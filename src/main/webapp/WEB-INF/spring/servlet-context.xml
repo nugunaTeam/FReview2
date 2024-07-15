@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:mvc="http://www.springframework.org/schema/mvc"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:tx="http://www.springframework.org/schema/tx"
+  xsi:schemaLocation="http://www.springframework.org/schema/mvc
+	http://www.springframework.org/schema/mvc/spring-mvc.xsd
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+  <!--
+  MariaDB ID/PW (src/main/resources/maria.properties)
+  MyBatis 매퍼파일 (src/main/resources/mappers/ *-map.xml)
+  MyBatis SQL로그 (src/main/resources/log4j.xml)
+  MyBatis 설정파일 (src/main/resources/mybatis-context.xml)
+  MyBatis 매퍼인터페이스.java (com.nuguna.freview.mappers) // !! Mapper 만질 때 건들여줘야함.
+  -->
+
+  <!-- ===============================[어노테이션 기반으로 동작]================================== -->
+  <!--  어노테이션 기반 -->
+  <mvc:annotation-driven/>
+  <!-- 적용 대상 패키지 -->
+  <context:component-scan base-package="com.nuguna.freview"/>
+
+  <!-- =============================== 자바의 classpth: 자바 코드에서 필요한 설정파일들 넣어놓는 위치
+       /src/main/resources/**  ${webappRoot}/resources directory -->
+  <mvc:resources mapping="/resources/**" location="/resources/"/>
+
+  <!-- =============================== /  +  @Controllers 리턴값 + .jsp     -->
+  <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="prefix" value="/"/>
+    <property name="suffix" value=".jsp"/>
+  </bean>
+
+  <!-- ################################################################################  -->
+  <!-- =============================== datasource : 프로퍼티 파일을 사용한 형태 -->
+  <context:property-placeholder location="classpath:maria.properties"/>
+  <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <property name="driverClassName" value="${driver-class-name}"/>
+    <property name="url" value="${db-url}"/>
+    <property name="username" value="${db-username}"/>
+    <property name="password" value="${db-password}"/>
+  </bean>
+  <!-- ===================================================
+     트랜잭션 관련 설정
+     - annotation-driven :: txManager(Datasource) - @Transactional
+   ======================================================= -->
+  <!-- txManager [ DataSource ... sqlSession ] 관리를 위한 매니저 설정 -->
+  <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="logDataSource"/>
+  </bean>
+
+  <!-- annotation 기반 설정 시  @Transactional이 붙은 메서드만 관리  -->
+  <tx:annotation-driven transaction-manager="txManager"/>
+
+  <!-- ################################################################################  -->
+  <!-- =============================== DBCPool + MyBatis
+       [ DataSource == SqlSessionFactoryBean - *SqlSessionTemplate -  sqlSession ]
+                                            (datasource 에서 가져온 session 관리)
+  -->
+  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="logDataSource"/>
+    <property name="mapperLocations" value="classpath:mappers/**/*-map.xml"/>
+    <property name="configLocation" value="classpath:mybatis-context.xml"/>
+  </bean>
+  <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+    <constructor-arg index="0" ref="sqlSessionFactory"/>
+  </bean>
+
+  <!-- =============================== MYBATIS 콘솔 로그 출력 : log4jdbc-remix.jar -->
+  <bean id="logDataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+    <constructor-arg ref="dataSource"/>
+    <property name="logFormatter">
+      <bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+        <property name="loggingType" value="MULTI_LINE"/>
+        <property name="sqlPrefix" value=""/>
+      </bean>
+    </property>
+  </bean>
+
+  <!-- =============================== MyBatis + Mapper인터페이스
+     MapperScannerConfigurer : @Mapper 찾기 + sqlSessionFactory  -->
+  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="com.nuguna.freview.admin.mapper"/>
+    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+  </bean>
+
+  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="com.nuguna.freview.common.mapper"/>
+    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+  </bean>
+
+  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="com.nuguna.freview.customer.mapper"/>
+    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+  </bean>
+
+  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="com.nuguna.freview.store.mapper"/>
+    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+  </bean>
+  
+</beans>
