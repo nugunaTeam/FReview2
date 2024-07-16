@@ -2,9 +2,10 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<c:set var="loginUser" value="${requestScope.loginUser}"/>
-<c:set var="userSeq" value="${loginUser.memberSeq}"/>
+<c:set var="loginUser" value="${loginUser}"/>
+<c:set var="userSeq" value="${loginUser.seq}"/>
 <c:set var="nickname" value="${loginUser.nickname}"/>
+<c:set var="profileUrl" value="${loginUser.profilePhotoUrl}" />
 <c:set var="code" value="${loginUser.code}"/>
 
 <!DOCTYPE html>
@@ -93,10 +94,7 @@
   <div class="header-hr-right">
     <a href="/my-info?member_seq=${userSeq}" style="margin-right: 20px">
       ${nickname}
-      <img src="assets/img/basic/basic-profile-img.png" alt=" " style="width: 30px;
-                margin-top: 15px;">
-      <%--            <img src="<%=profileURL()%>" alt=" " style="width: 30px;--%>
-      <%--    margin-top: 15px;"> TODO: 세션의 프로필 url을 적용할 것--%>
+        <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
     </a>
     <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
   </div>
@@ -114,7 +112,7 @@
       <ul id="tables-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
         <li>
           <a href="/admin-member-management" class="active">
-            <i class="bi bi-circle"></i><span>멤버</span>
+            <i class="bi bi-circle"></i><span>체험단</span>
           </a>
         </li>
         <li>
@@ -138,7 +136,7 @@
 <main id="main" class="main">
 
   <div class="pagetitle">
-    <h1>멤버 관리</h1>
+    <h1>체험단 관리</h1>
   </div>
 
   <section class="section">
@@ -147,8 +145,8 @@
 
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">멤버 리스트</h5>
-            <p>가입한 멤버 리스트입니다. <br>아이디를 클릭하면 해당 멤버의 브랜딩 페이지로 이동할 수 있습니다.</p>
+            <h5 class="card-title">체험단 리스트</h5>
+            <p>가입한 체험단 리스트입니다. <br>아이디를 클릭하면 해당 유저의 브랜딩 페이지로 이동할 수 있습니다.</p>
 
             <div>
               <input type="text" name="searchWord" id="searchWord" placeholder="원하는 키워드로 검색하세요!">

@@ -11,6 +11,7 @@
     <result property="email" column="email"/>
     <result property="password" column="password"/>
     <result property="nickname" column="nickname"/>
+    <result property="profilePhotoUrl" column="profile_photo_url"/>
     <result property="introduce" column="introduce"/>
     <result property="subEmail" column="sub_email"/>
     <result property="createdAt" column="created_at"/>
@@ -20,7 +21,7 @@
   <!-- 관리자 정보 조회 -->
   <select id="selectAdmin" parameterType="Long" resultMap="adminMap">
     select
-      seq, code, email, password, nickname, sub_email, created_at, updated_at
+      seq, code, email, password, nickname, profile_photo_url, sub_email, created_at, updated_at
     from user
     where seq = #{userSeq}
   </select>
