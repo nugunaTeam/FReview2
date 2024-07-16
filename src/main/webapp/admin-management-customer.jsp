@@ -3,9 +3,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <c:set var="loginUser" value="${requestScope.loginUser}"/>
-<c:set var="memberSeq" value="${loginUser.memberSeq}"/>
+<c:set var="userSeq" value="${loginUser.memberSeq}"/>
 <c:set var="nickname" value="${loginUser.nickname}"/>
-<c:set var="gubun" value="${loginUser.gubun}"/>
+<c:set var="code" value="${loginUser.code}"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -82,7 +82,7 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center header-hr">
   <div class="d-flex align-items-center justify-content-between ">
-    <a href="/main?seq=${memberSeq}&pagecode=Requester"
+    <a href="/main?seq=${userSeq}&pagecode=Requester"
        class="logo d-flex align-items-center">
       <img src="assets/img/logo/logo-vertical.png" alt=""
            style="  width: 50px; margin-top: 20px;">
@@ -91,7 +91,7 @@
     <i class="bi bi-list toggle-sidebar-btn"></i>
   </div>
   <div class="header-hr-right">
-    <a href="/my-info?member_seq=${memberSeq}" style="margin-right: 20px">
+    <a href="/my-info?member_seq=${userSeq}" style="margin-right: 20px">
       ${nickname}
       <img src="assets/img/basic/basic-profile-img.png" alt=" " style="width: 30px;
                 margin-top: 15px;">
