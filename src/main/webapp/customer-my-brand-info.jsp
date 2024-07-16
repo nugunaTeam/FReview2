@@ -49,7 +49,7 @@
     <!-- Favicons -->
     <link href="/assets/img/favicon.png" rel="icon">
     <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
-
+  
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
@@ -319,7 +319,6 @@
                             <!-- 연령대 보여주기/등록하기 -->
                             <div class="row">
                                 <div class="col-lg-3 col-md-4">연령대</div>
-
                                 <div class="col-lg-8 col-md-6">
                                     <select id="age-group-input"
                                             class="form-control form-control-readonly" disabled>
@@ -435,7 +434,6 @@
                             </div>
                             <script>
                               var selectedFoodTypes = ${brandInfo.foodTypes};
-
                               function initializeFoodTypeSelect() {
                                 var foodTypeSelect = $('#food-type-select');
                                 foodTypeSelect.find('option').each(function () {
@@ -660,7 +658,6 @@
 
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
-
 
 </body>
 
