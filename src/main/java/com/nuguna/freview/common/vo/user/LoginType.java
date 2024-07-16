@@ -9,9 +9,8 @@ import lombok.ToString;
 @ToString
 @RequiredArgsConstructor
 public enum LoginType {
-
-  GOOGLE("구글"),
-  FORM("폼");
+  GOOGLE("GOOGLE"),
+  FORM("FORM");
 
   private final String code;
 

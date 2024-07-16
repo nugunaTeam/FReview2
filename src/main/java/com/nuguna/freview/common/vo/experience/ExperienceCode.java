@@ -8,8 +8,8 @@ import lombok.ToString;
 @ToString
 @RequiredArgsConstructor
 public enum ExperienceCode {
-  PROPOSE("제안"),
-  APPLY("지원");
+  PROPOSE("PROPOSE"),
+  APPLY("APPLY");
 
   private final String code;
 

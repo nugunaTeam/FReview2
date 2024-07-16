@@ -8,9 +8,10 @@ import lombok.ToString;
 @ToString
 @RequiredArgsConstructor
 public enum UserCode {
-  ADMIN("관리자"),
-  STORE("스토어"),
-  CUSTOMER("체험단");
+
+  ADMIN("ADMIN"),
+  STORE("STORE"),
+  CUSTOMER("CUSTOMER");
 
   private final String code;
 

@@ -1,6 +1,5 @@
 package com.nuguna.freview.common.vo.user.tag;
 
-import com.nuguna.freview.admin.vo.user.tag.TagType;
 import com.nuguna.freview.common.exception.IllegalTagException;
 import lombok.Getter;
 import lombok.ToString;

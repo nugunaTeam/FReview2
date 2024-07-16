@@ -33,7 +33,7 @@ public enum FoodDish {
   OTHER("기타", FoodType.WESTERN);
 
   private final String code;
-  private final FoodType typeCode;
+  private final FoodType foodType;
 
   public static FoodDish fromCode(String code) {
     for (FoodDish dish : FoodDish.values()) {
@@ -44,9 +44,9 @@ public enum FoodDish {
     throw new IllegalArgumentException("유효하지 않은 FoodDish 입력: " + code);
   }
 
-  public static FoodDish fromTypeCode(FoodType typeCode) {
+  public static FoodDish fromFoodType(FoodType typeCode) {
     for (FoodDish dish : FoodDish.values()) {
-      if (dish.getTypeCode() == typeCode) {
+      if (dish.getFoodType() == typeCode) {
         return dish;
       }
     }

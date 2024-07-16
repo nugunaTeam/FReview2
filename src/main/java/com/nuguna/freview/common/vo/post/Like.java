@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Likes {
+public class Like {
 
   private Long seq;
   private Long userSeq;

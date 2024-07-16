@@ -1,6 +1,5 @@
-package com.nuguna.freview.admin.vo.post;
+package com.nuguna.freview.common.vo.post;
 
-import com.nuguna.freview.common.vo.post.PostCode;
 import java.sql.Date;
 import java.sql.Timestamp;
 import lombok.AllArgsConstructor;

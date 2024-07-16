@@ -1,4 +1,4 @@
-package com.nuguna.freview.admin.vo.user.tag;
+package com.nuguna.freview.common.vo.user.tag;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -8,8 +8,8 @@ import lombok.ToString;
 @ToString
 @RequiredArgsConstructor
 public enum TagType {
-  STORE("스토어"),
-  CUSTOMER("체험단");
+  STORE("STORE"),
+  CUSTOMER("CUSTOMER");
 
   private final String code;
 

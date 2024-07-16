@@ -1,4 +1,4 @@
-package com.nuguna.freview.admin.vo.review;
+package com.nuguna.freview.common.vo.review;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -7,7 +7,9 @@ import lombok.ToString;
 @ToString
 public enum ReviewStatus {
   UNWRITTEN("UNWRITTEN"),
-  WRITTEN("WRITTEN");
+  WRITTEN("WRITTEN"),
+  NOSHOW("NOSHOW"),
+  STORE_HIDDEN("STORE_HIDDEN");
 
   private final String status;
 

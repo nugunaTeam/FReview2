@@ -9,7 +9,6 @@ import lombok.ToString;
 @ToString
 @RequiredArgsConstructor
 public enum FoodType {
-
   KOREAN("한식"),
   CHINESE("중식"),
   WESTERN("양식"),
