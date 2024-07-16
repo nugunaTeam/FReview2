@@ -37,6 +37,7 @@
         background-color: #e9ecef;
         opacity: 1;
       }
+
     </style>
 
     <meta charset="utf-8">
@@ -49,7 +50,7 @@
     <!-- Favicons -->
     <link href="/assets/img/favicon.png" rel="icon">
     <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
-  
+
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
@@ -78,6 +79,12 @@
 
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!--Select2 Css, JS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+          rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 
     <!-- =======================================================
     * Template Name: NiceAdmin
@@ -175,8 +182,6 @@
 
                         <div class="tab-pane fade show active profile-overview"
                              id="profile-overview">
-
-                            <h5 class="card-title">Profile Details</h5>
 
                             <!-- 소개 -->
                             <div class="row">
@@ -434,6 +439,7 @@
                             </div>
                             <script>
                               var selectedFoodTypes = ${brandInfo.foodTypes};
+
                               function initializeFoodTypeSelect() {
                                 var foodTypeSelect = $('#food-type-select');
                                 foodTypeSelect.find('option').each(function () {
@@ -525,16 +531,21 @@
                                 });
                               });
                             </script>
-                            <!-- 태그들 보여주기/등록하기 -->
+
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 label">태그</div>
                                 <div class="col-lg-8 col-md-6">
-                                    <select id="tag-select" class="form-select" multiple size="3"
+                                    <select id="tag-select" class="form-select" multiple size="2"
                                             disabled>
-                                        <option value="초식">초식</option>
-                                        <option value="육식">육식</option>
-                                        <option value="빵빵이">빵빵이</option>
+                                        <option value="초식" data-custom-color="green">초식</option>
+                                        <option value="육식" data-custom-color="indianred">육식</option>
+                                        <option value="맛집블로거" data-custom-color="blue">맛집블로거
+                                        </option>
+                                        <option value="정성리뷰어" data-custom-color="orange">정성리뷰어
+                                        </option>
                                     </select>
+                                    <p id="tag-select-message" class="text-primary"
+                                       style="font-size: 14px;"></p>
                                 </div>
                                 <div class="col-lg-1 col-md-2">
                                     <button id="tag-update-btn" type="button"
@@ -552,60 +563,94 @@
                             </div>
 
                             <script>
+
                               $(document).ready(function () {
+                                $('#tag-select').select2({
+                                  width: '100%',
+                                  templateSelection: function (option) {
+                                    var color = $(option.element).data('custom-color');
+                                    return $('<span style="color: ' + color + '">' + option.text
+                                        + '</span>');
+                                  }
+                                });
+
                                 var selectedTags = ${brandInfo.tagInfos};
-                                <%--'{\"tagInfos\" : \"${brandInfo.tagInfos}\"}');--%>
-                                <%--'<%=gson.toJson(brandInfo.getTagInfos())%>'--%>
 
                                 function initializeTagSelect() {
                                   var tagSelect = $('#tag-select');
-                                  tagSelect.find('option').each(function () {
-                                    if (selectedTags.includes($(this).val())) {
-                                      $(this).prop('selected', true);
-                                      $(this).addClass('selected-option');
-                                    } else {
-                                      $(this).prop('selected', false);
-                                      $(this).removeClass('selected-option');
-                                    }
-                                  });
+                                  tagSelect.val(selectedTags).trigger('change');
+
+                                  // Display message if selectedTags is empty
+                                  if (selectedTags.length === 0) {
+                                    $('#tag-select-message').text('아직 선택한 태그가 없어요.');
+                                  } else {
+                                    $('#tag-select-message').text('');
+                                  }
                                 }
 
                                 initializeTagSelect();
 
+                                $('#tag-select').on('select2:select', function (e) {
+                                  var selectedOptions = $(this).val();
+                                  if (selectedOptions.length > 2) {
+                                    var $element = $(e.params.data.element);
+                                    $element.prop("selected", false);
+                                    $(this).trigger('change');
+                                    alert('태그는 2개까지만 선택할 수 있습니다');
+                                  }
+                                });
+
                                 $("#tag-update-btn").click(function () {
-                                  $("#tag-update-btn").hide();
-                                  $("#tag-cancel-btn").show();
-                                  $("#tag-submit-btn").show();
-                                  $('#tag-select').prop('disabled', false);
+                                  $(this).hide();
+                                  $("#tag-cancel-btn, #tag-submit-btn").show();
+                                  $('#tag-select').prop('disabled', false).select2({
+                                    width: '100%',
+                                    templateSelection: function (option) {
+                                      var color = $(option.element).data('custom-color');
+                                      return $('<span style="color: ' + color + '">' + option.text
+                                          + '</span>');
+                                    }
+                                  });
                                 });
 
                                 $('#tag-cancel-btn').click(function () {
-                                  $('#tag-cancel-btn').hide();
-                                  $('#tag-submit-btn').hide();
-                                  $('#tag-update-btn').show();
-                                  $('#tag-select').prop('disabled', true);
+                                  $(this).hide();
+                                  $("#tag-submit-btn").hide();
+                                  $("#tag-update-btn").show();
+                                  $('#tag-select').prop('disabled', true).select2({
+                                    width: '100%',
+                                    templateSelection: function (option) {
+                                      var color = $(option.element).data('custom-color');
+                                      return $('<span style="color: ' + color + '">' + option.text
+                                          + '</span>');
+                                    }
+                                  });
                                   initializeTagSelect();
                                 });
 
                                 $('#tag-submit-btn').click(function () {
-                                  var selectedTags = [];
-                                  $('#tag-select option:selected').each(function () {
-                                    selectedTags.push($(this).val());
-                                  });
+                                  var selectedTags = $('#tag-select').val();
 
                                   $.ajax({
                                     url: '<%=request.getContextPath()%>/api/my-brand/tag',
                                     method: 'POST',
+                                    contentType: 'application/json',
                                     data: JSON.stringify({
                                       'userSeq': ${userSeq},
                                       'toTags': selectedTags
                                     }),
                                     success: function (response) {
-                                      console.log(response.item);
                                       alert('태그 변경에 성공하였습니다.');
-                                      $('#tag-select').prop('disabled', true);
-                                      $('#tag-submit-btn').hide();
-                                      $('#tag-cancel-btn').hide();
+                                      $('#tag-select').prop('disabled', true).select2({
+                                        width: '100%',
+                                        templateSelection: function (option) {
+                                          var color = $(option.element).data('custom-color');
+                                          return $(
+                                              '<span style="color: ' + color + '">' + option.text
+                                              + '</span>');
+                                        }
+                                      });
+                                      $('#tag-submit-btn, #tag-cancel-btn').hide();
                                       $('#tag-update-btn').show();
                                     },
                                     error: function (err) {
@@ -615,13 +660,9 @@
                                 });
 
                                 $('#tag-select').on('change', function () {
-                                  $('#tag-select option').each(function () {
-                                    if ($(this).is(':selected')) {
-                                      $(this).addClass('selected-option');
-                                    } else {
-                                      $(this).removeClass('selected-option');
-                                    }
-                                  });
+                                  $(this).find('option:selected').addClass('selected-option');
+                                  $(this).find('option:not(:selected)').removeClass(
+                                      'selected-option');
                                 });
                               });
                             </script>
