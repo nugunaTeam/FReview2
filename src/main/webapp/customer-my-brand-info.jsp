@@ -1,21 +1,11 @@
-<%@ page import="com.nuguna.freview.dto.cust.brand.CustMyBrandInfoDto" %>
 <%@ page import="com.google.gson.Gson" %>
-<%@ page import="com.nuguna.freview.entity.member.Member" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <%
-    CustMyBrandInfoDto brandInfo = (CustMyBrandInfoDto) request.getAttribute("brandInfo");
     Gson gson = new Gson();
-    Member member = null;
-    int memberSeq = 0;
-    if (session.getAttribute("Member") != null) {
-        member = (Member) session.getAttribute("Member");
-        memberSeq = member.getMemberSeq();
-    }
 %>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -57,8 +47,8 @@
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="assets/img/favicon.png" rel="icon">
-    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="/assets/img/favicon.png" rel="icon">
+    <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -66,17 +56,17 @@
           rel="stylesheet">
 
     <!-- Vendor CSS Files -->
-    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-    <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
-    <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-    <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-    <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/assets/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
     <!-- Template Main CSS File -->
-    <link href="assets/css/style.css" rel="stylesheet">
-    <link href="assets/css/style-h.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/style-h.css" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
@@ -103,9 +93,9 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="${pageContext.request.contextPath}/main?seq=<%=memberSeq%>&pagecode=Requester"
+        <a href="${pageContext.request.contextPath}/main?seq=${userSeq}&pagecode=Requester"
            class="logo d-flex align-items-center">
-            <img src="assets/img/logo/logo-vertical.png" alt="">
+            <img src="/assets/img/logo/logo-vertical.png" alt="">
             <span class="d-none d-lg-block">FReview</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -115,10 +105,10 @@
         <ul class="d-flex align-items-center">
             <li class="nav-item dropdown pe-3">
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-                    <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
+                    <img src="/assets/img/basic/basic-profile-img.png" alt="Profile"
                          class="rounded-circle">
                     <span id="nickname-holder-head"
-                          class="d-none d-md-block"><%=brandInfo.getNickname()%></span>
+                          class="d-none d-md-block">${brandInfo.nickname}<%--<%=brandInfo.getNickname()%>--%></span>
                 </a><!-- End Profile Iamge Icon -->
             </li><!-- End Profile Nav -->
         </ul>
@@ -170,9 +160,9 @@
             <div class="card">
                 <!-- profile  -->
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                    <img src="assets/img/basic/basic-profile-img.png" alt="Profile"
+                    <img src="/assets/img/basic/basic-profile-img.png" alt="Profile"
                          class="rounded-circle">
-                    <h2 id="nickname-holder-section"><%=brandInfo.getNickname()%>
+                    <h2 id="nickname-holder-section">${brandInfo.nickname}
                     </h2>
                     <div class="social-links mt-2 ri-heart-3-fill">
                         ${brandInfo.zzimCount}
@@ -193,7 +183,7 @@
                                 <div class="col-lg-3 col-md-4 label">소개</div>
                                 <div class="col-lg-8 col-md-6">
                                     <input id="introduce-input" type="text" name="to_nickname"
-                                           value="<%= brandInfo.getIntroduce() == null? "" : brandInfo.getIntroduce() %>"
+                                           value="${brandInfo.introduce}"
                                            class="form-control" readonly>
                                 </div>
                                 <div class="col-lg-1 col-md-2">
@@ -216,7 +206,7 @@
                                 <div class="col-lg-3 col-md-4 label">닉네임</div>
                                 <div class="col-lg-8 col-md-6">
                                     <input id="nickname-input" type="text" name="to_nickname"
-                                           value="<%=brandInfo.getNickname()%>"
+                                           value="${brandInfo.nickname}"
                                            class="form-control" readonly>
                                 </div>
                                 <div class="col-lg-1 col-md-2">
@@ -235,16 +225,15 @@
                             <script>
                               $(document).ready(function () {
                                 function initializeIntroduceForm() {
-                                  $('#introduce-input').val(
-                                      '<%= brandInfo.getIntroduce() == null? "" : brandInfo.getIntroduce() %>').prop(
-                                      'readonly', true);
+                                  $('#introduce-input').val(${brandInfo.introduce}).prop('readonly',
+                                      true);
                                   $('#introduce-update-btn').show();
                                   $('#introduce-submit-btn').hide();
                                   $('#introduce-cancel-btn').hide();
                                 }
 
                                 function initializeNicknameForm() {
-                                  $('#nickname-input').val('<%=brandInfo.getNickname()%>').prop(
+                                  $('#nickname-input').val('${brandInfo.nickname}').prop(
                                       'readonly', true);
                                   $('#nickname-update-btn').show();
                                   $('#nickname-submit-btn').hide();
@@ -268,7 +257,7 @@
                                     url: '<%=request.getContextPath()%>/api/my-brand/introduce',
                                     method: 'POST',
                                     data: JSON.stringify({
-                                      'member_seq': <%=memberSeq%>,
+                                      'user_seq': ${userSeq},
                                       'to_introduce': newIntroduce
                                     }),
                                     contentType: 'application/json',
@@ -304,8 +293,8 @@
                                     url: '<%=request.getContextPath()%>/api/my-brand/nickname',
                                     method: 'POST',
                                     data: JSON.stringify({
-                                      'member_seq': <%=memberSeq%>,
-                                      'to_nickname': newNickname
+                                      'userSeq': ${userSeq},
+                                      'toNickname': newNickname
                                     }),
                                     contentType: 'application/json',
                                     success: function (response) {
@@ -334,23 +323,27 @@
                                     <select id="age-group-input"
                                             class="form-control form-control-readonly" disabled>
                                         <!-- col-lg-8 col-md-6 -->
-                                        <%
-                                            String[] ageGroups = {"10대", "20대", "30대", "40대", "50대",
-                                                    "60대", "70대", "80대", "90대"};
-                                            String selectedAgeGroup = brandInfo.getAgeGroup();
-                                        %>
-                                        <%
-                                            for (String ageGroup : ageGroups) {
-                                        %>
-                                        <option value="<%= ageGroup %>" <%=
-                                        ageGroup.equals(selectedAgeGroup) ? "selected"
-                                                : "" %>><%= ageGroup %>
-                                        </option>
-                                        <%
-                                            }
-                                        %>
                                     </select>
                                 </div>
+
+                                <script>
+                                  $(document).ready(function () {
+                                    var ageGroups = ["10대", "20대", "30대", "40대", "50대", "60대",
+                                      "70대", "80대", "90대"];
+                                    var selectedAgeGroup = '${brandInfo.ageGroup}'; // JSP 변수를 JavaScript로 가져오기
+
+                                    $.each(ageGroups, function (index, ageGroup) {
+                                      var option = $('<option>', {
+                                        value: ageGroup,
+                                        text: ageGroup
+                                      });
+                                      if (ageGroup === selectedAgeGroup) {
+                                        option.prop('selected', true);
+                                      }
+                                      $('#age-group-input').append(option);
+                                    });
+                                  });
+                                </script>
 
                                 <script>
                                   $(document).ready(function () {
@@ -375,6 +368,8 @@
                                         url: '<%=request.getContextPath()%>/api/customer/my-brand/age-group',
                                         method: 'POST',
                                         data: JSON.stringify({
+                                          'usersSeq': ${userSeq},
+                                          'toAgeGroup': newAgeGroup
                                         }),
                                         success: function (response) {
                                           // 성공적으로 응답을 받았을 때 처리
@@ -438,7 +433,7 @@
                                 </div>
                             </div>
                             <script>
-
+                              var selectedFoodTypes = ${brandInfo.foodTypes};
                               function initializeFoodTypeSelect() {
                                 var foodTypeSelect = $('#food-type-select');
                                 foodTypeSelect.find('option').each(function () {
@@ -490,6 +485,8 @@
                                     method: 'POST',
                                     contentType: 'application/json',
                                     data: JSON.stringify({
+                                      'userSeq': ${userSeq},
+                                      'toFoodTypes': selectedFoodTypes
                                     }),
                                     success: function (response) {
                                       var foodTypesFromServer = response.item;
@@ -556,6 +553,9 @@
 
                             <script>
                               $(document).ready(function () {
+                                var selectedTags = ${brandInfo.tagInfos};
+                                <%--'{\"tagInfos\" : \"${brandInfo.tagInfos}\"}');--%>
+                                <%--'<%=gson.toJson(brandInfo.getTagInfos())%>'--%>
 
                                 function initializeTagSelect() {
                                   var tagSelect = $('#tag-select');
@@ -597,6 +597,8 @@
                                     url: '<%=request.getContextPath()%>/api/my-brand/tag',
                                     method: 'POST',
                                     data: JSON.stringify({
+                                      'userSeq': ${userSeq},
+                                      'toTags': selectedTags
                                     }),
                                     success: function (response) {
                                       console.log(response.item);
@@ -606,6 +608,7 @@
                                       $('#tag-cancel-btn').hide();
                                       $('#tag-update-btn').show();
                                     },
+                                    error: function (err) {
                                       alert('태그 변경에 실패하였습니다.');
                                     }
                                   });
@@ -644,18 +647,17 @@
         crossorigin="anonymous"></script>
 
 <!-- Vendor JS Files -->
-<script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
-<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="assets/vendor/chart.js/chart.umd.js"></script>
-<script src="assets/vendor/echarts/echarts.min.js"></script>
-<script src="assets/vendor/quill/quill.js"></script>
-<script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
-<script src="assets/vendor/tinymce/tinymce.min.js"></script>
-<script src="assets/vendor/php-email-form/validate.js"></script>
+<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/assets/vendor/quill/quill.js"></script>
+<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
 
 <!-- Template Main JS File -->
-<script src="assets/js/main.js"></script>
-
+<script src="/assets/js/main.js"></script>
 
 </body>
 
