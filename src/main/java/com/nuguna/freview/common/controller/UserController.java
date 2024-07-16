@@ -25,7 +25,7 @@ public class UserController {
   }
 
   @RequestMapping(value = "/api/common/signup/form/customer", method = RequestMethod.POST)
-  public ResponseEntity<?> signup(
+  public ResponseEntity<CustomerSignupResponseDTO> signup(
       @Valid @RequestBody CustomerSignupRequestDTO customerSignupRequestDTO) {
     log.info("체험단 회원 가입 진행");
     userService.signup(customerSignupRequestDTO);
@@ -33,5 +33,5 @@ public class UserController {
         "폼 회원 가입이 완료되었습니다.");
     return new ResponseEntity<>(customerSignupResponseDTO, HttpStatus.OK);
   }
-  
+
 }
