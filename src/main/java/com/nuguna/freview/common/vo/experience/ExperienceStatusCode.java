@@ -1,4 +1,4 @@
-package com.nuguna.freview.admin.vo.experience;
+package com.nuguna.freview.common.vo.experience;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
