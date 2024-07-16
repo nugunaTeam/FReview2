@@ -22,6 +22,6 @@ public enum ExperienceStatusCode {
         return rs;
       }
     }
-    throw new IllegalArgumentException("유효하지 않은 RequestStatus 입력 : " + status);
+    throw new IllegalArgumentException("유효하지 않은 ExperienceStatusCode 입력 : " + status);
   }
 }
