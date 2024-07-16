@@ -16,10 +16,10 @@
 
   <insert id="insertCustomer" parameterType="com.nuguna.freview.common.vo.UserVO">
     insert into user(business_number, code, email, password, nickname, profile_photo_url,
-                     introduce, sub_email, login_type, is_withdrawen, age_group, store_location,
+                     sub_email, login_type, is_withdrawn, age_group, store_location,
                      created_at, updated_at)
     values (null, #{code}, #{email}, #{password}, #{nickname}, null,
-            null, #{subEmail}, #{loginType}, false, #{ageGroup},
+            #{subEmail}, #{loginType}, false, #{ageGroup},
             null, NOW(), NOW())
   </insert>
 
