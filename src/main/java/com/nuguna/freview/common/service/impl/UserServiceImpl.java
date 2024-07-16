@@ -3,7 +3,7 @@ package com.nuguna.freview.common.service.impl;
 import com.nuguna.freview.common.dto.request.CustomerSignupRequestDTO;
 import com.nuguna.freview.common.mapper.UserMapper;
 import com.nuguna.freview.common.service.UserService;
-import com.nuguna.freview.common.vo.UserVO;
+import com.nuguna.freview.common.vo.user.UserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
