@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.admin.mapper.AdminMapper">
+
+  <!-- resultMap - adminMap 설정 -->
+  <resultMap id="adminMap" type="com.nuguna.freview.admin.vo.AdminVO">
+    <id property="seq" column="seq"/>
+    <result property="code" column="code"/>
+    <result property="email" column="email"/>
+    <result property="password" column="password"/>
+    <result property="nickname" column="nickname"/>
+    <result property="introduce" column="introduce"/>
+    <result property="subEmail" column="sub_email"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="updatedAt" column="updated_at"/>
+  </resultMap>
+
+  <!-- 관리자 정보 조회 -->
+  <select id="selectAdmin" parameterType="Long" resultMap="adminMap">
+    select
+      seq, code, email, password, nickname, sub_email, created_at, updated_at
+    from user
+    where seq = #{userSeq}
+  </select>
+
+
+</mapper>
