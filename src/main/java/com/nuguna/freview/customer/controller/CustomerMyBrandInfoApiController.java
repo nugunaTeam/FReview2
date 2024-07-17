@@ -95,7 +95,9 @@ public class CustomerMyBrandInfoApiController {
   public ResponseEntity<CustomerReviewRegisterResponseDTO> registerCustomerReviews(
       @Valid @RequestBody CustomerReviewRegisterRequestDTO customerReviewRegisterRequestDTO
   ) {
-    return null;
+    CustomerReviewRegisterResponseDTO responseDTO = customerBrandService.registerCustomerReview(
+        customerReviewRegisterRequestDTO);
+    return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
   }
 
 }

@@ -1,6 +1,8 @@
 package com.nuguna.freview.customer.exception.handler;
 
 import com.nuguna.freview.customer.exception.AlreadyExistNicknameException;
+import com.nuguna.freview.customer.exception.IllegalReviewException;
+import com.nuguna.freview.global.exception.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,8 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class CustomerApiExceptionHandler {
 
   @ExceptionHandler(AlreadyExistNicknameException.class)
-  public ResponseEntity<String> handleNicknameException(AlreadyExistNicknameException ex) {
-    return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+  public ResponseEntity<ErrorResponse> handleNicknameException(AlreadyExistNicknameException ex) {
+    return new ResponseEntity<>(new ErrorResponse(ex.getMessage(), null), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(IllegalReviewException.class)
+  public ResponseEntity<ErrorResponse> handleReviewException(IllegalReviewException ex) {
+    return new ResponseEntity<>(new ErrorResponse(ex.getMessage(), null), HttpStatus.NOT_FOUND);
   }
 
 }

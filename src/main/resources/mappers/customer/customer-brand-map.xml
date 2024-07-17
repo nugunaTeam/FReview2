@@ -42,13 +42,13 @@
   </delete>
 
   <insert id="insertFoodTypes">
-    INSERT INTO user_food_type (user_seq, food_type_seq)
-    SELECT
+    insert into user_food_type (user_seq, food_type_seq)
+    select
     #{userSeq}, seq
-    FROM
+    from
     food_type
-    WHERE
-    dish IN
+    where
+    dish in
     <foreach item="item" index="index" collection="toFoodTypes" open="(" separator="," close=")">
       #{item}
     </foreach>
@@ -61,16 +61,30 @@
   </delete>
 
   <insert id="insertTags">
-    INSERT INTO user_tag (user_seq, tag_seq)
-    SELECT
+    insert into user_tag (user_seq, tag_seq)
+    select
     #{userSeq}, seq
-    FROM
+    from
     tag
-    WHERE
-    name IN
+    where
+    name in
     <foreach item="item" index="index" collection="toTags" open="(" separator="," close=")">
       #{item}
     </foreach>
   </insert>
+
+  <select id="checkIsValidReview" resultType="Boolean">
+    select count(1) > 0
+    from review
+    where seq = #{reviewSeq}
+      and customer_seq = #{userSeq}
+  </select>
+
+  <update id="registerReview">
+    update review
+    set url    = #{reviewUrl},
+        status = 'WRITTEN'
+    where seq = #{reviewSeq}
+  </update>
 
 </mapper>

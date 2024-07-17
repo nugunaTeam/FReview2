@@ -29,4 +29,7 @@ public interface CustomerBrandMapper {
 
   void insertTags(@Param("userSeq") Long userSeq, @Param("toTags") List<String> toTags);
 
+  Boolean checkIsValidReview(@Param("userSeq") Long userSeq, @Param("reviewSeq") Long reviewSeq);
+
+  void registerReview(@Param("reviewSeq") Long reviewSeq, @Param("reviewUrl") String reviewUrl);
 }
