@@ -1,7 +1,6 @@
 package com.nuguna.freview.admin.controller;
 
 import com.nuguna.freview.admin.dto.request.CustomerListRequestDTO;
-import com.nuguna.freview.admin.dto.request.CustomerSearchRequestDTO;
 import com.nuguna.freview.admin.dto.request.DeleteCustomerRequestDTO;
 import com.nuguna.freview.admin.dto.response.CustomerListDTO;
 import com.nuguna.freview.admin.dto.response.page.CustomerManageResponseDTO;
@@ -28,17 +27,14 @@ public class CustomerManageApiController {
   public CustomerManageApiController(AdminService adminService) { this.adminService = adminService; }
 
   @RequestMapping(value = "/list", method = RequestMethod.POST)
-  public CustomerManageResponseDTO getCustomerList(@RequestBody CustomerSearchRequestDTO requestDTO) {
+  public CustomerManageResponseDTO getCustomerList(@RequestBody CustomerListRequestDTO requestDTO) {
     Long previousUserSeq = requestDTO.getPreviousUserSeq();
+    String searchWord = requestDTO.getSearchWord();
 
     if (previousUserSeq == null) {
       previousUserSeq = Long.MAX_VALUE;
     }
-    CustomerListRequestDTO customerListRequestDTO = CustomerListRequestDTO.builder()
-        .previousUserSeq(previousUserSeq)
-        .limit(PAGE_SIZE)
-        .build();
-    List<CustomerListDTO> customerList = adminService.getCustomerList(customerListRequestDTO);
+    List<CustomerListDTO> customerList = adminService.getCustomerList(previousUserSeq, searchWord, PAGE_SIZE);
     boolean hasMore = customerList.size() == PAGE_SIZE;
     CustomerManageResponseDTO responseDTO = CustomerManageResponseDTO.builder()
         .customerList(customerList)
@@ -62,24 +58,5 @@ public class CustomerManageApiController {
     } catch (IllegalStateException e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
-  }
-
-  @RequestMapping(value = "/search", method = RequestMethod.POST)
-  public CustomerManageResponseDTO searchCustomer(@RequestBody CustomerSearchRequestDTO requestDTO) {
-    Long previousUserSeq = requestDTO.getPreviousUserSeq();
-    String searchWord = requestDTO.getSearchWord();
-
-    if (previousUserSeq == null) {
-      previousUserSeq = Long.MAX_VALUE;
-    }
-    List<CustomerListDTO> customerList = adminService.getSearchedCustomerList(previousUserSeq, searchWord, PAGE_SIZE);
-    boolean hasMore = customerList.size() == PAGE_SIZE;
-
-    CustomerManageResponseDTO responseDTO = CustomerManageResponseDTO.builder()
-        .customerList(customerList)
-        .hasMore(hasMore)
-        .build();
-
-    return responseDTO;
   }
 }
