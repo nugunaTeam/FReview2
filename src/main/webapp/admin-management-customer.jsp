@@ -205,21 +205,22 @@
     });
 
     function loadInitialData(searchWord = '') {
-      let apiUrl = searchWord ? "/admin-user-search" : "/api/admin/customer/list";
+      let apiUrl = searchWord ? "/api/admin/customer/search" : "/api/admin/customer/list";
       $.ajax({
         method: "POST",
         url: apiUrl,
-        data: {
-          previous_user_seq: null,
-          search_word: searchWord,
-        },
+        contentType: "application/json",
+        data: JSON.stringify({
+          previousUserSeq: null,
+          searchWord: searchWord,
+        }),
         dataType: "json",
         success: function (response) {
           $('#userList').empty();
           renderData(response.customerList
           );
           if (response.hasMore) {
-            $('#loadMoreBtn').data('previous-user-seq',
+            $('#loadMoreBtn').data('previousUserSeq',
                     response.customerList
                             [response.customerList
                             .length - 1].seq).show();
@@ -234,14 +235,15 @@
     }
 
     function loadMoreData(previousUserSeq, searchWord = '') {
-      let apiUrl = searchWord ? "/admin-user-search" : "/api/admin/customer/list";
+      let apiUrl = searchWord ? "/api/admin/customer/search" : "/api/admin/customer/list";
       $.ajax({
         method: "POST",
         url: apiUrl,
-        data: {
-          previous_user_seq: previousUserSeq,
+        contentType: "application/json",
+        data: JSON.stringify({
+          previousUserSeq: previousUserSeq,
           searchWord: searchWord
-        },
+        }),
         dataType: "json",
         success: function (response) {
           if (response.customerList
@@ -249,7 +251,7 @@
             renderData(response.customerList
             );
             if (response.hasMore) {
-              $('#loadMoreBtn').data('previous-user-seq',
+              $('#loadMoreBtn').data('previousUserSeq',
                       response.customerList
                               [response.customerList
                               .length - 1].seq).show();
