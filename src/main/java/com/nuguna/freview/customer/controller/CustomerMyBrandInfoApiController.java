@@ -86,7 +86,9 @@ public class CustomerMyBrandInfoApiController {
   public ResponseEntity<CustomerTagsUpdateResponseDTO> updateCustomerTags(
       @Valid @RequestBody CustomerTagsUpdateRequestDTO customerTagsUpdateRequestDTO
   ) {
-    return null;
+    CustomerTagsUpdateResponseDTO responseDTO = customerBrandService.updateCustomerTags(
+        customerTagsUpdateRequestDTO);
+    return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
   @RequestMapping(value = "/review", method = RequestMethod.POST)

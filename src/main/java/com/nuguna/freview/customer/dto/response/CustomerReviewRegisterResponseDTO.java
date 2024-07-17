@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CustomerReviewRegisterResponseDTO {
 
-  private String profilePhotoUrl;
+  private String reviewUrl;
 }

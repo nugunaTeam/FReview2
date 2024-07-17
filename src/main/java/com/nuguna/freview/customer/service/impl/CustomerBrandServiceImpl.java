@@ -86,7 +86,11 @@ public class CustomerBrandServiceImpl implements CustomerBrandService {
   @Override
   public CustomerTagsUpdateResponseDTO updateCustomerTags(
       CustomerTagsUpdateRequestDTO customerTagsUpdateRequestDTO) {
-    return null;
+    Long userSeq = customerTagsUpdateRequestDTO.getUserSeq();
+    List<String> toTags = customerTagsUpdateRequestDTO.getToTags();
+    customerBrandMapper.deleteTagsByUserSeq(userSeq);
+    customerBrandMapper.insertTags(userSeq, toTags);
+    return new CustomerTagsUpdateResponseDTO(toTags);
   }
 
   @Override

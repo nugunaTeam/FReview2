@@ -25,4 +25,8 @@ public interface CustomerBrandMapper {
   void insertFoodTypes(@Param("userSeq") Long userSeq,
       @Param("toFoodTypes") List<String> toFoodTypes);
 
+  void deleteTagsByUserSeq(Long userSeq);
+
+  void insertTags(@Param("userSeq") Long userSeq, @Param("toTags") List<String> toTags);
+
 }

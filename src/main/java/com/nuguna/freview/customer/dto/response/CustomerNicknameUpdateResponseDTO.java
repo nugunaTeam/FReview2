@@ -10,5 +10,4 @@ import lombok.NoArgsConstructor;
 public class CustomerNicknameUpdateResponseDTO {
 
   private String nickname;
-
 }

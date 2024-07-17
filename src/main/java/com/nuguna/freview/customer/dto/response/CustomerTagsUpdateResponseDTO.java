@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CustomerTagsUpdateResponseDTO {
 
-  private List<String> foodTypes;
+  private List<String> tags;
 }

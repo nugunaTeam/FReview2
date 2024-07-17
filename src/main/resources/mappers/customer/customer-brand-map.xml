@@ -46,10 +46,29 @@
     SELECT
     #{userSeq}, seq
     FROM
-    FOOD_TYPE
+    food_type
     WHERE
     dish IN
     <foreach item="item" index="index" collection="toFoodTypes" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </insert>
+
+  <delete id="deleteTagsByUserSeq">
+    delete
+    from user_tag
+    where user_seq = #{userSeq}
+  </delete>
+
+  <insert id="insertTags">
+    INSERT INTO user_tag (user_seq, tag_seq)
+    SELECT
+    #{userSeq}, seq
+    FROM
+    tag
+    WHERE
+    name IN
+    <foreach item="item" index="index" collection="toTags" open="(" separator="," close=")">
       #{item}
     </foreach>
   </insert>
