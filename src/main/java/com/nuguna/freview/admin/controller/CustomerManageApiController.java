@@ -44,7 +44,7 @@ public class CustomerManageApiController {
     return responseDTO;
   }
 
-  @RequestMapping(value = "/delete", method = RequestMethod.POST)
+  @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
   public ResponseEntity<?> deleteCustomer(@RequestBody DeleteCustomerRequestDTO requestDTO) {
     Long deleteUserSeq = requestDTO.getDeleteUserSeq();
     String adminVerificationPW = ShaUtil.sha256Encoding(requestDTO.getAdminVerificationPW());

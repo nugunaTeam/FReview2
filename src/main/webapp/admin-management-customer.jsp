@@ -300,7 +300,7 @@
       let adminVerificationPW = modalBodyInput.value;
 
       fetch('/api/admin/customer/delete', {
-        method: 'POST',
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
         },
