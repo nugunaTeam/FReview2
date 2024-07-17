@@ -2,11 +2,11 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<c:set var="loginUser" value="${loginUser}"/>
-<c:set var="userSeq" value="${loginUser.seq}"/>
-<c:set var="nickname" value="${loginUser.nickname}"/>
-<c:set var="profileUrl" value="${loginUser.profilePhotoUrl}" />
-<c:set var="code" value="${loginUser.code}"/>
+<c:set var ="loginUser" value="${loginUser}"/>
+<c:set var ="userSeq" value="${loginUser.seq}"/>
+<c:set var ="nickname" value="${loginUser.nickname}"/>
+<c:set var ="profileUrl" value="${loginUser.profilePhotoUrl}" />
+<c:set var ="code" value="${loginUser.code}"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -55,6 +55,16 @@
   ======================================================== -->
 </head>
 
+<style>
+  .delete-btn {
+    color: red;
+    font-weight: bold;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+</style>
+
 <body>
 
 <!-- 탈퇴 모달 창 -->
@@ -92,7 +102,7 @@
     <i class="bi bi-list toggle-sidebar-btn"></i>
   </div>
   <div class="header-hr-right">
-    <a href="/my-info?member_seq=${userSeq}" style="margin-right: 20px">
+    <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
       ${nickname}
         <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
     </a>
@@ -111,7 +121,7 @@
       </a>
       <ul id="tables-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
         <li>
-          <a href="/admin-member-management" class="active">
+          <a href="/admin-user-management" class="active">
             <i class="bi bi-circle"></i><span>체험단</span>
           </a>
         </li>
@@ -156,14 +166,14 @@
             <table class="table">
               <thead>
               <tr>
-                <th>유형</th>
                 <th>닉네임</th>
                 <th>아이디</th>
                 <th>가입일자</th>
+                <th>노쇼횟수</th>
                 <th>탈퇴</th>
               </tr>
               </thead>
-              <tbody id="memberList"></tbody>
+              <tbody id="userList"></tbody>
             </table>
           </div>
         </div>
@@ -172,43 +182,44 @@
   </section>
 
   <div class="d-flex justify-content-center">
-    <button class="btn btn-primary" id="loadMoreBtn" data-previous-member-seq="0">더보기</button>
+    <button class="btn btn-primary" id="loadMoreBtn" data-previous-user-seq="0">더보기</button>
   </div>
 
 </main>
 
 <script>
   $(document).ready(function() {
-    var currentSearchWord = '';
+    let currentSearchWord = '';
 
     loadInitialData();
 
     $('#searchBtn').click(function() {
       currentSearchWord = $('#searchWord').val();
-      $('#memberList').empty();
+      $('#userList').empty();
       loadInitialData(currentSearchWord);
     });
 
     $('#loadMoreBtn').click(function () {
-      var previousMemberSeq = $(this).data('previous-member-seq');
-      loadMoreData(previousMemberSeq, currentSearchWord);
+      let previousUserSeq = $(this).data('previous-user-seq');
+      loadMoreData(previousUserSeq, currentSearchWord);
     });
 
     function loadInitialData(searchWord = '') {
-      var apiUrl = searchWord ? "/admin-member-search" : "/admin-member-management";
+      let apiUrl = searchWord ? "/admin-user-search" : "/api/admin/customer/list";
       $.ajax({
         method: "POST",
         url: apiUrl,
         data: {
-          searchWord: searchWord
+          previous_user_seq: null,
+          search_word: searchWord,
         },
         dataType: "json",
         success: function (response) {
-          $('#memberList').empty();
+          $('#userList').empty();
           renderData(response.data);
           if (response.hasMore) {
-            $('#loadMoreBtn').data('previous-member-seq',
-                    response.data[response.data.length - 1].memberSeq).show();
+            $('#loadMoreBtn').data('previous-user-seq',
+                    response.data[response.data.length - 1].seq).show();
           } else {
             $('#loadMoreBtn').hide();
           }
@@ -219,13 +230,13 @@
       });
     }
 
-    function loadMoreData(previousMemberSeq, searchWord = '') {
-      var apiUrl = searchWord ? "/admin-member-search" : "/admin-member-management";
+    function loadMoreData(previousUserSeq, searchWord = '') {
+      let apiUrl = searchWord ? "/admin-user-search" : "/api/admin/customer/list";
       $.ajax({
         method: "POST",
         url: apiUrl,
         data: {
-          previousMemberSeq: previousMemberSeq,
+          previous_user_seq: previousUserSeq,
           searchWord: searchWord
         },
         dataType: "json",
@@ -233,8 +244,8 @@
           if (response.data.length > 0) {
             renderData(response.data);
             if (response.hasMore) {
-              $('#loadMoreBtn').data('previous-member-seq',
-                      response.data[response.data.length - 1].memberSeq).show();
+              $('#loadMoreBtn').data('previous-user-seq',
+                      response.data[response.data.length - 1].seq).show();
             } else {
               $('#loadMoreBtn').hide();
             }
@@ -249,39 +260,39 @@
     }
 
     function renderData(data) {
-      var htmlStr = "";
-      $.map(data, function (member) {
-        var formattedCreatedAt = dayjs(member["createdAt"]).format('YYYY-MM-DD HH:mm');
+      let htmlStr = "";
+      $.map(data, function (user) {
+        let formattedCreatedAt = dayjs(user["createdAt"]).format('YYYY-MM-DD HH:mm');
 
         htmlStr += "<tr>";
-        htmlStr += "<td>" + member["gubun"] + "</td>";
-        htmlStr += "<td>" + member["nickname"] + "</td>";
-        htmlStr += "<td><a href='/brand-page?member_seq=" + member["memberSeq"] + "'>" + member["id"] + "</a></td>";
+        htmlStr += "<td>" + user["nickname"] + "</td>";
+        htmlStr += "<td><a href='/brand-page?user_seq=" + user["seq"] + "'>" + user["email"] + "</a></td>";
         htmlStr += "<td>" + formattedCreatedAt + "</td>";
-        htmlStr += "<td><button class='btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#deleteModal' data-id='" + member["id"] + "' data-seq='" + member["memberSeq"] + "'>x</button></td>";
+        htmlStr += "<td>" + "0" + "</td>";
+        htmlStr += "<td><button class='btn btn-danger btn-sm delete-btn' data-bs-toggle='modal' data-bs-target='#deleteModal' data-id='" + user["email"] + "' data-seq='" + user["seq"] + "'>X</button></td>";
         htmlStr += "</tr>";
       });
-      $('#memberList').append(htmlStr);
+      $('#userList').append(htmlStr);
     }
 
   });
 
-  var deleteModal = document.getElementById('deleteModal');
+  let deleteModal = document.getElementById('deleteModal');
   deleteModal.addEventListener('show.bs.modal', function (event) {
-    var button = event.relatedTarget;
-    var deleteMemberId = button.getAttribute('data-id');
-    var deleteMemberSeq = button.getAttribute('data-seq');
-    var modalTitle = deleteModal.querySelector('.modal-title');
-    var modalBodyInput = deleteModal.querySelector('.modal-body input');
+    let button = event.relatedTarget;
+    let deleteMemberId = button.getAttribute('data-id');
+    let deleteMemberSeq = button.getAttribute('data-seq');
+    let modalTitle = deleteModal.querySelector('.modal-title');
+    let modalBodyInput = deleteModal.querySelector('.modal-body input');
 
     modalTitle.textContent = '정말 탈퇴시킬까요? (ID: ' + deleteMemberId + ')';
     modalBodyInput.value = '';
 
     document.getElementById('deleteForm').onsubmit = function(event) {
       event.preventDefault();
-      var adminVerificationPW = modalBodyInput.value;
+      let adminVerificationPW = modalBodyInput.value;
 
-      fetch('/admin-member-delete', {
+      fetch('/admin-user-delete', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -293,13 +304,13 @@
           return response.text().then(data => {
             console.log(data);
             alert('정상적으로 탈퇴 처리 되었습니다.');
-            var modal = bootstrap.Modal.getInstance(deleteModal);
+            let modal = bootstrap.Modal.getInstance(deleteModal);
             modal.hide();
             location.reload();
           });
         } else if (response.status === 401) {
           modalBodyInput.classList.add('is-invalid');
-          var invalidFeedback = deleteModal.querySelector('.invalid-feedback');
+          let invalidFeedback = deleteModal.querySelector('.invalid-feedback');
           if (!invalidFeedback) {
             invalidFeedback = document.createElement('div');
             invalidFeedback.classList.add('invalid-feedback');
