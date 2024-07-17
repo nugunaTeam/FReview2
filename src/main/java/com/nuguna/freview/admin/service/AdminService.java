@@ -11,4 +11,5 @@ public interface AdminService {
     List<CustomerListDTO> getCustomerList(CustomerListRequestDTO dto);
     boolean isPasswordValid(Long adminSeq, String password);
     boolean deleteUser(Long userSeq);
+    void deleteCustomer(Long adminSeq, String adminVerificationPW, Long deleteUserSeq);
 }

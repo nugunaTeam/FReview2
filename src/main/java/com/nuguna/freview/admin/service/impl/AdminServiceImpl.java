@@ -38,4 +38,14 @@ public class AdminServiceImpl implements AdminService {
   public boolean deleteUser(Long userSeq) {
     return adminMapper.deleteUser(userSeq) > 0;
   }
+
+  @Override
+  public void deleteCustomer(Long adminSeq, String adminVerificationPW, Long deleteUserSeq) {
+    if (!isPasswordValid(adminSeq, adminVerificationPW)) {
+      throw new IllegalArgumentException("[ERROR] 입력한 비밀번호는 올바르지 않습니다.");
+    }
+    if (!deleteUser(deleteUserSeq)) {
+      throw new IllegalStateException("[ERROR] 유저 삭제에 실패하였습니다.");
+    }
+  }
 }
