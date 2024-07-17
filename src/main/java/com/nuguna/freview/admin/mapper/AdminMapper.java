@@ -13,4 +13,5 @@ public interface AdminMapper {
   AdminVO selectAdmin(Long userSeq);
   List<CustomerListDTO> selectCustomerList(CustomerListRequestDTO dto);
   int selectMatchingAdmin(@Param("adminSeq") Long userSeq, @Param("password")String password);
+  int deleteUser(Long userSeq);
 }

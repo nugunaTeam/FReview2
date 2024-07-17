@@ -56,4 +56,11 @@
     where seq = #{adminSeq} and password = #{password}
   </select>
 
+  <!-- 유저 삭제 -->
+  <delete id="deleteUser" parameterType="Long">
+    delete
+    from user
+    where seq = #{userSeq}
+  </delete>
+
 </mapper>
