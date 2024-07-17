@@ -4,4 +4,17 @@
 
 <mapper namespace="com.nuguna.freview.customer.mapper.CustomerBrandMapper">
 
+  <select id="checkNicknameExist" resultType="Boolean">
+    select count(1) > 0
+    from user
+    where nickname = #{toNickname}
+      and seq != #{userSeq}
+  </select>
+
+  <update id="updateNickname">
+    update user
+    set nickname = #{toNickname}
+    where seq = #{userSeq}
+  </update>
+
 </mapper>

@@ -18,6 +18,7 @@ import com.nuguna.freview.customer.service.CustomerBrandService;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +41,9 @@ public class CustomerMyBrandInfoApiController {
   public ResponseEntity<CustomerNicknameUpdateResponseDTO> updateCustomerNickname(
       @Valid @RequestBody CustomerNicknameUpdateRequestDTO customerNicknameUpdateRequestDTO
   ) {
-    return null;
+    CustomerNicknameUpdateResponseDTO responseDTO = customerBrandService.updateCustomerNickname(
+        customerNicknameUpdateRequestDTO);
+    return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
   @RequestMapping(value = "/age-group", method = RequestMethod.PUT)
