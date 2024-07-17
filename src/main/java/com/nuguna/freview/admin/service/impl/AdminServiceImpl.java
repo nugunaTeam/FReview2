@@ -28,4 +28,9 @@ public class AdminServiceImpl implements AdminService {
   public List<CustomerListDTO> getCustomerList(CustomerListRequestDTO dto) {
     return adminMapper.selectCustomerList(dto);
   }
+
+  @Override
+  public boolean isPasswordValid(Long adminSeq, String password) {
+    return adminMapper.selectMatchingAdmin(adminSeq, password) > 0;
+  }
 }

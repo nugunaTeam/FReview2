@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface AdminService {
 
-    public AdminVO getAdminById(Long userSeq);
-    public List<CustomerListDTO> getCustomerList(CustomerListRequestDTO dto);
-
+    AdminVO getAdminById(Long userSeq);
+    List<CustomerListDTO> getCustomerList(CustomerListRequestDTO dto);
+    boolean isPasswordValid(Long adminSeq, String password);
 }
