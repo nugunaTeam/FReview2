@@ -104,7 +104,7 @@
   <div class="header-hr-right">
     <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
       ${nickname}
-        <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
+      <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
     </a>
     <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
   </div>
@@ -299,12 +299,15 @@
       event.preventDefault();
       let adminVerificationPW = modalBodyInput.value;
 
-      fetch('/admin-user-delete', {
+      fetch('/api/admin/customer/delete', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Content-Type': 'application/json'
         },
-        body: 'deleteMemberSeq=' + encodeURIComponent(deleteMemberSeq) + '&adminVerificationPW=' + encodeURIComponent(adminVerificationPW)
+        body: JSON.stringify({
+          deleteMemberSeq: deleteMemberSeq,
+          adminVerificationPW: adminVerificationPW
+        })
       })
       .then(response => {
         if (response.status === 200) {
