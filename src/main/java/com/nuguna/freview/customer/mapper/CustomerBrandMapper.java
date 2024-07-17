@@ -11,4 +11,6 @@ public interface CustomerBrandMapper {
 
   void updateNickname(@Param("userSeq") Long userSeq, @Param("toNickname") String toNickname);
 
+  void updateAgeGroup(@Param("userSeq") Long userSeq, @Param("toAgeGroup") String toAgeGroup);
+
 }

@@ -48,7 +48,10 @@ public class CustomerBrandServiceImpl implements CustomerBrandService {
   @Override
   public CustomerAgeGroupUpdateResponseDTO updateCustomerAgeGroup(
       CustomerAgeGroupUpdateRequestDTO customerAgeGroupUpdateRequestDTO) {
-    return null;
+    Long userSeq = customerAgeGroupUpdateRequestDTO.getUserSeq();
+    String toAgeGroup = customerAgeGroupUpdateRequestDTO.getToAgeGroup();
+    customerBrandMapper.updateAgeGroup(userSeq, toAgeGroup);
+    return new CustomerAgeGroupUpdateResponseDTO(toAgeGroup);
   }
 
   @Override

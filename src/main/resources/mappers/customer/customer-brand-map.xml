@@ -17,4 +17,10 @@
     where seq = #{userSeq}
   </update>
 
+  <update id="updateAgeGroup">
+    update user
+    set age_group = #{toAgeGroup}
+    where seq = #{userSeq}
+  </update>
+
 </mapper>

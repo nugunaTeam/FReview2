@@ -50,7 +50,9 @@ public class CustomerMyBrandInfoApiController {
   public ResponseEntity<CustomerAgeGroupUpdateResponseDTO> updateCustomerAgeGroup(
       @Valid @RequestBody CustomerAgeGroupUpdateRequestDTO customerAgeGroupUpdateRequestDTO
   ) {
-    return null;
+    CustomerAgeGroupUpdateResponseDTO responseDTO = customerBrandService.updateCustomerAgeGroup(
+        customerAgeGroupUpdateRequestDTO);
+    return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
   @RequestMapping(value = "/profile-photo-url", method = RequestMethod.PUT)
