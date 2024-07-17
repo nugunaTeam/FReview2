@@ -27,23 +27,22 @@ public class AuthApiController {
 
 
   @RequestMapping(value = "/api/auth/checkid", method = RequestMethod.POST)
-  public int checkDuplicatedId(@Valid @RequestBody RegisterCheckIdRequestDTO registerCheckIdRequestDTO) {
+  public ResponseEntity<RegisterCheckIdResponseDTO> checkDuplicatedId(@Valid @RequestBody RegisterCheckIdRequestDTO registerCheckIdRequestDTO) {
     log.info("아이디 중복 확인");
     log.info(registerCheckIdRequestDTO.getEmail());
-    int result = registerService.checkDuplicatedEmail(registerCheckIdRequestDTO);
+    boolean result = registerService.checkDuplicatedEmail(registerCheckIdRequestDTO);
     log.info("이메일 중복 결과 "+result);
-    RegisterCheckIdResponseDTO registerCheckIdResponseDTO = new RegisterCheckIdResponseDTO("사용가능한 아이디입니다");
 
-    return result;
+    RegisterCheckIdResponseDTO registerCheckIdResponseDTO = new RegisterCheckIdResponseDTO(result);
+
+    return new ResponseEntity<>(registerCheckIdResponseDTO,HttpStatus.OK);
   }
 
   @RequestMapping(value = "/api/auth/sendEmail", method = RequestMethod.POST)
-  public void checkDuplicatedId(@Valid @RequestBody RegisterCheckIdRequestDTO registerCheckIdRequestDTO) {
+  public void sendEmail(@Valid @RequestBody RegisterCheckIdRequestDTO registerCheckIdRequestDTO) {
     log.info("아이디 중복 확인");
     log.info(registerCheckIdRequestDTO.getEmail());
-    int result = registerService.checkDuplicatedEmail(registerCheckIdRequestDTO);
-    log.info("이메일 중복 결과 "+result);
-    RegisterCheckIdResponseDTO registerCheckIdResponseDTO = new RegisterCheckIdResponseDTO("사용가능한 아이디입니다");
+
 
 
   }

@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class RegisterCheckIdResponseDTO {
-  private String message;
+  private boolean checkDuplicatedId;
 }

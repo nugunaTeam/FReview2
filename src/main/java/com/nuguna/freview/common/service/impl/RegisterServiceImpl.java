@@ -18,13 +18,16 @@ public class RegisterServiceImpl implements RegisterService {
   RegisterServiceImpl(RegisterMapper registerMapper){this.registerMapper = registerMapper;}
 
   @Override
-  public int checkDuplicatedEmail(RegisterCheckIdRequestDTO registerCheckIdRequestDTO) {
-    int result = 0;
+  public boolean checkDuplicatedEmail(RegisterCheckIdRequestDTO registerCheckIdRequestDTO) {
+    int checkRow = 0;
+    boolean result = false;
     String email = registerCheckIdRequestDTO.getEmail();
     log.info(email);
-    result = registerMapper.getDuplicatedEmail(email);
+    checkRow = registerMapper.getDuplicatedEmail(email);
+    if(checkRow == 0)
+      result = true;
     log.info("서비스 결과 "+result);
-    System.out.println("아이디 확인 서비스 결과:"+result);
+
 
     return result;
   }

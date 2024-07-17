@@ -22,9 +22,9 @@ $(function(){
       data: JSON.stringify({ email: inputID }),
       error: function(myval){console.log("에러"+myval)},
       success: function(myval){
-        console.log("성공"+myval);
+        console.log("성공"+myval.checkDuplicatedId);
 
-        if (myval == 1) {
+        if (!myval.checkDuplicatedId) {
           $("#COMM_register_IDdeny").removeClass("remove");
           $("#COMM_register_IDavail").addClass("remove");
           $("#Input_ID").val("");
@@ -32,7 +32,7 @@ $(function(){
           $("#COMM_register_IDdeny").addClass("remove");
           $("#COMM_register_IDavail").removeClass("remove");
           COMM_register_idCheck = true;
-        }
+       }
 
       }
     })
