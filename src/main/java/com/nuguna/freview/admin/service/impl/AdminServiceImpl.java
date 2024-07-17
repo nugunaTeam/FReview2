@@ -30,6 +30,11 @@ public class AdminServiceImpl implements AdminService {
   }
 
   @Override
+  public List<CustomerListDTO> getSearchedCustomerList(Long previousUserSeq, String searchWord, Integer limit) {
+    return adminMapper.searchCustomer(previousUserSeq, searchWord, limit);
+  }
+
+  @Override
   public boolean isPasswordValid(Long adminSeq, String password) {
     return adminMapper.selectMatchingAdmin(adminSeq, password) > 0;
   }
