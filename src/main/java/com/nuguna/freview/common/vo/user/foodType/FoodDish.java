@@ -9,7 +9,7 @@ import lombok.ToString;
 @RequiredArgsConstructor
 public enum FoodDish {
   GUKBAB("국밥", FoodType.KOREAN),
-  TONKATSU("돈까스", FoodType.WESTERN),
+  TONKATSU("돈까스", FoodType.KOREAN),
   JOKBAL("족발", FoodType.KOREAN),
   MAKCHANG("막창", FoodType.KOREAN),
   PIZZA("피자", FoodType.WESTERN),
@@ -20,17 +20,18 @@ public enum FoodDish {
   JJAJANGMYEON("짜장면", FoodType.CHINESE),
   JJAMPPONG("짬뽕", FoodType.CHINESE),
   TANGSOOYOOK("탕수육", FoodType.CHINESE),
-  TTEOKBOKKI("떡볶이", FoodType.KOREAN),
+  TENDON("텐동", FoodType.JAPANESE),
+  SUSHI("초밥", FoodType.JAPANESE),
   GYUDON("규동", FoodType.JAPANESE),
   RAMEN("라멘", FoodType.JAPANESE),
   BREAD("빵", FoodType.BAKERY),
   CAKE("케이크", FoodType.BAKERY),
   COOKIE("쿠키", FoodType.BAKERY),
-  SANDWICH("샌드위치", FoodType.WESTERN),
-  COFFEE("커피", FoodType.BAKERY),
-  CURRY("커리", FoodType.JAPANESE),
-  RICE_NOODLES("쌀국수", FoodType.WESTERN),
-  OTHER("기타", FoodType.WESTERN);
+  SANDWICH("샌드위치", FoodType.BAKERY),
+  COFFEE("커피", FoodType.OTHER),
+  CURRY("커리", FoodType.OTHER),
+  RICE_NOODLES("쌀국수", FoodType.OTHER),
+  OTHER("기타", FoodType.OTHER);
 
   private final String code;
   private final FoodType foodType;

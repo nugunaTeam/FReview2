@@ -13,7 +13,8 @@ public enum FoodType {
   CHINESE("중식"),
   WESTERN("양식"),
   JAPANESE("일식"),
-  BAKERY("베이커리");
+  BAKERY("베이커리"),
+  OTHER("기타");
 
   private final String code;
 
