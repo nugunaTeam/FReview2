@@ -1,6 +1,5 @@
 package com.nuguna.freview.admin.service.impl;
 
-import com.nuguna.freview.admin.dto.request.CustomerListRequestDTO;
 import com.nuguna.freview.admin.dto.response.CustomerListDTO;
 import com.nuguna.freview.admin.mapper.AdminMapper;
 import com.nuguna.freview.admin.service.AdminService;
@@ -25,13 +24,12 @@ public class AdminServiceImpl implements AdminService {
   }
 
   @Override
-  public List<CustomerListDTO> getCustomerList(CustomerListRequestDTO dto) {
-    return adminMapper.selectCustomerList(dto);
-  }
-
-  @Override
-  public List<CustomerListDTO> getSearchedCustomerList(Long previousUserSeq, String searchWord, Integer limit) {
-    return adminMapper.searchCustomer(previousUserSeq, searchWord, limit);
+  public List<CustomerListDTO> getCustomerList(Long previousUserSeq, String searchWord, Integer pageSize) {
+    if (searchWord == null) {
+      return adminMapper.selectCustomerList(previousUserSeq, pageSize);
+    } else {
+      return adminMapper.searchCustomer(previousUserSeq, searchWord, pageSize);
+    }
   }
 
   @Override
