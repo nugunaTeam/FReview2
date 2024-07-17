@@ -68,7 +68,9 @@ public class CustomerMyBrandInfoApiController {
   public ResponseEntity<CustomerIntroduceUpdateResponseDTO> updateCustomerIntroduce(
       @Valid @RequestBody CustomerIntroduceUpdateRequestDTO customerIntroduceUpdateRequestDTO
   ) {
-    return null;
+    CustomerIntroduceUpdateResponseDTO responseDTO = customerBrandService.updateCustomerIntroduce(
+        customerIntroduceUpdateRequestDTO);
+    return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
   @RequestMapping(value = "/tags", method = RequestMethod.PUT)

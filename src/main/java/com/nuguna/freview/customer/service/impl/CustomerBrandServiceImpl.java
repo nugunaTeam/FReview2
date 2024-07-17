@@ -66,7 +66,10 @@ public class CustomerBrandServiceImpl implements CustomerBrandService {
   @Override
   public CustomerIntroduceUpdateResponseDTO updateCustomerIntroduce(
       CustomerIntroduceUpdateRequestDTO customerIntroduceUpdateRequestDTO) {
-    return null;
+    Long userSeq = customerIntroduceUpdateRequestDTO.getUserSeq();
+    String toIntroduce = customerIntroduceUpdateRequestDTO.getToIntroduce();
+    customerBrandMapper.updateIntroduce(userSeq, toIntroduce);
+    return new CustomerIntroduceUpdateResponseDTO(toIntroduce);
   }
 
   @Override

@@ -16,5 +16,7 @@ public interface CustomerBrandMapper {
   void updateProfilePhotoUrl(@Param("userSeq") Long userSeq,
       @Param("toProfilePhotoUrl") String toProfilePhotoUrl);
 
+  void updateIntroduce(@Param("userSeq") Long userSeq,
+      @Param("toIntroduce") String toIntroduce);
 
 }
