@@ -287,12 +287,12 @@
   let deleteModal = document.getElementById('deleteModal');
   deleteModal.addEventListener('show.bs.modal', function (event) {
     let button = event.relatedTarget;
-    let deleteMemberId = button.getAttribute('data-id');
-    let deleteMemberSeq = button.getAttribute('data-seq');
+    let deleteUserEmail = button.getAttribute('data-id');
+    let deleteUserSeq = button.getAttribute('data-seq');
     let modalTitle = deleteModal.querySelector('.modal-title');
     let modalBodyInput = deleteModal.querySelector('.modal-body input');
 
-    modalTitle.textContent = '정말 탈퇴시킬까요? (ID: ' + deleteMemberId + ')';
+    modalTitle.textContent = '정말 탈퇴시킬까요? (ID: ' + deleteUserEmail + ')';
     modalBodyInput.value = '';
 
     document.getElementById('deleteForm').onsubmit = function(event) {
@@ -305,8 +305,9 @@
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          deleteMemberSeq: deleteMemberSeq,
-          adminVerificationPW: adminVerificationPW
+          deleteUserSeq: deleteUserSeq,
+          adminVerificationPW: adminVerificationPW,
+          adminSeq: ${userSeq}
         })
       })
       .then(response => {
