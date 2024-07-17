@@ -28,11 +28,30 @@
     set age_group = #{toAgeGroup}
     where seq = #{userSeq}
   </update>
-  
+
   <update id="updateIntroduce">
     update user
     set introduce = #{toIntroduce}
     where seq = #{userSeq}
   </update>
+
+  <delete id="deleteFoodTypesByUserSeq">
+    delete
+    from user_food_type
+    where user_seq = #{userSeq}
+  </delete>
+
+  <insert id="insertFoodTypes">
+    INSERT INTO user_food_type (user_seq, food_type_seq)
+    SELECT
+    #{userSeq}, seq
+    FROM
+    FOOD_TYPE
+    WHERE
+    dish IN
+    <foreach item="item" index="index" collection="toFoodTypes" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </insert>
 
 </mapper>

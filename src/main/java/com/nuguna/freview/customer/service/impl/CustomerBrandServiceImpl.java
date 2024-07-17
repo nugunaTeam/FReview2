@@ -17,6 +17,7 @@ import com.nuguna.freview.customer.dto.response.CustomerTagsUpdateResponseDTO;
 import com.nuguna.freview.customer.exception.AlreadyExistNicknameException;
 import com.nuguna.freview.customer.mapper.CustomerBrandMapper;
 import com.nuguna.freview.customer.service.CustomerBrandService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,7 +76,11 @@ public class CustomerBrandServiceImpl implements CustomerBrandService {
   @Override
   public CustomerFoodTypesUpdateResponseDTO updateCustomerFoodTypes(
       CustomerFoodTypesUpdateRequestDTO customerFoodTypesUpdateRequestDTO) {
-    return null;
+    Long userSeq = customerFoodTypesUpdateRequestDTO.getUserSeq();
+    List<String> toFoodTypes = customerFoodTypesUpdateRequestDTO.getToFoodTypes();
+    customerBrandMapper.deleteFoodTypesByUserSeq(userSeq);
+    customerBrandMapper.insertFoodTypes(userSeq, toFoodTypes);
+    return new CustomerFoodTypesUpdateResponseDTO(toFoodTypes);
   }
 
   @Override

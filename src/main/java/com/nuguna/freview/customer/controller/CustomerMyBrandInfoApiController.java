@@ -73,16 +73,18 @@ public class CustomerMyBrandInfoApiController {
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
-  @RequestMapping(value = "/tags", method = RequestMethod.PUT)
-  public ResponseEntity<CustomerTagsUpdateResponseDTO> updateCustomerTags(
-      @Valid @RequestBody CustomerTagsUpdateRequestDTO customerTagsUpdateRequestDTO
-  ) {
-    return null;
-  }
-
   @RequestMapping(value = "/food-types", method = RequestMethod.PUT)
   public ResponseEntity<CustomerFoodTypesUpdateResponseDTO> updateCustomerFoodTypes(
       @Valid @RequestBody CustomerFoodTypesUpdateRequestDTO customerFoodTypesUpdateRequestDTO
+  ) {
+    CustomerFoodTypesUpdateResponseDTO responseDTO = customerBrandService.updateCustomerFoodTypes(
+        customerFoodTypesUpdateRequestDTO);
+    return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+  }
+
+  @RequestMapping(value = "/tags", method = RequestMethod.PUT)
+  public ResponseEntity<CustomerTagsUpdateResponseDTO> updateCustomerTags(
+      @Valid @RequestBody CustomerTagsUpdateRequestDTO customerTagsUpdateRequestDTO
   ) {
     return null;
   }
