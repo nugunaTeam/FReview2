@@ -2,10 +2,11 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<c:set var="loginUser" value="${requestScope.loginUser}"/>
-<c:set var="memberSeq" value="${loginUser.memberSeq}"/>
-<c:set var="nickname" value="${loginUser.nickname}"/>
-<c:set var="gubun" value="${loginUser.gubun}"/>
+<c:set var ="loginUser" value="${loginUser}"/>
+<c:set var ="userSeq" value="${loginUser.seq}"/>
+<c:set var ="nickname" value="${loginUser.nickname}"/>
+<c:set var ="profileUrl" value="${loginUser.profilePhotoUrl}" />
+<c:set var ="code" value="${loginUser.code}"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -54,6 +55,16 @@
   ======================================================== -->
 </head>
 
+<style>
+  .delete-btn {
+    color: red;
+    font-weight: bold;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+</style>
+
 <body>
 
 <!-- 탈퇴 모달 창 -->
@@ -82,7 +93,7 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center header-hr">
   <div class="d-flex align-items-center justify-content-between ">
-    <a href="/main?seq=${memberSeq}&pagecode=Requester"
+    <a href="/main?seq=${userSeq}&pagecode=Requester"
        class="logo d-flex align-items-center">
       <img src="assets/img/logo/logo-vertical.png" alt=""
            style="  width: 50px; margin-top: 20px;">
@@ -91,12 +102,9 @@
     <i class="bi bi-list toggle-sidebar-btn"></i>
   </div>
   <div class="header-hr-right">
-    <a href="/my-info?member_seq=${memberSeq}" style="margin-right: 20px">
+    <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
       ${nickname}
-      <img src="assets/img/basic/basic-profile-img.png" alt=" " style="width: 30px;
-                margin-top: 15px;">
-      <%--            <img src="<%=profileURL()%>" alt=" " style="width: 30px;--%>
-      <%--    margin-top: 15px;"> TODO: 세션의 프로필 url을 적용할 것--%>
+        <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
     </a>
     <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
   </div>
@@ -113,8 +121,8 @@
       </a>
       <ul id="tables-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
         <li>
-          <a href="/admin-member-management" class="active">
-            <i class="bi bi-circle"></i><span>멤버</span>
+          <a href="/admin-user-management" class="active">
+            <i class="bi bi-circle"></i><span>체험단</span>
           </a>
         </li>
         <li>
@@ -138,7 +146,7 @@
 <main id="main" class="main">
 
   <div class="pagetitle">
-    <h1>멤버 관리</h1>
+    <h1>체험단 관리</h1>
   </div>
 
   <section class="section">
@@ -147,8 +155,8 @@
 
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">멤버 리스트</h5>
-            <p>가입한 멤버 리스트입니다. <br>아이디를 클릭하면 해당 멤버의 브랜딩 페이지로 이동할 수 있습니다.</p>
+            <h5 class="card-title">체험단 리스트</h5>
+            <p>가입한 체험단 리스트입니다. <br>아이디를 클릭하면 해당 유저의 브랜딩 페이지로 이동할 수 있습니다.</p>
 
             <div>
               <input type="text" name="searchWord" id="searchWord" placeholder="원하는 키워드로 검색하세요!">
@@ -158,14 +166,14 @@
             <table class="table">
               <thead>
               <tr>
-                <th>유형</th>
                 <th>닉네임</th>
                 <th>아이디</th>
                 <th>가입일자</th>
+                <th>노쇼횟수</th>
                 <th>탈퇴</th>
               </tr>
               </thead>
-              <tbody id="memberList"></tbody>
+              <tbody id="userList"></tbody>
             </table>
           </div>
         </div>
@@ -174,43 +182,47 @@
   </section>
 
   <div class="d-flex justify-content-center">
-    <button class="btn btn-primary" id="loadMoreBtn" data-previous-member-seq="0">더보기</button>
+    <button class="btn btn-primary" id="loadMoreBtn" data-previous-user-seq="0">더보기</button>
   </div>
 
 </main>
 
 <script>
   $(document).ready(function() {
-    var currentSearchWord = '';
+    let currentSearchWord = '';
 
     loadInitialData();
 
     $('#searchBtn').click(function() {
       currentSearchWord = $('#searchWord').val();
-      $('#memberList').empty();
+      $('#userList').empty();
       loadInitialData(currentSearchWord);
     });
 
     $('#loadMoreBtn').click(function () {
-      var previousMemberSeq = $(this).data('previous-member-seq');
-      loadMoreData(previousMemberSeq, currentSearchWord);
+      let previousUserSeq = $(this).data('previous-user-seq');
+      loadMoreData(previousUserSeq, currentSearchWord);
     });
 
     function loadInitialData(searchWord = '') {
-      var apiUrl = searchWord ? "/admin-member-search" : "/admin-member-management";
+      let apiUrl = searchWord ? "/admin-user-search" : "/api/admin/customer/list";
       $.ajax({
         method: "POST",
         url: apiUrl,
         data: {
-          searchWord: searchWord
+          previous_user_seq: null,
+          search_word: searchWord,
         },
         dataType: "json",
         success: function (response) {
-          $('#memberList').empty();
-          renderData(response.data);
+          $('#userList').empty();
+          renderData(response.customerList
+          );
           if (response.hasMore) {
-            $('#loadMoreBtn').data('previous-member-seq',
-                    response.data[response.data.length - 1].memberSeq).show();
+            $('#loadMoreBtn').data('previous-user-seq',
+                    response.customerList
+                            [response.customerList
+                            .length - 1].seq).show();
           } else {
             $('#loadMoreBtn').hide();
           }
@@ -221,22 +233,26 @@
       });
     }
 
-    function loadMoreData(previousMemberSeq, searchWord = '') {
-      var apiUrl = searchWord ? "/admin-member-search" : "/admin-member-management";
+    function loadMoreData(previousUserSeq, searchWord = '') {
+      let apiUrl = searchWord ? "/admin-user-search" : "/api/admin/customer/list";
       $.ajax({
         method: "POST",
         url: apiUrl,
         data: {
-          previousMemberSeq: previousMemberSeq,
+          previous_user_seq: previousUserSeq,
           searchWord: searchWord
         },
         dataType: "json",
         success: function (response) {
-          if (response.data.length > 0) {
-            renderData(response.data);
+          if (response.customerList
+                  .length > 0) {
+            renderData(response.customerList
+            );
             if (response.hasMore) {
-              $('#loadMoreBtn').data('previous-member-seq',
-                      response.data[response.data.length - 1].memberSeq).show();
+              $('#loadMoreBtn').data('previous-user-seq',
+                      response.customerList
+                              [response.customerList
+                              .length - 1].seq).show();
             } else {
               $('#loadMoreBtn').hide();
             }
@@ -251,39 +267,39 @@
     }
 
     function renderData(data) {
-      var htmlStr = "";
-      $.map(data, function (member) {
-        var formattedCreatedAt = dayjs(member["createdAt"]).format('YYYY-MM-DD HH:mm');
+      let htmlStr = "";
+      $.map(data, function (user) {
+        let formattedCreatedAt = dayjs(user["createdAt"]).format('YYYY-MM-DD HH:mm');
 
         htmlStr += "<tr>";
-        htmlStr += "<td>" + member["gubun"] + "</td>";
-        htmlStr += "<td>" + member["nickname"] + "</td>";
-        htmlStr += "<td><a href='/brand-page?member_seq=" + member["memberSeq"] + "'>" + member["id"] + "</a></td>";
+        htmlStr += "<td>" + user["nickname"] + "</td>";
+        htmlStr += "<td><a href='/brand-page?user_seq=" + user["seq"] + "'>" + user["email"] + "</a></td>";
         htmlStr += "<td>" + formattedCreatedAt + "</td>";
-        htmlStr += "<td><button class='btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#deleteModal' data-id='" + member["id"] + "' data-seq='" + member["memberSeq"] + "'>x</button></td>";
+        htmlStr += "<td>" + "0" + "</td>";
+        htmlStr += "<td><button class='btn btn-danger btn-sm delete-btn' data-bs-toggle='modal' data-bs-target='#deleteModal' data-id='" + user["email"] + "' data-seq='" + user["seq"] + "'>X</button></td>";
         htmlStr += "</tr>";
       });
-      $('#memberList').append(htmlStr);
+      $('#userList').append(htmlStr);
     }
 
   });
 
-  var deleteModal = document.getElementById('deleteModal');
+  let deleteModal = document.getElementById('deleteModal');
   deleteModal.addEventListener('show.bs.modal', function (event) {
-    var button = event.relatedTarget;
-    var deleteMemberId = button.getAttribute('data-id');
-    var deleteMemberSeq = button.getAttribute('data-seq');
-    var modalTitle = deleteModal.querySelector('.modal-title');
-    var modalBodyInput = deleteModal.querySelector('.modal-body input');
+    let button = event.relatedTarget;
+    let deleteMemberId = button.getAttribute('data-id');
+    let deleteMemberSeq = button.getAttribute('data-seq');
+    let modalTitle = deleteModal.querySelector('.modal-title');
+    let modalBodyInput = deleteModal.querySelector('.modal-body input');
 
     modalTitle.textContent = '정말 탈퇴시킬까요? (ID: ' + deleteMemberId + ')';
     modalBodyInput.value = '';
 
     document.getElementById('deleteForm').onsubmit = function(event) {
       event.preventDefault();
-      var adminVerificationPW = modalBodyInput.value;
+      let adminVerificationPW = modalBodyInput.value;
 
-      fetch('/admin-member-delete', {
+      fetch('/admin-user-delete', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -295,13 +311,13 @@
           return response.text().then(data => {
             console.log(data);
             alert('정상적으로 탈퇴 처리 되었습니다.');
-            var modal = bootstrap.Modal.getInstance(deleteModal);
+            let modal = bootstrap.Modal.getInstance(deleteModal);
             modal.hide();
             location.reload();
           });
         } else if (response.status === 401) {
           modalBodyInput.classList.add('is-invalid');
-          var invalidFeedback = deleteModal.querySelector('.invalid-feedback');
+          let invalidFeedback = deleteModal.querySelector('.invalid-feedback');
           if (!invalidFeedback) {
             invalidFeedback = document.createElement('div');
             invalidFeedback.classList.add('invalid-feedback');
