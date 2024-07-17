@@ -17,8 +17,9 @@ $(function(){
 
     $.ajax({
       method: "post",
-      url : "/auth?pagecode=checkID",
-      data : {"id" : inputID},
+      url : "/api/auth/checkid",
+      contentType: "application/json",
+      data: JSON.stringify({ email: inputID }),
       error: function(myval){console.log("에러"+myval)},
       success: function(myval){
         console.log("성공"+myval);
@@ -28,6 +29,7 @@ $(function(){
           $("#COMM_register_IDavail").addClass("remove");
           $("#Input_ID").val("");
         } else {
+          $("#COMM_register_IDdeny").addClass("remove");
           $("#COMM_register_IDavail").removeClass("remove");
           COMM_register_idCheck = true;
         }
