@@ -605,7 +605,6 @@
                             </div>
 
                             <script>
-
                               $(document).ready(function () {
                                 $('#tag-select').select2({
                                   width: '100%',
@@ -621,25 +620,40 @@
                                 function initializeTagSelect() {
                                   var tagSelect = $('#tag-select');
                                   tagSelect.val(selectedTags).trigger('change');
+                                  updateTagMessage();
+                                }
 
-                                  // Display message if selectedTags is empty
-                                  if (selectedTags.length === 0) {
-                                    $('#tag-select-message').text('아직 선택한 태그가 없어요.');
+                                function updateTagMessage() {
+                                  var selectedOptions = $('#tag-select').val();
+                                  var messageElement = $('#tag-select-message');
+
+                                  if (selectedOptions === null || selectedOptions.length === 0) {
+                                    messageElement.text('아직 선택한 태그가 없어요.');
                                   } else {
-                                    $('#tag-select-message').text('');
+                                    messageElement.text('');
                                   }
                                 }
 
                                 initializeTagSelect();
 
-                                $('#tag-select').on('select2:select', function (e) {
-                                  var selectedOptions = $(this).val();
-                                  if (selectedOptions.length > 2) {
-                                    var $element = $(e.params.data.element);
-                                    $element.prop("selected", false);
-                                    $(this).trigger('change');
-                                    alert('태그는 2개까지만 선택할 수 있습니다');
-                                  }
+                                $('#tag-select').on('select2:select',
+                                    function (e) {
+                                      var selectedOptions = $(this).val();
+                                      if (selectedOptions.length > 2) {
+                                        var $element = $(e.params.data.element);
+                                        $element.prop("selected", false);
+                                        $(this).trigger('change');
+                                        alert('태그는 2개까지만 선택할 수 있습니다');
+                                      } else {
+                                        updateTagMessage();
+                                      }
+                                    });
+
+                                $('#tag-select').on('change', function () {
+                                  $(this).find('option:selected').addClass('selected-option');
+                                  $(this).find('option:not(:selected)').removeClass(
+                                      'selected-option');
+                                  updateTagMessage();
                                 });
 
                                 $("#tag-update-btn").click(function () {
@@ -694,6 +708,7 @@
                                       });
                                       $('#tag-submit-btn, #tag-cancel-btn').hide();
                                       $('#tag-update-btn').show();
+                                      updateTagMessage();
                                     },
                                     error: function (err) {
                                       alert('태그 변경에 실패하였습니다.');
@@ -701,11 +716,7 @@
                                   });
                                 });
 
-                                $('#tag-select').on('change', function () {
-                                  $(this).find('option:selected').addClass('selected-option');
-                                  $(this).find('option:not(:selected)').removeClass(
-                                      'selected-option');
-                                });
+                                initializeTagSelect();
                               });
                             </script>
 </main><!-- End #main -->
