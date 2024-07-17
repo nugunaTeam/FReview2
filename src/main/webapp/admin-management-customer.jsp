@@ -216,10 +216,13 @@
         dataType: "json",
         success: function (response) {
           $('#userList').empty();
-          renderData(response.data);
+          renderData(response.customerList
+          );
           if (response.hasMore) {
             $('#loadMoreBtn').data('previous-user-seq',
-                    response.data[response.data.length - 1].seq).show();
+                    response.customerList
+                            [response.customerList
+                            .length - 1].seq).show();
           } else {
             $('#loadMoreBtn').hide();
           }
@@ -241,11 +244,15 @@
         },
         dataType: "json",
         success: function (response) {
-          if (response.data.length > 0) {
-            renderData(response.data);
+          if (response.customerList
+                  .length > 0) {
+            renderData(response.customerList
+            );
             if (response.hasMore) {
               $('#loadMoreBtn').data('previous-user-seq',
-                      response.data[response.data.length - 1].seq).show();
+                      response.customerList
+                              [response.customerList
+                              .length - 1].seq).show();
             } else {
               $('#loadMoreBtn').hide();
             }

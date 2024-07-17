@@ -27,7 +27,6 @@ public class AdminController {
   @RequestMapping(value = "/manage/customer", method = RequestMethod.GET)
   public String adminPage(@RequestParam("user_seq") Long userSeq, Model model) {
     AdminVO loginUser = adminService.getAdminById(userSeq);
-    model.addAttribute("loginUser", loginUser);
     UserCode currentCode = UserCode.from(loginUser.getCode());
 
     if (!currentCode.isAdmin()) {

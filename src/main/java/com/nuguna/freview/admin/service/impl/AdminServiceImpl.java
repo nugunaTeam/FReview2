@@ -1,7 +1,7 @@
 package com.nuguna.freview.admin.service.impl;
 
-import com.nuguna.freview.admin.dto.request.CustomerManageRequestDTO;
-import com.nuguna.freview.admin.dto.response.CustomerManageResponseDTO;
+import com.nuguna.freview.admin.dto.request.CustomerListRequestDTO;
+import com.nuguna.freview.admin.dto.response.CustomerListDTO;
 import com.nuguna.freview.admin.mapper.AdminMapper;
 import com.nuguna.freview.admin.service.AdminService;
 import com.nuguna.freview.admin.vo.AdminVO;
@@ -25,7 +25,7 @@ public class AdminServiceImpl implements AdminService {
   }
 
   @Override
-  public List<CustomerManageResponseDTO> getCustomerList(CustomerManageRequestDTO dto) {
+  public List<CustomerListDTO> getCustomerList(CustomerListRequestDTO dto) {
     return adminMapper.selectCustomerList(dto);
   }
 }

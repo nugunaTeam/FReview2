@@ -11,7 +11,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerManageRequestDTO {
+public class CustomerListRequestDTO {
 
   private Long previousUserSeq;
   private Integer limit;
