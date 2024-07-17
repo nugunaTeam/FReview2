@@ -205,10 +205,9 @@
     });
 
     function loadInitialData(searchWord = '') {
-      let apiUrl = searchWord ? "/api/admin/customer/search" : "/api/admin/customer/list";
       $.ajax({
         method: "POST",
-        url: apiUrl,
+        url: "/api/admin/customer/list",
         contentType: "application/json",
         data: JSON.stringify({
           previousUserSeq: null,
@@ -235,10 +234,9 @@
     }
 
     function loadMoreData(previousUserSeq, searchWord = '') {
-      let apiUrl = searchWord ? "/api/admin/customer/search" : "/api/admin/customer/list";
       $.ajax({
         method: "POST",
-        url: apiUrl,
+        url: "/api/admin/customer/list",
         contentType: "application/json",
         data: JSON.stringify({
           previousUserSeq: previousUserSeq,
