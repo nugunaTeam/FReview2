@@ -21,7 +21,7 @@ public enum UserCode {
         return g;
       }
     }
-    throw new IllegalArgumentException("유효하지 않은 MemberGubun 입력 : " + code);
+    throw new IllegalArgumentException("유효하지 않은 UserCode 입력 : " + code);
   }
 
   public boolean isAdmin() {
