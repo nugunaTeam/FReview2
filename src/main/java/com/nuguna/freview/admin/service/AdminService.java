@@ -10,4 +10,5 @@ public interface AdminService {
     AdminVO getAdminById(Long userSeq);
     List<CustomerListDTO> getCustomerList(CustomerListRequestDTO dto);
     boolean isPasswordValid(Long adminSeq, String password);
+    boolean deleteUser(Long userSeq);
 }

@@ -33,4 +33,9 @@ public class AdminServiceImpl implements AdminService {
   public boolean isPasswordValid(Long adminSeq, String password) {
     return adminMapper.selectMatchingAdmin(adminSeq, password) > 0;
   }
+
+  @Override
+  public boolean deleteUser(Long userSeq) {
+    return adminMapper.deleteUser(userSeq) > 0;
+  }
 }
