@@ -79,7 +79,9 @@ public class CustomerBrandServiceImpl implements CustomerBrandService {
     Long userSeq = customerFoodTypesUpdateRequestDTO.getUserSeq();
     List<String> toFoodTypes = customerFoodTypesUpdateRequestDTO.getToFoodTypes();
     customerBrandMapper.deleteFoodTypesByUserSeq(userSeq);
-    customerBrandMapper.insertFoodTypes(userSeq, toFoodTypes);
+    if (toFoodTypes != null && !toFoodTypes.isEmpty()) {
+      customerBrandMapper.insertFoodTypes(userSeq, toFoodTypes);
+    }
     return new CustomerFoodTypesUpdateResponseDTO(toFoodTypes);
   }
 
@@ -89,7 +91,9 @@ public class CustomerBrandServiceImpl implements CustomerBrandService {
     Long userSeq = customerTagsUpdateRequestDTO.getUserSeq();
     List<String> toTags = customerTagsUpdateRequestDTO.getToTags();
     customerBrandMapper.deleteTagsByUserSeq(userSeq);
-    customerBrandMapper.insertTags(userSeq, toTags);
+    if (toTags != null && !toTags.isEmpty()) {
+      customerBrandMapper.insertTags(userSeq, toTags);
+    }
     return new CustomerTagsUpdateResponseDTO(toTags);
   }
 
