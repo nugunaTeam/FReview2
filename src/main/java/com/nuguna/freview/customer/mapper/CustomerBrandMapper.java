@@ -13,4 +13,8 @@ public interface CustomerBrandMapper {
 
   void updateAgeGroup(@Param("userSeq") Long userSeq, @Param("toAgeGroup") String toAgeGroup);
 
+  void updateProfilePhotoUrl(@Param("userSeq") Long userSeq,
+      @Param("toProfilePhotoUrl") String toProfilePhotoUrl);
+
+
 }

@@ -55,14 +55,17 @@ public class CustomerBrandServiceImpl implements CustomerBrandService {
   }
 
   @Override
-  public CustomerIntroduceUpdateResponseDTO updateCustomerIntroduce(
-      CustomerIntroduceUpdateRequestDTO customerIntroduceUpdateRequestDTO) {
-    return null;
+  public CustomerProfilePhotoUpdateResponseDTO updateCustomerPhotoUrl(
+      CustomerProfilePhotoUpdateRequestDTO customerProfilePhotoUpdateRequestDTO) {
+    Long userSeq = customerProfilePhotoUpdateRequestDTO.getUserSeq();
+    String toProfilePhotoUrl = customerProfilePhotoUpdateRequestDTO.getToProfilePhotoUrl();
+    customerBrandMapper.updateProfilePhotoUrl(userSeq, toProfilePhotoUrl);
+    return new CustomerProfilePhotoUpdateResponseDTO(toProfilePhotoUrl);
   }
 
   @Override
-  public CustomerProfilePhotoUpdateResponseDTO updateCustomerPhotoUrl(
-      CustomerProfilePhotoUpdateRequestDTO customerProfilePhotoUpdateRequestDTO) {
+  public CustomerIntroduceUpdateResponseDTO updateCustomerIntroduce(
+      CustomerIntroduceUpdateRequestDTO customerIntroduceUpdateRequestDTO) {
     return null;
   }
 

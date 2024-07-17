@@ -37,6 +37,15 @@ public class CustomerMyBrandInfoApiController {
     this.customerBrandService = customerBrandService;
   }
 
+  @RequestMapping(value = "/profile-photo-url", method = RequestMethod.PUT)
+  public ResponseEntity<CustomerProfilePhotoUpdateResponseDTO> updateCustomerProfilePhoto(
+      @Valid @RequestBody CustomerProfilePhotoUpdateRequestDTO customerProfilePhotoUpdateRequestDTO
+  ) {
+    CustomerProfilePhotoUpdateResponseDTO responseDTO = customerBrandService.updateCustomerPhotoUrl(
+        customerProfilePhotoUpdateRequestDTO);
+    return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+  }
+
   @RequestMapping(value = "/nickname", method = RequestMethod.PUT)
   public ResponseEntity<CustomerNicknameUpdateResponseDTO> updateCustomerNickname(
       @Valid @RequestBody CustomerNicknameUpdateRequestDTO customerNicknameUpdateRequestDTO
@@ -53,13 +62,6 @@ public class CustomerMyBrandInfoApiController {
     CustomerAgeGroupUpdateResponseDTO responseDTO = customerBrandService.updateCustomerAgeGroup(
         customerAgeGroupUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
-  }
-
-  @RequestMapping(value = "/profile-photo-url", method = RequestMethod.PUT)
-  public ResponseEntity<CustomerProfilePhotoUpdateResponseDTO> updateCustomerProfilePhoto(
-      @Valid @RequestBody CustomerProfilePhotoUpdateRequestDTO customerProfilePhotoUpdateRequestDTO
-  ) {
-    return null;
   }
 
   @RequestMapping(value = "/introduce", method = RequestMethod.PUT)

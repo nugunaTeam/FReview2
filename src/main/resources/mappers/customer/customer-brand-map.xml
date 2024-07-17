@@ -23,4 +23,10 @@
     where seq = #{userSeq}
   </update>
 
+  <update id="updateProfilePhotoUrl">
+    update user
+    set profile_photo_url = #{toProfilePhotoUrl}
+    where seq = #{userSeq}
+  </update>
+
 </mapper>

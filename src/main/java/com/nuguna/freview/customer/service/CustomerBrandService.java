@@ -23,11 +23,11 @@ public interface CustomerBrandService {
   CustomerAgeGroupUpdateResponseDTO updateCustomerAgeGroup(
       CustomerAgeGroupUpdateRequestDTO customerAgeGroupUpdateRequestDTO);
 
-  CustomerIntroduceUpdateResponseDTO updateCustomerIntroduce(
-      CustomerIntroduceUpdateRequestDTO customerIntroduceUpdateRequestDTO);
-
   CustomerProfilePhotoUpdateResponseDTO updateCustomerPhotoUrl(
       CustomerProfilePhotoUpdateRequestDTO customerProfilePhotoUpdateRequestDTO);
+
+  CustomerIntroduceUpdateResponseDTO updateCustomerIntroduce(
+      CustomerIntroduceUpdateRequestDTO customerIntroduceUpdateRequestDTO);
 
   CustomerFoodTypesUpdateResponseDTO updateCustomerFoodTypes(
       CustomerFoodTypesUpdateRequestDTO customerFoodTypesUpdateRequestDTO);
