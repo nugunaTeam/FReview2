@@ -74,5 +74,4 @@
     from user
     where seq = #{userSeq}
   </delete>
-
 </mapper>

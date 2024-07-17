@@ -43,7 +43,7 @@ public class CustomerManageApiController {
 
     return responseDTO;
   }
-
+  
   @RequestMapping(value = "/delete", method = RequestMethod.POST)
   public ResponseEntity<?> deleteCustomer(@RequestBody DeleteCustomerRequestDTO requestDTO) {
     Long deleteUserSeq = requestDTO.getDeleteUserSeq();
