@@ -13,6 +13,6 @@ public class CustomerReviewRegisterRequestDTO {
 
   @Min(1)
   private Long userSeq;
-  @NotBlank
+  @NotBlank(message = "리뷰 URL은 비어있는 값이면 안됩니다.")
   private String reviewUrl;
 }
