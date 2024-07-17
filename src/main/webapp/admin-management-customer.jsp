@@ -95,7 +95,7 @@
   <div class="d-flex align-items-center justify-content-between ">
     <a href="/main?seq=${userSeq}&pagecode=Requester"
        class="logo d-flex align-items-center">
-      <img src="assets/img/logo/logo-vertical.png" alt=""
+      <img src="/assets/img/logo/logo-vertical.png" alt=""
            style="  width: 50px; margin-top: 20px;">
       <span class="d-none d-lg-block">FReview</span>
     </a>
@@ -121,12 +121,12 @@
       </a>
       <ul id="tables-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
         <li>
-          <a href="/admin-user-management" class="active">
+          <a href="/admin/manage/customer" class="active">
             <i class="bi bi-circle"></i><span>체험단</span>
           </a>
         </li>
         <li>
-          <a href="/admin-store-management">
+          <a href="/admin/manage/store">
             <i class="bi bi-circle"></i><span>스토어</span>
           </a>
         </li>
@@ -134,7 +134,7 @@
     </li>
     <ul class="sidebar-nav">
       <li class="nav-item">
-        <a class="nav-link collapsed" href="/personal-info-update">
+        <a class="nav-link collapsed" href="/account/info">
           <i class="bi bi-person"></i><span>개인정보수정</span>
         </a>
       </li>
