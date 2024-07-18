@@ -35,4 +35,9 @@ public class UserServiceImpl implements UserService {
         .build();
     userMapper.insertCustomer(uvo);
   }
+
+  @Override
+  public UserVO getUserInfo(Long userSeq) {
+    return userMapper.selectUser(userSeq);
+  }
 }
