@@ -28,7 +28,7 @@ public class NoticeBoardApiController {
   @RequestMapping(value = "/list/{currentPage}", method = RequestMethod.GET)
   public NoticeResponseDTO getNoticeList(@PathVariable int currentPage) {
     List<NoticeListDTO> noticeList = boardService.getNoticeList(currentPage, PAGE_SIZE);
-    int noticeTotal = boardService.getTotalPage(PostCode.NOTICE.getCode());
+    int noticeTotal = boardService.getTotalCount(PostCode.NOTICE.getCode());
     int totalPage = (int)Math.ceil((double)noticeTotal / (double)PAGE_SIZE);
 
     NoticeResponseDTO responseDTO = NoticeResponseDTO.builder()
