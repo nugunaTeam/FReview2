@@ -78,6 +78,7 @@
     FROM user
     WHERE code = 'STORE'
       AND seq &lt; #{previousUserSeq}
+      AND is_withdrawen = 0
     ORDER BY seq DESC
       LIMIT #{limit}
   </select>
@@ -90,6 +91,7 @@
     WHERE code = 'STORE'
       AND seq &lt; #{previousUserSeq}
       AND (email LIKE CONCAT('%', #{searchWord}, '%') OR nickname LIKE CONCAT('%', #{searchWord}, '%'))
+      AND is_withdrawen = 0
     ORDER BY seq DESC
       LIMIT #{limit}
   </select>
