@@ -344,7 +344,6 @@
                                 <div class="col-lg-8 col-md-6">
                                     <select id="age-group-input"
                                             class="form-control form-control-readonly" disabled>
-                                        <!-- col-lg-8 col-md-6 -->
                                     </select>
                                 </div>
 
@@ -387,15 +386,17 @@
                                       var newAgeGroup = $('#age-group-input').val();
                                       // Ajax 요청
                                       $.ajax({
-                                        url: '<%=request.getContextPath()%>/api/customer/my-brand/age-group',
-                                        method: 'POST',
+                                        url: '<%=request.getContextPath()%>/api/customer/my/brand-info/age-group',
+                                        method: 'PUT',
+                                        contentType: 'application/json',
                                         data: JSON.stringify({
-                                          'usersSeq': ${userSeq},
+                                          'userSeq': ${userSeq},
                                           'toAgeGroup': newAgeGroup
                                         }),
                                         success: function (response) {
                                           // 성공적으로 응답을 받았을 때 처리
-                                          $('#age-group-input').val(response.item).prop('disabled',
+                                          $('#age-group-input').val(response.ageGroup).prop(
+                                              'disabled',
                                               true);
                                           $("#age-group-submit-btn").hide();
                                           $("#age-group-cancel-btn").hide();
