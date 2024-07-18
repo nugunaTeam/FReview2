@@ -299,16 +299,11 @@
       event.preventDefault();
       let adminVerificationPW = modalBodyInput.value;
 
-      fetch('/api/admin/customer/delete', {
-        method: 'PATCH',
+      fetch('/api/admin/customer/' + deleteUserSeq + '?adminVerificationPW=' + encodeURIComponent(adminVerificationPW) + '&adminSeq=' + ${userSeq}, {
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          deleteUserSeq: deleteUserSeq,
-          adminVerificationPW: adminVerificationPW,
-          adminSeq: ${userSeq}
-        })
+        }
       })
       .then(response => {
         if (response.status === 200) {
