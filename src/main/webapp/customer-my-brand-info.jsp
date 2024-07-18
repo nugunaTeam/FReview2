@@ -19,6 +19,30 @@
       #food-type-select-message {
         margin-bottom: 5px;
       }
+
+      #review-log-table {
+        border-collapse: collapse;
+      }
+
+      #review-log-table th,
+      #review-log-table td {
+        border: 2px solid #dee2e6; /* 선 두께를 2px로 설정 */
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      #review-log-table th {
+        font-weight: bold;
+      }
+
+      #page-buttons .btn {
+        margin: 0 2px;
+      }
+
+      .d-flex.justify-content-center {
+        gap: 0.5rem;
+      }
+
     </style>
 
     <style>
@@ -327,7 +351,7 @@
 
                             <!-- 연령대 보여주기/등록하기 -->
                             <div class="row">
-                                <div class="col-lg-3 col-md-4">연령대</div>
+                                <div class="col-lg-3 col-md-4 label">연령대</div>
                                 <div class="col-lg-8 col-md-6">
                                     <select id="age-group-input"
                                             class="form-control form-control-readonly" disabled>
@@ -719,6 +743,167 @@
                                 initializeTagSelect();
                               });
                             </script>
+
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">리뷰 로그</div>
+                                <div class="col-lg-8 col-md-6">
+                                    <table class="table table-striped table-bordered text-center"
+                                           id="review-log-table">
+                                        <thead>
+                                        <tr>
+                                            <th>스토어명</th>
+                                            <th>방문일자</th>
+                                            <th>리뷰 작성여부</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td>Brandon Jacob</td>
+                                            <td>Designer</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">2</th>
+                                            <td>Bridie Kessler</td>
+                                            <td>Developer</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">3</th>
+                                            <td>Ashleigh Langosh</td>
+                                            <td>Finance</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">4</th>
+                                            <td>Angus Grady</td>
+                                            <td>HR</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">5</th>
+                                            <td>Raheem Lehner</td>
+                                            <td>Dynamic Division Officer</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="d-flex justify-content-between mt-3">
+                                        <button id="prev-block-button"
+                                                class="btn btn-primary edit-btn" disabled>&lt;
+                                        </button>
+                                        <div id="page-buttons"
+                                             class="d-flex justify-content-center mx-2">
+                                            <!-- 페이지 번호 버튼들이 여기에 추가됩니다 -->
+                                        </div>
+                                        <button id="next-block-button"
+                                                class="btn btn-primary edit-btn" disabled>&gt;
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <script>
+                                  $(document).ready(function () {
+                                    var currentPage = 1;
+                                    var totalPages = 50; // 예시: 총 페이지 수는 50이라고 가정
+                                    var pagesPerBlock = 5;
+
+                                    function fetchReviewLogs(page) {
+                                      $.ajax({
+                                        url: '/api/review-logs',
+                                        method: 'GET',
+                                        data: {page: page},
+                                        success: function (response) {
+                                          var reviewLogs = response.logs;
+                                          var hasPrevious = response.hasPrevious;
+                                          var hasNext = response.hasNext;
+                                          totalPages = response.totalPages;
+
+                                          renderReviewLogs(reviewLogs);
+                                          renderPageButtons();
+                                          updatePaginationButtons(hasPrevious, hasNext);
+                                        },
+                                        error: function (err) {
+                                          alert('리뷰 로그 데이터를 가져오는데 실패하였습니다.');
+                                          renderPageButtons();
+                                        }
+                                      });
+                                    }
+
+                                    function renderReviewLogs(reviewLogs) {
+                                      var tbody = $('#review-log-table tbody');
+                                      tbody.empty(); // 기존 데이터를 제거합니다.
+
+                                      reviewLogs.forEach(function (log) {
+                                        var row = $('<tr>');
+                                        row.append($('<td>').text(log.storeName));
+                                        row.append($('<td>').text(log.visitDate));
+                                        row.append($('<td>').text(log.reviewWritten));
+                                        tbody.append(row);
+                                      });
+                                    }
+
+                                    function renderPageButtons() {
+                                      var pageButtonsDiv = $('#page-buttons');
+                                      pageButtonsDiv.empty(); // 기존 페이지 버튼을 제거합니다.
+
+                                      var currentBlock = Math.floor(
+                                          (currentPage - 1) / pagesPerBlock);
+                                      var startPage = currentBlock * pagesPerBlock + 1;
+                                      var endPage = Math.min(startPage + pagesPerBlock - 1,
+                                          totalPages);
+
+                                      for (var i = startPage; i <= endPage; i++) {
+                                        var pageButton = $('<button>')
+                                        .text(i)
+                                        .addClass(
+                                            'btn btn-outline-primary mx-1 datatable-pagination-list-item-link')
+                                        .attr('data-page', i)
+                                        .attr('aria-label', 'Page ' + i);
+                                        if (i === currentPage) {
+                                          pageButton.addClass('active');
+                                        }
+                                        pageButton.on('click', function () {
+                                          var page = parseInt($(this).attr('data-page'));
+                                          currentPage = page;
+                                          fetchReviewLogs(currentPage);
+                                        });
+                                        pageButtonsDiv.append(pageButton);
+                                      }
+                                    }
+
+                                    function updatePaginationButtons(hasPrevious, hasNext) {
+                                      var currentBlock = Math.floor(
+                                          (currentPage - 1) / pagesPerBlock);
+                                      var totalBlocks = Math.ceil(totalPages / pagesPerBlock);
+
+                                      $('#prev-block-button').prop('disabled', currentBlock === 0);
+                                      $('#next-block-button').prop('disabled',
+                                          currentBlock >= totalBlocks - 1);
+                                    }
+
+                                    $('#prev-block-button').click(function () {
+                                      var currentBlock = Math.floor(
+                                          (currentPage - 1) / pagesPerBlock);
+                                      if (currentBlock > 0) {
+                                        currentPage = (currentBlock - 1) * pagesPerBlock + 1;
+                                        fetchReviewLogs(currentPage);
+                                      }
+                                    });
+
+                                    $('#next-block-button').click(function () {
+                                      var currentBlock = Math.floor(
+                                          (currentPage - 1) / pagesPerBlock);
+                                      var totalBlocks = Math.ceil(totalPages / pagesPerBlock);
+                                      if (currentBlock < totalBlocks - 1) {
+                                        currentPage = (currentBlock + 1) * pagesPerBlock + 1;
+                                        fetchReviewLogs(currentPage);
+                                      }
+                                    });
+
+                                    // 초기 데이터 로드
+                                    fetchReviewLogs(currentPage);
+                                  });
+
+                                </script>
+
+
 </main><!-- End #main -->
 
 <!-- ======= Footer ======= -->
