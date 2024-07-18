@@ -70,7 +70,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Users / Profile - NiceAdmin Bootstrap Template</title>
+    <title>브랜딩 페이지</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -246,7 +246,8 @@
                             <script>
                               $(document).ready(function () {
                                 function initializeIntroduceForm() {
-                                  $('#introduce-input').val(${brandInfo.introduce}).prop('readonly',
+                                  $('#introduce-input').val('${brandInfo.introduce}').prop(
+                                      'readonly',
                                       true);
                                   $('#introduce-update-btn').show();
                                   $('#introduce-submit-btn').hide();
@@ -275,15 +276,15 @@
                                 $("#introduce-submit-btn").click(function () {
                                   var newIntroduce = $('#introduce-input').val();
                                   $.ajax({
-                                    url: '<%=request.getContextPath()%>/api/my-brand/introduce',
-                                    method: 'POST',
+                                    url: '<%=request.getContextPath()%>/api/customer/my/brand-info/introduce',
+                                    method: 'PUT',
                                     data: JSON.stringify({
-                                      'user_seq': ${userSeq},
-                                      'to_introduce': newIntroduce
+                                      'userSeq': ${userSeq},
+                                      'toIntroduce': newIntroduce
                                     }),
                                     contentType: 'application/json',
                                     success: function (response) {
-                                      $('#introduce-input').val(response.item).prop('readonly',
+                                      $('#introduce-input').val(response.introduce).prop('readonly',
                                           true);
                                       $("#introduce-submit-btn").hide();
                                       $("#introduce-cancel-btn").hide();
@@ -426,7 +427,7 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <%--<div class="row">
                                 <div class="col-lg-3 col-md-4 label">활동 분야</div>
                                 <div class="col-lg-8 col-md-6">
                                     <select id="food-type-select" class="form-select" multiple
@@ -889,7 +890,7 @@
                                     fetchReviewLogs(currentPage);
                                   });
 
-                                </script>
+                                </script>--%>
 
 
 </main><!-- End #main -->

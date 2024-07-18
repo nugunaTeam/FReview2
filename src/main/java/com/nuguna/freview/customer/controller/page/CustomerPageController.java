@@ -33,4 +33,19 @@ public class CustomerPageController {
     return "customer-my-brand-info";
   }
 
+  @RequestMapping("/my/activity")
+  public String customerMyActivity(@RequestParam(required = false) Long userSeq) {
+    return "customer-my-activity-info";
+  }
+
+  @RequestMapping("/my/notification")
+  public String customerMyNotification(@RequestParam(required = false) Long userSeq) {
+    return "customer-my-notification";
+  }
+
+  @RequestMapping("/my/personal-info")
+  public String customerMyPersonalInfo(@RequestParam(required = false) Long userSeq) {
+    return "customer-my-personal-info";
+  }
+
 }
