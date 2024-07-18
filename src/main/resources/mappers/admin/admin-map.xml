@@ -54,11 +54,12 @@
     FROM user
     WHERE code = 'CUSTOMER'
       AND seq &lt; #{previousUserSeq}
+      AND is_withdrawen = 0
     ORDER BY seq DESC
       LIMIT #{limit}
   </select>
 
-  <!-- 검색 조건에 부합하는 회원 목록 조회 -->
+  <!-- 검색 조건에 부합하는 체험단 목록 조회 -->
   <select id="searchCustomer" parameterType="map" resultMap="customerManageMap">
     SELECT
       seq, code, nickname, email, created_at
@@ -66,10 +67,10 @@
     WHERE code = 'CUSTOMER'
       AND seq &lt; #{previousUserSeq}
       AND (email LIKE CONCAT('%', #{searchWord}, '%') OR nickname LIKE CONCAT('%', #{searchWord}, '%'))
+      AND is_withdrawen = 0
     ORDER BY seq DESC
       LIMIT #{limit}
   </select>
-
   <!-- 스토어 목록 조회 -->
   <select id="selectStoreList" parameterType="map" resultMap="customerManageMap">
     SELECT
@@ -102,10 +103,9 @@
   </select>
 
   <!-- 유저 삭제 -->
-  <delete id="deleteUser" parameterType="Long">
-    delete
-    from user
-    where seq = #{userSeq}
-  </delete>
-
+  <update id="deleteUser" parameterType="Long">
+    UPDATE user
+    SET is_withdrawen = 1
+    WHERE seq = #{userSeq}
+  </update>
 </mapper>
