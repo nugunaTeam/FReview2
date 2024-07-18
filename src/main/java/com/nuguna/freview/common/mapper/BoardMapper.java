@@ -9,5 +9,7 @@ import org.apache.ibatis.annotations.Param;
 public interface BoardMapper {
 
   int selectTotalPage(String postCode);
+  int selectTotalPageWithSearchWord(@Param("postCode") String postCode, @Param("searchWord") String searchWord);
   List<NoticeListDTO> selectNoticeList(@Param("offset") int offset, @Param("pageSize") int pageSize);
+  List<NoticeListDTO> searchNoticeList(@Param("offset") int offset, @Param("pageSize") int pageSize, @Param("searchWord") String searchWord);
 }

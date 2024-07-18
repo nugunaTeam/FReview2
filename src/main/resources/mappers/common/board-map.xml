@@ -24,7 +24,15 @@
     where code = #{postCode}
   </select>
 
-  <!-- 페이지 별 공지글 조회 -->
+  <select id="selectTotalPageWithSearchWord" parameterType="map" resultType="int">
+    select
+      count(*)
+    from freview2.post
+    where code = #{postCode}
+    AND (title LIKE CONCAT('%', #{searchWord}, '%') OR content LIKE CONCAT('%', #{searchWord}, '%'))
+  </select>
+
+  <!-- 페이지 별 공지 리스트 조회 -->
   <select id="selectNoticeList" parameterType="map" resultMap="noticeMap">
     select
         seq, user_seq, title, content, created_at, view_count
@@ -33,6 +41,18 @@
     order by seq DESC
     LIMIT #{pageSize}
     OFFSET #{offset}
+  </select>
+
+  <!-- 검색 조건에 부합하는 공지 리스트 조회 -->
+  <select id="searchNoticeList" parameterType="map" resultMap="noticeMap">
+    select
+      seq, user_seq, title, content, created_at, view_count
+    from freview2.post
+    where code = '공지'
+      AND (title LIKE CONCAT('%', #{searchWord}, '%') OR content LIKE CONCAT('%', #{searchWord}, '%'))
+    order by seq DESC
+    LIMIT #{pageSize}
+      OFFSET #{offset}
   </select>
 
 </mapper>
