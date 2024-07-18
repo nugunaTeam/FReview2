@@ -112,9 +112,9 @@
                                                       novalidate>
                                                     <div class="col-12">
                                                         <label for="Input_ID"
-                                                               class="form-label">아이디</label>
+                                                               class="form-label">이메일</label>
                                                         <div style=display:flex>
-                                                            <input type="text" name="id"
+                                                            <input type="text" name="email"
                                                                    class="form-control"
                                                                    id="Input_ID" required>
                                                             <button type="button"
@@ -173,9 +173,10 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <label for="COMM_register_input_email"
-                                                               class="form-label">이메일</label>
+                                                               class="form-label">보조 이메일</label>
+                                                        <div style="font-size: small; color: blue">이메일 찾기시 보조 이메일로 회원임을 확인합니다</div>
                                                         <div style=display:flex>
-                                                            <input type="email" name="email"
+                                                            <input type="email" name="sub_email"
                                                                    class="form-control"
                                                                    id="COMM_register_input_email"
                                                                    required>
@@ -250,7 +251,7 @@
                                                     <div class="col-12">
                                                         <label for="Input_AgeGroup"
                                                                class="form-label">연령대</label>
-                                                        <select id="Input_AgeGroup" name="agegroup"
+                                                        <select id="Input_AgeGroup" name="age_group"
                                                                 style="margin-left: 10px;
                                                                         width: 100px;"
                                                                 required>
