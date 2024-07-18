@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.common.mapper.PostMapper">
+
+  <!-- resultMap 설정 -->
+  <!-- noticeMap 설정 -->
+  <resultMap id="noticeDetailMap" type="com.nuguna.freview.common.dto.response.page.NoticeDetailResponseDTO">
+    <id property="seq" column="seq"/>
+    <result property="userSeq" column="user_seq"/>
+    <result property="title" column="title"/>
+    <result property="createdAt" column="created_at" jdbcType="TIMESTAMP" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler"/>
+    <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler"/>
+    <result property="content" column="content"/>
+    <result property="viewCount" column="view_count"/>
+  </resultMap>
+
+  <!-- SQL 쿼리 -->
+  <!-- 특정 공지글 정보 조회 -->
+  <select id="selectNotice" parameterType="Long" resultMap="noticeDetailMap">
+    select
+        seq, user_seq, title, created_at, updated_at, content, view_count
+    from freview2.post
+    where seq = #{postSeq}
+  </select>
+
+</mapper>
