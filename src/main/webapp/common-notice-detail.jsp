@@ -2,10 +2,11 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<c:set var="loginUser" value="${requestScope.loginUser}"/>
-<c:set var="memberSeq" value="${loginUser.memberSeq}"/>
+<c:set var="loginUser" value="${loginUser}"/>
+<c:set var="userSeq" value="${loginUser.seq}"/>
 <c:set var="nickname" value="${loginUser.nickname}"/>
-<c:set var="gubun" value="${loginUser.gubun}"/>
+<c:set var="profileUrl" value="${loginUser.profilePhotoUrl}" />
+<c:set var="code" value="${loginUser.code}"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -108,7 +109,7 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center header-hr">
     <div class="d-flex align-items-center justify-content-between ">
-        <a href="/main?seq=${memberSeq}&pagecode=Requester"
+        <a href="/main?seq=${userSeq}&pagecode=Requester"
            class="logo d-flex align-items-center">
             <img src="/assets/img/logo/logo-vertical.png" alt=""
                  style="  width: 50px; margin-top: 20px;">
@@ -116,12 +117,9 @@
         </a>
     </div>
     <div class="header-hr-right">
-        <a href="/my-info?member_seq=${memberSeq}" style="margin-right: 20px">
+        <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
             ${nickname}
-            <img src="/assets/img/basic/basic-profile-img.png" alt=" " style="width: 30px;
-                margin-top: 15px;">
-            <%--            <img src="<%=profileURL()%>" alt=" " style="width: 30px;--%>
-            <%--    margin-top: 15px;"> TODO: 세션의 프로필 url을 적용할 것--%>
+            <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
         </a>
         <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
     </div>
@@ -137,7 +135,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="card-title mb-0">공지</h5>
                 <div>
-                    <c:if test="${memberSeq == currentPost.memberSeq}">
+                    <c:if test="${userSeq  == currentPost.userSeq }">
                         <button type="button" class="btn btn-danger" onclick="confirmDelete()">
                             삭제
                         </button>
@@ -146,12 +144,12 @@
                         </button>
                     </c:if>
                     <button type="button" class="btn btn-primary"
-                            onclick="location.href='/notice'">목록으로
+                            onclick="location.href='/board/notice'">목록으로
                     </button>
                 </div>
             </div>
             <form id="postForm" action="/notice/detail/update" method="post">
-                <input type="hidden" name="postSeq" value="${currentPost.postSeq}">
+                <input type="hidden" name="postSeq" value="${currentPost.seq}">
                 <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
                     <tbody>
                     <tr>
@@ -179,6 +177,10 @@
                                       name="content" rows="20">${currentPost.content}</textarea>
                         </td>
                     </tr>
+                    <tr>
+                        <th class="fixed-width">조회수</th>
+                        <td id="displayViewCount">${currentPost.viewCount}</td>
+                    </tr>
                     </tbody>
                 </table>
                 <div class="button-container">
@@ -186,13 +188,15 @@
                         <c:choose>
                             <c:when test="${isLiked}">
                                 <button type="button" class="btn btn-primary like-button"
-                                        onclick="cancelLike(${currentPost.postSeq}, ${memberSeq})">
+                                        onclick="cancelLike(${currentPost.postSeq}, ${userSeq
+                                       })">
                                     <i class="bi bi-heart-fill me-1"></i> 좋아요
                                 </button>
                             </c:when>
                             <c:otherwise>
                                 <button type="button" class="btn btn-primary like-button"
-                                        onclick="addLike(${currentPost.postSeq}, ${memberSeq})">
+                                        onclick="addLike(${currentPost.postSeq}, ${userSeq
+                                       })">
                                     <i class="bi bi-heart me-1"></i> 좋아요
                                 </button>
                             </c:otherwise>
@@ -319,7 +323,7 @@
         .catch(error => console.error('Error:', error));
       }
 
-      function addLike(postSeq, memberSeq) {
+      function addLike(postSeq, userSeq) {
         fetch('/likes-add', {
           method: 'POST',
           headers: {
@@ -328,7 +332,7 @@
           body: new URLSearchParams({
             postSeq: postSeq,
             //TODO: 접속자의 세션 seq로 변경 필요
-            memberSeq: memberSeq
+            userSeq: userSeq
           }).toString()
         })
         .then(response => {
@@ -344,7 +348,7 @@
         });
       }
 
-      function cancelLike(postSeq, memberSeq) {
+      function cancelLike(postSeq, userSeq) {
         fetch('/likes-cancel', {
           method: 'POST',
           headers: {
@@ -352,7 +356,7 @@
           },
           body: new URLSearchParams({
             postSeq: postSeq,
-            memberSeq: memberSeq
+            userSeq: userSeq
           }).toString()
         })
         .then(response => {
