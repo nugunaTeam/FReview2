@@ -2,10 +2,11 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<c:set var="loginUser" value="${requestScope.loginUser}"/>
-<c:set var="memberSeq" value="${loginUser.memberSeq}"/>
+<c:set var="loginUser" value="${loginUser}"/>
+<c:set var="userSeq" value="${loginUser.seq}"/>
 <c:set var="nickname" value="${loginUser.nickname}"/>
-<c:set var="gubun" value="${loginUser.gubun}"/>
+<c:set var="profileUrl" value="${loginUser.profilePhotoUrl}"/>
+<c:set var="code" value="${loginUser.code}"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -56,6 +57,16 @@
 </head>
 
 <style>
+  .delete-btn {
+    color: red;
+    font-weight: bold;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+</style>
+
+<style>
   .search-container {
     display: flex;
     justify-content: space-between;
@@ -71,12 +82,12 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">정말 삭제할까요?</h5><br>
+                <h5 class="modal-title" id="deleteModalLabel">정말 탈퇴시킬까요?</h5><br>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                         aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                스토어 삭제를 원하시면 관리자 비밀번호를 입력해주세요
+                탈퇴를 원하시면 관리자 비밀번호를 입력해주세요
                 <form id="deleteForm">
                     <div class="mb-3">
                         <label for="password" class="form-label">비밀번호</label>
@@ -91,57 +102,21 @@
     </div>
 </div>
 
-<!-- 스토어 등록 모달 창 -->
-<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="registerModalLabel">스토어 등록</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                등록할 스토어의 정보를 입력해주세요
-                <form id="registerForm">
-                    <div class="mb-3">
-                        <label for="storeName" class="form-label">스토어명</label>
-                        <input type="text" class="form-control" id="storeName" name="addStoreName"
-                               required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="businessNumber" class="form-label">사업자번호</label>
-                        <input type="text" class="form-control" id="businessNumber"
-                               name="addBusinessNumber" pattern="\d{3}-\d{2}-\d{5}"
-                               placeholder="123-45-67890" required>
-                    </div>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소
-                    </button>
-                    <button type="submit" class="btn btn-primary">등록완료</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center header-hr">
     <div class="d-flex align-items-center justify-content-between ">
-        <a href="/main?seq=${memberSeq}&pagecode=Requester"
+        <a href="/main?seq=${userSeq}&pagecode=Requester"
            class="logo d-flex align-items-center">
-            <img src="assets/img/logo/logo-vertical.png" alt=""
+            <img src="/assets/img/logo/logo-vertical.png" alt=""
                  style="  width: 50px; margin-top: 20px;">
             <span class="d-none d-lg-block">FReview</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div>
     <div class="header-hr-right">
-        <a href="/my-info?member_seq=${memberSeq}" style="margin-right: 20px">
+        <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
             ${nickname}
-            <img src="assets/img/basic/basic-profile-img.png" alt=" " style="width: 30px;
-                margin-top: 15px;">
-            <%--            <img src="<%=profileURL()%>" alt=" " style="width: 30px;--%>
-            <%--    margin-top: 15px;"> TODO: 세션의 프로필 url을 적용할 것--%>
+            <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
         </a>
         <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
     </div>
@@ -151,6 +126,7 @@
 <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
+
         <li class="nav-item">
             <a class="nav-link " data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-layout-text-window-reverse"></i><span>관리</span><i
@@ -158,12 +134,12 @@
             </a>
             <ul id="tables-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="/admin-member-management">
-                        <i class="bi bi-circle"></i><span>멤버</span>
+                    <a href="/admin/manage/customer">
+                        <i class="bi bi-circle"></i><span>체험단</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/admin-store-management" class="active">
+                    <a href="/admin/manage/store" class="active">
                         <i class="bi bi-circle"></i><span>스토어</span>
                     </a>
                 </li>
@@ -171,7 +147,7 @@
         </li>
         <ul class="sidebar-nav">
             <li class="nav-item">
-                <a class="nav-link collapsed" href="/personal-info-update">
+                <a class="nav-link collapsed" href="/account/info">
                     <i class="bi bi-person"></i><span>개인정보수정</span>
                 </a>
             </li>
@@ -192,18 +168,14 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">스토어 리스트</h5>
-                        <p>전국에 등록된 스토어 리스트와 가입한 사장님 리스트입니다 <br>
+                        <p>가입한 스토어 리스트입니다 <br>
                             아이디를 클릭하면 해당 멤버의 브랜딩 페이지로 이동할 수 있습니다 <br>
-                            가입한 사장님이 있는 스토어는 삭제할 수 없습니다 <br>
+                            <br>
                         </p>
-                        <div class="search-container">
-                            <div>
-                                <input type="text" name="searchWord" id="searchWord" placeholder="원하는 키워드로 검색하세요!">
-                                <input type="button" id="searchBtn" value="검색">
-                            </div>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
-                                스토어 등록
-                            </button>
+                        <div>
+                            <input type="text" name="searchWord" id="searchWord"
+                                   placeholder="원하는 키워드로 검색하세요!">
+                            <input type="button" id="searchBtn" value="검색">
                         </div>
 
                         <table class="table">
@@ -211,13 +183,12 @@
                             <tr>
                                 <th>스토어명</th>
                                 <th>사업자번호</th>
-                                <th>가입한 사장님 아이디</th>
-                                <th data-type="date" data-format="YYYY/DD/MM">사장님 가입일자</th>
-                                <th>삭제</th>
+                                <th>아이디</th>
+                                <th>가입일자</th>
+                                <th>탈퇴</th>
                             </tr>
                             </thead>
-                            <tbody id="storeList">
-                            </tbody>
+                            <tbody id="storeList"></tbody>
                         </table>
                     </div>
                 </div>
@@ -234,7 +205,7 @@
 
 <script>
   $(document).ready(function () {
-    var currentSearchWord = '';
+    let currentSearchWord = '';
 
     loadInitialData();
 
@@ -245,25 +216,28 @@
     });
 
     $('#loadMoreBtn').click(function () {
-      var previousBusinessNumber = $(this).data('previous-business-number');
+      let previousBusinessNumber = $(this).data('previous-user-seq');
       loadMoreData(previousBusinessNumber, currentSearchWord);
     });
 
     function loadInitialData(searchWord = '') {
-      var apiUrl = searchWord ? "/admin-store-search" : "/admin-store-management";
       $.ajax({
         method: "POST",
-        url: apiUrl,
-        data: {
+        url: "/api/admin/store/list",
+        contentType: "application/json",
+        data: JSON.stringify({
+          previousUserSeq: null,
           searchWord: searchWord
-        },
+        }),
         dataType: "json",
         success: function (response) {
           $('#storeList').empty();
-          renderData(response.data);
+          renderData(response.storeList);
           if (response.hasMore) {
-            $('#loadMoreBtn').data('previous-business-number',
-                response.data[response.data.length - 1].businessNumber).show();
+            $('#loadMoreBtn').data('previousUserSeq',
+                response.storeList
+                    [response.storeList
+                    .length - 1].seq).show();
           } else {
             $('#loadMoreBtn').hide();
           }
@@ -274,23 +248,26 @@
       });
     }
 
-    function loadMoreData(previousBusinessNumber, searchWord = '') {
-      var apiUrl = searchWord ? "/admin-store-search" : "/admin-store-management";
+    function loadMoreData(previousUserSeq, searchWord = '') {
       $.ajax({
         method: "POST",
-        url: apiUrl,
-        data: {
-          previousBusinessNumber: previousBusinessNumber,
+        url: "/api/admin/store/list",
+        contentType: "application/json",
+        data: JSON.stringify({
+          previousUserSeq: previousUserSeq,
           searchWord: searchWord
-        },
+        }),
         dataType: "json",
         success: function (response) {
-          if (response.data.length > 0) {
-            renderData(response.data);
+          if (response.storeList
+              .length > 0) {
+            renderData(response.storeList
+            );
             if (response.hasMore) {
-              console.log("hasMore = true");
-              $('#loadMoreBtn').data('previous-business-number',
-                  response.data[response.data.length - 1].businessNumber).show();
+              $('#loadMoreBtn').data('previousUserSeq',
+                  response.storeList
+                      [response.storeList
+                      .length - 1].seq).show();
             } else {
               $('#loadMoreBtn').hide();
             }
@@ -305,26 +282,18 @@
     }
 
     function renderData(data) {
-      var htmlStr = "";
-
-      $.map(data, function (store) {
-        var storeId = store["id"] ? store["id"] : "(미가입)";
-        var formattedCreatedAt = store["createdAt"] ? dayjs(store["createdAt"]).format(
-            'YYYY-MM-DD HH:mm') : "";
+      let htmlStr = "";
+      $.map(data, function (user) {
+        let formattedCreatedAt = dayjs(user["createdAt"]).format('YYYY-MM-DD HH:mm');
 
         htmlStr += "<tr>";
-        htmlStr += "<td>" + store["storeName"] + "</td>";
-        htmlStr += "<td>" + store["businessNumber"] + "</td>";
-        htmlStr += "<td>" + storeId + "</td>";
+        htmlStr += "<td>" + user["nickname"] + "</td>";
+        htmlStr += "<td>" + user["businessNumber"] + "</td>";
+        htmlStr += "<td><a href='/brand-page?user_seq=" + user["seq"] + "'>" + user["email"]
+            + "</a></td>";
         htmlStr += "<td>" + formattedCreatedAt + "</td>";
-        htmlStr += "<td>";
-        if (store["id"] == null) {
-          htmlStr += "<button class='btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#deleteModal' data-id='"
-              + store["businessNumber"] + "'>x</button>";
-        } else {
-          htmlStr += "<button class='btn btn-secondary btn-sm' disabled>x</button>";
-        }
-        htmlStr += "</td>";
+        htmlStr += "<td><button class='btn btn-danger btn-sm delete-btn' data-bs-toggle='modal' data-bs-target='#deleteModal' data-id='"
+            + user["email"] + "' data-seq='" + user["seq"] + "'>X</button></td>";
         htmlStr += "</tr>";
       });
       $('#storeList').append(htmlStr);
@@ -332,40 +301,44 @@
 
   });
 
-  var deleteModal = document.getElementById('deleteModal');
+  let deleteModal = document.getElementById('deleteModal');
   deleteModal.addEventListener('show.bs.modal', function (event) {
-    var button = event.relatedTarget;
-    var deleteBusinessNumber = button.getAttribute('data-id');
-    var modalTitle = deleteModal.querySelector('.modal-title');
-    var modalBodyInput = deleteModal.querySelector('.modal-body input');
+    let button = event.relatedTarget;
+    let deleteUserEmail = button.getAttribute('data-id');
+    let deleteUserSeq = button.getAttribute('data-seq');
+    let modalTitle = deleteModal.querySelector('.modal-title');
+    let modalBodyInput = deleteModal.querySelector('.modal-body input');
 
-    modalTitle.textContent = '정말 삭제시킬까요? (사업자번호: ' + deleteBusinessNumber + ')';
+    modalTitle.textContent = '정말 탈퇴시킬까요? (ID: ' + deleteUserEmail + ')';
     modalBodyInput.value = '';
 
     document.getElementById('deleteForm').onsubmit = function (event) {
       event.preventDefault();
-      var adminVerificationPW = modalBodyInput.value;
+      let adminVerificationPW = modalBodyInput.value;
 
-      fetch('admin-store-delete', {
-        method: 'POST',
+      fetch('/api/admin/store/delete', {
+        method: 'DELETE',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Content-Type': 'application/json'
         },
-        body: 'deleteBusinessNumber=' + encodeURIComponent(deleteBusinessNumber)
-            + '&adminVerificationPW=' + encodeURIComponent(adminVerificationPW)
+        body: JSON.stringify({
+          deleteUserSeq: deleteUserSeq,
+          adminVerificationPW: adminVerificationPW,
+          adminSeq: ${userSeq}
+        })
       })
       .then(response => {
         if (response.status === 200) {
           return response.text().then(data => {
             console.log(data);
             alert('정상적으로 삭제 처리 되었습니다.');
-            var modal = bootstrap.Modal.getInstance(deleteModal);
+            let modal = bootstrap.Modal.getInstance(deleteModal);
             modal.hide();
             location.reload();
           });
         } else if (response.status === 401) {
           modalBodyInput.classList.add('is-invalid');
-          var invalidFeedback = deleteModal.querySelector('.invalid-feedback');
+          let invalidFeedback = deleteModal.querySelector('.invalid-feedback');
           if (!invalidFeedback) {
             invalidFeedback = document.createElement('div');
             invalidFeedback.classList.add('invalid-feedback');
@@ -383,46 +356,6 @@
     };
   });
 
-  var registerModal = document.getElementById('registerModal');
-  registerModal.addEventListener('show.bs.modal', function (event) {
-    document.getElementById('registerForm').onsubmit = function (event) {
-      event.preventDefault(); // Prevent default form submission
-
-      var storeName = document.getElementById('storeName').value;
-      var businessNumber = document.getElementById('businessNumber').value;
-
-      var formData = new URLSearchParams();
-      formData.append('addStoreName', storeName);
-      formData.append('addBusinessNumber', businessNumber);
-
-      fetch('/admin-store-add', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: formData.toString()
-      })
-      .then(response => {
-        if (response.status === 200) {
-          return response.text().then(data => {
-            console.log(data);
-            alert('스토어가 성공적으로 등록되었습니다.');
-            var modal = bootstrap.Modal.getInstance(registerModal);
-            modal.hide();
-            location.reload();
-          });
-        } else {
-          return response.text().then(data => {
-            console.error(data);
-            alert('스토어 등록에 실패했습니다. 다시 시도해 주세요.');
-          });
-        }
-      })
-      .catch(error => console.error('Error:', error));
-
-      $('#registerModal').modal('hide');
-    };
-  });
 </script>
 
 <!-- ======= Footer ======= -->
