@@ -1,6 +1,7 @@
 package com.nuguna.freview.admin.service.impl;
 
 import com.nuguna.freview.admin.dto.response.CustomerListDTO;
+import com.nuguna.freview.admin.dto.response.StoreListDTO;
 import com.nuguna.freview.admin.mapper.AdminMapper;
 import com.nuguna.freview.admin.service.AdminService;
 import com.nuguna.freview.admin.vo.AdminVO;
@@ -33,6 +34,16 @@ public class AdminServiceImpl implements AdminService {
   }
 
   @Override
+  public List<StoreListDTO> getStoreList(Long previousUserSeq, String searchWord,
+      Integer pageSize) {
+    if (searchWord == null) {
+      return adminMapper.selectStoreList(previousUserSeq, pageSize);
+    } else {
+      return adminMapper.searchStore(previousUserSeq, searchWord, pageSize);
+    }
+  }
+
+  @Override
   public boolean isPasswordValid(Long adminSeq, String password) {
     return adminMapper.selectMatchingAdmin(adminSeq, password) > 0;
   }
@@ -43,7 +54,7 @@ public class AdminServiceImpl implements AdminService {
   }
 
   @Override
-  public void deleteCustomer(Long adminSeq, String adminVerificationPW, Long deleteUserSeq) {
+  public void deleteUser(Long adminSeq, String adminVerificationPW, Long deleteUserSeq) {
     if (!isPasswordValid(adminSeq, adminVerificationPW)) {
       throw new IllegalArgumentException("[ERROR] 입력한 비밀번호는 올바르지 않습니다.");
     }
