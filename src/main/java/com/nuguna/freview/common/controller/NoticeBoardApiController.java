@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -25,10 +26,10 @@ public class NoticeBoardApiController {
     this.boardService = boardService;
   }
 
-  @RequestMapping(value = "/list/{currentPage}", method = RequestMethod.GET)
-  public NoticeResponseDTO getNoticeList(@PathVariable int currentPage) {
-    List<NoticeListDTO> noticeList = boardService.getNoticeList(currentPage, PAGE_SIZE);
-    int noticeTotal = boardService.getTotalCount(PostCode.NOTICE.getCode());
+  @RequestMapping(value = "/list/{currentPage}", method = RequestMethod.POST)
+  public NoticeResponseDTO getNoticeList(@PathVariable int currentPage, @RequestParam(value = "searchWord") String searchWord) {
+    List<NoticeListDTO> noticeList = boardService.getNoticeList(currentPage, PAGE_SIZE, searchWord);
+    int noticeTotal = boardService.getTotalCount(PostCode.NOTICE.getCode(), searchWord);
     int totalPage = (int)Math.ceil((double)noticeTotal / (double)PAGE_SIZE);
 
     NoticeResponseDTO responseDTO = NoticeResponseDTO.builder()
