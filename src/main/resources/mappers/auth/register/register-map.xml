@@ -20,6 +20,11 @@
     WHERE email = #{email}
   </select>
 
+  <select id="getDuplicatedNickName" parameterType="string" resultType="int">
+    SELECT count(*)
+    FROM user
+    WHERE nickname = #{email}
+  </select>
 
 </mapper>
 
