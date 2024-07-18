@@ -5,17 +5,14 @@ import com.nuguna.freview.customer.dto.request.CustomerFoodTypesUpdateRequestDTO
 import com.nuguna.freview.customer.dto.request.CustomerIntroduceUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerNicknameUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerProfilePhotoUpdateRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerReviewRegisterRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerTagsUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerAgeGroupUpdateResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerFoodTypesUpdateResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerIntroduceUpdateResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerNicknameUpdateResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerProfilePhotoUpdateResponseDTO;
-import com.nuguna.freview.customer.dto.response.CustomerReviewRegisterResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerTagsUpdateResponseDTO;
 import com.nuguna.freview.customer.exception.AlreadyExistNicknameException;
-import com.nuguna.freview.customer.exception.IllegalReviewException;
 import com.nuguna.freview.customer.mapper.CustomerBrandMapper;
 import com.nuguna.freview.customer.service.CustomerBrandService;
 import java.util.List;
@@ -39,7 +36,7 @@ public class CustomerBrandServiceImpl implements CustomerBrandService {
       CustomerNicknameUpdateRequestDTO customerNicknameUpdateRequestDTO) {
     String toNickname = customerNicknameUpdateRequestDTO.getToNickname();
     Long userSeq = customerNicknameUpdateRequestDTO.getUserSeq();
-    
+
     if (customerBrandMapper.checkNicknameExist(toNickname, userSeq)) {
       throw new AlreadyExistNicknameException("이미 존재하는 닉네임입니다.");
     }
@@ -101,19 +98,5 @@ public class CustomerBrandServiceImpl implements CustomerBrandService {
       customerBrandMapper.insertTags(userSeq, toTags);
     }
     return new CustomerTagsUpdateResponseDTO(toTags);
-  }
-
-  @Override
-  public CustomerReviewRegisterResponseDTO registerCustomerReview(
-      CustomerReviewRegisterRequestDTO customerReviewRegisterRequestDTO) {
-    Long userSeq = customerReviewRegisterRequestDTO.getUserSeq(); // Customer의 Seq
-    Long reviewSeq = customerReviewRegisterRequestDTO.getReviewSeq();
-    String reviewUrl = customerReviewRegisterRequestDTO.getReviewUrl();
-
-    if (!customerBrandMapper.checkIsValidReview(userSeq, reviewSeq)) {
-      throw new IllegalReviewException("존재하지 않는 리뷰입니다.");
-    }
-    customerBrandMapper.registerReview(reviewSeq, reviewUrl);
-    return new CustomerReviewRegisterResponseDTO(reviewUrl);
   }
 }
