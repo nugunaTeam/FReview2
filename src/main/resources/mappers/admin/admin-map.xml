@@ -44,6 +44,7 @@
     FROM user
     WHERE code = 'CUSTOMER'
       AND seq &lt; #{previousUserSeq}
+      AND is_withdrawen = 0
     ORDER BY seq DESC
       LIMIT #{limit}
   </select>
@@ -56,6 +57,7 @@
     WHERE code = 'CUSTOMER'
       AND seq &lt; #{previousUserSeq}
       AND (email LIKE CONCAT('%', #{searchWord}, '%') OR nickname LIKE CONCAT('%', #{searchWord}, '%'))
+      AND is_withdrawen = 0
     ORDER BY seq DESC
       LIMIT #{limit}
   </select>
@@ -69,9 +71,9 @@
   </select>
 
   <!-- 유저 삭제 -->
-  <delete id="deleteUser" parameterType="Long">
-    delete
-    from user
-    where seq = #{userSeq}
-  </delete>
+  <update id="deleteUser" parameterType="Long">
+    UPDATE user
+    SET is_withdrawen = 1
+    WHERE seq = #{userSeq}
+  </update>
 </mapper>
