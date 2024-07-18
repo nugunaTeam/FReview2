@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerListRequestDTO {
+public class DeleteUserRequestDTO {
 
-  private Long previousUserSeq;
-  private String searchWord;
+  private Long adminSeq;
+  private String adminVerificationPW;
 }

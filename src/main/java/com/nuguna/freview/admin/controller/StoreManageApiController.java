@@ -1,8 +1,8 @@
 package com.nuguna.freview.admin.controller;
 
-import com.nuguna.freview.admin.dto.request.CustomerListRequestDTO;
-import com.nuguna.freview.admin.dto.response.CustomerListDTO;
-import com.nuguna.freview.admin.dto.response.page.CustomerManageResponseDTO;
+import com.nuguna.freview.admin.dto.request.StoreListRequestDTO;
+import com.nuguna.freview.admin.dto.response.StoreListDTO;
+import com.nuguna.freview.admin.dto.response.page.StoreManageResponseDTO;
 import com.nuguna.freview.admin.service.AdminService;
 import com.nuguna.freview.global.util.ShaUtil;
 import java.util.List;
@@ -19,26 +19,28 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/admin/customer")
-public class CustomerManageApiController {
+@RequestMapping("/api/admin/store")
+public class StoreManageApiController {
   private final AdminService adminService;
-  private final int PAGE_SIZE = 30;
+  private final Integer PAGE_SIZE = 30;
 
   @Autowired
-  public CustomerManageApiController(AdminService adminService) { this.adminService = adminService; }
+  public StoreManageApiController(AdminService adminService) {
+    this.adminService = adminService;
+  }
 
   @RequestMapping(value = "/list", method = RequestMethod.POST)
-  public CustomerManageResponseDTO getCustomerList(@RequestBody CustomerListRequestDTO requestDTO) {
+  public StoreManageResponseDTO getStoreList(@RequestBody StoreListRequestDTO requestDTO) {
     Long previousUserSeq = requestDTO.getPreviousUserSeq();
     String searchWord = requestDTO.getSearchWord();
 
     if (previousUserSeq == null) {
       previousUserSeq = Long.MAX_VALUE;
     }
-    List<CustomerListDTO> customerList = adminService.getCustomerList(previousUserSeq, searchWord, PAGE_SIZE);
-    boolean hasMore = customerList.size() == PAGE_SIZE;
-    CustomerManageResponseDTO responseDTO = CustomerManageResponseDTO.builder()
-        .customerList(customerList)
+    List<StoreListDTO> storeList = adminService.getStoreList(previousUserSeq, searchWord, PAGE_SIZE);
+    boolean hasMore = storeList.size() == PAGE_SIZE;
+    StoreManageResponseDTO responseDTO = StoreManageResponseDTO.builder()
+        .storeList(storeList)
         .hasMore(hasMore)
         .build();
 
@@ -46,7 +48,7 @@ public class CustomerManageApiController {
   }
 
   @RequestMapping(value = "/{deleteUserSeq}", method = RequestMethod.DELETE)
-  public ResponseEntity<?> deleteCustomer(@PathVariable Long deleteUserSeq,
+  public ResponseEntity<?> deleteStore(@PathVariable Long deleteUserSeq,
       @RequestParam String adminVerificationPW,
       @RequestParam Long adminSeq) {
     String encodedPW = ShaUtil.sha256Encoding(adminVerificationPW);

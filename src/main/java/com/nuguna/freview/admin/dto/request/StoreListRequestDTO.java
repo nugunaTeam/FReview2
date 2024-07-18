@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerListRequestDTO {
+public class StoreListRequestDTO {
 
   private Long previousUserSeq;
   private String searchWord;
