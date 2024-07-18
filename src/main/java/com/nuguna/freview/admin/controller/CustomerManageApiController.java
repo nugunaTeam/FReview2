@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/admin/customer")
 public class CustomerManageApiController {
   private final AdminService adminService;
-  private final Integer PAGE_SIZE = 30;
+  private final int PAGE_SIZE = 30;
 
   @Autowired
   public CustomerManageApiController(AdminService adminService) { this.adminService = adminService; }

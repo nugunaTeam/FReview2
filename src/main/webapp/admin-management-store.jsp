@@ -316,7 +316,7 @@
       event.preventDefault();
       let adminVerificationPW = modalBodyInput.value;
 
-      fetch('/api/admin/customer/' + deleteUserSeq + '?adminVerificationPW=' + encodeURIComponent(adminVerificationPW) + '&adminSeq=' + ${userSeq}, {
+      fetch('/api/admin/store/' + deleteUserSeq + '?adminVerificationPW=' + encodeURIComponent(adminVerificationPW) + '&adminSeq=' + ${userSeq}, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
