@@ -2,11 +2,13 @@ package com.nuguna.freview.common.controller;
 
 import com.nuguna.freview.common.dto.request.RegisterCheckIdRequestDTO;
 import com.nuguna.freview.common.dto.request.RegisterCheckNickNameRequestDTO;
+import com.nuguna.freview.common.dto.request.RegisterRequestDTO;
 import com.nuguna.freview.common.dto.request.RegisterSendEmailRequestDTO;
 import com.nuguna.freview.common.dto.response.RegisterCheckDuplicatedInfoResponseDTO;
 import com.nuguna.freview.common.dto.response.RegisterSendEmailResponseDTO;
 import com.nuguna.freview.common.service.RegisterService;
 import com.nuguna.freview.global.util.SendMailUtil;
+import com.nuguna.freview.global.util.ShaUtil;
 import java.util.Properties;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +27,10 @@ public class AuthApiController {
   private RegisterService registerService;
   private SendMailUtil sendMailUtil;
 
+
   @Autowired
-  AuthApiController(RegisterService registerService, SendMailUtil sendEmail) {this.registerService = registerService;
-                                                                            this.sendMailUtil = sendEmail;}
+  AuthApiController(RegisterService registerService, SendMailUtil sendEmail, ShaUtil shautil) {this.registerService = registerService;
+                                                                                               this.sendMailUtil = sendEmail;}
 
 
 
@@ -74,6 +77,22 @@ public class AuthApiController {
 
    return new ResponseEntity<>(registerCheckDuplicatedInfoResponseDTO,HttpStatus.OK);
   }
+
+  @RequestMapping(value = "/api/auth/register", method = RequestMethod.POST)
+  public void register(@Valid @RequestBody RegisterRequestDTO registerRequestDTO) {
+    log.info("닉네임 중복 확인");
+    log.info(registerRequestDTO.getCode());
+    if(registerRequestDTO.getCode().equals("CUSTOMER")){
+      registerService.cutomerRegist(registerRequestDTO);
+    }
+    //boolean result = registerService.checkDuplicatedNickName(requestCheckNicknameRequestDTO);
+    //log.info("이메일 중복 결과 "+result);
+    // RegisterCheckDuplicatedInfoResponseDTO registerCheckDuplicatedInfoResponseDTO = new RegisterCheckDuplicatedInfoResponseDTO(result);
+
+
+  }
+
+
 
 
 }

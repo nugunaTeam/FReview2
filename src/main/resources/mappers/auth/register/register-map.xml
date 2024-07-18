@@ -26,5 +26,9 @@
     WHERE nickname = #{email}
   </select>
 
+  <insert id="insertCustomerInfo" parameterType="com.nuguna.freview.common.vo.user.UserVO">
+    INSERT INTO user (code,email,password,nickname,sub_email,login_type,is_withdrawn,age_group)
+    VALUES (#{code},#{email},#{password},#{nickname},#{subEmail},#{loginType},#{isWithDrawn},#{ageGroup})
+  </insert>
 </mapper>
 

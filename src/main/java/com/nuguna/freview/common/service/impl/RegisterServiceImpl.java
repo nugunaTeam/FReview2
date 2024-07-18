@@ -2,9 +2,12 @@ package com.nuguna.freview.common.service.impl;
 
 import com.nuguna.freview.common.dto.request.RegisterCheckIdRequestDTO;
 import com.nuguna.freview.common.dto.request.RegisterCheckNickNameRequestDTO;
+import com.nuguna.freview.common.dto.request.RegisterRequestDTO;
 import com.nuguna.freview.common.mapper.RegisterMapper;
 import com.nuguna.freview.common.service.RegisterService;
 import com.nuguna.freview.common.service.UserService;
+import com.nuguna.freview.common.vo.user.UserVO;
+import com.nuguna.freview.global.util.ShaUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,9 +17,10 @@ import org.springframework.stereotype.Service;
 public class RegisterServiceImpl implements RegisterService {
 
   private final RegisterMapper registerMapper;
-
+  private final ShaUtil shaUtil;
   @Autowired
-  RegisterServiceImpl(RegisterMapper registerMapper){this.registerMapper = registerMapper;}
+  RegisterServiceImpl(RegisterMapper registerMapper, ShaUtil shaUtil){this.registerMapper = registerMapper;
+                                                                      this.shaUtil = shaUtil;}
 
   @Override
   public boolean checkDuplicatedEmail(RegisterCheckIdRequestDTO registerCheckIdRequestDTO) {
@@ -45,5 +49,22 @@ public class RegisterServiceImpl implements RegisterService {
       result = true;
 
     return result;
+  }
+
+  @Override
+  public void cutomerRegist(RegisterRequestDTO registerRequestDTO) throws RuntimeException {
+    log.info("회원가입 서비스");
+    String shaPassword = shaUtil.sha256Encoding(registerRequestDTO.getPassword());
+    UserVO uvo = UserVO.builder()
+        .email(registerRequestDTO.getEmail())
+        .password(shaPassword)
+        .subEmail(registerRequestDTO.getSubEmail())
+        .nickname(registerRequestDTO.getNickName())
+        .ageGroup(registerRequestDTO.getAgeGroup())
+        .code(registerRequestDTO.getCode())
+        .loginType("FORM")
+        .isWithDrawn(false).build();
+    log.info(uvo.toString());
+    registerMapper.insertCustomerInfo(uvo);
   }
 }
