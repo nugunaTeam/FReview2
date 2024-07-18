@@ -10,6 +10,18 @@ $(function(){
   let COMM_register_businessInfo = false;
   let COMM_register_buisnessloc = false;
 
+  $("#Input_ID").on("change",function(){ // common-register 이메일 확인란
+
+    let input_id = $("#Input_ID").val();
+
+    let reg = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$/
+    if(!reg.test(input_id)){
+      alert("이메일 형식이 틀렸습니다! 다시 입력해주세요");
+      $("#Input_id").val("");
+    }
+
+  })
+
   $("#COMM_register_IDcheckBTN").on("click",function(){ //COMM_register 아이디체크
 
 
@@ -98,14 +110,15 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
       $.ajax({
         method : "post",
-        url : "/send-certification",
-        data : {"email" : inputEmail,
-                "randomNumber" : randomFourDigitNumber},
+        url : "/api/auth/sendEmail",
+        contentType: "application/json",
+        data: JSON.stringify({ email: inputEmail,
+                                     randomNumber: randomFourDigitNumber}),
         error : function(myval){console.log("에러"+myval)},
         success : function(myval) {
 
           console.log("성공"+myval)
-          emailNumber = myval;
+          emailNumber = myval.randomNumber;
 
         }
 

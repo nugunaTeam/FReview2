@@ -33,6 +33,9 @@
   <!--<mvc:resources mapping="/resources/**" location="/resources/"/>-->
   <mvc:resources mapping="/assets/**" location="/assets/"/>
 
+  <!-- Property Placeholder 설정 -->
+  <context:property-placeholder location="classpath:maria.properties,classpath:sendEmail.properties"/>
+
   <!-- =============================== /  +  @Controllers 리턴값 + .jsp     -->
   <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
     <property name="prefix" value="/"/>
@@ -41,7 +44,7 @@
 
   <!-- ################################################################################  -->
   <!-- =============================== datasource : 프로퍼티 파일을 사용한 형태 -->
-  <context:property-placeholder location="classpath:maria.properties"/>
+
   <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
     <property name="driverClassName" value="${driver-class-name}"/>
     <property name="url" value="${db-url}"/>
@@ -105,6 +108,18 @@
   <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
     <property name="basePackage" value="com.nuguna.freview.store.mapper"/>
     <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+  </bean>
+
+
+  <!-- ################################################################################  -->
+  <!-- =============================== datasource : 프로퍼티 파일을 사용한 형태 -->
+
+  <bean id="sendEmail" class="com.nuguna.freview.global.util.SendMailUtil" >
+    <constructor-arg name="ENCODING" value="${gmail-encoding}"/>
+    <constructor-arg name="PORT" value="${gmail-port}"/>
+    <constructor-arg name="SMTPHOST" value="${gmail-smtphost}"/>
+    <constructor-arg name="userName" value="${gmail-usermail}"/>
+    <constructor-arg name="password" value="${gmail-password}"/>
   </bean>
   
 </beans>
