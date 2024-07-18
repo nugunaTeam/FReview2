@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class RegisterCheckIdResponseDTO {
-  private boolean checkDuplicatedId;
+public class RegisterCheckDuplicatedInfoResponseDTO {
+  private boolean checkDuplicated;
 }
