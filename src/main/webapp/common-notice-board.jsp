@@ -165,13 +165,13 @@
     loadPage(1);
 
     $('#searchBtn').click(function() {
-      var searchWord = $('#searchWord').val();
+      let searchWord = $('#searchWord').val();
       loadPage(1, searchWord);
     });
 
     function loadPage(currentPage, searchWord = '') {
       $.ajax({
-        method: "GET",
+        method: "POST",
         url: '/api/common/notice/list/' + currentPage,
         data: { searchWord: searchWord },
         dataType: "json",
@@ -186,25 +186,25 @@
     }
 
     function renderData(data) {
-      var htmlStr = "";
+      let htmlStr = "";
       $.map(data, function (val) {
         let formattedCreatedAt = dayjs(val["createdAt"]).format('YYYY-MM-DD HH:mm');
         let shortContent = val["content"].length > 30 ? val["content"].substring(0, 30) + "..." : val["content"];
 
         htmlStr += "<tr>";
         htmlStr += "<td><a href='/notice-detail?postId=" + val["seq"] + "'>" + val["title"] + "</a></td>";
-        htmlStr += "<td>" + shortContent + "</td>";  <!-- 추가된 부분 -->
+        htmlStr += "<td>" + shortContent + "</td>";
         htmlStr += "<td>" + formattedCreatedAt + "</td>";
-        htmlStr += "<td>" + val["viewCount"] + "</td>";  <!-- 추가된 부분 -->
+        htmlStr += "<td>" + val["viewCount"] + "</td>";
         htmlStr += "</tr>";
       });
       $('#noticeList').empty().append(htmlStr);
     }
 
     function renderPagination(totalPages, currentPage, searchWord) {
-      var htmlStr = "";
-      var startPage = Math.floor((currentPage - 1) / 10) * 10 + 1;
-      var endPage = startPage + 9;
+      let htmlStr = "";
+      let startPage = Math.floor((currentPage - 1) / 10) * 10 + 1;
+      let endPage = startPage + 9;
       if (endPage > totalPages) {
         endPage = totalPages;
       }
@@ -215,7 +215,7 @@
         htmlStr += "<span style='color: grey;'>이전</span>";
       }
 
-      for (var i = startPage; i <= endPage; i++) {
+      for (let i = startPage; i <= endPage; i++) {
         if (i === currentPage) {
           htmlStr += "<span class='current-page'>" + i + "</span>";
         } else {
@@ -234,8 +234,8 @@
 
     $('#pagination').on('click', 'a.page-link', function (e) {
       e.preventDefault();
-      var page = $(this).data('page');
-      var searchWord = $(this).data('search');
+      let page = $(this).data('page');
+      let searchWord = $(this).data('search');
       loadPage(page, searchWord);
     });
   });
