@@ -14,5 +14,5 @@ import lombok.Setter;
 public class CustomerListRequestDTO {
 
   private Long previousUserSeq;
-  private Integer limit;
+  private String searchWord;
 }

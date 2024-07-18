@@ -68,5 +68,4 @@ public class SendMailUtil {
       System.out.println("메일 보내시 실패");
     }
   }
-
 }
