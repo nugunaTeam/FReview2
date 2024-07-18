@@ -1,7 +1,7 @@
 package com.nuguna.freview.admin.controller;
 
 import com.nuguna.freview.admin.dto.request.CustomerListRequestDTO;
-import com.nuguna.freview.admin.dto.request.DeleteCustomerRequestDTO;
+import com.nuguna.freview.admin.dto.request.DeleteUserRequestDTO;
 import com.nuguna.freview.admin.dto.response.CustomerListDTO;
 import com.nuguna.freview.admin.dto.response.page.CustomerManageResponseDTO;
 import com.nuguna.freview.admin.service.AdminService;
@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,14 +45,13 @@ public class CustomerManageApiController {
     return responseDTO;
   }
 
-  @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-  public ResponseEntity<?> deleteCustomer(@RequestBody DeleteCustomerRequestDTO requestDTO) {
-    Long deleteUserSeq = requestDTO.getDeleteUserSeq();
+  @RequestMapping(value = "/{userSeq}", method = RequestMethod.DELETE)
+  public ResponseEntity<?> deleteCustomer(@PathVariable Long userSeq,  @RequestBody DeleteUserRequestDTO requestDTO) {
     String adminVerificationPW = ShaUtil.sha256Encoding(requestDTO.getAdminVerificationPW());
     Long adminSeq = requestDTO.getAdminSeq();
 
     try {
-      adminService.deleteCustomer(adminSeq, adminVerificationPW, deleteUserSeq);
+      adminService.deleteUser(adminSeq, adminVerificationPW, userSeq);
       return new ResponseEntity<>(HttpStatus.OK);
     } catch (IllegalArgumentException e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
