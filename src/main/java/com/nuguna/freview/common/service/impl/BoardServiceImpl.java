@@ -18,13 +18,22 @@ public class BoardServiceImpl implements BoardService {
   }
 
   @Override
-  public int getTotalCount(String postCode) {
-    return boardMapper.selectTotalPage(postCode);
+  public int getTotalCount(String postCode, String searchWord) {
+    if (searchWord == null) {
+      return boardMapper.selectTotalPage(postCode);
+    } else {
+      return boardMapper.selectTotalPageWithSearchWord(postCode, searchWord);
+    }
   }
 
   @Override
-  public List<NoticeListDTO> getNoticeList(int currentPage, int pageSize) {
+  public List<NoticeListDTO> getNoticeList(int currentPage, int pageSize, String searchWord) {
     int offset = (currentPage - 1) * pageSize;
-    return boardMapper.selectNoticeList(offset, pageSize);
+
+    if (searchWord == null) {
+      return boardMapper.selectNoticeList(offset, pageSize);
+    } else {
+      return boardMapper.searchNoticeList(offset, pageSize, searchWord);
+    }
   }
 }

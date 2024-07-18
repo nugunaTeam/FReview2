@@ -5,6 +5,6 @@ import java.util.List;
 
 public interface BoardService {
 
-  int getTotalCount(String postCode);
-  List<NoticeListDTO> getNoticeList(int currentPage, int pageSize);
+  int getTotalCount(String postCode, String searchWord);
+  List<NoticeListDTO> getNoticeList(int currentPage, int pageSize, String searchWord);
 }
