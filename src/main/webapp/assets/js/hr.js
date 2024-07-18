@@ -34,7 +34,7 @@ $(function(){
       data: JSON.stringify({ email: inputID }),
       error: function(myval){console.log("에러"+myval)},
       success: function(myval){
-        console.log("성공"+myval.checkDuplicatedId);
+        console.log("성공"+myval.checkDuplicated);
 
         if (!myval.checkDuplicatedId) {
           $("#COMM_register_IDdeny").removeClass("remove");
@@ -161,13 +161,14 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
     $.ajax({
       method: "post",
-      url : "/auth?pagecode=checkNickName",
-      data : {"NickName" : inputnickName},
+      url : "/api/auth/checkNick",
+      contentType: "application/json",
+      data: JSON.stringify({ nickName: inputnickName }),
       error: function(myval){console.log("에러"+myval)},
       success: function(myval){
         console.log("성공"+myval);
 
-        if (myval == 1) {
+        if (!myval.checkDuplicated) {
           $("#COMM_register_NickNamedeny").removeClass("remove");
           $("#COMM_register_NickNameavail").addClass("remove");
           $("#Input_NickName").val("");

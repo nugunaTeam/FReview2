@@ -5,4 +5,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface RegisterMapper {
   int getDuplicatedEmail(String email);
+  int getDuplicatedNickName(String nickName);
 }
