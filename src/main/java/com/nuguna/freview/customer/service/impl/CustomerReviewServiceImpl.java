@@ -1,10 +1,15 @@
 package com.nuguna.freview.customer.service.impl;
 
+import static com.nuguna.freview.customer.constant.CustomerConstant.CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE;
+
+import com.nuguna.freview.customer.dto.request.CustomerMyReviewsRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerReviewRegisterRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerReviewRegisterResponseDTO;
+import com.nuguna.freview.customer.dto.response.ReviewLogInfoDTO;
 import com.nuguna.freview.customer.exception.IllegalReviewException;
 import com.nuguna.freview.customer.mapper.CustomerReviewMapper;
 import com.nuguna.freview.customer.service.CustomerReviewService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,5 +37,15 @@ public class CustomerReviewServiceImpl implements CustomerReviewService {
     }
     customerReviewMapper.registerReview(reviewSeq, reviewUrl);
     return new CustomerReviewRegisterResponseDTO(reviewUrl);
+  }
+
+  @Override
+  public List<ReviewLogInfoDTO> getReviews(
+      CustomerMyReviewsRetrieveRequestDTO customerMyReviewsRetrieveRequestDTO) {
+    Long userSeq = customerMyReviewsRetrieveRequestDTO.getUserSeq();
+    Integer currentPage = customerMyReviewsRetrieveRequestDTO.getCurrentPage();
+
+    return customerReviewMapper.getReviewsInfo(userSeq,
+        (currentPage - 1) * CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE, CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE);
   }
 }

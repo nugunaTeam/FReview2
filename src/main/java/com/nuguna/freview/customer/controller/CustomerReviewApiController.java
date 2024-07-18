@@ -1,8 +1,11 @@
 package com.nuguna.freview.customer.controller;
 
+import com.nuguna.freview.customer.dto.request.CustomerMyReviewsRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerReviewRegisterRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerReviewRegisterResponseDTO;
+import com.nuguna.freview.customer.dto.response.ReviewLogInfoDTO;
 import com.nuguna.freview.customer.service.CustomerReviewService;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,15 @@ public class CustomerReviewApiController {
   ) {
     CustomerReviewRegisterResponseDTO responseDTO = customerReviewService.registerCustomerReview(
         customerReviewRegisterRequestDTO);
+    return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+  }
+
+  @RequestMapping(value = "/reviews", method = RequestMethod.GET)
+  public ResponseEntity<List<ReviewLogInfoDTO>> registerCustomerReview(
+      @Valid @RequestBody CustomerMyReviewsRetrieveRequestDTO customerMyReviewsRetrieveRequestDTO
+  ) {
+    List<ReviewLogInfoDTO> responseDTO = customerReviewService.getReviews(
+        customerMyReviewsRetrieveRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
   }
 
