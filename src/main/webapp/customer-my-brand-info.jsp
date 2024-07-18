@@ -312,18 +312,18 @@
                                 $("#nickname-submit-btn").click(function () {
                                   var newNickname = $('#nickname-input').val();
                                   $.ajax({
-                                    url: '<%=request.getContextPath()%>/api/my-brand/nickname',
-                                    method: 'POST',
+                                    url: '<%=request.getContextPath()%>/api/customer/my/brand-info/nickname',
+                                    method: 'PUT',
                                     data: JSON.stringify({
                                       'userSeq': ${userSeq},
                                       'toNickname': newNickname
                                     }),
                                     contentType: 'application/json',
                                     success: function (response) {
-                                      $('#nickname-input').val(response.item).prop('readonly',
+                                      $('#nickname-input').val(response.nickname).prop('readonly',
                                           true);
-                                      $("#nickname-holder-head").text(response.item);
-                                      $("#nickname-holder-section").text(response.item);
+                                      $("#nickname-holder-head").text(response.nickname);
+                                      $("#nickname-holder-section").text(response.nickname);
                                       $("#nickname-submit-btn").hide();
                                       $("#nickname-cancel-btn").hide();
                                       $("#nickname-update-btn").show();
