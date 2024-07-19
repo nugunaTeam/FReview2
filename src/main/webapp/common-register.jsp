@@ -98,7 +98,7 @@
                                                         data-bs-target="#bordered-justified-profile"
                                                         type="button" role="tab"
                                                         aria-controls="profile"
-                                                        aria-selected="true">사장님
+                                                        aria-selected="true">Store
                                                 </button>
                                             </li>
                                         </ul>
@@ -410,7 +410,7 @@
                                             <div class="tab-pane fade active show"
                                                  id="bordered-justified-profile" role="tabpanel"
                                                  aria-labelledby="profile-tab">
-                                                <p>협찬을 제공하고 온라인 리뷰를 제공받는 사장님 입니다</p>
+                                                <p>협찬을 제공하고 온라인 리뷰를 제공받는 Store 입니다</p>
                                                 <form class="row g-3 needs-validation"
                                                       id="COMM_register_form_Boss_regist"
                                                       novalidate>
@@ -632,7 +632,7 @@
                                                                             <h4>개인정보 수집 및 이용약관</h4>
                                                                             <h5>1. 개인정보의 수집 및 이용
                                                                                 목적</h5>
-                                                                            <p>1.2. 식당을 운영하는 사장님으로서
+                                                                            <p>1.2. 식당을 운영하는 Store으로서
                                                                                 회원 가입하는 경우, 다음과 같은
                                                                                 개인정보를 수집합니다.</p>
                                                                             <ul>
@@ -648,7 +648,7 @@
                                                                                 제공되는 경우, 이벤트나 프로모션
                                                                                 참여 시 수집될 수 있습니다.</p>
                                                                             <h5>3. 개인정보의 이용</h5>
-                                                                            <p>3.2. 사장님 회원의 개인정보는
+                                                                            <p>3.2. Store 회원의 개인정보는
                                                                                 다음과 같은 목적으로
                                                                                 이용됩니다.</p>
 
