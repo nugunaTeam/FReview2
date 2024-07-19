@@ -39,7 +39,6 @@ public class RegisterServiceImpl implements RegisterService {
     String nickName = requestCheckNicknameRequestDTO.getNickname();
     log.info(nickName);
     result = registerMapper.getDuplicatedNickName(nickName);
-
     return result;
   }
 

@@ -31,7 +31,6 @@ public class AuthApiController {
 
   @Autowired
   public AuthApiController(RegisterService registerService, SendMailUtil sendEmail) {this.registerService = registerService;
-                                                                                               this.sendMailUtil = sendEmail;}
 
 
 
@@ -49,6 +48,7 @@ public class AuthApiController {
 
   @RequestMapping(value = "/api/auth/send-randomNumber-toEmail", method = RequestMethod.POST)
   public ResponseEntity<RegisterSendEmailResponseDTO> sendEmail(@Valid @RequestBody RegisterSendEmailRequestDTO registerSendEmailRequestDTO) {
+    
     log.info("이메일 보내기 확인");
     log.info(registerSendEmailRequestDTO.getEmail());
     log.info(registerSendEmailRequestDTO.getRandomNumber());
@@ -67,11 +67,13 @@ public class AuthApiController {
 
   }
 
+
   @RequestMapping(value = "/api/auth/nickname-check", method = RequestMethod.POST)
   public ResponseEntity<RegisterCheckInfoResponseDTO> checkDuplicatedNick(@Valid @RequestBody
       RegisterCheckNickNameRequestDTO requestCheckNicknameRequestDTO) {
     log.info("닉네임 중복 확인");
     log.info(requestCheckNicknameRequestDTO.getNickname());
+
     boolean result = registerService.checkDuplicatedNickName(requestCheckNicknameRequestDTO);
     log.info("이메일 중복 결과 "+result);
    RegisterCheckInfoResponseDTO registerCheckInfoResponseDTO = new RegisterCheckInfoResponseDTO(result);
@@ -89,6 +91,7 @@ public class AuthApiController {
       registerService.storeRegist(registerRequestDTO);
     }
   }
+
 
   @RequestMapping(value = "/api/auth/business-number-check", method = RequestMethod.POST)
   public ResponseEntity<RegisterCheckInfoResponseDTO> checkBuisnessNumber(@Valid @RequestBody RegisterCheckBusinessNumberDTO registerCheckBusinessNumberDTO) {
