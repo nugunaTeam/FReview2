@@ -132,7 +132,7 @@
 
     <div class="pagetitle">
         <h1>모집</h1>
-    </div><!-- End Page Title -->
+    </div>
 
     <div class="card">
         <div class="card-body">
@@ -240,7 +240,7 @@
         let formattedApplyEndDate = dayjs(post["applyEndDate"]).format('YYYY-MM-DD');
         let formattedExperienceDate = dayjs(post["experienceDate"]).format('YYYY-MM-DD');
 
-        htmlStr += "<a href='/mojip-detail?postSeq=" + post["postSeq"]
+        htmlStr += "<a href='/mojip/" + post["seq"]
             + "' class='post-item'>";
         htmlStr += "<img src='" + post["profilePhotoUrl"] + "' alt='Profile' class='profile-img'>";
         htmlStr += "<h5>" + post["title"] + "</h5>";
@@ -248,7 +248,7 @@
         htmlStr += "<p>[체험 장소] " + post["storeLocation"] + "</p>";
         htmlStr += "<p>[체험 기간] " + formattedApplyStartDate + " ~ " + formattedApplyEndDate + "</p>";
         htmlStr += "<p>[체험 날짜] " + formattedExperienceDate + "</p>";
-        htmlStr += "<p>[좋아요 수] " + post["totalLikes"] + "</p>";
+        htmlStr += "<p>[좋아요 수] " + post["totalLike"] + "</p>";
         htmlStr += "</a>";
       });
       $('#postList').append(htmlStr);

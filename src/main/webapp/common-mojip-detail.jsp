@@ -1,11 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<c:set var="loginUser" value="${requestScope.loginUser}"/>
-<c:set var="memberSeq" value="${loginUser.memberSeq}"/>
+<c:set var="loginUser" value="${loginUser}"/>
+<c:set var="userSeq" value="${loginUser.seq}"/>
 <c:set var="nickname" value="${loginUser.nickname}"/>
-<c:set var="gubun" value="${loginUser.gubun}"/>
+<c:set var="profileUrl" value="${loginUser.profilePhotoUrl}" />
+<c:set var="code" value="${loginUser.code}"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -74,20 +76,17 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center header-hr">
     <div class="d-flex align-items-center justify-content-between ">
-        <a href="/main?seq=${memberSeq}&pagecode=Requester"
+        <a href="/main?seq=${userSeq}&pagecode=Requester"
            class="logo d-flex align-items-center">
-            <img src="assets/img/logo/logo-vertical.png" alt=""
+            <img src="/assets/img/logo/logo-vertical.png" alt=""
                  style="  width: 50px; margin-top: 20px;">
             <span class="d-none d-lg-block">FReview</span>
         </a>
     </div>
     <div class="header-hr-right">
-        <a href="/my-info?member_seq=${memberSeq}" style="margin-right: 20px">
+        <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
             ${nickname}
-            <img src="assets/img/basic/basic-profile-img.png" alt=" " style="width: 30px;
-                margin-top: 15px;">
-            <%--            <img src="<%=profileURL()%>" alt=" " style="width: 30px;--%>
-            <%--    margin-top: 15px;"> TODO: 세션의 프로필 url을 적용할 것--%>
+            <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
         </a>
         <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
     </div>
@@ -103,12 +102,12 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="card-title mb-0">모집글 상세보기</h5>
                 <div>
-                    <c:if test="${memberSeq == mojipPost.memberSeq || gubun == 'A'}">
+                    <c:if test="${userSeq == mojipPost.userSeq || code eq 'ADMIN'}">
                         <button type="button" class="btn btn-danger" onclick="confirmDelete()">
                             삭제
                         </button>
                     </c:if>
-                    <c:if test="${memberSeq == mojipPost.memberSeq}">
+                    <c:if test="${userSeq == mojipPost.userSeq}">
                         <button type="button" class="btn btn-primary" onclick="editPost()">수정
                         </button>
                     </c:if>
@@ -120,38 +119,32 @@
             <div class="d-flex mb-4">
                 <img src="${mojipPost.profilePhotoUrl}" alt="Profile" class="profile-img">
                 <div class="ml-4">
-                    <h3><a href='/brand-page?member_seq=${mojipPost.memberSeq}'>${mojipPost.storeName}</a></h3>
-                    <p>분야: ${mojipPost.codeName}</p>
-                    <p>태그: ${mojipPost.name}</p>
+                    <h3><a href='/brand-page?user_seq=${mojipPost.userSeq}'>${mojipPost.storeName}</a></h3>
+                    <p>분야: ${mojipPost.foodTypeWord}</p>
+                    <p>태그: ${mojipPost.tagWord}</p>
                 </div>
             </div>
             <form id="postForm" action="/mojip-detail-update" method="post">
-                <input type="hidden" name="postSeq" value="${mojipPost.postSeq}">
-                <input type="hidden" name="writerSeq" value="${mojipPost.memberSeq}">
-                <input type="hidden" name="memberSeq" value="${memberSeq}">
+                <input type="hidden" name="postSeq" value="${mojipPost.seq}">
+                <input type="hidden" name="writerSeq" value="${mojipPost.userSeq}">
+                <input type="hidden" name="userSeq" value="${userSeq}">
                 <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
                     <tbody>
                     <tr>
                         <th class="fixed-width">제목</th>
-                        <td>
-                            <span id="titleView">${mojipPost.title}</span>
-                            <input type="text" class="form-control d-none" id="titleEdit"
-                                   name="title" value="${mojipPost.title}">
-                        </td>
+                        <td>${mojipPost.title}</td>
                     </tr>
                     <tr>
                         <th class="fixed-width">모집 시작 일자</th>
-                        <td>
-                            <span id="mojipView">${mojipPost.applyStartDate}</span>
-                        </td>
+                        <td><fmt:formatDate value="${mojipPost.applyStartDate}" pattern="yyyy-MM-dd"/></td>
                     </tr>
                     <tr>
                         <th class="fixed-width">모집 종료 일자</th>
-                        <td>${mojipPost.applyEndDate}</td>
+                        <td><fmt:formatDate value="${mojipPost.applyEndDate}" pattern="yyyy-MM-dd"/></td>
                     </tr>
                     <tr>
                         <th class="fixed-width">체험 날짜</th>
-                        <td>${mojipPost.experienceDate}</td>
+                        <td><fmt:formatDate value="${mojipPost.experienceDate}" pattern="yyyy-MM-dd"/></td>
                     </tr>
                     <tr>
                         <th class="fixed-width">체험 장소</th>
@@ -159,16 +152,11 @@
                     </tr>
                     <tr>
                         <th class="fixed-width">내용</th>
-                        <td>
-                            <span id="contentView"
-                                  style="white-space: pre-line;">${mojipPost.content}</span>
-                            <textarea class="form-control d-none" id="contentEdit" name="content"
-                                      rows="10">${mojipPost.content}</textarea>
-                        </td>
+                        <td style="white-space: pre-line;">${mojipPost.content}</td>
                     </tr>
                     <tr>
                         <th class="fixed-width">좋아요 수</th>
-                        <td>${mojipPost.numberOfLikes}</td>
+                        <td>${mojipPost.totalLike}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -179,7 +167,7 @@
                 </div>
             </form>
             <div id="likeButtons" class="button-container text-center">
-                <c:if test="${gubun == 'B' || gubun == 'C'}">
+                <c:if test="${code eq 'STORE' || code eq 'CUSTOMER'}">
                     <c:choose>
                         <c:when test="${isLiked}">
                             <button type="button" class="btn btn-primary like-button"
@@ -195,7 +183,7 @@
                         </c:otherwise>
                     </c:choose>
                 </c:if>
-                <c:if test="${gubun == 'C'}">
+                <c:if test="${code eq 'CUSTOMER'}">
                     <button type="button" class="btn btn-primary apply-button"
                             data-bs-toggle="modal" data-bs-target="#applyModal">지원하기
                     </button>
@@ -269,12 +257,12 @@
   function applyPost() {
     var postSeq = document.querySelector('input[name="postSeq"]').value;
     var writerSeq = document.querySelector('input[name="writerSeq"]').value;
-    var memberSeq = document.querySelector('input[name="memberSeq"]').value;
+    var userSeq = document.querySelector('input[name="userSeq"]').value;
 
     var formData = new URLSearchParams();
     formData.append('postSeq', postSeq);
     formData.append('writerSeq', writerSeq);
-    formData.append('memberSeq', memberSeq);
+    formData.append('userSeq', userSeq);
 
     fetch('/mojip-detail-apply', {
       method: 'POST',
@@ -369,7 +357,7 @@
       },
       body: new URLSearchParams({
         postSeq: postSeq,
-        memberSeq: ${memberSeq}
+        userSeq: ${userSeq}
       }).toString()
     })
     .then(response => {
@@ -393,7 +381,7 @@
       },
       body: new URLSearchParams({
         postSeq: postSeq,
-        memberSeq: ${memberSeq}
+        userSeq: ${userSeq}
       }).toString()
     })
     .then(response => {
