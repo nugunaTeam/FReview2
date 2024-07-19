@@ -1,10 +1,12 @@
 package com.nuguna.freview.common.service;
 
-import com.nuguna.freview.common.dto.response.MojipPostDTO;
+import com.nuguna.freview.common.dto.response.MojipPostDetailDTO;
+import java.util.Date;
 import java.util.List;
 
 public interface MojipService {
 
-  List<MojipPostDTO> getMojipList(Long previousPostSeq, String searchWord, int pageSize);
-  MojipPostDTO getMojipDetail(Long postSeq);
+  List<MojipPostDetailDTO> getMojipList(Long previousPostSeq, String searchWord, int pageSize);
+  MojipPostDetailDTO getMojipDetail(Long postSeq);
+  boolean createMojip(Long userSeq, String title, Date applyStartDate, Date applyEndDate, Date experienceDate, String content);
 }

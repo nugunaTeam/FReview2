@@ -1,8 +1,9 @@
 package com.nuguna.freview.common.service.impl;
 
-import com.nuguna.freview.common.dto.response.MojipPostDTO;
+import com.nuguna.freview.common.dto.response.MojipPostDetailDTO;
 import com.nuguna.freview.common.mapper.MojipMapper;
 import com.nuguna.freview.common.service.MojipService;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class MojipServiceImpl implements MojipService {
   }
 
   @Override
-  public List<MojipPostDTO> getMojipList(Long previousPostSeq, String searchWord, int pageSize) {
+  public List<MojipPostDetailDTO> getMojipList(Long previousPostSeq, String searchWord, int pageSize) {
     if (searchWord == null) {
       return mojipMapper.selectMojipList(previousPostSeq, pageSize);
     } else {
@@ -27,7 +28,14 @@ public class MojipServiceImpl implements MojipService {
   }
 
   @Override
-  public MojipPostDTO getMojipDetail(Long postSeq) {
+  public MojipPostDetailDTO getMojipDetail(Long postSeq) {
     return mojipMapper.selectMojipDetail(postSeq);
+  }
+
+  @Override
+  public boolean createMojip(Long userSeq, String title, Date applyStartDate,
+      Date applyEndDate, Date experienceDate, String content) {
+    int result = mojipMapper.insertMojip(userSeq, title, applyStartDate, applyEndDate, experienceDate, content);
+    return result == 1;
   }
 }
