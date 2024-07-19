@@ -183,26 +183,6 @@
                     </tr>
                     </tbody>
                 </table>
-                <div class="button-container">
-                    <c:if test="${gubun == 'C' || gubun == 'B'}">
-                        <c:choose>
-                            <c:when test="${isLiked}">
-                                <button type="button" class="btn btn-primary like-button"
-                                        onclick="cancelLike(${currentPost.postSeq}, ${userSeq
-                                       })">
-                                    <i class="bi bi-heart-fill me-1"></i> 좋아요
-                                </button>
-                            </c:when>
-                            <c:otherwise>
-                                <button type="button" class="btn btn-primary like-button"
-                                        onclick="addLike(${currentPost.postSeq}, ${userSeq
-                                       })">
-                                    <i class="bi bi-heart me-1"></i> 좋아요
-                                </button>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:if>
-                </div>
                 <div id="editButtons" class="d-none">
                     <button type="submit" class="btn btn-primary">완료</button>
                     <button type="button" class="btn btn-secondary" onclick="cancelEdit()">취소
@@ -212,7 +192,6 @@
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
@@ -235,147 +214,75 @@
 
     <script>
       document.addEventListener('DOMContentLoaded', function () {
+        // 날짜 형식 변환 함수
         function formatDate(dataString) {
           return dayjs(dataString).format('YYYY-MM-DD HH:mm');
         }
 
+        // 초기화 시 날짜 설정
         var createdAt = "${currentPost.createdAt}";
         var updatedAt = "${currentPost.updatedAt}";
-
         document.getElementById('displayCreatedAt').textContent = formatDate(createdAt);
         document.getElementById('displayUpdatedAt').textContent = formatDate(updatedAt);
-      });
 
-      function editPost() {
-        document.getElementById('titleView').classList.add('d-none');
-        document.getElementById('contentView').classList.add('d-none');
-        document.getElementById('titleEdit').classList.remove('d-none');
-        document.getElementById('contentEdit').classList.remove('d-none');
-        document.getElementById('editButtons').classList.remove('d-none');
-      }
+        function editPost() {
+          $('#titleView, #contentView').addClass('d-none');
+          $('#titleEdit, #contentEdit, #editButtons').removeClass('d-none');
+        }
 
-      function cancelEdit() {
-        document.getElementById('titleView').classList.remove('d-none');
-        document.getElementById('contentView').classList.remove('d-none');
-        document.getElementById('titleEdit').classList.add('d-none');
-        document.getElementById('contentEdit').classList.add('d-none');
-        document.getElementById('editButtons').classList.add('d-none');
-      }
+        function cancelEdit() {
+          $('#titleView, #contentView').removeClass('d-none');
+          $('#titleEdit, #contentEdit, #editButtons').addClass('d-none');
+        }
 
-      document.getElementById('postForm').addEventListener('submit', function (event) {
-        event.preventDefault();
+        function confirmDelete() {
+          var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+          deleteModal.show();
+        }
 
-        var formData = new URLSearchParams(new FormData(this));
+        // 게시글 삭제
+        function deletePost() {
+          var postSeq = $('input[name="postSeq"]').val();
+          fetch('/notice/detail/delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({postSeq: postSeq}).toString()
+          })
+          .then(response => response.ok ? location.replace("/notice") : alert('게시글 삭제 실패'))
+          .catch(error => alert('Error: ' + error));
+        }
 
-        fetch('/notice/detail/update', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: formData.toString()
-        })
-        .then(response => {
-          if (response.ok) {
-            return response.text().then(data => {
-              console.log(data);
-              alert('게시글이 성공적으로 수정되었습니다.');
-              location.replace("/notice")
-            })
-          } else {
-            response.text().then(data => {
-              console.error(data);
-              alert('게시글 수정에 실패했습니다. 다시 시도해 주세요.');
-            });
-          }
-        })
-        .catch(error => console.error('Error:', error));
-      });
-
-      function confirmDelete() {
-        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-        deleteModal.show();
-      }
-
-      function deletePost() {
-        var postSeq = document.querySelector('input[name="postSeq"]').value;
-
-        fetch('/notice/detail/delete', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: new URLSearchParams({postSeq: postSeq}).toString()
-        })
-        .then(response => {
-          if (response.ok) {
-            return response.text().then(data => {
-              console.log(data);
-              alert('게시글이 성공적으로 삭제되었습니다.');
-              location.replace("/notice");
-            });
-          } else {
-            response.text().then(data => {
-              console.error(data);
-              alert('게시글 삭제에 실패했습니다. 다시 시도해 주세요.');
-            });
-          }
-        })
-        .catch(error => console.error('Error:', error));
-      }
-
-      function addLike(postSeq, userSeq) {
-        fetch('/likes-add', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: new URLSearchParams({
-            postSeq: postSeq,
-            //TODO: 접속자의 세션 seq로 변경 필요
-            userSeq: userSeq
-          }).toString()
-        })
-        .then(response => {
-          if (response.ok) {
-            location.reload();
-          } else {
-            alert('좋아요를 추가하는 데 실패했습니다. 다시 시도해 주세요.');
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('좋아요를 추가하는 도중 오류가 발생했습니다.');
+        // 폼 제출 처리
+        $('#postForm').on('submit', function(e) {
+          e.preventDefault();
+          var postData = {
+            seq: $('input[name="postSeq"]').val(),
+            title: $('#titleEdit').val(),
+            content: $('#contentEdit').val()
+          };
+          $.ajax({
+            url: '/api/common/notice/update',
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(postData),
+            success: function(response) {
+              alert('게시글이 성공적으로 업데이트되었습니다.');
+              window.location.reload(); // 성공 후 페이지 새로고침
+            },
+            error: function(xhr, status, error) {
+              alert('업데이트 실패: ' + error);
+            }
+          });
         });
-      }
 
-      function cancelLike(postSeq, userSeq) {
-        fetch('/likes-cancel', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: new URLSearchParams({
-            postSeq: postSeq,
-            userSeq: userSeq
-          }).toString()
-        })
-        .then(response => {
-          if (response.ok) {
-            location.reload();
-          } else {
-            alert('좋아요를 취소하는 데 실패했습니다. 다시 시도해 주세요.');
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('좋아요를 취소하는 도중 오류가 발생했습니다.');
-        });
-      }
+        window.editPost = editPost;
+        window.cancelEdit = cancelEdit;
+        window.confirmDelete = confirmDelete;
+        window.deletePost = deletePost;
+      });
     </script>
 
-    </script>
-
-</main><!-- End #main -->
+</main>
 
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">

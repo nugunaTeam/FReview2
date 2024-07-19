@@ -102,7 +102,7 @@
 
 <header id="header" class="header fixed-top d-flex align-items-center header-hr">
     <div class="d-flex align-items-center justify-content-between ">
-        <a href="/main?seq=${memberSeq}&pagecode=Requester"
+        <a href="/main?seq=${userSeq}&pagecode=Requester"
            class="logo d-flex align-items-center">
             <img src="/assets/img/logo/logo-vertical.png" alt=""
                  style="  width: 50px; margin-top: 20px;">

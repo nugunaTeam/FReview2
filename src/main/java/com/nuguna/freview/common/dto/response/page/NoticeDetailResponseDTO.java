@@ -1,6 +1,6 @@
 package com.nuguna.freview.common.dto.response.page;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,8 +15,8 @@ public class NoticeDetailResponseDTO {
   private Long seq;
   private Long userSeq;
   private String title;
-  private LocalDateTime createdAt;
-  private LocalDateTime updatedAt;
+  private Timestamp createdAt;
+  private Timestamp updatedAt;
   private String content;
   private int viewCount;
 }
