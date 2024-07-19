@@ -1,6 +1,6 @@
 package com.nuguna.freview.common.controller.page;
 
-import com.nuguna.freview.common.dto.response.MojipPostDTO;
+import com.nuguna.freview.common.dto.response.MojipPostDetailDTO;
 import com.nuguna.freview.common.service.MojipService;
 import com.nuguna.freview.common.service.PostService;
 import com.nuguna.freview.common.service.UserService;
@@ -48,7 +48,7 @@ public class MojipController {
     UserVO loginUser = userService.getUserInfo(userSeq);
 
     postService.addViewCount(postSeq);
-    MojipPostDTO mojipPost = mojipService.getMojipDetail(postSeq);
+    MojipPostDetailDTO mojipPost = mojipService.getMojipDetail(postSeq);
 
     model.addAttribute("mojipPost", mojipPost);
     model.addAttribute("loginUser", loginUser);

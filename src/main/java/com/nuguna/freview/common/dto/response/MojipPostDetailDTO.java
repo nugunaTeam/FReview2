@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MojipPostDTO {
+public class MojipPostDetailDTO {
 
   private Long seq;
   private Long userSeq;

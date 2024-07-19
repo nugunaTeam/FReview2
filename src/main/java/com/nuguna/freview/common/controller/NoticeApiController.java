@@ -79,8 +79,8 @@ public class NoticeApiController {
     }
   }
 
-  @RequestMapping(value = "/insert", method = RequestMethod.POST)
-  public ResponseEntity<?> insertPost(@RequestBody NoticeInsertRequestDTO requestDTO) {
+  @RequestMapping(value = "/create", method = RequestMethod.POST)
+  public ResponseEntity<?> createNoticePost(@RequestBody NoticeInsertRequestDTO requestDTO) {
     Long userSeq = requestDTO.getUserSeq();
     String title = requestDTO.getTitle();
     String content = requestDTO.getContent();

@@ -171,13 +171,13 @@
                     <c:choose>
                         <c:when test="${isLiked}">
                             <button type="button" class="btn btn-primary like-button"
-                                    onclick="cancelLike(${mojipPost.postSeq}, ${applicantSeq})">
+                                    onclick="cancelLike(${mojipPost.seq}, ${applicantSeq})">
                                 <i class="bi bi-heart-fill me-1"></i> 좋아요
                             </button>
                         </c:when>
                         <c:otherwise>
                             <button type="button" class="btn btn-primary like-button"
-                                    onclick="addLike(${mojipPost.postSeq}, ${applicantSeq})">
+                                    onclick="addLike(${mojipPost.seq}, ${applicantSeq})">
                                 <i class="bi bi-heart me-1"></i> 좋아요
                             </button>
                         </c:otherwise>
