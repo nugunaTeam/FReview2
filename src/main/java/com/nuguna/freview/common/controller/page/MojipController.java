@@ -45,12 +45,14 @@ public class MojipController {
   @RequestMapping(value = "/{postSeq}", method = RequestMethod.GET)
   public String noticePostDetail(@PathVariable Long postSeq, Model model) {
     //HACK: 로그인 유저의 실제 seq 로 수정 필요
-    Long userSeq = 200L;
+    Long userSeq = 1L;
     UserVO loginUser = userService.getUserInfo(userSeq);
 
     postService.addViewCount(postSeq);
     MojipPostDetailDTO mojipPost = mojipService.getMojipDetail(postSeq);
+    boolean isLiked = postService.isLikedPost(userSeq, postSeq);
 
+    model.addAttribute("isLiked", isLiked);
     model.addAttribute("mojipPost", mojipPost);
     model.addAttribute("loginUser", loginUser);
 
@@ -60,7 +62,7 @@ public class MojipController {
   @RequestMapping(value = "/create", method = RequestMethod.GET)
   public String mojipCreatePage(Model model) {
     //HACK: 로그인 유저의 실제 seq 로 수정 필요
-    Long userSeq = 1L; // STORE
+    Long userSeq = 1L;
     UserVO loginUser = userService.getUserInfo(userSeq);
 
     model.addAttribute("loginUser", loginUser);
