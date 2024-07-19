@@ -340,14 +340,8 @@
   });
 
   function deletePost() {
-    var postSeq = document.querySelector('input[name="postSeq"]').value;
-
-    fetch('/mojip-detail-delete', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: new URLSearchParams({postSeq: postSeq}).toString()
+    fetch('/api/common/mojip/${mojipPost.seq}', {
+      method: 'DELETE',
     })
     .then(response => {
       if (response.ok) {

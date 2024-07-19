@@ -6,12 +6,14 @@ import com.nuguna.freview.common.dto.request.MojipUpdateRequestDTO;
 import com.nuguna.freview.common.dto.response.MojipPostDetailDTO;
 import com.nuguna.freview.common.dto.response.page.MojipResponseDTO;
 import com.nuguna.freview.common.service.MojipService;
+import com.nuguna.freview.common.service.PostService;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,11 +25,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class MojipApiController {
 
   private final MojipService mojipService;
+  private final PostService postService;
   private final int PAGE_SIZE = 12;
 
   @Autowired
-  public MojipApiController(MojipService mojipService) {
+  public MojipApiController(MojipService mojipService, PostService postService) {
     this.mojipService = mojipService;
+    this.postService = postService;
   }
 
   @RequestMapping(value = "/list", method = RequestMethod.POST)
@@ -89,6 +93,15 @@ public class MojipApiController {
       }
     } catch (Exception e) {
       log.error("[ERROR] 모집글 수정 도중 에러 발생", e);
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @RequestMapping(value = "/{deletePostSeq}", method = RequestMethod.DELETE)
+  public ResponseEntity<?> deleteMojipPost(@PathVariable Long deletePostSeq) {
+    if (postService.deletePost(deletePostSeq)) {
+      return new ResponseEntity<>(HttpStatus.OK);
+    } else {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
