@@ -10,8 +10,8 @@
     <id property="seq" column="seq"/>
     <result property="userSeq" column="user_seq"/>
     <result property="title" column="title"/>
-    <result property="createdAt" column="created_at" jdbcType="TIMESTAMP" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler"/>
-    <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler"/>
+    <result property="createdAt" column="created_at" />
+    <result property="updatedAt" column="updated_at" />
     <result property="content" column="content"/>
     <result property="viewCount" column="view_count"/>
   </resultMap>
@@ -38,6 +38,16 @@
     UPDATE
         freview2.post
     SET view_count = view_count + 1
+    WHERE seq = #{postSeq}
+  </update>
+
+  <!-- 특정 공지글 수정 -->
+  <update id="updateNotice" parameterType="map">
+    UPDATE freview2.post
+    SET
+      title = #{title},
+      content = #{content},
+      updated_at = #{updatedAt}
     WHERE seq = #{postSeq}
   </update>
 </mapper>
