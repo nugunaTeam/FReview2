@@ -25,4 +25,9 @@ public class MojipServiceImpl implements MojipService {
       return mojipMapper.searchMojipList(previousPostSeq, pageSize, searchWord);
     }
   }
+
+  @Override
+  public MojipPostDTO getMojipDetail(Long postSeq) {
+    return mojipMapper.selectMojipDetail(postSeq);
+  }
 }

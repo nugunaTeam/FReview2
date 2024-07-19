@@ -6,4 +6,5 @@ import java.util.List;
 public interface MojipService {
 
   List<MojipPostDTO> getMojipList(Long previousPostSeq, String searchWord, int pageSize);
+  MojipPostDTO getMojipDetail(Long postSeq);
 }
