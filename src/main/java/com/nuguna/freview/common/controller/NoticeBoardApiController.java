@@ -42,10 +42,9 @@ public class NoticeBoardApiController {
     int noticeTotal = boardService.getTotalCount(PostCode.NOTICE.getCode(), searchWord);
     int totalPage = (int)Math.ceil((double)noticeTotal / (double)PAGE_SIZE);
 
-    NoticeResponseDTO responseDTO = NoticeResponseDTO.builder()
-        .noticeList(noticeList)
-        .pageTotalCount(totalPage)
-        .build();
+    NoticeResponseDTO responseDTO = new NoticeResponseDTO();
+    responseDTO.setNoticeList(noticeList);
+    responseDTO.setPageTotalCount(totalPage);
 
     return responseDTO;
   }

@@ -3,12 +3,12 @@ package com.nuguna.freview.common.dto.response.page;
 import com.nuguna.freview.common.dto.response.NoticeListDTO;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@Builder
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class NoticeResponseDTO {
