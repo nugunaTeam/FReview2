@@ -6,7 +6,7 @@
 
   <!-- ResultMap 설정 -->
   <!-- mojipListMap 설정 -->
-  <resultMap id="mojipListMap" type="com.nuguna.freview.common.dto.response.MojipPostDTO">
+  <resultMap id="mojipPostMap" type="com.nuguna.freview.common.dto.response.MojipPostDTO">
     <id property="seq" column="post_seq"/>
     <result property="userSeq" column="user_seq"/>
     <result property="businessNumber" column="business_number"/>
@@ -20,10 +20,11 @@
     <result property="applyEndDate" column="apply_end_date"/>
     <result property="experienceDate" column="experience_date"/>
     <result property="content" column="content"/>
-    <result property="totalLikes" column="number_of_likes"/>
+    <result property="totalLike" column="number_of_likes"/>
+    <result property="totalView" column="view_count"/>
   </resultMap>
 
-  <select id="selectMojipList" parameterType="map" resultMap="mojipListMap">
+  <select id="selectMojipList" parameterType="map" resultMap="mojipPostMap">
     SELECT
     p.seq AS post_seq,
     m.seq AS user_seq,
@@ -38,7 +39,8 @@
     p.apply_end_date,
     p.experience_date,
     p.content,
-    (SELECT COUNT(*) FROM `like` l WHERE l.post_seq = p.seq) AS number_of_likes
+    (SELECT COUNT(*) FROM `like` l WHERE l.post_seq = p.seq) AS number_of_likes,
+    p.view_count
     FROM
     post p
     LEFT JOIN user m ON p.user_seq = m.seq
@@ -56,7 +58,7 @@
     LIMIT #{limit}
   </select>
 
-  <select id="searchMojipList" parameterType="map" resultMap="mojipListMap">
+  <select id="searchMojipList" parameterType="map" resultMap="mojipPostMap">
     SELECT
       p.seq AS post_seq,
       m.seq AS user_seq,
@@ -71,7 +73,8 @@
       p.apply_end_date,
       p.experience_date,
       p.content,
-      (SELECT COUNT(*) FROM `like` l WHERE l.post_seq = p.seq) AS number_of_likes
+      (SELECT COUNT(*) FROM `like` l WHERE l.post_seq = p.seq) AS number_of_likes,
+      p.view_count
     FROM
       post p
         LEFT JOIN user m ON p.user_seq = m.seq
@@ -94,6 +97,35 @@
     ORDER BY
       p.seq DESC
     LIMIT #{limit}
+  </select>
+
+  <select id="selectMojipDetail" parameterType="map" resultMap="mojipPostMap">
+    SELECT
+      p.seq AS post_seq,
+      m.seq AS user_seq,
+      m.business_number,
+      m.profile_photo_url,
+      m.store_location,
+      GROUP_CONCAT(DISTINCT ft.dish ORDER BY ft.dish ASC SEPARATOR ', ') AS food_type_word,
+      GROUP_CONCAT(DISTINCT t.name ORDER BY t.name ASC SEPARATOR ', ') AS tag_word,
+      s.store_name,
+      p.title,
+      p.apply_start_date,
+      p.apply_end_date,
+      p.experience_date,
+      p.content,
+      (SELECT COUNT(*) FROM `like` l WHERE l.post_seq = p.seq) AS number_of_likes,
+      p.view_count
+    FROM
+      post p
+        LEFT JOIN user m ON p.user_seq = m.seq
+        LEFT JOIN user_food_type mft ON m.seq = mft.user_seq
+        LEFT JOIN food_type ft ON mft.food_type_seq = ft.seq
+        LEFT JOIN user_tag mt ON m.seq = mt.user_seq
+        LEFT JOIN tag t ON mt.tag_seq = t.seq
+        LEFT JOIN national_store_business_information s ON m.business_number = s.business_number
+    WHERE
+      p.seq = #{postSeq}
   </select>
 
 </mapper>

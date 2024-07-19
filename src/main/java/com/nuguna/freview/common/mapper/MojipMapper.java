@@ -10,4 +10,5 @@ public interface MojipMapper {
 
   List<MojipPostDTO> selectMojipList(@Param("previousPostSeq") Long previousPostSeq, @Param("limit") int limit);
   List<MojipPostDTO> searchMojipList(@Param("previousPostSeq") Long previousPostSeq, @Param("limit") int limit, @Param("searchWord") String keyword);
+  MojipPostDTO selectMojipDetail(@Param("postSeq") Long postSeq);
 }
