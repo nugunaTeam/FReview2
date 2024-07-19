@@ -112,16 +112,20 @@
 
     <script>
       document.getElementById('createPostForm').addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevent the default form submission
+        event.preventDefault();
 
-        var formData = new URLSearchParams(new FormData(this));
+        var formData = {
+          userSeq: ${userSeq},
+          title: document.getElementById('title').value, // 제목 입력 필드
+          content: document.getElementById('content').value // 내용 입력 필드
+        };
 
-        fetch('/notice-create', {
+        fetch('/api/common/notice/insert', { // 컨트롤러 URL과 일치해야 함
           method: 'POST',
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/json'
           },
-          body: formData.toString()
+          body: JSON.stringify(formData)
         })
         .then(response => {
           if (response.ok) {
@@ -129,19 +133,22 @@
               console.log(data);
               alert('게시글이 성공적으로 등록되었습니다.');
               location.replace("/notice");
-            })
+            });
           } else {
-            response.text().then(data => {
+            return response.text().then(data => {
               console.error(data);
               alert('게시글 등록에 실패했습니다. 다시 시도해 주세요.');
             });
           }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+          console.error('Error:', error);
+          alert('게시글 등록 중 오류가 발생했습니다.');
+        });
       });
     </script>
 
-</main><!-- End #main -->
+</main>
 
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
