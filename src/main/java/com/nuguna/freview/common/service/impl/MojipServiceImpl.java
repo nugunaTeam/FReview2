@@ -44,4 +44,10 @@ public class MojipServiceImpl implements MojipService {
    int result = mojipMapper.updateMojip(postSeq, title, content);
    return result == 1;
   }
+
+  @Override
+  public boolean applyMojip(Long fromUserSeq, Long toUserSeq, Long fromPostSeq) {
+    int result = mojipMapper.applyMojip(fromUserSeq, toUserSeq, fromPostSeq);
+    return result == 1;
+  }
 }
