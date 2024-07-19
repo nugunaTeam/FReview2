@@ -26,4 +26,11 @@
     from post
     where seq = #{postSeq}
   </delete>
+
+  <!-- 특정 게시글 좋아요 추가 -->
+  <insert id="insertLike" parameterType="map">
+    insert into `like` (user_seq, post_seq)
+    values (#{userSeq}, #{postSeq})
+  </insert>
+
 </mapper>
