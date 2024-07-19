@@ -56,4 +56,43 @@
     LIMIT #{limit}
   </select>
 
+  <select id="searchMojipList" parameterType="map" resultMap="mojipListMap">
+    SELECT
+      p.seq AS post_seq,
+      m.seq AS user_seq,
+      m.business_number,
+      m.profile_photo_url,
+      m.store_location,
+      GROUP_CONCAT(DISTINCT ft.dish ORDER BY ft.dish ASC SEPARATOR ', ') AS food_type_word,
+      GROUP_CONCAT(DISTINCT t.name ORDER BY t.name ASC SEPARATOR ', ') AS tag_word,
+      s.store_name,
+      p.title,
+      p.apply_start_date,
+      p.apply_end_date,
+      p.experience_date,
+      p.content,
+      (SELECT COUNT(*) FROM `like` l WHERE l.post_seq = p.seq) AS number_of_likes
+    FROM
+      post p
+        LEFT JOIN user m ON p.user_seq = m.seq
+        LEFT JOIN user_food_type mft ON m.seq = mft.user_seq
+        LEFT JOIN food_type ft ON mft.food_type_seq = ft.seq
+        LEFT JOIN user_tag mt ON m.seq = mt.user_seq
+        LEFT JOIN tag t ON mt.tag_seq = t.seq
+        LEFT JOIN national_store_business_information s ON m.business_number = s.business_number
+    WHERE
+      p.code = '모집' AND p.seq &lt; #{previousPostSeq}
+      AND (
+      s.store_name LIKE CONCAT('%', #{searchWord}, '%')
+        OR m.store_location LIKE CONCAT('%', #{searchWord}, '%')
+        OR ft.dish LIKE CONCAT('%', #{searchWord}, '%')
+        OR t.name LIKE CONCAT('%', #{searchWord}, '%')
+      )
+    GROUP BY
+      p.seq
+    ORDER BY
+      p.seq DESC
+    LIMIT #{limit}
+  </select>
+
 </mapper>
