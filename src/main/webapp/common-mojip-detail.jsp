@@ -132,19 +132,27 @@
                     <tbody>
                     <tr>
                         <th class="fixed-width">제목</th>
-                        <td>${mojipPost.title}</td>
+                        <td>
+                            <span id="titleView">${mojipPost.title}</span>
+                            <input type="text" class="form-control d-none" id="titleEdit"
+                                   name="title" value="${mojipPost.title}">
+                        </td>
                     </tr>
                     <tr>
+                    <tr>
                         <th class="fixed-width">모집 시작 일자</th>
-                        <td><fmt:formatDate value="${mojipPost.applyStartDate}" pattern="yyyy-MM-dd"/></td>
+                        <td>
+                            <span id="mojipView">${mojipPost.applyStartDate}</span>
+                        </td>
+                    </tr>
                     </tr>
                     <tr>
                         <th class="fixed-width">모집 종료 일자</th>
-                        <td><fmt:formatDate value="${mojipPost.applyEndDate}" pattern="yyyy-MM-dd"/></td>
+                        <td>${mojipPost.applyEndDate}</td>
                     </tr>
                     <tr>
                         <th class="fixed-width">체험 날짜</th>
-                        <td><fmt:formatDate value="${mojipPost.experienceDate}" pattern="yyyy-MM-dd"/></td>
+                        <td>${mojipPost.experienceDate}</td>
                     </tr>
                     <tr>
                         <th class="fixed-width">체험 장소</th>
@@ -152,7 +160,12 @@
                     </tr>
                     <tr>
                         <th class="fixed-width">내용</th>
-                        <td style="white-space: pre-line;">${mojipPost.content}</td>
+                        <td>
+                            <span id="contentView"
+                                  style="white-space: pre-line;">${mojipPost.content}</span>
+                            <textarea class="form-control d-none" id="contentEdit" name="content"
+                                      rows="10">${mojipPost.content}</textarea>
+                        </td>
                     </tr>
                     <tr>
                         <th class="fixed-width">좋아요 수</th>
@@ -296,21 +309,25 @@
   document.getElementById('postForm').addEventListener('submit', function (event) {
     event.preventDefault();
 
-    var formData = new URLSearchParams(new FormData(this));
+    var formData = {
+      postSeq: this.postSeq.value,
+      title: this.title.value,
+      content: this.content.value
+    };
 
-    fetch('/mojip-detail-update', {
-      method: 'POST',
+    fetch('/api/common/mojip/update', {
+      method: 'PUT',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
       },
-      body: formData.toString()
+      body: JSON.stringify(formData)
     })
     .then(response => {
       if (response.ok) {
         return response.text().then(data => {
           console.log(data);
           alert('게시글이 성공적으로 수정되었습니다.');
-          location.replace("/mojip");
+          location.replace("/mojip/${mojipPost.seq}");
         });
       } else {
         response.text().then(data => {
