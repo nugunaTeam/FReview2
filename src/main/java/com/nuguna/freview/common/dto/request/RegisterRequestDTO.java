@@ -11,7 +11,7 @@ public class RegisterRequestDTO {
   private String email;
   private String password;
   private String subEmail;
-  private String nickName;
+  private String nickname;
   private String ageGroup;
   private String code;
   private String storeLocation;

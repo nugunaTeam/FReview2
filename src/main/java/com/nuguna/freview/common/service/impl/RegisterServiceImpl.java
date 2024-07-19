@@ -25,30 +25,20 @@ public class RegisterServiceImpl implements RegisterService {
 
   @Override
   public boolean checkDuplicatedEmail(RegisterCheckIdRequestDTO registerCheckIdRequestDTO) {
-    int checkRow = 0;
     boolean result = false;
     String email = registerCheckIdRequestDTO.getEmail();
     log.info(email);
-    checkRow = registerMapper.getDuplicatedEmail(email);
-    if(checkRow == 0)
-      result = true;
-    log.info("서비스 결과 "+result);
-
-
+    result = registerMapper.getDuplicatedEmail(email);
     return result;
   }
 
   @Override
   public boolean checkDuplicatedNickName(
       RegisterCheckNickNameRequestDTO requestCheckNicknameRequestDTO) {
-    int checkRow = 0;
     boolean result = false;
-    String nickName = requestCheckNicknameRequestDTO.getNickName();
+    String nickName = requestCheckNicknameRequestDTO.getNickname();
     log.info(nickName);
-    checkRow = registerMapper.getDuplicatedNickName(nickName);
-    if(checkRow == 0)
-      result = true;
-
+    result = registerMapper.getDuplicatedNickName(nickName);
     return result;
   }
 
@@ -60,7 +50,7 @@ public class RegisterServiceImpl implements RegisterService {
         .email(registerRequestDTO.getEmail())
         .password(shaPassword)
         .subEmail(registerRequestDTO.getSubEmail())
-        .nickname(registerRequestDTO.getNickName())
+        .nickname(registerRequestDTO.getNickname())
         .ageGroup(registerRequestDTO.getAgeGroup())
         .code(registerRequestDTO.getCode())
         .loginType("FORM")
@@ -72,14 +62,9 @@ public class RegisterServiceImpl implements RegisterService {
   @Override
   public boolean checkBusinessNumber(
       RegisterCheckBusinessNumberDTO registerCheckBusinessNumberDTO) {
-    int resultRow = 0;
     boolean result = false;
     String businessNumber = registerCheckBusinessNumberDTO.getBuisnessNumber();
-    resultRow = registerMapper.getCheckBusinessNumber(businessNumber);
-
-    if(resultRow!=0)
-      result = true;
-    log.info("사업자번호: "+result);
+    result = registerMapper.getCheckBusinessNumber(businessNumber);
     return result;
   }
 

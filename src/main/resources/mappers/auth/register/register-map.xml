@@ -14,14 +14,14 @@
   </resultMap>-->
 
 
-  <select id="getDuplicatedEmail" parameterType="string" resultType="int">
-    SELECT count(*)
+  <select id="getDuplicatedEmail" parameterType="string" resultType="boolean">
+    SELECT count(1) > 0
     FROM user
     WHERE email = #{email}
   </select>
 
-  <select id="getDuplicatedNickName" parameterType="string" resultType="int">
-    SELECT count(*)
+  <select id="getDuplicatedNickName" parameterType="string" resultType="boolean">
+    SELECT count(1) > 0
     FROM user
     WHERE nickname = #{email}
   </select>
@@ -31,8 +31,8 @@
     VALUES (#{code},#{email},#{password},#{nickname},#{subEmail},#{loginType},#{isWithDrawn},#{ageGroup})
   </insert>
 
-  <select id="getCheckBusinessNumber" parameterType="String" resultType="int">
-    select count(*)
+  <select id="getCheckBusinessNumber" parameterType="String" resultType="boolean">
+    select count(1) > 1
     from national_store_business_information
     WHERE business_number = #{#businessNumber}
   </select>
