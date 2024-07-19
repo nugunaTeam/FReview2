@@ -268,21 +268,18 @@
   }
 
   function applyPost() {
-    var postSeq = document.querySelector('input[name="postSeq"]').value;
-    var writerSeq = document.querySelector('input[name="writerSeq"]').value;
-    var userSeq = document.querySelector('input[name="userSeq"]').value;
+    let formData = {
+      fromPostSeq: document.querySelector('input[name="postSeq"]').value,
+      fromUserSeq: document.querySelector('input[name="userSeq"]').value,
+      toUserSeq: document.querySelector('input[name="writerSeq"]').value
+    };
 
-    var formData = new URLSearchParams();
-    formData.append('postSeq', postSeq);
-    formData.append('writerSeq', writerSeq);
-    formData.append('userSeq', userSeq);
-
-    fetch('/mojip-detail-apply', {
+    fetch('/api/common/mojip/apply', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
       },
-      body: formData.toString()
+      body: JSON.stringify(formData)
     })
     .then(response => {
       if (response.ok) {
