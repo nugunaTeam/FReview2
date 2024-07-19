@@ -69,4 +69,12 @@ public class NoticeBoardApiController {
     }
   }
 
+  @RequestMapping(value = "/{deletePostSeq}", method = RequestMethod.DELETE)
+  public ResponseEntity<?> deletePost(@PathVariable Long deletePostSeq) {
+    if (postService.deletePost(deletePostSeq)) {
+      return new ResponseEntity<>(HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 }
