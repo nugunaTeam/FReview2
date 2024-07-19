@@ -145,7 +145,7 @@
                 <input type="button" id="searchBtn" value="검색">
             </div>
 
-            <c:if test="${gubun == 'B'}">
+            <c:if test="${code eq 'STORE'}">
                 <a href="/mojip-create" class="btn btn-register">
                     모집 등록
                 </a>
@@ -164,7 +164,7 @@
 
 <script>
   $(document).ready(function () {
-    var currentSearchWord = '';
+    let currentSearchWord = '';
 
     loadInitialData();
 
@@ -175,25 +175,25 @@
     });
 
     $('#loadMoreBtn').click(function () {
-      var previousPostSeq = $(this).data('previous-post-seq');
+      let previousPostSeq = $(this).data('previous-post-seq');
       loadMoreData(previousPostSeq, currentSearchWord);
     });
 
     function loadInitialData(searchWord = '') {
-      var apiUrl = searchWord ? "/mojip-search" : "/mojip";
       $.ajax({
         method: "POST",
-        url: apiUrl,
-        data: {
+        url: "/api/common/mojip/list",
+        contentType: "application/json",
+        data: JSON.stringify({
           searchWord: searchWord
-        },
+        }),
         dataType: "json",
         success: function (response) {
           $('#postList').empty();
-          renderData(response.data);
+          renderData(response.mojipList); // 데이터 객체 접근 수정
           if (response.hasMore) {
             $('#loadMoreBtn').data('previous-post-seq',
-                response.data[response.data.length - 1].postSeq).show();
+                response.mojipList[response.mojipList.length - 1].seq).show();
           } else {
             $('#loadMoreBtn').hide();
           }
@@ -205,22 +205,21 @@
     }
 
     function loadMoreData(previousPostSeq, searchWord = '') {
-      var apiUrl = searchWord ? "/mojip-search" : "/mojip";
       $.ajax({
         method: "POST",
-        url: apiUrl,
-        data: {
+        url: "/api/common/mojip/list",
+        contentType: "application/json",
+        data: JSON.stringify({
           previousPostSeq: previousPostSeq,
           searchWord: searchWord
-        },
+        }),
         dataType: "json",
         success: function (response) {
-          if (response.data.length > 0) {
-            renderData(response.data);
+          if (response.mojipList.length > 0) {
+            renderData(response.mojipList);
             if (response.hasMore) {
               $('#loadMoreBtn').data('previous-post-seq',
-                  response.data[response.data.length - 1].postSeq).show();
-              console.log(response.data[response.data.length - 1].postSeq);
+                  response.mojipList[response.mojipList.length - 1].seq).show();
             } else {
               $('#loadMoreBtn').hide();
             }
@@ -237,15 +236,19 @@
     function renderData(data) {
       var htmlStr = "";
       $.map(data, function (post) {
+        let formattedApplyStartDate = dayjs(post["applyStartDate"]).format('YYYY-MM-DD');
+        let formattedApplyEndDate = dayjs(post["applyEndDate"]).format('YYYY-MM-DD');
+        let formattedExperienceDate = dayjs(post["experienceDate"]).format('YYYY-MM-DD');
+
         htmlStr += "<a href='/mojip-detail?postSeq=" + post["postSeq"]
             + "' class='post-item'>";
         htmlStr += "<img src='" + post["profilePhotoUrl"] + "' alt='Profile' class='profile-img'>";
         htmlStr += "<h5>" + post["title"] + "</h5>";
-        htmlStr += "<p>모집 가게: " + post["storeName"] + "</p>";
-        htmlStr += "<p>체험 장소: " + post["storeLocation"] + "</p>";
-        htmlStr += "<p>체험 기간: " + post["applyStartDate"] + " ~ " + post["applyEndDate"] + "</p>";
-        htmlStr += "<p>체험 날짜: " + post["experienceDate"] + "</p>";
-        htmlStr += "<p>좋아요 수: " + post["numberOfLikes"] + "</p>";
+        htmlStr += "<p>[모집 가게] " + post["storeName"] + "</p>";
+        htmlStr += "<p>[체험 장소] " + post["storeLocation"] + "</p>";
+        htmlStr += "<p>[체험 기간] " + formattedApplyStartDate + " ~ " + formattedApplyEndDate + "</p>";
+        htmlStr += "<p>[체험 날짜] " + formattedExperienceDate + "</p>";
+        htmlStr += "<p>[좋아요 수] " + post["totalLikes"] + "</p>";
         htmlStr += "</a>";
       });
       $('#postList').append(htmlStr);
