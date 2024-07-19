@@ -31,4 +31,10 @@ public class PostServiceImpl implements PostService {
   public void addViewCount(Long postSeq) {
     postMapper.insertPostViewCount(postSeq);
   }
+
+  @Override
+  public boolean updateNotice(Long postSeq, String title, String content, Timestamp now) {
+    int result = postMapper.updateNotice(postSeq, title, content, now);
+    return result == 1;
+  }
 }
