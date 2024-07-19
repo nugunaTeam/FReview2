@@ -24,11 +24,7 @@ public class CustomerPageController {
   public String customerMyBrandPage(@RequestParam Long userSeq, Model model) {
     CustomerMyBrandPageInfoResponseDTO brandPageInfo = customerPageService.getBrandPageInfo(
         userSeq);
-
     log.info("reviewPagination INFO = {}", brandPageInfo.getReviewPaginationInfo());
-
-    log.info(brandPageInfo.getReviewInfos().toString());
-    log.info(brandPageInfo.getBrandInfo().toString());
     model.addAttribute("brandInfo", brandPageInfo.getBrandInfo());
     model.addAttribute("reviewInfos", brandPageInfo.getReviewInfos());
     model.addAttribute("reviewPageInfo", brandPageInfo.getReviewPaginationInfo());

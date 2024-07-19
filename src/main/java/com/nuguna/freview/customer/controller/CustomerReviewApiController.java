@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/customer/review")
+@RequestMapping("/api/customer")
 public class CustomerReviewApiController {
 
   private final ReviewService reviewService;
