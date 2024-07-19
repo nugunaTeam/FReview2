@@ -11,11 +11,11 @@ import javax.mail.internet.MimeMessage;
 
 public class SendMailUtil {
 
-  final private String ENCODING;
-  final private String PORT;
-  final private String SMTPHOST;
-  final private String userName;
-  final private String password;
+  private final String ENCODING;
+  private final String PORT;
+  private final String SMTPHOST;
+  private final String userName;
+  private final String password;
 
   public SendMailUtil(String ENCODING, String PORT, String SMTPHOST, String userName, String password) {
     this.ENCODING = ENCODING;
