@@ -1,6 +1,7 @@
 package com.nuguna.freview.common.controller.page;
 
 import com.nuguna.freview.common.dto.response.page.NoticeDetailResponseDTO;
+import com.nuguna.freview.common.service.NoticeService;
 import com.nuguna.freview.common.service.PostService;
 import com.nuguna.freview.common.service.UserService;
 import com.nuguna.freview.common.vo.user.UserVO;
@@ -19,11 +20,14 @@ public class NoticeController {
 
   private final UserService userService;
   private final PostService postService;
+  private final NoticeService noticeService;
 
   @Autowired
-  public NoticeController(UserService userService, PostService postService) {
+  public NoticeController(UserService userService, PostService postService,
+      NoticeService noticeService) {
     this.userService = userService;
     this.postService = postService;
+    this.noticeService = noticeService;
   }
 
   @RequestMapping(value = "", method = RequestMethod.GET)
@@ -43,7 +47,7 @@ public class NoticeController {
     Long userSeq = 301L;
     UserVO loginUser = userService.getUserInfo(userSeq);
     postService.addViewCount(postSeq);
-    NoticeDetailResponseDTO currentPost = postService.getNoticeBySeq(postSeq);
+    NoticeDetailResponseDTO currentPost = noticeService.getNoticeBySeq(postSeq);
 
     model.addAttribute("currentPost", currentPost);
     model.addAttribute("loginUser", loginUser);

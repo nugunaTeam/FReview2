@@ -5,6 +5,7 @@ import com.nuguna.freview.common.dto.request.NoticeUpdateRequestDTO;
 import com.nuguna.freview.common.dto.response.NoticePostDTO;
 import com.nuguna.freview.common.dto.response.page.NoticeResponseDTO;
 import com.nuguna.freview.common.service.BoardService;
+import com.nuguna.freview.common.service.NoticeService;
 import com.nuguna.freview.common.service.PostService;
 import com.nuguna.freview.common.vo.post.PostCode;
 import java.sql.Timestamp;
@@ -28,12 +29,15 @@ public class NoticeApiController {
 
   private final BoardService boardService;
   private final PostService postService;
+  private final NoticeService noticeService;
   private final int PAGE_SIZE = 10;
 
   @Autowired
-  public NoticeApiController(BoardService boardService, PostService postService) {
+  public NoticeApiController(BoardService boardService, PostService postService,
+      NoticeService noticeService) {
     this.boardService = boardService;
     this.postService = postService;
+    this.noticeService = noticeService;
   }
 
   @RequestMapping(value = "/list/{currentPage}", method = RequestMethod.POST)
@@ -58,7 +62,7 @@ public class NoticeApiController {
     Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
     try {
-      boolean updateResult = postService.updateNotice(postSeq, title, content, now);
+      boolean updateResult = noticeService.updateNotice(postSeq, title, content, now);
       if (updateResult) {
         return new ResponseEntity<>(HttpStatus.OK);
       } else {
@@ -87,7 +91,7 @@ public class NoticeApiController {
     Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
     try {
-      boolean updateResult = postService.insertNotice(userSeq, title, content, now);
+      boolean updateResult = noticeService.insertNotice(userSeq, title, content, now);
       if (updateResult) {
         return new ResponseEntity<>(HttpStatus.OK);
       } else {
