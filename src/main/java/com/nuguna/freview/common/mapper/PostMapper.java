@@ -16,4 +16,5 @@ public interface PostMapper {
       @Param("content") String content,
       @Param("updatedAt") Timestamp updatedAt);
   int deletePost(Long postSeq);
+  int insertNotice(@Param("userSeq") Long userSeq, @Param("title") String title, @Param("content") String content, @Param("now") Timestamp now);
 }
