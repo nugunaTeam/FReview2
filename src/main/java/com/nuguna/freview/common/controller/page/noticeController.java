@@ -14,19 +14,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Slf4j
 @Controller
-@RequestMapping("/board")
-public class BoardController {
+@RequestMapping("/notice")
+public class noticeController {
 
   private final UserService userService;
   private final PostService postService;
 
   @Autowired
-  public BoardController(UserService userService, PostService postService) {
+  public noticeController(UserService userService, PostService postService) {
     this.userService = userService;
     this.postService = postService;
   }
 
-  @RequestMapping(value = "/notice", method = RequestMethod.GET)
+  @RequestMapping(value = "", method = RequestMethod.GET)
   public String noticeBoardPage(Model model) {
     //HACK: 로그인 유저의 실제 seq 로 수정 필요
     Long userSeq = 301L;
@@ -37,7 +37,7 @@ public class BoardController {
     return "common-notice-board";
   }
 
-  @RequestMapping(value = "/notice/{postSeq}", method = RequestMethod.GET)
+  @RequestMapping(value = "/{postSeq}", method = RequestMethod.GET)
   public String noticePostDetail(@PathVariable Long postSeq, Model model) {
     //HACK: 로그인 유저의 실제 seq 로 수정 필요
     Long userSeq = 301L;
@@ -49,5 +49,16 @@ public class BoardController {
     model.addAttribute("loginUser", loginUser);
 
     return "common-notice-detail";
+  }
+
+  @RequestMapping(value = "/insert", method = RequestMethod.GET)
+  public String noticeCreate(Model model) {
+    //HACK: 로그인 유저의 실제 seq 로 수정 필요
+    Long userSeq = 301L;
+    UserVO loginUser = userService.getUserInfo(userSeq);
+
+    model.addAttribute("loginUser", loginUser);
+
+    return "admin-notice-create";
   }
 }
