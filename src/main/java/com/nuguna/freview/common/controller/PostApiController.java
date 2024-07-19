@@ -1,6 +1,6 @@
 package com.nuguna.freview.common.controller;
 
-import com.nuguna.freview.common.dto.request.AddLIkeRequestDTO;
+import com.nuguna.freview.common.dto.request.PostLikeRequestDTO;
 import com.nuguna.freview.common.service.PostService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class PostApiController {
   }
 
   @RequestMapping(value = "/like-add", method = RequestMethod.POST)
-  public ResponseEntity<?> addLikeToPost(@RequestBody AddLIkeRequestDTO requestDTO) {
+  public ResponseEntity<?> addLikeToPost(@RequestBody PostLikeRequestDTO requestDTO) {
     Long postSeq = requestDTO.getPostSeq();
     Long userSeq = requestDTO.getUserSeq();
 
@@ -37,6 +37,24 @@ public class PostApiController {
       }
     } catch (Exception e) {
       log.error("[ERROR] 게시글 좋아요 도중 에러 발생", e);
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @RequestMapping(value = "/like-cancel", method = RequestMethod.DELETE)
+  public ResponseEntity<?> cancelLikeToPost(@RequestBody PostLikeRequestDTO requestDTO) {
+    Long postSeq = requestDTO.getPostSeq();
+    Long userSeq = requestDTO.getUserSeq();
+
+    try {
+      boolean result = postService.cancelLikeToPost(postSeq, userSeq);
+      if (result) {
+        return new ResponseEntity<>(HttpStatus.OK);
+      } else {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    } catch (Exception e) {
+      log.error("[ERROR] 게시글 좋아요 취소 도중 에러 발생", e);
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
