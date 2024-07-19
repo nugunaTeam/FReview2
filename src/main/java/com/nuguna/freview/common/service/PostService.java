@@ -13,4 +13,5 @@ public interface PostService {
   boolean deletePost(Long postSeq);
   boolean insertNotice(Long postSeq, String title, String content, Timestamp now);
   boolean addLikeToPost(Long postSeq, Long userSeq);
+  boolean cancelLikeToPost(Long postSeq, Long userSeq);
 }

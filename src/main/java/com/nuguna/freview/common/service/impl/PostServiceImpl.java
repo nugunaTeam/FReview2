@@ -59,4 +59,10 @@ public class PostServiceImpl implements PostService {
     int result = postMapper.insertLike(postSeq, userSeq);
     return result == 1;
   }
+
+  @Override
+  public boolean cancelLikeToPost(Long postSeq, Long userSeq) {
+    int result = postMapper.deleteLike(postSeq, userSeq);
+    return result == 1;
+  }
 }
