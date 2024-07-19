@@ -242,13 +242,18 @@
 
         // 게시글 삭제
         function deletePost() {
-          var postSeq = $('input[name="postSeq"]').val();
-          fetch('/notice/detail/delete', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({postSeq: postSeq}).toString()
+          let postSeq = $('input[name="postSeq"]').val();
+          fetch(`/api/common/notice/${postSeq}`, {
+            method: 'DELETE',
           })
-          .then(response => response.ok ? location.replace("/notice") : alert('게시글 삭제 실패'))
+          .then(response => {
+            if (response.ok) {
+              alert('게시글이 성공적으로 삭제되었습니다.');
+              location.replace("/board/notice");
+            } else {
+              response.text().then(text => alert('게시글 삭제 실패: ' + text));
+            }
+          })
           .catch(error => alert('Error: ' + error));
         }
 
