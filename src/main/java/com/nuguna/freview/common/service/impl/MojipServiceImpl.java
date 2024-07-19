@@ -19,6 +19,10 @@ public class MojipServiceImpl implements MojipService {
 
   @Override
   public List<MojipPostDTO> getMojipList(Long previousPostSeq, String searchWord, int pageSize) {
+    if (searchWord == null) {
       return mojipMapper.selectMojipList(previousPostSeq, pageSize);
+    } else {
+      return mojipMapper.searchMojipList(previousPostSeq, pageSize, searchWord);
+    }
   }
 }
