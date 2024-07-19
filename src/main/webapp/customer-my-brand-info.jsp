@@ -19,6 +19,29 @@
       #food-type-select-message {
         margin-bottom: 5px;
       }
+
+      #review-log-table {
+        border-collapse: collapse;
+      }
+
+      #review-log-table th,
+      #review-log-table td {
+        border: 2px solid #dee2e6; /* 선 두께를 2px로 설정 */
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      #review-log-table th {
+        font-weight: bold;
+      }
+
+      #page-buttons .btn {
+        margin: 0 2px;
+      }
+
+      .d-flex.justify-content-center {
+        gap: 0.5rem;
+      }
     </style>
 
     <style>
@@ -47,7 +70,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Users / Profile - NiceAdmin Bootstrap Template</title>
+    <title>브랜딩 페이지</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -75,7 +98,6 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-    <!-- icon bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
@@ -84,19 +106,9 @@
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-    <!--Select2 Css, JS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
           rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-
-    <!-- =======================================================
-    * Template Name: NiceAdmin
-    * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-    * Updated: Apr 20 2024 with Bootstrap v5.3.3
-    * Author: BootstrapMade.com
-    * License: https://bootstrapmade.com/license/
-    ======================================================== -->
 </head>
 
 <body>
@@ -110,7 +122,7 @@
             <span class="d-none d-lg-block">FReview</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div><!-- End Logo -->
+    </div>
 
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
@@ -119,12 +131,12 @@
                     <img src="/assets/img/basic/basic-profile-img.png" alt="Profile"
                          class="rounded-circle">
                     <span id="nickname-holder-head"
-                          class="d-none d-md-block">${brandInfo.nickname}<%--<%=brandInfo.getNickname()%>--%></span>
-                </a><!-- End Profile Iamge Icon -->
-            </li><!-- End Profile Nav -->
+                          class="d-none d-md-block">${brandInfo.nickname}</span>
+                </a>
+            </li>
         </ul>
-    </nav><!-- End Icons Navigation -->
-</header><!-- End Header -->
+    </nav>
+</header>
 
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
@@ -137,14 +149,14 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="${pageContext.request.contextPath}/my-activity">
+            <a class="nav-link collapsed" href="${pageContext.request.contextPath}/my/activity">
                 <i class="bi bi-layout-text-window-reverse"></i>
                 <span>활동</span>
             </a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="${pageContext.request.contextPath}/my-notification">
+            <a class="nav-link collapsed" href="${pageContext.request.contextPath}/my/notification">
                 <i class="bi bi-envelope"></i>
                 <span>알림</span>
             </a>
@@ -152,7 +164,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/my-personal-info">
+               href="${pageContext.request.contextPath}/my/personal-info">
                 <i class="ri-edit-box-line"></i>
                 <span>개인정보수정</span>
             </a>
@@ -234,7 +246,8 @@
                             <script>
                               $(document).ready(function () {
                                 function initializeIntroduceForm() {
-                                  $('#introduce-input').val(${brandInfo.introduce}).prop('readonly',
+                                  $('#introduce-input').val('${brandInfo.introduce}').prop(
+                                      'readonly',
                                       true);
                                   $('#introduce-update-btn').show();
                                   $('#introduce-submit-btn').hide();
@@ -263,15 +276,15 @@
                                 $("#introduce-submit-btn").click(function () {
                                   var newIntroduce = $('#introduce-input').val();
                                   $.ajax({
-                                    url: '<%=request.getContextPath()%>/api/my-brand/introduce',
-                                    method: 'POST',
+                                    url: '<%=request.getContextPath()%>/api/customer/my/brand-info/introduce',
+                                    method: 'PUT',
                                     data: JSON.stringify({
-                                      'user_seq': ${userSeq},
-                                      'to_introduce': newIntroduce
+                                      'userSeq': ${userSeq},
+                                      'toIntroduce': newIntroduce
                                     }),
                                     contentType: 'application/json',
                                     success: function (response) {
-                                      $('#introduce-input').val(response.item).prop('readonly',
+                                      $('#introduce-input').val(response.introduce).prop('readonly',
                                           true);
                                       $("#introduce-submit-btn").hide();
                                       $("#introduce-cancel-btn").hide();
@@ -299,18 +312,18 @@
                                 $("#nickname-submit-btn").click(function () {
                                   var newNickname = $('#nickname-input').val();
                                   $.ajax({
-                                    url: '<%=request.getContextPath()%>/api/my-brand/nickname',
-                                    method: 'POST',
+                                    url: '<%=request.getContextPath()%>/api/customer/my/brand-info/nickname',
+                                    method: 'PUT',
                                     data: JSON.stringify({
                                       'userSeq': ${userSeq},
                                       'toNickname': newNickname
                                     }),
                                     contentType: 'application/json',
                                     success: function (response) {
-                                      $('#nickname-input').val(response.item).prop('readonly',
+                                      $('#nickname-input').val(response.nickname).prop('readonly',
                                           true);
-                                      $("#nickname-holder-head").text(response.item);
-                                      $("#nickname-holder-section").text(response.item);
+                                      $("#nickname-holder-head").text(response.nickname);
+                                      $("#nickname-holder-section").text(response.nickname);
                                       $("#nickname-submit-btn").hide();
                                       $("#nickname-cancel-btn").hide();
                                       $("#nickname-update-btn").show();
@@ -327,11 +340,10 @@
 
                             <!-- 연령대 보여주기/등록하기 -->
                             <div class="row">
-                                <div class="col-lg-3 col-md-4">연령대</div>
+                                <div class="col-lg-3 col-md-4 label">연령대</div>
                                 <div class="col-lg-8 col-md-6">
                                     <select id="age-group-input"
                                             class="form-control form-control-readonly" disabled>
-                                        <!-- col-lg-8 col-md-6 -->
                                     </select>
                                 </div>
 
@@ -374,15 +386,17 @@
                                       var newAgeGroup = $('#age-group-input').val();
                                       // Ajax 요청
                                       $.ajax({
-                                        url: '<%=request.getContextPath()%>/api/customer/my-brand/age-group',
-                                        method: 'POST',
+                                        url: '<%=request.getContextPath()%>/api/customer/my/brand-info/age-group',
+                                        method: 'PUT',
+                                        contentType: 'application/json',
                                         data: JSON.stringify({
-                                          'usersSeq': ${userSeq},
+                                          'userSeq': ${userSeq},
                                           'toAgeGroup': newAgeGroup
                                         }),
                                         success: function (response) {
                                           // 성공적으로 응답을 받았을 때 처리
-                                          $('#age-group-input').val(response.item).prop('disabled',
+                                          $('#age-group-input').val(response.ageGroup).prop(
+                                              'disabled',
                                               true);
                                           $("#age-group-submit-btn").hide();
                                           $("#age-group-cancel-btn").hide();
@@ -474,8 +488,22 @@
                                 </div>
                             </div>
 
+
                             <script>
                               $(document).ready(function () {
+                                // Initialize the selectedFoodTypes array using EL
+                                var selectedFoodTypes = [
+                                  <c:forEach var="foodType" items="${brandInfo.foodTypes}">
+                                  "${foodType}"
+                                  <c:if test="${!foodType.equals(foodTypes[foodTypes.size() - 1])}">,
+                                  </c:if>
+                                  </c:forEach>
+                                ];
+
+                                // Store the initial selected food types
+                                var initialSelectedFoodTypes = selectedFoodTypes.slice();
+
+                                // Initialize select2 with custom colors
                                 $('#food-type-select').select2({
                                   width: '100%',
                                   templateSelection: function (option) {
@@ -485,15 +513,15 @@
                                   }
                                 });
 
-                                var selectedFoodTypes = ${brandInfo.foodTypes};
-
+                                // Function to initialize the select2 with selected values
                                 function initializeFoodTypeSelect() {
                                   var foodTypeSelect = $('#food-type-select');
+                                  // Set the selected values
                                   foodTypeSelect.val(selectedFoodTypes).trigger('change');
-
                                   updateFoodTypeMessage();
                                 }
 
+                                // Function to update the message based on selected options
                                 function updateFoodTypeMessage() {
                                   var selectedOptions = $('#food-type-select').val();
                                   var messageElement = $('#food-type-select-message');
@@ -505,8 +533,10 @@
                                   }
                                 }
 
+                                // Initialize the select2 with selected values on page load
                                 initializeFoodTypeSelect();
 
+                                // Handle select2 option selection
                                 $('#food-type-select').on('select2:select', function (e) {
                                   var selectedOptions = $(this).val();
                                   if (selectedOptions.length > 5) {
@@ -515,10 +545,12 @@
                                     $(this).trigger('change');
                                     alert('활동 분야는 최대 5개까지만 선택할 수 있습니다.');
                                   } else {
+                                    selectedFoodTypes = selectedOptions;
                                     updateFoodTypeMessage();
                                   }
                                 });
 
+                                // Handle the update button click
                                 $("#food-type-update-btn").click(function () {
                                   $("#food-type-update-btn").hide();
                                   $("#food-type-cancel-btn").show();
@@ -526,14 +558,18 @@
                                   $('#food-type-select').prop('disabled', false);
                                 });
 
+                                // Handle the cancel button click
                                 $('#food-type-cancel-btn').click(function () {
                                   $('#food-type-cancel-btn').hide();
                                   $('#food-type-submit-btn').hide();
                                   $('#food-type-update-btn').show();
                                   $('#food-type-select').prop('disabled', true);
+                                  // Restore initial selected values
+                                  selectedFoodTypes = initialSelectedFoodTypes.slice();
                                   initializeFoodTypeSelect();
                                 });
 
+                                // Handle select2 option changes
                                 $('#food-type-select').on('change', function () {
                                   $(this).find('option:selected').addClass('selected-option');
                                   $(this).find('option:not(:selected)').removeClass(
@@ -541,12 +577,13 @@
                                   updateFoodTypeMessage();
                                 });
 
+                                // Handle the submit button click
                                 $("#food-type-submit-btn").click(function () {
                                   var selectedFoodTypes = $('#food-type-select').val();
 
                                   $.ajax({
-                                    url: '<%=request.getContextPath()%>/api/my-brand/food-type',
-                                    method: 'POST',
+                                    url: '<%=request.getContextPath()%>/api/customer/my/brand-info/food-types',
+                                    method: 'PUT',
                                     contentType: 'application/json',
                                     data: JSON.stringify({
                                       'userSeq': ${userSeq},
@@ -554,6 +591,8 @@
                                     }),
                                     success: function (response) {
                                       alert('활동 분야 변경에 성공하였습니다.');
+                                      // Update initial selected food types
+                                      initialSelectedFoodTypes = selectedFoodTypes.slice();
                                       $('#food-type-select').prop('disabled', true).select2({
                                         width: '100%',
                                         templateSelection: function (option) {
@@ -604,7 +643,7 @@
                                 </div>
                             </div>
 
-                            <script>
+                            <%--<script>
                               $(document).ready(function () {
                                 $('#tag-select').select2({
                                   width: '100%',
@@ -718,7 +757,279 @@
 
                                 initializeTagSelect();
                               });
+                            </script>--%>
+                            <script>
+                              $(document).ready(function () {
+                                // Initialize the selectedTags array using EL
+                                var selectedTags = [
+                                  <c:forEach var="tag" items="${brandInfo.tagInfos}">
+                                  "${tag}"
+                                  <c:if test="${!tag.equals(tagInfos[tagInfos.size() - 1])}">,
+                                  </c:if>
+                                  </c:forEach>
+                                ];
+
+                                // Store the initial selected tags
+                                var initialSelectedTags = selectedTags.slice();
+
+                                // Initialize select2 with custom colors for tags
+                                $('#tag-select').select2({
+                                  width: '100%',
+                                  templateSelection: function (option) {
+                                    var color = $(option.element).data('custom-color');
+                                    return $('<span style="color: ' + color + '">' + option.text
+                                        + '</span>');
+                                  }
+                                });
+
+                                // Function to initialize the select2 with selected values
+                                function initializeTagSelect() {
+                                  var tagSelect = $('#tag-select');
+                                  tagSelect.val(selectedTags).trigger('change');
+                                  updateTagMessage();
+                                }
+
+                                // Function to update the message based on selected options
+                                function updateTagMessage() {
+                                  var selectedOptions = $('#tag-select').val();
+                                  var messageElement = $('#tag-select-message');
+
+                                  if (selectedOptions === null || selectedOptions.length === 0) {
+                                    messageElement.text('아직 선택한 태그가 없어요.');
+                                  } else {
+                                    messageElement.text('');
+                                  }
+                                }
+
+                                initializeTagSelect();
+
+                                // Handle select2 option selection for tags
+                                $('#tag-select').on('select2:select', function (e) {
+                                  var selectedOptions = $(this).val();
+                                  if (selectedOptions.length > 2) {
+                                    var $element = $(e.params.data.element);
+                                    $element.prop('selected', false);
+                                    $(this).trigger('change');
+                                    alert('태그는 2개까지만 선택할 수 있습니다.');
+                                  } else {
+                                    selectedTags = selectedOptions;
+                                    updateTagMessage();
+                                  }
+                                });
+
+                                // Handle the update button click for tags
+                                $("#tag-update-btn").click(function () {
+                                  $(this).hide();
+                                  $("#tag-cancel-btn, #tag-submit-btn").show();
+                                  $('#tag-select').prop('disabled', false);
+                                });
+
+                                // Handle the cancel button click for tags
+                                $('#tag-cancel-btn').click(function () {
+                                  $(this).hide();
+                                  $("#tag-submit-btn").hide();
+                                  $("#tag-update-btn").show();
+                                  $('#tag-select').prop('disabled', true);
+                                  selectedTags = initialSelectedTags.slice();
+                                  initializeTagSelect();
+                                });
+
+                                // Handle select2 option changes for tags
+                                $('#tag-select').on('change', function () {
+                                  $(this).find('option:selected').addClass('selected-option');
+                                  $(this).find('option:not(:selected)').removeClass(
+                                      'selected-option');
+                                  updateTagMessage();
+                                });
+
+                                // Handle the submit button click for tags
+                                $('#tag-submit-btn').click(function () {
+                                  var selectedTags = $('#tag-select').val();
+
+                                  $.ajax({
+                                    url: '<%=request.getContextPath()%>/api/customer/my/brand-info/tags',
+                                    method: 'PUT',
+                                    contentType: 'application/json',
+                                    data: JSON.stringify({
+                                      'userSeq': ${userSeq},
+                                      'toTags': selectedTags
+                                    }),
+                                    success: function (response) {
+                                      alert('태그 변경에 성공하였습니다.');
+                                      initialSelectedTags = selectedTags.slice();
+                                      $('#tag-select').prop('disabled', true);
+                                      $('#tag-submit-btn, #tag-cancel-btn').hide();
+                                      $('#tag-update-btn').show();
+                                      updateTagMessage();
+                                    },
+                                    error: function (err) {
+                                      alert('태그 변경에 실패하였습니다.');
+                                    }
+                                  });
+                                });
+                              });
                             </script>
+                            <%--
+                                                        <div class="row">
+                                                            <div class="col-lg-3 col-md-4 label">리뷰 로그</div>
+                                                            <div class="col-lg-8 col-md-6">
+                                                                <table class="table table-striped table-bordered text-center"
+                                                                       id="review-log-table">
+                                                                    <thead>
+                                                                    <tr>
+                                                                        <th>스토어명</th>
+                                                                        <th>방문일자</th>
+                                                                        <th>리뷰 작성여부</th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                    <tr>
+                                                                        <th scope="row">1</th>
+                                                                        <td>Brandon Jacob</td>
+                                                                        <td>Designer</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">2</th>
+                                                                        <td>Bridie Kessler</td>
+                                                                        <td>Developer</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">3</th>
+                                                                        <td>Ashleigh Langosh</td>
+                                                                        <td>Finance</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">4</th>
+                                                                        <td>Angus Grady</td>
+                                                                        <td>HR</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">5</th>
+                                                                        <td>Raheem Lehner</td>
+                                                                        <td>Dynamic Division Officer</td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                                <div class="d-flex justify-content-between mt-3">
+                                                                    <button id="prev-block-button"
+                                                                            class="btn btn-primary edit-btn" disabled>&lt;
+                                                                    </button>
+                                                                    <div id="page-buttons"
+                                                                         class="d-flex justify-content-center mx-2">
+                                                                        <!-- 페이지 번호 버튼들이 여기에 추가됩니다 -->
+                                                                    </div>
+                                                                    <button id="next-block-button"
+                                                                            class="btn btn-primary edit-btn" disabled>&gt;
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+
+                                                            <script>
+                                                              $(document).ready(function () {
+                                                                var currentPage = 1;
+                                                                var totalPages = 50; // 예시: 총 페이지 수는 50이라고 가정
+                                                                var pagesPerBlock = 5;
+
+                                                                function fetchReviewLogs(page) {
+                                                                  $.ajax({
+                                                                    url: '/api/review-logs',
+                                                                    method: 'GET',
+                                                                    data: {page: page},
+                                                                    success: function (response) {
+                                                                      var reviewLogs = response.logs;
+                                                                      var hasPrevious = response.hasPrevious;
+                                                                      var hasNext = response.hasNext;
+                                                                      totalPages = response.totalPages;
+
+                                                                      renderReviewLogs(reviewLogs);
+                                                                      renderPageButtons();
+                                                                      updatePaginationButtons(hasPrevious, hasNext);
+                                                                    },
+                                                                    error: function (err) {
+                                                                      alert('리뷰 로그 데이터를 가져오는데 실패하였습니다.');
+                                                                      renderPageButtons();
+                                                                    }
+                                                                  });
+                                                                }
+
+                                                                function renderReviewLogs(reviewLogs) {
+                                                                  var tbody = $('#review-log-table tbody');
+                                                                  tbody.empty(); // 기존 데이터를 제거합니다.
+
+                                                                  reviewLogs.forEach(function (log) {
+                                                                    var row = $('<tr>');
+                                                                    row.append($('<td>').text(log.storeName));
+                                                                    row.append($('<td>').text(log.visitDate));
+                                                                    row.append($('<td>').text(log.reviewWritten));
+                                                                    tbody.append(row);
+                                                                  });
+                                                                }
+
+                                                                function renderPageButtons() {
+                                                                  var pageButtonsDiv = $('#page-buttons');
+                                                                  pageButtonsDiv.empty(); // 기존 페이지 버튼을 제거합니다.
+
+                                                                  var currentBlock = Math.floor(
+                                                                      (currentPage - 1) / pagesPerBlock);
+                                                                  var startPage = currentBlock * pagesPerBlock + 1;
+                                                                  var endPage = Math.min(startPage + pagesPerBlock - 1,
+                                                                      totalPages);
+
+                                                                  for (var i = startPage; i <= endPage; i++) {
+                                                                    var pageButton = $('<button>')
+                                                                    .text(i)
+                                                                    .addClass(
+                                                                        'btn btn-outline-primary mx-1 datatable-pagination-list-item-link')
+                                                                    .attr('data-page', i)
+                                                                    .attr('aria-label', 'Page ' + i);
+                                                                    if (i === currentPage) {
+                                                                      pageButton.addClass('active');
+                                                                    }
+                                                                    pageButton.on('click', function () {
+                                                                      var page = parseInt($(this).attr('data-page'));
+                                                                      currentPage = page;
+                                                                      fetchReviewLogs(currentPage);
+                                                                    });
+                                                                    pageButtonsDiv.append(pageButton);
+                                                                  }
+                                                                }
+
+                                                                function updatePaginationButtons(hasPrevious, hasNext) {
+                                                                  var currentBlock = Math.floor(
+                                                                      (currentPage - 1) / pagesPerBlock);
+                                                                  var totalBlocks = Math.ceil(totalPages / pagesPerBlock);
+
+                                                                  $('#prev-block-button').prop('disabled', currentBlock === 0);
+                                                                  $('#next-block-button').prop('disabled',
+                                                                      currentBlock >= totalBlocks - 1);
+                                                                }
+
+                                                                $('#prev-block-button').click(function () {
+                                                                  var currentBlock = Math.floor(
+                                                                      (currentPage - 1) / pagesPerBlock);
+                                                                  if (currentBlock > 0) {
+                                                                    currentPage = (currentBlock - 1) * pagesPerBlock + 1;
+                                                                    fetchReviewLogs(currentPage);
+                                                                  }
+                                                                });
+
+                                                                $('#next-block-button').click(function () {
+                                                                  var currentBlock = Math.floor(
+                                                                      (currentPage - 1) / pagesPerBlock);
+                                                                  var totalBlocks = Math.ceil(totalPages / pagesPerBlock);
+                                                                  if (currentBlock < totalBlocks - 1) {
+                                                                    currentPage = (currentBlock + 1) * pagesPerBlock + 1;
+                                                                    fetchReviewLogs(currentPage);
+                                                                  }
+                                                                });
+
+                                                                // 초기 데이터 로드
+                                                                fetchReviewLogs(currentPage);
+                                                              });
+
+                                                            </script>--%>
+
+
 </main><!-- End #main -->
 
 <!-- ======= Footer ======= -->

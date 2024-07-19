@@ -73,18 +73,4 @@
     </foreach>
   </insert>
 
-  <select id="checkIsValidReview" resultType="Boolean">
-    select count(1) > 0
-    from review
-    where seq = #{reviewSeq}
-      and customer_seq = #{userSeq}
-  </select>
-
-  <update id="registerReview">
-    update review
-    set url    = #{reviewUrl},
-        status = 'WRITTEN'
-    where seq = #{reviewSeq}
-  </update>
-
 </mapper>

@@ -5,14 +5,12 @@ import com.nuguna.freview.customer.dto.request.CustomerFoodTypesUpdateRequestDTO
 import com.nuguna.freview.customer.dto.request.CustomerIntroduceUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerNicknameUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerProfilePhotoUpdateRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerReviewRegisterRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerTagsUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerAgeGroupUpdateResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerFoodTypesUpdateResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerIntroduceUpdateResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerNicknameUpdateResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerProfilePhotoUpdateResponseDTO;
-import com.nuguna.freview.customer.dto.response.CustomerReviewRegisterResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerTagsUpdateResponseDTO;
 import com.nuguna.freview.customer.service.CustomerBrandService;
 import javax.validation.Valid;
@@ -89,15 +87,6 @@ public class CustomerMyBrandInfoApiController {
     CustomerTagsUpdateResponseDTO responseDTO = customerBrandService.updateCustomerTags(
         customerTagsUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
-  }
-
-  @RequestMapping(value = "/review", method = RequestMethod.POST)
-  public ResponseEntity<CustomerReviewRegisterResponseDTO> registerCustomerReviews(
-      @Valid @RequestBody CustomerReviewRegisterRequestDTO customerReviewRegisterRequestDTO
-  ) {
-    CustomerReviewRegisterResponseDTO responseDTO = customerBrandService.registerCustomerReview(
-        customerReviewRegisterRequestDTO);
-    return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
   }
 
 }
