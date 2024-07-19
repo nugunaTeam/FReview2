@@ -85,6 +85,7 @@
       AND (
       s.store_name LIKE CONCAT('%', #{searchWord}, '%')
         OR m.store_location LIKE CONCAT('%', #{searchWord}, '%')
+        OR p.title LIKE CONCAT('%', #{searchWord}, '%')
         OR ft.dish LIKE CONCAT('%', #{searchWord}, '%')
         OR t.name LIKE CONCAT('%', #{searchWord}, '%')
       )
