@@ -1,5 +1,6 @@
 package com.nuguna.freview.common.controller;
 
+import com.nuguna.freview.common.dto.request.MojipApplyRequestDTO;
 import com.nuguna.freview.common.dto.request.MojipInsertRequestDTO;
 import com.nuguna.freview.common.dto.request.MojipListRequestDTO;
 import com.nuguna.freview.common.dto.request.MojipUpdateRequestDTO;
@@ -34,6 +35,7 @@ public class MojipApiController {
     this.postService = postService;
   }
 
+  //TODO: 모집글의 지원자 수 함께 보여주기
   @RequestMapping(value = "/list", method = RequestMethod.POST)
   public MojipResponseDTO getMojipList(@RequestBody MojipListRequestDTO requestDTO) {
     Long previousPostSeq = requestDTO.getPreviousPostSeq();
@@ -102,6 +104,26 @@ public class MojipApiController {
     if (postService.deletePost(deletePostSeq)) {
       return new ResponseEntity<>(HttpStatus.OK);
     } else {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  //TODO: 이미 지원한 모집글은 지원불가 옵션 추가
+  @RequestMapping(value = "/apply", method = RequestMethod.POST)
+  public ResponseEntity<?> applyMojipPost(@RequestBody MojipApplyRequestDTO requestDTO) {
+    Long fromUserSeq = requestDTO.getFromUserSeq();
+    Long toUserSeq = requestDTO.getToUserSeq();
+    Long fromPostSeq = requestDTO.getFromPostSeq();
+
+    try {
+      boolean result = mojipService.applyMojip(fromUserSeq, toUserSeq, fromPostSeq);
+      if (result) {
+        return new ResponseEntity<>(HttpStatus.OK);
+      } else {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    } catch (Exception e) {
+      log.error("[ERROR] 모집글 지원 도중 에러 발생", e);
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }

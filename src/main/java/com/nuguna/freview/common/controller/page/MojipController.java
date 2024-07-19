@@ -41,10 +41,11 @@ public class MojipController {
     return "common-mojip-board";
   }
 
+  //TODO: 모집글의 지원자 수 함께 보여주기
   @RequestMapping(value = "/{postSeq}", method = RequestMethod.GET)
   public String noticePostDetail(@PathVariable Long postSeq, Model model) {
     //HACK: 로그인 유저의 실제 seq 로 수정 필요
-    Long userSeq = 1L;
+    Long userSeq = 200L;
     UserVO loginUser = userService.getUserInfo(userSeq);
 
     postService.addViewCount(postSeq);
