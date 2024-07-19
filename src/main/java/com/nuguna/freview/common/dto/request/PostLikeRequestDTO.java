@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddLIkeRequestDTO {
+public class PostLikeRequestDTO {
 
   private Long postSeq;
   private Long userSeq;

@@ -33,4 +33,11 @@
     values (#{userSeq}, #{postSeq})
   </insert>
 
+  <!-- 특정 게시글 좋아요 취소 -->
+  <delete id="deleteLike" parameterType="map">
+    delete
+    from `like`
+    where user_seq = #{userSeq} and post_seq = #{postSeq}
+  </delete>
+
 </mapper>
