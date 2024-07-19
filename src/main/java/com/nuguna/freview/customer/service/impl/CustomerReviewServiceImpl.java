@@ -43,9 +43,9 @@ public class CustomerReviewServiceImpl implements CustomerReviewService {
   public List<ReviewLogInfoDTO> getReviews(
       CustomerMyReviewsRetrieveRequestDTO customerMyReviewsRetrieveRequestDTO) {
     Long userSeq = customerMyReviewsRetrieveRequestDTO.getUserSeq();
-    Integer currentPage = customerMyReviewsRetrieveRequestDTO.getCurrentPage();
+    Integer page = customerMyReviewsRetrieveRequestDTO.getPage();
 
     return customerReviewMapper.getReviewsInfo(userSeq,
-        (currentPage - 1) * CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE, CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE);
+        (page - 1) * CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE, CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE);
   }
 }

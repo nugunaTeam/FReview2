@@ -15,6 +15,6 @@ public class CustomerMyReviewsRetrieveRequestDTO {
 
   private Long userSeq;
 
-  private Integer currentPage;
+  private Integer page;
 
 }
