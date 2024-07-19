@@ -6,7 +6,7 @@
 
   <!-- ResultMap 설정 -->
   <!-- mojipListMap 설정 -->
-  <resultMap id="mojipPostMap" type="com.nuguna.freview.common.dto.response.MojipPostDTO">
+  <resultMap id="mojipPostMap" type="com.nuguna.freview.common.dto.response.MojipPostDetailDTO">
     <id property="seq" column="post_seq"/>
     <result property="userSeq" column="user_seq"/>
     <result property="businessNumber" column="business_number"/>
@@ -127,5 +127,10 @@
     WHERE
       p.seq = #{postSeq}
   </select>
+
+  <insert id="insertMojip" parameterType="map">
+    INSERT INTO post (user_seq, title, apply_start_date, apply_end_date, experience_date, content, code)
+    VALUES (#{userSeq}, #{title}, #{applyStartDate}, #{applyEndDate}, #{experienceDate}, #{content}, '모집')
+  </insert>
 
 </mapper>
