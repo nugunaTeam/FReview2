@@ -44,4 +44,11 @@
     ORDER BY r.created_at ASC
     LIMIT #{offset}, #{pageSize}
   </select>
+
+  <select id="getReviewCount" resultType="java.lang.Integer">
+    select count(*)
+    from review
+    where customer_seq = #{userSeq}
+  </select>
+
 </mapper>

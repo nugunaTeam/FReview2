@@ -41,6 +41,7 @@ public class CustomerReviewApiController {
   public ResponseEntity<List<ReviewLogInfoDTO>> registerCustomerReview(
       @Valid @RequestBody CustomerMyReviewsRetrieveRequestDTO customerMyReviewsRetrieveRequestDTO
   ) {
+    // reviewStatus 까지 함께 담는 DTO를 만들어야 함.
     List<ReviewLogInfoDTO> responseDTO = customerReviewService.getReviews(
         customerMyReviewsRetrieveRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
