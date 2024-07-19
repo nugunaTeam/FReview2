@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterCheckNickNameRequestDTO {
-  private String nickName;
+  private String nickname;
 }
