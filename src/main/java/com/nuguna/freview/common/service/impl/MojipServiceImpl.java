@@ -38,4 +38,10 @@ public class MojipServiceImpl implements MojipService {
     int result = mojipMapper.insertMojip(userSeq, title, applyStartDate, applyEndDate, experienceDate, content);
     return result == 1;
   }
+
+  @Override
+  public boolean updateMojip(Long postSeq, String title, String content) {
+   int result = mojipMapper.updateMojip(postSeq, title, content);
+   return result == 1;
+  }
 }
