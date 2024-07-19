@@ -6,5 +6,5 @@ public interface PostService {
 
   NoticeDetailResponseDTO getPostBySeq(Long postSeq);
   boolean isLikedPost(Long userSeq, Long postSeq);
-
+  void addViewCount(Long postSeq);
 }

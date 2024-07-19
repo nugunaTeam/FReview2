@@ -3,6 +3,7 @@ package com.nuguna.freview.common.service.impl;
 import com.nuguna.freview.common.dto.response.page.NoticeDetailResponseDTO;
 import com.nuguna.freview.common.mapper.PostMapper;
 import com.nuguna.freview.common.service.PostService;
+import java.sql.Timestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,4 +27,8 @@ public class PostServiceImpl implements PostService {
     return result == 1;
   }
 
+  @Override
+  public void addViewCount(Long postSeq) {
+    postMapper.insertPostViewCount(postSeq);
+  }
 }
