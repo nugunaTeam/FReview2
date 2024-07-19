@@ -50,4 +50,11 @@
       updated_at = #{updatedAt}
     WHERE seq = #{postSeq}
   </update>
+
+  <!-- 특정 게시글 삭제 -->
+  <delete id="deletePost" parameterType="Long">
+    delete
+    from freview2.post
+    where seq = #{postSeq}
+  </delete>
 </mapper>
