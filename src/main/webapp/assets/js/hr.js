@@ -31,7 +31,7 @@ $(function(){
 
       $.ajax({
         method: "post",
-        url : "/api/auth/checkid",
+        url : "/api/auth/check-id",
         contentType: "application/json",
         data: JSON.stringify({ email: inputID }),
         error: function(myval){console.log("에러"+myval)},
@@ -117,7 +117,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
       $.ajax({
         method : "post",
-        url : "/api/auth/sendEmail",
+        url : "/api/auth/send-randomNumber-toEmail",
         contentType: "application/json",
         data: JSON.stringify({ email: inputEmail,
                                      randomNumber: randomFourDigitNumber}),
@@ -168,9 +168,9 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
     $.ajax({
       method: "post",
-      url : "/api/auth/checkNick",
+      url : "/api/auth/nickname-check",
       contentType: "application/json",
-      data: JSON.stringify({ nickName: inputnickName }),
+      data: JSON.stringify({ nickname: inputnickName }),
       error: function(myval){console.log("에러"+myval)},
       success: function(myval){
         console.log("성공"+myval);
@@ -220,7 +220,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
              email : inputEmail,
              password : inputPassword,
              subEmail : inputSubEmail,
-            nickName: inputNickname,
+            nickname: inputNickname,
             ageGroup: inputAgeGroup,
             code: "CUSTOMER"}),
         error: function(myval){console.log("에러"+myval)},
@@ -259,7 +259,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
       $.ajax({
         method: "post",
-        url : "/api/auth/checkid",
+        url : "/api/auth/check-id",
         contentType: "application/json",
         data: JSON.stringify({ email: inputID }),
         error: function(myval){console.log("에러"+myval)},
@@ -341,7 +341,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
       $.ajax({
         method : "post",
-        url : "/api/auth/sendEmail",
+        url : "/api/auth/send-randomNumber-toEmail",
         contentType: "application/json",
         data: JSON.stringify({ email: inputEmail,
           randomNumber: randomFourDigitNumber}),
@@ -393,7 +393,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
       $.ajax({
         method : "post",
-        url : "/api/auth/checkBuisnessNumber",
+        url : "/api/auth/business-number-check",
         contentType: "application/json",
         data: JSON.stringify({ buisnessNumber: buisnessInfo}),
         error : function(myval){console.log("에러"+myval)},
@@ -557,7 +557,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
     $.ajax({
       method: "post",
       url : "/auth?pagecode=checkNickName",
-      data : {"NickName" : inputnickName},
+      data : {"nickname" : inputnickName},
       error: function(myval){console.log("에러"+myval)},
       success: function(myval){
         console.log("성공"+myval);
