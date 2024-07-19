@@ -43,4 +43,10 @@ public class PostServiceImpl implements PostService {
     int result = postMapper.deletePost(postSeq);
     return result == 1;
   }
+
+  @Override
+  public boolean insertNotice(Long postSeq, String title, String content, Timestamp now) {
+    int result = postMapper.insertNotice(postSeq, title, content, now);
+    return result == 1;
+  }
 }

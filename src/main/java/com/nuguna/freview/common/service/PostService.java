@@ -11,4 +11,5 @@ public interface PostService {
   void addViewCount(Long postSeq);
   boolean updateNotice(Long postSeq, String title, String content, Timestamp now);
   boolean deletePost(Long postSeq);
+  boolean insertNotice(Long postSeq, String title, String content, Timestamp now);
 }
