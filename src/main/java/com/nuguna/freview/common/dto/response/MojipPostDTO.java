@@ -25,5 +25,6 @@ public class MojipPostDTO {
   private Timestamp applyEndDate;
   private Timestamp experienceDate;
   private String content;
-  private int totalLikes;
+  private int totalLike;
+  private int totalView;
 }

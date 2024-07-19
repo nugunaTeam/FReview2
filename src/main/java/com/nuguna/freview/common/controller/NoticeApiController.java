@@ -86,8 +86,6 @@ public class NoticeApiController {
     String content = requestDTO.getContent();
     Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
-    log.info("---" + userSeq + ", " + title + ", " + content + ", " + now.toString());
-
     try {
       boolean updateResult = postService.insertNotice(userSeq, title, content, now);
       if (updateResult) {

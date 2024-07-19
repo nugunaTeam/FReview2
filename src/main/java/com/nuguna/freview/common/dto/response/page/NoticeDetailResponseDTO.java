@@ -18,5 +18,5 @@ public class NoticeDetailResponseDTO {
   private Timestamp createdAt;
   private Timestamp updatedAt;
   private String content;
-  private int viewCount;
+  private int totalView;
 }

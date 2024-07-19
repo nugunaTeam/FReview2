@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 
 public interface PostService {
 
-  NoticeDetailResponseDTO getPostBySeq(Long postSeq);
+  NoticeDetailResponseDTO getNoticeBySeq(Long postSeq);
   boolean isLikedPost(Long userSeq, Long postSeq);
   void addViewCount(Long postSeq);
   boolean updateNotice(Long postSeq, String title, String content, Timestamp now);

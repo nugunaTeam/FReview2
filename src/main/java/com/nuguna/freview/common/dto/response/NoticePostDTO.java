@@ -17,5 +17,5 @@ public class NoticePostDTO {
   private String title;
   private String content;
   private Timestamp createdAt;
-  private int viewCount;
+  private int totalView;
 }

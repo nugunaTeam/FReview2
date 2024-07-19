@@ -21,7 +21,7 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
-  public NoticeDetailResponseDTO getPostBySeq(Long postSeq) {
+  public NoticeDetailResponseDTO getNoticeBySeq(Long postSeq) {
     return noticeMapper.selectNotice(postSeq);
   }
 

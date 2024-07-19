@@ -43,7 +43,7 @@ public class NoticeController {
     Long userSeq = 301L;
     UserVO loginUser = userService.getUserInfo(userSeq);
     postService.addViewCount(postSeq);
-    NoticeDetailResponseDTO currentPost = postService.getPostBySeq(postSeq);
+    NoticeDetailResponseDTO currentPost = postService.getNoticeBySeq(postSeq);
 
     model.addAttribute("currentPost", currentPost);
     model.addAttribute("loginUser", loginUser);
