@@ -34,7 +34,7 @@
   <select id="selectUser" parameterType="Long" resultMap="userMap">
     select
       seq, business_number, code, email, password, nickname, profile_photo_url, introduce, sub_email, login_type, is_withdrawn, age_group, store_location, created_at, updated_at
-    from freview2.user
+    from user
     where seq = #{userSeq}
   </select>
 

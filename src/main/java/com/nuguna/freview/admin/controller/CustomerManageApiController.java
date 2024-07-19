@@ -1,7 +1,7 @@
 package com.nuguna.freview.admin.controller;
 
 import com.nuguna.freview.admin.dto.request.CustomerListRequestDTO;
-import com.nuguna.freview.admin.dto.response.CustomerListDTO;
+import com.nuguna.freview.admin.dto.response.CustomerInfoDTO;
 import com.nuguna.freview.admin.dto.response.page.CustomerManageResponseDTO;
 import com.nuguna.freview.admin.service.AdminService;
 import com.nuguna.freview.global.util.ShaUtil;
@@ -35,7 +35,7 @@ public class CustomerManageApiController {
     if (previousUserSeq == null) {
       previousUserSeq = Long.MAX_VALUE;
     }
-    List<CustomerListDTO> customerList = adminService.getCustomerList(previousUserSeq, searchWord, PAGE_SIZE);
+    List<CustomerInfoDTO> customerList = adminService.getCustomerList(previousUserSeq, searchWord, PAGE_SIZE);
     boolean hasMore = customerList.size() == PAGE_SIZE;
     CustomerManageResponseDTO responseDTO = new CustomerManageResponseDTO();
     responseDTO.setCustomerList(customerList);

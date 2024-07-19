@@ -8,14 +8,14 @@
   <select id="checkPostLiked" parameterType="map" resultType="int">
     select
       count(*)
-    from freview2.`like`
+    from `like`
     where user_seq = #{userSeq} and post_seq = #{postSeq}
   </select>
 
   <!-- 특정 게시글 조회수 증가 -->
   <update id="insertPostViewCount" parameterType="Long">
     UPDATE
-        freview2.post
+        post
     SET view_count = view_count + 1
     WHERE seq = #{postSeq}
   </update>
@@ -23,7 +23,7 @@
   <!-- 특정 게시글 삭제 -->
   <delete id="deletePost" parameterType="Long">
     delete
-    from freview2.post
+    from post
     where seq = #{postSeq}
   </delete>
 </mapper>

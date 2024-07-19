@@ -20,7 +20,7 @@
   </resultMap>
 
   <!-- customerManageMap 설정 -->
-  <resultMap id="customerManageMap" type="com.nuguna.freview.admin.dto.response.CustomerListDTO">
+  <resultMap id="customerManageMap" type="com.nuguna.freview.admin.dto.response.CustomerInfoDTO">
     <id property="seq" column="seq"/>
     <result property="code" column="code"/>
     <result property="nickname" column="nickname"/>
@@ -29,7 +29,7 @@
   </resultMap>
 
   <!-- storeManageMap 설정 -->
-  <resultMap id="storeManageMap" type="com.nuguna.freview.admin.dto.response.StoreListDTO">
+  <resultMap id="storeManageMap" type="com.nuguna.freview.admin.dto.response.StoreInfoDTO">
     <id property="seq" column="seq"/>
     <result property="code" column="code"/>
     <result property="businessNumber" column="business_number"/>
@@ -43,7 +43,7 @@
   <select id="selectAdmin" parameterType="Long" resultMap="adminMap">
     select
       seq, code, email, password, nickname, profile_photo_url, sub_email, created_at, updated_at
-    from freview2.user
+    from user
     where seq = #{userSeq}
   </select>
 
@@ -51,7 +51,7 @@
   <select id="selectCustomerList" parameterType="map" resultMap="customerManageMap">
     SELECT
       seq, code, nickname, email, created_at
-    FROM freview2.user
+    FROM user
     WHERE code = 'CUSTOMER'
       AND seq &lt; #{previousUserSeq}
       AND is_withdrawn = 0
@@ -63,7 +63,7 @@
   <select id="searchCustomer" parameterType="map" resultMap="customerManageMap">
     SELECT
       seq, code, nickname, email, created_at
-    FROM freview2.user
+    FROM user
     WHERE code = 'CUSTOMER'
       AND seq &lt; #{previousUserSeq}
       AND (email LIKE CONCAT('%', #{searchWord}, '%') OR nickname LIKE CONCAT('%', #{searchWord}, '%'))
@@ -75,7 +75,7 @@
   <select id="selectStoreList" parameterType="map" resultMap="customerManageMap">
     SELECT
       seq, code, nickname, business_number, email, created_at
-    FROM freview2.user
+    FROM user
     WHERE code = 'STORE'
       AND seq &lt; #{previousUserSeq}
       AND is_withdrawn = 0
@@ -87,7 +87,7 @@
   <select id="searchStore" parameterType="map" resultMap="storeManageMap">
     SELECT
       seq, code, nickname, business_number, email, created_at
-    FROM freview2.user
+    FROM user
     WHERE code = 'STORE'
       AND seq &lt; #{previousUserSeq}
       AND (email LIKE CONCAT('%', #{searchWord}, '%') OR nickname LIKE CONCAT('%', #{searchWord}, '%'))
@@ -100,13 +100,13 @@
   <select id="selectMatchingAdmin" parameterType="map" resultType="int">
     select
         count(seq)
-    from freview2.user
+    from user
     where seq = #{adminSeq} and password = #{password}
   </select>
 
   <!-- 유저 삭제 -->
   <update id="deleteUser" parameterType="Long">
-    UPDATE freview2.user
+    UPDATE user
     SET is_withdrawn = 1
     WHERE seq = #{userSeq}
   </update>

@@ -1,6 +1,6 @@
 package com.nuguna.freview.admin.dto.response.page;
 
-import com.nuguna.freview.admin.dto.response.StoreListDTO;
+import com.nuguna.freview.admin.dto.response.StoreInfoDTO;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class StoreManageResponseDTO {
 
-  private List<StoreListDTO> storeList;
+  private List<StoreInfoDTO> storeList;
   private boolean hasMore;
 }

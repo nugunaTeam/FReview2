@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NoticeListDTO {
+public class NoticePostDTO {
 
   private Long seq;
   private Long userSeq;

@@ -1,6 +1,6 @@
 package com.nuguna.freview.common.dto.response.page;
 
-import com.nuguna.freview.common.dto.response.NoticeListDTO;
+import com.nuguna.freview.common.dto.response.NoticePostDTO;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class NoticeResponseDTO {
 
-  private List<NoticeListDTO> noticeList;
+  private List<NoticePostDTO> noticeList;
   private int pageTotalCount;
 }

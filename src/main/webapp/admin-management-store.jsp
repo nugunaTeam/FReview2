@@ -197,8 +197,7 @@
     </section>
 
     <div class="d-flex justify-content-center">
-        <button class="btn btn-primary" id="loadMoreBtn" data-previous-business-number="0">더보기
-        </button>
+        <button class="btn btn-primary" id="loadMoreBtn" data-previous-business-number="0">더보기</button>
     </div>
 
 </main>
@@ -235,9 +234,7 @@
           renderData(response.storeList);
           if (response.hasMore) {
             $('#loadMoreBtn').data('previousUserSeq',
-                response.storeList
-                    [response.storeList
-                    .length - 1].seq).show();
+                response.storeList[response.storeList.length - 1].seq).show();
           } else {
             $('#loadMoreBtn').hide();
           }
@@ -259,15 +256,11 @@
         }),
         dataType: "json",
         success: function (response) {
-          if (response.storeList
-              .length > 0) {
-            renderData(response.storeList
-            );
+          if (response.storeList.length > 0) {
+            renderData(response.storeList);
             if (response.hasMore) {
               $('#loadMoreBtn').data('previousUserSeq',
-                  response.storeList
-                      [response.storeList
-                      .length - 1].seq).show();
+                  response.storeList[response.storeList.length - 1].seq).show();
             } else {
               $('#loadMoreBtn').hide();
             }

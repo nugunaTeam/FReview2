@@ -2,7 +2,7 @@ package com.nuguna.freview.common.controller;
 
 import com.nuguna.freview.admin.dto.request.NoticeInsertRequestDTO;
 import com.nuguna.freview.common.dto.request.NoticeUpdateRequestDTO;
-import com.nuguna.freview.common.dto.response.NoticeListDTO;
+import com.nuguna.freview.common.dto.response.NoticePostDTO;
 import com.nuguna.freview.common.dto.response.page.NoticeResponseDTO;
 import com.nuguna.freview.common.service.BoardService;
 import com.nuguna.freview.common.service.PostService;
@@ -24,21 +24,21 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/api/common/notice")
-public class NoticeBoardApiController {
+public class NoticeApiController {
 
   private final BoardService boardService;
   private final PostService postService;
   private final int PAGE_SIZE = 10;
 
   @Autowired
-  public NoticeBoardApiController(BoardService boardService, PostService postService) {
+  public NoticeApiController(BoardService boardService, PostService postService) {
     this.boardService = boardService;
     this.postService = postService;
   }
 
   @RequestMapping(value = "/list/{currentPage}", method = RequestMethod.POST)
   public NoticeResponseDTO getNoticeList(@PathVariable int currentPage, @RequestParam(value = "searchWord") String searchWord) {
-    List<NoticeListDTO> noticeList = boardService.getNoticeList(currentPage, PAGE_SIZE, searchWord);
+    List<NoticePostDTO> noticeList = boardService.getNoticeList(currentPage, PAGE_SIZE, searchWord);
     int noticeTotal = boardService.getTotalCount(PostCode.NOTICE.getCode(), searchWord);
     int totalPage = (int)Math.ceil((double)noticeTotal / (double)PAGE_SIZE);
 
