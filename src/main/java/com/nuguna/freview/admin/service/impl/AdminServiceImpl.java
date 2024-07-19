@@ -1,7 +1,7 @@
 package com.nuguna.freview.admin.service.impl;
 
-import com.nuguna.freview.admin.dto.response.CustomerListDTO;
-import com.nuguna.freview.admin.dto.response.StoreListDTO;
+import com.nuguna.freview.admin.dto.response.CustomerInfoDTO;
+import com.nuguna.freview.admin.dto.response.StoreInfoDTO;
 import com.nuguna.freview.admin.mapper.AdminMapper;
 import com.nuguna.freview.admin.service.AdminService;
 import com.nuguna.freview.admin.vo.AdminVO;
@@ -25,7 +25,7 @@ public class AdminServiceImpl implements AdminService {
   }
 
   @Override
-  public List<CustomerListDTO> getCustomerList(Long previousUserSeq, String searchWord, Integer pageSize) {
+  public List<CustomerInfoDTO> getCustomerList(Long previousUserSeq, String searchWord, Integer pageSize) {
     if (searchWord == null) {
       return adminMapper.selectCustomerList(previousUserSeq, pageSize);
     } else {
@@ -34,7 +34,7 @@ public class AdminServiceImpl implements AdminService {
   }
 
   @Override
-  public List<StoreListDTO> getStoreList(Long previousUserSeq, String searchWord,
+  public List<StoreInfoDTO> getStoreList(Long previousUserSeq, String searchWord,
       Integer pageSize) {
     if (searchWord == null) {
       return adminMapper.selectStoreList(previousUserSeq, pageSize);
