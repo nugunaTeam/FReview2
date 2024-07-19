@@ -37,10 +37,9 @@ public class CustomerManageApiController {
     }
     List<CustomerListDTO> customerList = adminService.getCustomerList(previousUserSeq, searchWord, PAGE_SIZE);
     boolean hasMore = customerList.size() == PAGE_SIZE;
-    CustomerManageResponseDTO responseDTO = CustomerManageResponseDTO.builder()
-        .customerList(customerList)
-        .hasMore(hasMore)
-        .build();
+    CustomerManageResponseDTO responseDTO = new CustomerManageResponseDTO();
+    responseDTO.setCustomerList(customerList);
+    responseDTO.setHasMore(hasMore);
 
     return responseDTO;
   }

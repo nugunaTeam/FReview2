@@ -2,10 +2,11 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<c:set var="loginUser" value="${requestScope.loginUser}"/>
-<c:set var="memberSeq" value="${loginUser.memberSeq}"/>
+<c:set var="loginUser" value="${loginUser}"/>
+<c:set var="userSeq" value="${loginUser.seq}"/>
 <c:set var="nickname" value="${loginUser.nickname}"/>
-<c:set var="gubun" value="${loginUser.gubun}"/>
+<c:set var="profileUrl" value="${loginUser.profilePhotoUrl}" />
+<c:set var="code" value="${loginUser.code}"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,8 +20,8 @@
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="assets/img/favicon.png" rel="icon">
-    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="/assets/img/favicon.png" rel="icon">
+    <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -28,13 +29,13 @@
           rel="stylesheet">
 
     <!-- Vendor CSS Files -->
-    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-    <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
-    <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-    <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-    <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/assets/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
     <!-- Template Main CSS File -->
     <link href="/assets/css/style.css" rel="stylesheet">
@@ -101,20 +102,17 @@
 
 <header id="header" class="header fixed-top d-flex align-items-center header-hr">
     <div class="d-flex align-items-center justify-content-between ">
-        <a href="/main?seq=${memberSeq}&pagecode=Requester"
+        <a href="/main?seq=${userSeq}&pagecode=Requester"
            class="logo d-flex align-items-center">
-            <img src="assets/img/logo/logo-vertical.png" alt=""
+            <img src="/assets/img/logo/logo-vertical.png" alt=""
                  style="  width: 50px; margin-top: 20px;">
             <span class="d-none d-lg-block">FReview</span>
         </a>
     </div>
     <div class="header-hr-right">
-        <a href="/my-info?member_seq=${memberSeq}" style="margin-right: 20px">
+        <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
             ${nickname}
-            <img src="assets/img/basic/basic-profile-img.png" alt=" " style="width: 30px;
-                margin-top: 15px;">
-            <%--            <img src="<%=profileURL()%>" alt=" " style="width: 30px;--%>
-            <%--    margin-top: 15px;"> TODO: 세션의 프로필 url을 적용할 것--%>
+            <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
         </a>
         <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
     </div>
@@ -127,31 +125,32 @@
 
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">공지 게시판</h5>
+            <h5 class="card-title">공지게시판</h5>
             <p>매우 중요한 공지가 올라옵니다<br></p>
             <div class="d-flex justify-content-between">
                 <div>
                     <input type="text" name="searchWord" id="searchWord" placeholder="제목/내용으로 검색하세요!">
                     <input type="button" id="searchBtn" value="검색">
                 </div>
-                <c:if test="${gubun == 'A'}">
+                <c:if test="${code eq 'ADMIN'}">
                     <div>
-                        <a href="/notice-create" class="btn btn-primary">
+                        <a href="/notice/insert" class="btn btn-primary">
                             공지 등록
                         </a>
                     </div>
                 </c:if>
             </div>
             <table class="table">
-                <thead>
-                <tr>
-                    <th>제목</th>
-                    <th>작성일자</th>
-                    <th>수정일자</th>
-                </tr>
-                </thead>
-                <tbody id="noticeList"></tbody>
-            </table>
+            <thead>
+            <tr>
+                <th>제목</th>
+                <th>내용</th>
+                <th>작성일자</th>
+                <th>조회수</th>
+            </tr>
+            </thead>
+            <tbody id="noticeList"></tbody>
+        </table>
             <div class="pagination" id="pagination"></div>
 
         </div>
@@ -163,23 +162,19 @@
     loadPage(1);
 
     $('#searchBtn').click(function() {
-      var searchWord = $('#searchWord').val();
+      let searchWord = $('#searchWord').val();
       loadPage(1, searchWord);
     });
 
-    function loadPage(page, searchWord = '') {
-      var apiUrl = searchWord ? "/notice-search" : "/notice";
+    function loadPage(currentPage, searchWord = '') {
       $.ajax({
         method: "POST",
-        url: apiUrl,
-        data: {
-          page: page,
-          searchWord: searchWord
-        },
+        url: '/api/common/notice/list/' + currentPage,
+        data: { searchWord: searchWord },
         dataType: "json",
         success: function (response) {
-          renderData(response.data);
-          renderPagination(response.totalPages, page, searchWord);
+          renderData(response.noticeList);
+          renderPagination(response.pageTotalCount, currentPage, searchWord);
         },
         error: function () {
           console.error("[ERROR] 공지리스트 초기화 중 오류 발생");
@@ -188,25 +183,25 @@
     }
 
     function renderData(data) {
-      var htmlStr = "";
+      let htmlStr = "";
       $.map(data, function (val) {
-        var formattedCreatedAt = dayjs(val["createdAt"]).format('YYYY-MM-DD HH:mm');
-        var formattedUpdatedAt = dayjs(val["updatedAt"]).format('YYYY-MM-DD HH:mm');
+        let formattedCreatedAt = dayjs(val["createdAt"]).format('YYYY-MM-DD HH:mm');
+        let shortContent = val["content"].length > 30 ? val["content"].substring(0, 30) + "..." : val["content"];
 
         htmlStr += "<tr>";
-        htmlStr += "<td><a href='/notice-detail?postId=" + val["postSeq"] + "'>" + val["title"]
-            + "</a></td>";
+        htmlStr += "<td><a href='/notice/" + val["seq"] + "'>" + val["title"] + "</a></td>";
+        htmlStr += "<td>" + shortContent + "</td>";
         htmlStr += "<td>" + formattedCreatedAt + "</td>";
-        htmlStr += "<td>" + formattedUpdatedAt + "</td>";
+        htmlStr += "<td>" + val["viewCount"] + "</td>";
         htmlStr += "</tr>";
       });
       $('#noticeList').empty().append(htmlStr);
     }
 
     function renderPagination(totalPages, currentPage, searchWord) {
-      var htmlStr = "";
-      var startPage = Math.floor((currentPage - 1) / 10) * 10 + 1;
-      var endPage = startPage + 9;
+      let htmlStr = "";
+      let startPage = Math.floor((currentPage - 1) / 10) * 10 + 1;
+      let endPage = startPage + 9;
       if (endPage > totalPages) {
         endPage = totalPages;
       }
@@ -217,7 +212,7 @@
         htmlStr += "<span style='color: grey;'>이전</span>";
       }
 
-      for (var i = startPage; i <= endPage; i++) {
+      for (let i = startPage; i <= endPage; i++) {
         if (i === currentPage) {
           htmlStr += "<span class='current-page'>" + i + "</span>";
         } else {
@@ -236,8 +231,8 @@
 
     $('#pagination').on('click', 'a.page-link', function (e) {
       e.preventDefault();
-      var page = $(this).data('page');
-      var searchWord = $(this).data('search');
+      let page = $(this).data('page');
+      let searchWord = $(this).data('search');
       loadPage(page, searchWord);
     });
   });
@@ -261,17 +256,17 @@
         class="bi bi-arrow-up-short"></i></a>
 
 <!-- Vendor JS Files -->
-<script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
-<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="assets/vendor/chart.js/chart.umd.js"></script>
-<script src="assets/vendor/echarts/echarts.min.js"></script>
-<script src="assets/vendor/quill/quill.js"></script>
-<script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
-<script src="assets/vendor/tinymce/tinymce.min.js"></script>
-<script src="assets/vendor/php-email-form/validate.js"></script>
+<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/assets/vendor/quill/quill.js"></script>
+<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
 
 <!-- Template Main JS File -->
-<script src="assets/js/main.js"></script>
+<script src="/assets/js/main.js"></script>
 
 </body>
 

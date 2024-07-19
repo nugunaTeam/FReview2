@@ -43,7 +43,7 @@
   <select id="selectAdmin" parameterType="Long" resultMap="adminMap">
     select
       seq, code, email, password, nickname, profile_photo_url, sub_email, created_at, updated_at
-    from user
+    from freview2.user
     where seq = #{userSeq}
   </select>
 
@@ -51,10 +51,10 @@
   <select id="selectCustomerList" parameterType="map" resultMap="customerManageMap">
     SELECT
       seq, code, nickname, email, created_at
-    FROM user
+    FROM freview2.user
     WHERE code = 'CUSTOMER'
       AND seq &lt; #{previousUserSeq}
-      AND is_withdrawen = 0
+      AND is_withdrawn = 0
     ORDER BY seq DESC
       LIMIT #{limit}
   </select>
@@ -63,11 +63,11 @@
   <select id="searchCustomer" parameterType="map" resultMap="customerManageMap">
     SELECT
       seq, code, nickname, email, created_at
-    FROM user
+    FROM freview2.user
     WHERE code = 'CUSTOMER'
       AND seq &lt; #{previousUserSeq}
       AND (email LIKE CONCAT('%', #{searchWord}, '%') OR nickname LIKE CONCAT('%', #{searchWord}, '%'))
-      AND is_withdrawen = 0
+      AND is_withdrawn = 0
     ORDER BY seq DESC
       LIMIT #{limit}
   </select>
@@ -75,10 +75,10 @@
   <select id="selectStoreList" parameterType="map" resultMap="customerManageMap">
     SELECT
       seq, code, nickname, business_number, email, created_at
-    FROM user
+    FROM freview2.user
     WHERE code = 'STORE'
       AND seq &lt; #{previousUserSeq}
-      AND is_withdrawen = 0
+      AND is_withdrawn = 0
     ORDER BY seq DESC
       LIMIT #{limit}
   </select>
@@ -87,11 +87,11 @@
   <select id="searchStore" parameterType="map" resultMap="storeManageMap">
     SELECT
       seq, code, nickname, business_number, email, created_at
-    FROM user
+    FROM freview2.user
     WHERE code = 'STORE'
       AND seq &lt; #{previousUserSeq}
       AND (email LIKE CONCAT('%', #{searchWord}, '%') OR nickname LIKE CONCAT('%', #{searchWord}, '%'))
-      AND is_withdrawen = 0
+      AND is_withdrawn = 0
     ORDER BY seq DESC
       LIMIT #{limit}
   </select>
@@ -100,14 +100,14 @@
   <select id="selectMatchingAdmin" parameterType="map" resultType="int">
     select
         count(seq)
-    from user
+    from freview2.user
     where seq = #{adminSeq} and password = #{password}
   </select>
 
   <!-- 유저 삭제 -->
   <update id="deleteUser" parameterType="Long">
-    UPDATE user
-    SET is_withdrawen = 1
+    UPDATE freview2.user
+    SET is_withdrawn = 1
     WHERE seq = #{userSeq}
   </update>
 </mapper>

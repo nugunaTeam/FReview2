@@ -152,12 +152,12 @@
   <section class="section">
     <div class="row">
       <div class="col-lg-12">
-
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">체험단 리스트</h5>
-            <p>가입한 체험단 리스트입니다. <br>아이디를 클릭하면 해당 유저의 브랜딩 페이지로 이동할 수 있습니다.</p>
-
+            <p>가입한 체험단 리스트입니다 <br>
+              아이디를 클릭하면 해당 체험단의 브랜딩 페이지로 이동할 수 있습니다 <br>
+              <br>
             <div>
               <input type="text" name="searchWord" id="searchWord" placeholder="원하는 키워드로 검색하세요!">
               <input type="button" id="searchBtn" value="검색">

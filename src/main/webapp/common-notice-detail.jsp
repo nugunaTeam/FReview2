@@ -2,10 +2,11 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<c:set var="loginUser" value="${requestScope.loginUser}"/>
-<c:set var="memberSeq" value="${loginUser.memberSeq}"/>
+<c:set var="loginUser" value="${loginUser}"/>
+<c:set var="userSeq" value="${loginUser.seq}"/>
 <c:set var="nickname" value="${loginUser.nickname}"/>
-<c:set var="gubun" value="${loginUser.gubun}"/>
+<c:set var="profileUrl" value="${loginUser.profilePhotoUrl}" />
+<c:set var="code" value="${loginUser.code}"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -108,7 +109,7 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center header-hr">
     <div class="d-flex align-items-center justify-content-between ">
-        <a href="/main?seq=${memberSeq}&pagecode=Requester"
+        <a href="/main?seq=${userSeq}&pagecode=Requester"
            class="logo d-flex align-items-center">
             <img src="/assets/img/logo/logo-vertical.png" alt=""
                  style="  width: 50px; margin-top: 20px;">
@@ -116,12 +117,9 @@
         </a>
     </div>
     <div class="header-hr-right">
-        <a href="/my-info?member_seq=${memberSeq}" style="margin-right: 20px">
+        <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
             ${nickname}
-            <img src="/assets/img/basic/basic-profile-img.png" alt=" " style="width: 30px;
-                margin-top: 15px;">
-            <%--            <img src="<%=profileURL()%>" alt=" " style="width: 30px;--%>
-            <%--    margin-top: 15px;"> TODO: 세션의 프로필 url을 적용할 것--%>
+            <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
         </a>
         <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
     </div>
@@ -137,7 +135,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="card-title mb-0">공지</h5>
                 <div>
-                    <c:if test="${memberSeq == currentPost.memberSeq}">
+                    <c:if test="${userSeq  == currentPost.userSeq }">
                         <button type="button" class="btn btn-danger" onclick="confirmDelete()">
                             삭제
                         </button>
@@ -151,7 +149,7 @@
                 </div>
             </div>
             <form id="postForm" action="/notice/detail/update" method="post">
-                <input type="hidden" name="postSeq" value="${currentPost.postSeq}">
+                <input type="hidden" name="postSeq" value="${currentPost.seq}">
                 <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
                     <tbody>
                     <tr>
@@ -179,26 +177,12 @@
                                       name="content" rows="20">${currentPost.content}</textarea>
                         </td>
                     </tr>
+                    <tr>
+                        <th class="fixed-width">조회수</th>
+                        <td id="displayViewCount">${currentPost.viewCount}</td>
+                    </tr>
                     </tbody>
                 </table>
-                <div class="button-container">
-                    <c:if test="${gubun == 'C' || gubun == 'B'}">
-                        <c:choose>
-                            <c:when test="${isLiked}">
-                                <button type="button" class="btn btn-primary like-button"
-                                        onclick="cancelLike(${currentPost.postSeq}, ${memberSeq})">
-                                    <i class="bi bi-heart-fill me-1"></i> 좋아요
-                                </button>
-                            </c:when>
-                            <c:otherwise>
-                                <button type="button" class="btn btn-primary like-button"
-                                        onclick="addLike(${currentPost.postSeq}, ${memberSeq})">
-                                    <i class="bi bi-heart me-1"></i> 좋아요
-                                </button>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:if>
-                </div>
                 <div id="editButtons" class="d-none">
                     <button type="submit" class="btn btn-primary">완료</button>
                     <button type="button" class="btn btn-secondary" onclick="cancelEdit()">취소
@@ -208,7 +192,6 @@
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
@@ -231,147 +214,80 @@
 
     <script>
       document.addEventListener('DOMContentLoaded', function () {
+        // 날짜 형식 변환 함수
         function formatDate(dataString) {
           return dayjs(dataString).format('YYYY-MM-DD HH:mm');
         }
 
+        // 초기화 시 날짜 설정
         var createdAt = "${currentPost.createdAt}";
         var updatedAt = "${currentPost.updatedAt}";
-
         document.getElementById('displayCreatedAt').textContent = formatDate(createdAt);
         document.getElementById('displayUpdatedAt').textContent = formatDate(updatedAt);
-      });
 
-      function editPost() {
-        document.getElementById('titleView').classList.add('d-none');
-        document.getElementById('contentView').classList.add('d-none');
-        document.getElementById('titleEdit').classList.remove('d-none');
-        document.getElementById('contentEdit').classList.remove('d-none');
-        document.getElementById('editButtons').classList.remove('d-none');
-      }
+        function editPost() {
+          $('#titleView, #contentView').addClass('d-none');
+          $('#titleEdit, #contentEdit, #editButtons').removeClass('d-none');
+        }
 
-      function cancelEdit() {
-        document.getElementById('titleView').classList.remove('d-none');
-        document.getElementById('contentView').classList.remove('d-none');
-        document.getElementById('titleEdit').classList.add('d-none');
-        document.getElementById('contentEdit').classList.add('d-none');
-        document.getElementById('editButtons').classList.add('d-none');
-      }
+        function cancelEdit() {
+          $('#titleView, #contentView').removeClass('d-none');
+          $('#titleEdit, #contentEdit, #editButtons').addClass('d-none');
+        }
 
-      document.getElementById('postForm').addEventListener('submit', function (event) {
-        event.preventDefault();
+        function confirmDelete() {
+          var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+          deleteModal.show();
+        }
 
-        var formData = new URLSearchParams(new FormData(this));
-
-        fetch('/notice/detail/update', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: formData.toString()
-        })
-        .then(response => {
-          if (response.ok) {
-            return response.text().then(data => {
-              console.log(data);
-              alert('게시글이 성공적으로 수정되었습니다.');
-              location.replace("/notice")
-            })
-          } else {
-            response.text().then(data => {
-              console.error(data);
-              alert('게시글 수정에 실패했습니다. 다시 시도해 주세요.');
-            });
-          }
-        })
-        .catch(error => console.error('Error:', error));
-      });
-
-      function confirmDelete() {
-        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-        deleteModal.show();
-      }
-
-      function deletePost() {
-        var postSeq = document.querySelector('input[name="postSeq"]').value;
-
-        fetch('/notice/detail/delete', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: new URLSearchParams({postSeq: postSeq}).toString()
-        })
-        .then(response => {
-          if (response.ok) {
-            return response.text().then(data => {
-              console.log(data);
+        // 게시글 삭제
+        function deletePost() {
+          let postSeq = $('input[name="postSeq"]').val();
+          fetch(`/api/common/notice/${postSeq}`, {
+            method: 'DELETE',
+          })
+          .then(response => {
+            if (response.ok) {
               alert('게시글이 성공적으로 삭제되었습니다.');
               location.replace("/notice");
-            });
-          } else {
-            response.text().then(data => {
-              console.error(data);
-              alert('게시글 삭제에 실패했습니다. 다시 시도해 주세요.');
-            });
-          }
-        })
-        .catch(error => console.error('Error:', error));
-      }
+            } else {
+              response.text().then(text => alert('게시글 삭제 실패: ' + text));
+            }
+          })
+          .catch(error => alert('Error: ' + error));
+        }
 
-      function addLike(postSeq, memberSeq) {
-        fetch('/likes-add', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: new URLSearchParams({
-            postSeq: postSeq,
-            //TODO: 접속자의 세션 seq로 변경 필요
-            memberSeq: memberSeq
-          }).toString()
-        })
-        .then(response => {
-          if (response.ok) {
-            location.reload();
-          } else {
-            alert('좋아요를 추가하는 데 실패했습니다. 다시 시도해 주세요.');
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('좋아요를 추가하는 도중 오류가 발생했습니다.');
+        // 폼 제출 처리
+        $('#postForm').on('submit', function(e) {
+          e.preventDefault();
+          var postData = {
+            seq: $('input[name="postSeq"]').val(),
+            title: $('#titleEdit').val(),
+            content: $('#contentEdit').val()
+          };
+          $.ajax({
+            url: '/api/common/notice/update',
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(postData),
+            success: function(response) {
+              alert('게시글이 성공적으로 업데이트되었습니다.');
+              window.location.reload(); // 성공 후 페이지 새로고침
+            },
+            error: function(xhr, status, error) {
+              alert('업데이트 실패: ' + error);
+            }
+          });
         });
-      }
 
-      function cancelLike(postSeq, memberSeq) {
-        fetch('/likes-cancel', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: new URLSearchParams({
-            postSeq: postSeq,
-            memberSeq: memberSeq
-          }).toString()
-        })
-        .then(response => {
-          if (response.ok) {
-            location.reload();
-          } else {
-            alert('좋아요를 취소하는 데 실패했습니다. 다시 시도해 주세요.');
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('좋아요를 취소하는 도중 오류가 발생했습니다.');
-        });
-      }
+        window.editPost = editPost;
+        window.cancelEdit = cancelEdit;
+        window.confirmDelete = confirmDelete;
+        window.deletePost = deletePost;
+      });
     </script>
 
-    </script>
-
-</main><!-- End #main -->
+</main>
 
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">

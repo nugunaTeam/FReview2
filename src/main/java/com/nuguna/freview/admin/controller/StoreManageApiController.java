@@ -39,10 +39,9 @@ public class StoreManageApiController {
     }
     List<StoreListDTO> storeList = adminService.getStoreList(previousUserSeq, searchWord, PAGE_SIZE);
     boolean hasMore = storeList.size() == PAGE_SIZE;
-    StoreManageResponseDTO responseDTO = StoreManageResponseDTO.builder()
-        .storeList(storeList)
-        .hasMore(hasMore)
-        .build();
+    StoreManageResponseDTO responseDTO = new StoreManageResponseDTO();
+    responseDTO.setStoreList(storeList);
+    responseDTO.setHasMore(hasMore);
 
     return responseDTO;
   }
