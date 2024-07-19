@@ -864,10 +864,6 @@
                                             </c:forEach>
                                             </tbody>
                                         </table>
-                                        <%--<div class="alert alert-custom alert-custom-bottom"
-                                             role="alert">
-                                            노쇼한 리뷰는 제 3자에게 노출되지 않습니다.
-                                        </div>--%>
                                         <div class="pagination-container">
                                             <button id="prev-block-button"
                                                     class="btn btn-primary edit-btn" disabled>&lt;
@@ -883,63 +879,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <%--<div class="row">
-                                <div class="col-lg-3 col-md-4 label">리뷰 로그</div>
-                                <div class="col-lg-8 col-md-6">
-                                    <div class="alert alert-custom" role="alert">
-                                        노쇼한 리뷰는 제 3자에게 노출되지 않습니다.
-                                    </div>
-                                    <table class="table table-striped table-bordered text-center"
-                                           id="review-log-table">
-                                        <thead>
-                                        <tr>
-                                            <th>스토어명</th>
-                                            <th>방문일자</th>
-                                            <th>리뷰 작성여부</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <c:forEach var="review" items="${reviewInfos}">
-                                            <c:set var="visitDate" value="${review.visitDate}"/>
-                                            <c:if test="${review.status == 'NOSHOW'}">
-                                                <c:set var="visitDate" value="노쇼"/>
-                                            </c:if>
-                                            <tr>
-                                                <td>
-                                                    <a href="/brand/${review.storeName}">${review.storeName}</a>
-                                                </td>
-                                                <td>${visitDate}</td>
-                                                <td>
-                                                    <c:choose>
-                                                        <c:when test="${review.status == 'WRITTEN' || review.status == 'STORE_HIDDEN'}">
-                                                            <a href="${review.url}">O</a>
-                                                        </c:when>
-                                                        <c:when test="${review.status == 'UNWRITTEN'}">
-                                                            X
-                                                        </c:when>
-                                                        <c:when test="${review.status == 'NOSHOW'}">
-                                                            노쇼
-                                                        </c:when>
-                                                    </c:choose>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                        </tbody>
-                                    </table>
-                                    <div class="pagination-container">
-                                        <button id="prev-block-button"
-                                                class="btn btn-primary edit-btn" disabled>&lt;
-                                        </button>
-                                        <div id="page-buttons"
-                                             class="d-flex justify-content-center mx-2">
-                                            <!-- 페이지 번호 버튼들이 여기에 추가됩니다 -->
-                                        </div>
-                                        <button id="next-block-button"
-                                                class="btn btn-primary edit-btn" disabled>&gt;
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>--%>
 
                             <%-- <script>
                                $(document).ready(function () {

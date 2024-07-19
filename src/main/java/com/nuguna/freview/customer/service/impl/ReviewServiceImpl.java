@@ -1,14 +1,18 @@
 package com.nuguna.freview.customer.service.impl;
 
 import static com.nuguna.freview.customer.constant.CustomerConstant.CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE;
+import static com.nuguna.freview.customer.constant.CustomerConstant.CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE;
 
 import com.nuguna.freview.customer.dto.request.CustomerMyReviewsRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerReviewRegisterRequestDTO;
+import com.nuguna.freview.customer.dto.response.CustomerMyReviewsRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerReviewRegisterResponseDTO;
 import com.nuguna.freview.customer.dto.response.ReviewLogInfoDTO;
+import com.nuguna.freview.customer.dto.response.ReviewPaginationInfoResponseDTO;
 import com.nuguna.freview.customer.exception.IllegalReviewException;
+import com.nuguna.freview.customer.exception.IllegalReviewPageAccessException;
 import com.nuguna.freview.customer.mapper.CustomerReviewMapper;
-import com.nuguna.freview.customer.service.CustomerReviewService;
+import com.nuguna.freview.customer.service.ReviewService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,12 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class CustomerReviewServiceImpl implements CustomerReviewService {
+public class ReviewServiceImpl implements ReviewService {
 
   private final CustomerReviewMapper customerReviewMapper;
 
   @Autowired
-  public CustomerReviewServiceImpl(CustomerReviewMapper customerReviewMapper) {
+  public ReviewServiceImpl(CustomerReviewMapper customerReviewMapper) {
     this.customerReviewMapper = customerReviewMapper;
   }
 
@@ -40,12 +44,26 @@ public class CustomerReviewServiceImpl implements CustomerReviewService {
   }
 
   @Override
-  public List<ReviewLogInfoDTO> getReviews(
+  @Transactional(readOnly = true)
+  public CustomerMyReviewsRetrieveResponseDTO getCustomerMyReviews(
       CustomerMyReviewsRetrieveRequestDTO customerMyReviewsRetrieveRequestDTO) {
     Long userSeq = customerMyReviewsRetrieveRequestDTO.getUserSeq();
     Integer page = customerMyReviewsRetrieveRequestDTO.getPage();
 
-    return customerReviewMapper.getReviewsInfo(userSeq,
-        (page - 1) * CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE, CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE);
+    int offset = (page - 1) * CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE;
+    int reviewCount = customerReviewMapper.getReviewCount(userSeq);
+    if (offset > reviewCount) {
+      throw new IllegalReviewPageAccessException("해당하는 페이지에 대한 리뷰가 존재하지 않습니다.");
+    }
+    List<ReviewLogInfoDTO> reviewsInfo = customerReviewMapper.getReviewsInfo(userSeq, offset,
+        CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE);
+    int startPage =
+        ((page - 1) / CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE) * CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE
+            + 1;
+    int endPage = (startPage - 1) + CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE;
+
+    ReviewPaginationInfoResponseDTO reviewPaginationInfoResponseDTO = new ReviewPaginationInfoResponseDTO(
+        page, startPage, endPage);
+    return new CustomerMyReviewsRetrieveResponseDTO(reviewsInfo, reviewPaginationInfoResponseDTO);
   }
 }
