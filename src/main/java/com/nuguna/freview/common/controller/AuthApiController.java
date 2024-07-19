@@ -1,10 +1,11 @@
 package com.nuguna.freview.common.controller;
 
+import com.nuguna.freview.common.dto.request.RegisterCheckBusinessNumberDTO;
 import com.nuguna.freview.common.dto.request.RegisterCheckIdRequestDTO;
 import com.nuguna.freview.common.dto.request.RegisterCheckNickNameRequestDTO;
 import com.nuguna.freview.common.dto.request.RegisterRequestDTO;
 import com.nuguna.freview.common.dto.request.RegisterSendEmailRequestDTO;
-import com.nuguna.freview.common.dto.response.RegisterCheckDuplicatedInfoResponseDTO;
+import com.nuguna.freview.common.dto.response.RegisterCheckInfoResponseDTO;
 import com.nuguna.freview.common.dto.response.RegisterSendEmailResponseDTO;
 import com.nuguna.freview.common.service.RegisterService;
 import com.nuguna.freview.global.util.SendMailUtil;
@@ -35,15 +36,15 @@ public class AuthApiController {
 
 
   @RequestMapping(value = "/api/auth/checkid", method = RequestMethod.POST)
-  public ResponseEntity<RegisterCheckDuplicatedInfoResponseDTO> checkDuplicatedId(@Valid @RequestBody RegisterCheckIdRequestDTO registerCheckIdRequestDTO) {
+  public ResponseEntity<RegisterCheckInfoResponseDTO> checkDuplicatedId(@Valid @RequestBody RegisterCheckIdRequestDTO registerCheckIdRequestDTO) {
     log.info("아이디 중복 확인");
     log.info(registerCheckIdRequestDTO.getEmail());
     boolean result = registerService.checkDuplicatedEmail(registerCheckIdRequestDTO);
     log.info("이메일 중복 결과 "+result);
 
-    RegisterCheckDuplicatedInfoResponseDTO registerCheckDuplicatedInfoResponseDTO = new RegisterCheckDuplicatedInfoResponseDTO(result);
+    RegisterCheckInfoResponseDTO registerCheckInfoResponseDTO = new RegisterCheckInfoResponseDTO(result);
 
-    return new ResponseEntity<>(registerCheckDuplicatedInfoResponseDTO,HttpStatus.OK);
+    return new ResponseEntity<>(registerCheckInfoResponseDTO,HttpStatus.OK);
   }
 
   @RequestMapping(value = "/api/auth/sendEmail", method = RequestMethod.POST)
@@ -67,15 +68,15 @@ public class AuthApiController {
   }
 
   @RequestMapping(value = "/api/auth/checkNick", method = RequestMethod.POST)
-  public ResponseEntity<RegisterCheckDuplicatedInfoResponseDTO> checkDuplicatedNick(@Valid @RequestBody
+  public ResponseEntity<RegisterCheckInfoResponseDTO> checkDuplicatedNick(@Valid @RequestBody
       RegisterCheckNickNameRequestDTO requestCheckNicknameRequestDTO) {
     log.info("닉네임 중복 확인");
     log.info(requestCheckNicknameRequestDTO.getNickName());
     boolean result = registerService.checkDuplicatedNickName(requestCheckNicknameRequestDTO);
     log.info("이메일 중복 결과 "+result);
-   RegisterCheckDuplicatedInfoResponseDTO registerCheckDuplicatedInfoResponseDTO = new RegisterCheckDuplicatedInfoResponseDTO(result);
+   RegisterCheckInfoResponseDTO registerCheckInfoResponseDTO = new RegisterCheckInfoResponseDTO(result);
 
-   return new ResponseEntity<>(registerCheckDuplicatedInfoResponseDTO,HttpStatus.OK);
+   return new ResponseEntity<>(registerCheckInfoResponseDTO,HttpStatus.OK);
   }
 
   @RequestMapping(value = "/api/auth/register", method = RequestMethod.POST)
@@ -84,15 +85,19 @@ public class AuthApiController {
     log.info(registerRequestDTO.getCode());
     if(registerRequestDTO.getCode().equals("CUSTOMER")){
       registerService.cutomerRegist(registerRequestDTO);
+    }else if(registerRequestDTO.getCode().equals("STORE")){
+      registerService.storeRegist(registerRequestDTO);
     }
-    //boolean result = registerService.checkDuplicatedNickName(requestCheckNicknameRequestDTO);
-    //log.info("이메일 중복 결과 "+result);
-    // RegisterCheckDuplicatedInfoResponseDTO registerCheckDuplicatedInfoResponseDTO = new RegisterCheckDuplicatedInfoResponseDTO(result);
-
-
   }
 
-
+  @RequestMapping(value = "/api/auth/checkBuisnessNumber", method = RequestMethod.POST)
+  public ResponseEntity<RegisterCheckInfoResponseDTO> checkBuisnessNumber(@Valid @RequestBody RegisterCheckBusinessNumberDTO registerCheckBusinessNumberDTO) {
+    log.info("사업자번호 확인");
+    log.info(registerCheckBusinessNumberDTO.getBuisnessNumber());
+    boolean result = registerService.checkBusinessNumber(registerCheckBusinessNumberDTO);
+    RegisterCheckInfoResponseDTO registerCheckInfoResponseDTO = new RegisterCheckInfoResponseDTO(result);
+    return new ResponseEntity<>(registerCheckInfoResponseDTO,HttpStatus.OK);
+  }
 
 
 }
