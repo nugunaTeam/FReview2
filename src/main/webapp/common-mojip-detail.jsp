@@ -391,15 +391,17 @@
   }
 
   function cancelLike(postSeq) {
-    fetch('/like-cancel', {
-      method: 'POST',
+    let data = {
+      postSeq: postSeq,
+      userSeq: ${userSeq}
+    };
+
+    fetch('/api/common/post/like-cancel', {
+      method: 'DELETE',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
       },
-      body: new URLSearchParams({
-        postSeq: postSeq,
-        userSeq: ${userSeq}
-      }).toString()
+      body: JSON.stringify(data),
     })
     .then(response => {
       if (response.ok) {
