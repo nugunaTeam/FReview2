@@ -1,12 +1,16 @@
 package com.nuguna.freview.common.controller;
 
+import com.nuguna.freview.common.dto.request.MojipInsertRequestDTO;
 import com.nuguna.freview.common.dto.request.MojipListRequestDTO;
-import com.nuguna.freview.common.dto.response.MojipPostDTO;
+import com.nuguna.freview.common.dto.response.MojipPostDetailDTO;
 import com.nuguna.freview.common.dto.response.page.MojipResponseDTO;
 import com.nuguna.freview.common.service.MojipService;
+import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,7 +38,7 @@ public class MojipApiController {
       previousPostSeq = Long.MAX_VALUE;
     }
     try {
-      List<MojipPostDTO> mojipList = mojipService.getMojipList(previousPostSeq, searchWord, PAGE_SIZE);
+      List<MojipPostDetailDTO> mojipList = mojipService.getMojipList(previousPostSeq, searchWord, PAGE_SIZE);
       boolean hasMore = mojipList.size() == PAGE_SIZE;
       MojipResponseDTO responseDTO = new MojipResponseDTO();
       responseDTO.setMojipList(mojipList);
@@ -45,5 +49,27 @@ public class MojipApiController {
       e.printStackTrace();
     }
     return new MojipResponseDTO();
+  }
+
+  @RequestMapping(value = "/create", method = RequestMethod.POST)
+  public ResponseEntity<?> createMojipPost(@RequestBody MojipInsertRequestDTO requestDTO) {
+    Long userSeq = requestDTO.getUserSeq();
+    String title = requestDTO.getTitle();
+    Date applyStartDate = requestDTO.getApplyStartDate();
+    Date applyEndDate = requestDTO.getApplyEndDate();
+    Date experienceDate = requestDTO.getExperienceDate();
+    String content = requestDTO.getContent();
+
+    try {
+      boolean result = mojipService.createMojip(userSeq, title, applyStartDate, applyEndDate, experienceDate, content);
+      if (result) {
+        return new ResponseEntity<>(HttpStatus.OK);
+      } else {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    } catch (Exception e) {
+      log.error("[ERROR] 모집글 등록 도중 에러 발생", e);
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }
