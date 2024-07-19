@@ -2,6 +2,7 @@ package com.nuguna.freview.common.controller;
 
 import com.nuguna.freview.common.dto.request.MojipInsertRequestDTO;
 import com.nuguna.freview.common.dto.request.MojipListRequestDTO;
+import com.nuguna.freview.common.dto.request.MojipUpdateRequestDTO;
 import com.nuguna.freview.common.dto.response.MojipPostDetailDTO;
 import com.nuguna.freview.common.dto.response.page.MojipResponseDTO;
 import com.nuguna.freview.common.service.MojipService;
@@ -69,6 +70,25 @@ public class MojipApiController {
       }
     } catch (Exception e) {
       log.error("[ERROR] 모집글 등록 도중 에러 발생", e);
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @RequestMapping(value = "/update", method = RequestMethod.PUT)
+  public ResponseEntity<?> updateMojipPost(@RequestBody MojipUpdateRequestDTO requestDTO) {
+    Long postSeq = requestDTO.getPostSeq();
+    String title = requestDTO.getTitle();
+    String content = requestDTO.getContent();
+
+    try {
+      boolean result = mojipService.updateMojip(postSeq, title, content);
+      if (result) {
+        return new ResponseEntity<>(HttpStatus.OK);
+      } else {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    } catch (Exception e) {
+      log.error("[ERROR] 모집글 수정 도중 에러 발생", e);
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
