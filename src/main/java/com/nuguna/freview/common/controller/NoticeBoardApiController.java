@@ -1,5 +1,6 @@
 package com.nuguna.freview.common.controller;
 
+import com.nuguna.freview.admin.dto.request.NoticeInsertRequestDTO;
 import com.nuguna.freview.common.dto.request.NoticeUpdateRequestDTO;
 import com.nuguna.freview.common.dto.response.NoticeListDTO;
 import com.nuguna.freview.common.dto.response.page.NoticeResponseDTO;
@@ -49,6 +50,7 @@ public class NoticeBoardApiController {
     return responseDTO;
   }
 
+  //TODO: 여기도 PathVariable 로 처리할 것
   @RequestMapping(value = "/update", method = RequestMethod.PUT)
   public ResponseEntity<?> updatePost(@RequestBody NoticeUpdateRequestDTO requestDTO) {
     Long postSeq = requestDTO.getSeq();
@@ -74,6 +76,28 @@ public class NoticeBoardApiController {
     if (postService.deletePost(deletePostSeq)) {
       return new ResponseEntity<>(HttpStatus.OK);
     } else {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @RequestMapping(value = "/insert", method = RequestMethod.POST)
+  public ResponseEntity<?> insertPost(@RequestBody NoticeInsertRequestDTO requestDTO) {
+    Long userSeq = requestDTO.getUserSeq();
+    String title = requestDTO.getTitle();
+    String content = requestDTO.getContent();
+    Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+
+    log.info("---" + userSeq + ", " + title + ", " + content + ", " + now.toString());
+
+    try {
+      boolean updateResult = postService.insertNotice(userSeq, title, content, now);
+      if (updateResult) {
+        return new ResponseEntity<>(HttpStatus.OK);
+      } else {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    } catch (Exception e) {
+      log.error("[ERROR] 공지글 등록 도중 에러 발생", e);
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
