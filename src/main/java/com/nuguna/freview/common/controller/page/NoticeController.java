@@ -15,19 +15,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Slf4j
 @Controller
 @RequestMapping("/notice")
-public class noticeController {
+public class NoticeController {
 
   private final UserService userService;
   private final PostService postService;
 
   @Autowired
-  public noticeController(UserService userService, PostService postService) {
+  public NoticeController(UserService userService, PostService postService) {
     this.userService = userService;
     this.postService = postService;
   }
 
   @RequestMapping(value = "", method = RequestMethod.GET)
-  public String noticeBoardPage(Model model) {
+  public String noticeMainPage(Model model) {
     //HACK: 로그인 유저의 실제 seq 로 수정 필요
     Long userSeq = 301L;
     UserVO loginUser = userService.getUserInfo(userSeq);
