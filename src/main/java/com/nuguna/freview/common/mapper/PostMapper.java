@@ -1,0 +1,12 @@
+package com.nuguna.freview.common.mapper;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+@Mapper
+public interface PostMapper {
+
+  int checkPostLiked(@Param("userSeq") Long userSeq, @Param("postSeq") Long postSeq);
+  void insertPostViewCount(@Param("postSeq") Long postSeq);
+  int deletePost(Long postSeq);
+}

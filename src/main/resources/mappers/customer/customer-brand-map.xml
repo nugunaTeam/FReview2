@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.customer.mapper.CustomerBrandMapper">
+
+  <update id="updateProfilePhotoUrl">
+    update user
+    set profile_photo_url = #{toProfilePhotoUrl}
+    where seq = #{userSeq}
+  </update>
+
+  <select id="checkNicknameExist" resultType="Boolean">
+    select count(1) > 0
+    from user
+    where nickname = #{toNickname}
+      and seq != #{userSeq}
+  </select>
+
+  <update id="updateNickname">
+    update user
+    set nickname = #{toNickname}
+    where seq = #{userSeq}
+  </update>
+
+  <update id="updateAgeGroup">
+    update user
+    set age_group = #{toAgeGroup}
+    where seq = #{userSeq}
+  </update>
+
+  <update id="updateIntroduce">
+    update user
+    set introduce = #{toIntroduce}
+    where seq = #{userSeq}
+  </update>
+
+  <delete id="deleteFoodTypesByUserSeq">
+    delete
+    from user_food_type
+    where user_seq = #{userSeq}
+  </delete>
+
+  <insert id="insertFoodTypes">
+    insert into user_food_type (user_seq, food_type_seq)
+    select
+    #{userSeq}, seq
+    from
+    food_type
+    where
+    dish in
+    <foreach item="item" index="index" collection="toFoodTypes" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </insert>
+
+  <delete id="deleteTagsByUserSeq">
+    delete
+    from user_tag
+    where user_seq = #{userSeq}
+  </delete>
+
+  <insert id="insertTags">
+    insert into user_tag (user_seq, tag_seq)
+    select
+    #{userSeq}, seq
+    from
+    tag
+    where
+    name in
+    <foreach item="item" index="index" collection="toTags" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </insert>
+
+</mapper>

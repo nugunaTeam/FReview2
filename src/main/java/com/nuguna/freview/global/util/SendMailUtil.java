@@ -11,11 +11,19 @@ import javax.mail.internet.MimeMessage;
 
 public class SendMailUtil {
 
-  final private String ENCODING = "";
-  final private String PORT = "";
-  final private String SMTPHOST = "";
-  final private String userName = "";
-  final private String password = "";
+  private final String ENCODING;
+  private final String PORT;
+  private final String SMTPHOST;
+  private final String userName;
+  private final String password;
+
+  public SendMailUtil(String ENCODING, String PORT, String SMTPHOST, String userName, String password) {
+    this.ENCODING = ENCODING;
+    this.PORT = PORT;
+    this.SMTPHOST = SMTPHOST;
+    this.userName = userName;
+    this.password = password;
+  }
 
 
   public Session setting(Properties props){
@@ -64,9 +72,9 @@ public class SendMailUtil {
       Transport.send(msg);
       System.out.println("메일 보내기 성공");
     } catch(Exception e){
+
       e.printStackTrace();
       System.out.println("메일 보내시 실패");
     }
   }
-
 }

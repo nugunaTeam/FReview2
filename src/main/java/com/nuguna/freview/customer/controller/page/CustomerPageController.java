@@ -1,6 +1,5 @@
 package com.nuguna.freview.customer.controller.page;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nuguna.freview.customer.dto.response.page.CustomerMyBrandPageInfoResponseDTO;
 import com.nuguna.freview.customer.service.CustomerPageService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +21,31 @@ public class CustomerPageController {
   }
 
   @RequestMapping("/my/brand-info")
-  public String customerMyBrandPage(@RequestParam Long userSeq, Model model)
-      throws JsonProcessingException {
+  public String customerMyBrandPage(@RequestParam Long userSeq, Model model) {
     CustomerMyBrandPageInfoResponseDTO brandPageInfo = customerPageService.getBrandPageInfo(
         userSeq);
-    model.addAttribute("brandInfo", brandPageInfo);
+
+    log.info(brandPageInfo.getReviewInfos().toString());
+    log.info(brandPageInfo.getBrandInfo().toString());
+    model.addAttribute("brandInfo", brandPageInfo.getBrandInfo());
+    model.addAttribute("reviewInfos", brandPageInfo.getReviewInfos());
     model.addAttribute("userSeq", userSeq);
     return "customer-my-brand-info";
+  }
+
+  @RequestMapping("/my/activity")
+  public String customerMyActivity(@RequestParam(required = false) Long userSeq) {
+    return "customer-my-activity-info";
+  }
+
+  @RequestMapping("/my/notification")
+  public String customerMyNotification(@RequestParam(required = false) Long userSeq) {
+    return "customer-my-notification";
+  }
+
+  @RequestMapping("/my/personal-info")
+  public String customerMyPersonalInfo(@RequestParam(required = false) Long userSeq) {
+    return "customer-my-personal-info";
   }
 
 }

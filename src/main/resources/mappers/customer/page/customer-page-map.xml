@@ -4,8 +4,8 @@
 
 <mapper namespace="com.nuguna.freview.customer.mapper.CustomerPageMapper">
 
-  <resultMap id="CustomerMyBrandPageInfoResponseDTOResultMap"
-    type="com.nuguna.freview.customer.dto.response.page.CustomerMyBrandPageInfoResponseDTO">
+  <resultMap id="CustomerBrandInfoResponseDTOResultMap"
+    type="com.nuguna.freview.customer.dto.response.page.CustomerBrandInfoResponseDTO">
     <result property="profilePhotoUrl" column="profile_photo_url"/>
     <result property="nickname" column="nickname"/>
     <result property="ageGroup" column="age_group"/>
@@ -17,37 +17,21 @@
     <collection property="tagInfos" ofType="java.lang.String">
       <result column="tag_name"/>
     </collection>
-    <collection property="reviewInfos"
-      ofType="com.nuguna.freview.customer.dto.response.ReviewLogInfoDTO">
-      <result property="reviewStatus" column="status"/>
-      <result property="storeName" column="store_name"/>
-      <result property="visitDate" column="visit_date"/>
-      <result property="reviewUrl" column="url"/>
-    </collection>
   </resultMap>
 
-  <select id="getCustomerBrandPageInfo" resultMap="CustomerMyBrandPageInfoResponseDTOResultMap">
+  <select id="getBrandInfo" resultMap="CustomerBrandInfoResponseDTOResultMap">
     SELECT u.profile_photo_url,
            u.nickname,
            u.age_group,
            u.introduce,
            (SELECT COUNT(*) FROM zzim z WHERE z.to_user_seq = u.seq) AS zzimCount,
            ft.dish                                                   AS food_type_name,
-           t.name                                                    AS tag_name,
-           r.status,
-           nsbi.store_name,
-           e.visit_date,
-           r.url
+           t.name                                                    AS tag_name
     FROM user u
            LEFT JOIN user_food_type uft ON u.seq = uft.user_seq
            LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
            LEFT JOIN user_tag ut ON u.seq = ut.user_seq
            LEFT JOIN tag t ON ut.tag_seq = t.seq
-           LEFT JOIN review r ON u.seq = r.customer_seq
-           LEFT JOIN experience e ON r.experience_seq = e.seq
-           LEFT JOIN user u2 ON r.store_seq = u2.seq
-           LEFT JOIN national_store_business_information nsbi
-                     ON u2.business_number = nsbi.business_number
     WHERE u.seq = #{userSeq}
   </select>
 

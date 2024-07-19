@@ -3,6 +3,7 @@ package com.nuguna.freview.common.service.impl;
 import com.nuguna.freview.common.dto.request.CustomerSignupRequestDTO;
 import com.nuguna.freview.common.mapper.UserMapper;
 import com.nuguna.freview.common.service.UserService;
+
 import com.nuguna.freview.common.vo.user.UserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,10 @@ public class UserServiceImpl implements UserService {
         .loginType("FORM")
         .build();
     userMapper.insertCustomer(uvo);
+  }
+
+  @Override
+  public UserVO getUserInfo(Long userSeq) {
+    return userMapper.selectUser(userSeq);
   }
 }

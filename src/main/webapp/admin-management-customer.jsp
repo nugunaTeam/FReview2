@@ -95,7 +95,7 @@
   <div class="d-flex align-items-center justify-content-between ">
     <a href="/main?seq=${userSeq}&pagecode=Requester"
        class="logo d-flex align-items-center">
-      <img src="assets/img/logo/logo-vertical.png" alt=""
+      <img src="/assets/img/logo/logo-vertical.png" alt=""
            style="  width: 50px; margin-top: 20px;">
       <span class="d-none d-lg-block">FReview</span>
     </a>
@@ -104,7 +104,7 @@
   <div class="header-hr-right">
     <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
       ${nickname}
-        <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
+      <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
     </a>
     <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
   </div>
@@ -121,12 +121,12 @@
       </a>
       <ul id="tables-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
         <li>
-          <a href="/admin-user-management" class="active">
+          <a href="/admin/manage/customer" class="active">
             <i class="bi bi-circle"></i><span>체험단</span>
           </a>
         </li>
         <li>
-          <a href="/admin-store-management">
+          <a href="/admin/manage/store">
             <i class="bi bi-circle"></i><span>스토어</span>
           </a>
         </li>
@@ -134,7 +134,7 @@
     </li>
     <ul class="sidebar-nav">
       <li class="nav-item">
-        <a class="nav-link collapsed" href="/personal-info-update">
+        <a class="nav-link collapsed" href="/account/info">
           <i class="bi bi-person"></i><span>개인정보수정</span>
         </a>
       </li>
@@ -152,12 +152,12 @@
   <section class="section">
     <div class="row">
       <div class="col-lg-12">
-
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">체험단 리스트</h5>
-            <p>가입한 체험단 리스트입니다. <br>아이디를 클릭하면 해당 유저의 브랜딩 페이지로 이동할 수 있습니다.</p>
-
+            <p>가입한 체험단 리스트입니다 <br>
+              아이디를 클릭하면 해당 체험단의 브랜딩 페이지로 이동할 수 있습니다 <br>
+              <br>
             <div>
               <input type="text" name="searchWord" id="searchWord" placeholder="원하는 키워드로 검색하세요!">
               <input type="button" id="searchBtn" value="검색">
@@ -205,21 +205,21 @@
     });
 
     function loadInitialData(searchWord = '') {
-      let apiUrl = searchWord ? "/admin-user-search" : "/api/admin/customer/list";
       $.ajax({
         method: "POST",
-        url: apiUrl,
-        data: {
-          previous_user_seq: null,
-          search_word: searchWord,
-        },
+        url: "/api/admin/customer/list",
+        contentType: "application/json",
+        data: JSON.stringify({
+          previousUserSeq: null,
+          searchWord: searchWord,
+        }),
         dataType: "json",
         success: function (response) {
           $('#userList').empty();
           renderData(response.customerList
           );
           if (response.hasMore) {
-            $('#loadMoreBtn').data('previous-user-seq',
+            $('#loadMoreBtn').data('previousUserSeq',
                     response.customerList
                             [response.customerList
                             .length - 1].seq).show();
@@ -234,14 +234,14 @@
     }
 
     function loadMoreData(previousUserSeq, searchWord = '') {
-      let apiUrl = searchWord ? "/admin-user-search" : "/api/admin/customer/list";
       $.ajax({
         method: "POST",
-        url: apiUrl,
-        data: {
-          previous_user_seq: previousUserSeq,
+        url: "/api/admin/customer/list",
+        contentType: "application/json",
+        data: JSON.stringify({
+          previousUserSeq: previousUserSeq,
           searchWord: searchWord
-        },
+        }),
         dataType: "json",
         success: function (response) {
           if (response.customerList
@@ -249,7 +249,7 @@
             renderData(response.customerList
             );
             if (response.hasMore) {
-              $('#loadMoreBtn').data('previous-user-seq',
+              $('#loadMoreBtn').data('previousUserSeq',
                       response.customerList
                               [response.customerList
                               .length - 1].seq).show();
@@ -287,24 +287,23 @@
   let deleteModal = document.getElementById('deleteModal');
   deleteModal.addEventListener('show.bs.modal', function (event) {
     let button = event.relatedTarget;
-    let deleteMemberId = button.getAttribute('data-id');
-    let deleteMemberSeq = button.getAttribute('data-seq');
+    let deleteUserEmail = button.getAttribute('data-id');
+    let deleteUserSeq = button.getAttribute('data-seq');
     let modalTitle = deleteModal.querySelector('.modal-title');
     let modalBodyInput = deleteModal.querySelector('.modal-body input');
 
-    modalTitle.textContent = '정말 탈퇴시킬까요? (ID: ' + deleteMemberId + ')';
+    modalTitle.textContent = '정말 탈퇴시킬까요? (ID: ' + deleteUserEmail + ')';
     modalBodyInput.value = '';
 
     document.getElementById('deleteForm').onsubmit = function(event) {
       event.preventDefault();
       let adminVerificationPW = modalBodyInput.value;
 
-      fetch('/admin-user-delete', {
-        method: 'POST',
+      fetch('/api/admin/customer/' + deleteUserSeq + '?adminVerificationPW=' + encodeURIComponent(adminVerificationPW) + '&adminSeq=' + ${userSeq}, {
+        method: 'DELETE',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: 'deleteMemberSeq=' + encodeURIComponent(deleteMemberSeq) + '&adminVerificationPW=' + encodeURIComponent(adminVerificationPW)
+          'Content-Type': 'application/json'
+        }
       })
       .then(response => {
         if (response.status === 200) {

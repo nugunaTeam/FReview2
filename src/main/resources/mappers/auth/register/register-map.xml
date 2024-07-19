@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.common.mapper.RegisterMapper">
+
+  <!--<resultMap id="userMap_ID" type="com.kosta.semi.vo.UserVO">
+    <id property="userSeq" column="user_seq"/>
+    <result property="userId" column="user_id"/>
+    <result property="userPw" column="user_pw"/>
+    <result property="userName" column="user_name"/>
+    <result property="userGubun" column="user_gubun"/>
+    <result property="regdate" column="regdate"/>
+  </resultMap>-->
+
+
+  <select id="getDuplicatedEmail" parameterType="string" resultType="boolean">
+    SELECT count(1) > 0
+    FROM user
+    WHERE email = #{email}
+  </select>
+
+  <select id="getDuplicatedNickName" parameterType="string" resultType="boolean">
+    SELECT count(1) > 0
+    FROM user
+    WHERE nickname = #{email}
+  </select>
+
+  <insert id="insertCustomerInfo" parameterType="com.nuguna.freview.common.vo.user.UserVO">
+    INSERT INTO user (code,email,password,nickname,sub_email,login_type,is_withdrawn,age_group)
+    VALUES (#{code},#{email},#{password},#{nickname},#{subEmail},#{loginType},#{isWithDrawn},#{ageGroup})
+  </insert>
+
+  <select id="getCheckBusinessNumber" parameterType="String" resultType="boolean">
+    select count(1) > 1
+    from national_store_business_information
+    WHERE business_number = #{#businessNumber}
+  </select>
+
+  <insert id="insertStoreInfo" parameterType="com.nuguna.freview.common.vo.user.UserVO">
+    <selectKey resultType="String" keyProperty="nickname" order="BEFORE">
+      select store_name from national_store_business_information where business_number = #{businessNumber}
+    </selectKey>
+    INSERT INTO user (business_number,code,email,password,nickname,sub_email,login_type,is_withdrawn,age_Group,store_location)
+    values(#{businessNumber},#{code},#{email},#{password},#{nickname},#{subEmail},#{loginType},#{isWithDrawn},#{ageGroup},#{storeLocation})
+  </insert>
+</mapper>
+

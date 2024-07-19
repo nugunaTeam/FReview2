@@ -10,30 +10,51 @@ $(function(){
   let COMM_register_businessInfo = false;
   let COMM_register_buisnessloc = false;
 
+  // $("#Input_ID").on("change",function(){ // common-register 이메일 확인란
+  //
+  //   let input_id = $("#Input_ID").val();
+  //
+  //   let reg = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$/
+  //   if(!reg.test(input_id)){
+  //     alert("이메일 형식이 틀렸습니다! 다시 입력해주세요");
+  //     $("#Input_id").val("");
+  //   }
+  //
+  // })
+
   $("#COMM_register_IDcheckBTN").on("click",function(){ //COMM_register 아이디체크
 
-
+    let reg = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$/
     let inputID = $("#Input_ID").val();
 
-    $.ajax({
-      method: "post",
-      url : "/auth?pagecode=checkID",
-      data : {"id" : inputID},
-      error: function(myval){console.log("에러"+myval)},
-      success: function(myval){
-        console.log("성공"+myval);
+    if(reg.test(inputID)){
 
-        if (myval == 1) {
-          $("#COMM_register_IDdeny").removeClass("remove");
-          $("#COMM_register_IDavail").addClass("remove");
-          $("#Input_ID").val("");
-        } else {
-          $("#COMM_register_IDavail").removeClass("remove");
-          COMM_register_idCheck = true;
+      $.ajax({
+        method: "post",
+        url : "/api/auth/check-id",
+        contentType: "application/json",
+        data: JSON.stringify({ email: inputID }),
+        error: function(myval){console.log("에러"+myval)},
+        success: function(myval){
+          console.log("성공"+myval.checkDuplicated);
+
+          if (!myval.checkDuplicated) {
+            $("#COMM_register_IDdeny").removeClass("remove");
+            $("#COMM_register_IDavail").addClass("remove");
+            $("#Input_ID").val("");
+          } else {
+            $("#COMM_register_IDdeny").addClass("remove");
+            $("#COMM_register_IDavail").removeClass("remove");
+            COMM_register_idCheck = true;
+          }
+
         }
+      })
 
-      }
-    })
+
+    } else{
+      alert("이메일 형식이 틀렸습니다. 다시 입력해주세요");
+    }
 
   });
 
@@ -96,14 +117,15 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
       $.ajax({
         method : "post",
-        url : "/send-certification",
-        data : {"email" : inputEmail,
-                "randomNumber" : randomFourDigitNumber},
+        url : "/api/auth/send-randomNumber-toEmail",
+        contentType: "application/json",
+        data: JSON.stringify({ email: inputEmail,
+                                     randomNumber: randomFourDigitNumber}),
         error : function(myval){console.log("에러"+myval)},
         success : function(myval) {
 
           console.log("성공"+myval)
-          emailNumber = myval;
+          emailNumber = myval.randomNumber;
 
         }
 
@@ -146,13 +168,14 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
     $.ajax({
       method: "post",
-      url : "/auth?pagecode=checkNickName",
-      data : {"NickName" : inputnickName},
+      url : "/api/auth/nickname-check",
+      contentType: "application/json",
+      data: JSON.stringify({ nickname: inputnickName }),
       error: function(myval){console.log("에러"+myval)},
       success: function(myval){
         console.log("성공"+myval);
 
-        if (myval == 1) {
+        if (!myval.checkDuplicated) {
           $("#COMM_register_NickNamedeny").removeClass("remove");
           $("#COMM_register_NickNameavail").addClass("remove");
           $("#Input_NickName").val("");
@@ -176,8 +199,41 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
 
   $("#COMM_register_btn_reviewer_regist").click(function(){ // COMM_register reviewer 제출버튼
-    if(COMM_register_idCheck&&COMM_register_pwCheck&&COMM_register_emailNumberCheck&&COMM_register_nickNameCheck&&COMM_register_acceptTerms){
-    $("#COMM_register_form_reviewer_regist").attr({"action": "/auth?pagecode=reviewer_regist", "method":"post"}).submit();
+    let inputSubEmail = $("#COMM_register_input_email").val();
+    let inputEmail = $("#Input_ID").val();
+    let inputPassword = $("#Input_pw").val();
+    let inputNickname = $("#Input_NickName").val();
+    let inputAgeGroup = $("#Input_AgeGroup").val()
+
+
+    let email_subEmail_check = false;
+    if(inputEmail!=inputSubEmail)
+      email_subEmail_check = true;
+
+    if(COMM_register_idCheck&&COMM_register_pwCheck&&COMM_register_emailNumberCheck&&COMM_register_nickNameCheck&&email_subEmail_check){
+
+      $.ajax({
+        method: "post",
+        url : "/api/auth/register",
+        contentType: "application/json",
+        data: JSON.stringify({
+             email : inputEmail,
+             password : inputPassword,
+             subEmail : inputSubEmail,
+            nickname: inputNickname,
+            ageGroup: inputAgeGroup,
+            code: "CUSTOMER"}),
+        error: function(myval){console.log("에러"+myval)},
+        success: function(myval){
+          console.log("성공"+myval);
+
+          alert("회원가입 완료되었습니다");
+          location.replace("/login");
+
+        }
+      })
+
+    //$("#COMM_register_form_reviewer_regist").attr({"action": "/auth?pagecode=reviewer_regist", "method":"post"}).submit();
     }else if(!COMM_register_idCheck){
       alert("아이디 중복확인을 체크해주세요!");
     }else if(!COMM_register_pwCheck){
@@ -188,6 +244,8 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
       alert("닉네임 중복확인을 체크해주세요!");
     } else if(!COMM_register_acceptTerms){
       alert("개인정보 및 이용약관를 확인하고 동의해주세요");
+    }else if(!email_subEmail_check){
+      alert("이메일과 보조 이메일이 동일하면 안됩니다")
     }
   })
 
@@ -196,26 +254,34 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
 
     let inputID = $("#Boss_Input_ID").val();
+    let reg = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if(reg.test(inputID)){
 
-    $.ajax({
-      method: "post",
-      url : "/auth?pagecode=checkID",
-      data : {"id" : inputID},
-      error: function(myval){console.log("에러"+myval)},
-      success: function(myval){
-        console.log("성공"+myval);
+      $.ajax({
+        method: "post",
+        url : "/api/auth/check-id",
+        contentType: "application/json",
+        data: JSON.stringify({ email: inputID }),
+        error: function(myval){console.log("에러"+myval)},
+        success: function(myval){
+          console.log("성공"+myval);
 
-        if (myval == 1) {
-          $("#COMM_register_Boss_IDdeny").removeClass("remove");
-          $("#COMM_register_Boss_IDavail").addClass("remove");
-          $("#Boss_Input_ID").val("");
-        } else {
-          $("#COMM_register_Boss_IDavail").removeClass("remove");
-          COMM_register_idCheck = true;
+          if (!myval.checkDuplicated) {
+            $("#COMM_register_Boss_IDdeny").removeClass("remove");
+            $("#COMM_register_Boss_IDavail").addClass("remove");
+            $("#Boss_Input_ID").val("");
+          } else {
+            $("#COMM_register_Boss_IDdeny").addClass("remove");
+            $("#COMM_register_Boss_IDavail").removeClass("remove");
+            COMM_register_idCheck = true;
+          }
+
         }
+      })
 
-      }
-    })
+    }else{
+      alert("이메일 형식이 틀렸습니다. 다시 입력해주세요");
+    }
 
   });
 
@@ -275,14 +341,15 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
       $.ajax({
         method : "post",
-        url : "/send-certification",
-        data : {"email" : inputEmail,
-          "randomNumber" : randomFourDigitNumber},
+        url : "/api/auth/send-randomNumber-toEmail",
+        contentType: "application/json",
+        data: JSON.stringify({ email: inputEmail,
+          randomNumber: randomFourDigitNumber}),
         error : function(myval){console.log("에러"+myval)},
         success : function(myval) {
 
           console.log("성공"+myval)
-          emailNumber = myval;
+          emailNumber = myval.randomNumber;
 
         }
 
@@ -326,12 +393,13 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
 
       $.ajax({
         method : "post",
-        url : "/auth?pagecode=checkbuisnessInfo",
-        data : {"buisnessInfo" : buisnessInfo},
+        url : "/api/auth/business-number-check",
+        contentType: "application/json",
+        data: JSON.stringify({ buisnessNumber: buisnessInfo}),
         error : function(myval){console.log("에러"+myval)},
         success : function(myval) {
 
-          if(myval==1){
+          if(myval.checkDuplicated){
             $("#COMM_register_Boss_buisnessInfoavail").removeClass("remove");
             $("#COMM_register_input_Boss_addressbtn").attr("disabled",false);
             $("#COMM_register_input_Boss_buisnessaddress").attr("disabled",false);
@@ -339,6 +407,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
           }else{
             alert("등록된 사업자 번호가 아닙니다. 담당자에게 문의바랍니다. FReview: 02-5875-5785")
             $("#COMM_register_input_Boss_buisnessInfo").val("");
+            $("#COMM_register_Boss_buisnessInfoavail").addClass("remove");
             $("#COMM_register_input_Boss_addressbtn").attr("disabled",true);
             $("#COMM_register_input_Boss_buisnessaddress").attr("disabled",true);
             $("#COMM_register_input_Boss_buisnessaddress").val("");
@@ -361,39 +430,39 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
     }
   })
 
-  $("#COMM_register_input_Boss_buisnessInfo").change(function(){ // COMM_register Boss 사업자 등록번호 중복체크
-    let buisnessInfo = $("#COMM_register_input_Boss_buisnessInfo").val();
-    const reg = /^\d{3}-\d{2}-\d{5}$/;
-
-    if(reg.test(buisnessInfo)){
-
-      $.ajax({
-        method : "post",
-        url : "/auth?pagecode=checkduplocatedNumberinmember",
-        data : {"buisnessInfo" : buisnessInfo},
-        error : function(myval){console.log("에러"+myval)},
-        success : function(myval) {
-          if(myval==1) {
-            alert("등록된 사업자등록번호입니다");
-            $("#COMM_register_input_Boss_buisnessInfo").val("");
-            $("#COMM_register_input_Boss_addressbtn").attr("disabled",true);
-            $("#COMM_register_input_Boss_buisnessaddress").attr("disabled",true);
-            $("#COMM_register_input_Boss_buisnessaddress").val("");
-            COMM_register_businessInfo = false;
-            COMM_register_buisnessloc = false;
-          }
-        }
-      })
-
-    } else{
-      alert("사업자등록번호 형식에 맞게 작성해주세요");
-      $("#COMM_register_input_Boss_buisnessInfo").val("");
-      $("#COMM_register_input_Boss_addressbtn").attr("disabled",true);
-      $("#COMM_register_input_Boss_buisnessaddress").attr("disabled",true);
-    }
-
-
-  })
+  // $("#COMM_register_input_Boss_buisnessInfo").change(function(){ // COMM_register Boss 사업자 등록번호 중복체크
+  //   let buisnessInfo = $("#COMM_register_input_Boss_buisnessInfo").val();
+  //   const reg = /^\d{3}-\d{2}-\d{5}$/;
+  //
+  //   if(reg.test(buisnessInfo)){
+  //
+  //     $.ajax({
+  //       method : "post",
+  //       url : "/auth?pagecode=checkduplocatedNumberinmember",
+  //       data : {"buisnessInfo" : buisnessInfo},
+  //       error : function(myval){console.log("에러"+myval)},
+  //       success : function(myval) {
+  //         if(myval==1) {
+  //           alert("등록된 사업자등록번호입니다");
+  //           $("#COMM_register_input_Boss_buisnessInfo").val("");
+  //           $("#COMM_register_input_Boss_addressbtn").attr("disabled",true);
+  //           $("#COMM_register_input_Boss_buisnessaddress").attr("disabled",true);
+  //           $("#COMM_register_input_Boss_buisnessaddress").val("");
+  //           COMM_register_businessInfo = false;
+  //           COMM_register_buisnessloc = false;
+  //         }
+  //       }
+  //     })
+  //
+  //   } else{
+  //     alert("사업자등록번호 형식에 맞게 작성해주세요");
+  //     $("#COMM_register_input_Boss_buisnessInfo").val("");
+  //     $("#COMM_register_input_Boss_addressbtn").attr("disabled",true);
+  //     $("#COMM_register_input_Boss_buisnessaddress").attr("disabled",true);
+  //   }
+  //
+  //
+  // })
 
   $("#COMM_register_input_Boss_addressbtn").click(function(){ // COMM_register Boss 주소입력
     new daum.Postcode({
@@ -425,8 +494,42 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
   })
 
   $("#COMM_register_btn_Boss_regist").click(function(){ // COMM_register Boss 회원가입
-    if(COMM_register_idCheck&&COMM_register_pwCheck&&COMM_register_emailNumberCheck&&COMM_register_acceptTerms&&COMM_register_businessInfo&&COMM_register_buisnessloc){
-    $("#COMM_register_form_Boss_regist").attr({"action": "/auth?pagecode=Boss_regist", "method":"post"}).submit();
+
+    let inputSubEmail = $("#COMM_register_input_Boss_email").val();
+    let inputEmail = $("#Boss_Input_ID").val();
+    let inputPassword = $("#Input_Boss_pw").val();
+    let inputBusinessNumber = $("#COMM_register_input_Boss_buisnessInfo").val();
+    let inputBusinessAddress =  $("#COMM_register_input_Boss_buisnessaddress").val();
+    let inputAgeGroup = $("#Input_Boss_AgeGroup").val();
+
+    let email_subEmail_check = false;
+    if(inputEmail!=inputSubEmail)
+      email_subEmail_check = true;
+
+    if(COMM_register_idCheck&&COMM_register_pwCheck&&COMM_register_emailNumberCheck&&COMM_register_acceptTerms&&COMM_register_businessInfo&&COMM_register_buisnessloc&&email_subEmail_check){
+
+      $.ajax({
+        method: "post",
+        url : "/api/auth/register",
+        contentType: "application/json",
+        data: JSON.stringify({
+          email : inputEmail,
+          password : inputPassword,
+          subEmail : inputSubEmail,
+          businessNumber: inputBusinessNumber,
+          storeLocation: inputBusinessAddress,
+          ageGroup: inputAgeGroup,
+          code: "STORE"}),
+        error: function(myval){console.log("에러"+myval)},
+        success: function(myval){
+          console.log("성공"+myval);
+
+          alert("회원가입 완료되었습니다");
+          location.replace("/login");
+
+        }
+      })
+
     }else if(!COMM_register_idCheck){
       alert("아이디 중복확인을 체크해주세요!");
     }else if(!COMM_register_pwCheck){
@@ -439,6 +542,8 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
       alert("사업자 주소를 입력해주세요");
     } else if(!COMM_register_acceptTerms){
       alert("개인정보 및 이용약관에 동의해주세요");
+    } else if(!email_subEmail_check){
+      alert("이메일과 보조 이메일이 동일하면 안됩니다");
     }
 
   })
@@ -452,7 +557,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
     $.ajax({
       method: "post",
       url : "/auth?pagecode=checkNickName",
-      data : {"NickName" : inputnickName},
+      data : {"nickname" : inputnickName},
       error: function(myval){console.log("에러"+myval)},
       success: function(myval){
         console.log("성공"+myval);
