@@ -11,13 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CustomerMyBrandPageInfoResponseDTO {
 
-  private String profilePhotoUrl;
-  private String nickname;
-  private String ageGroup;
-  private String introduce;
-  private Long zzimCount;
-  private List<String> foodTypes;
-  private List<String> tagInfos;
+  private CustomerBrandInfoResponseDTO brandInfo;
   private List<ReviewLogInfoDTO> reviewInfos;
-
 }
