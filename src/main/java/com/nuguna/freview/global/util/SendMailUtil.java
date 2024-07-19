@@ -72,9 +72,9 @@ public class SendMailUtil {
       Transport.send(msg);
       System.out.println("메일 보내기 성공");
     } catch(Exception e){
+
       e.printStackTrace();
       System.out.println("메일 보내시 실패");
     }
   }
-
 }

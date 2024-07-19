@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Controller
@@ -23,9 +22,10 @@ public class AdminController {
     this.adminService = adminService;
   }
 
-  //HACK: 로그인 유저의 실제 seq 로 수정 필요
   @RequestMapping(value = "/manage/customer", method = RequestMethod.GET)
-  public String adminPage(@RequestParam("user_seq") Long userSeq, Model model) {
+  public String customerManagePage(Model model) {
+    //HACK: 로그인 유저의 실제 seq 로 수정 필요
+    Long userSeq = 301L;
     AdminVO loginUser = adminService.getAdminById(userSeq);
     UserCode currentCode = UserCode.from(loginUser.getCode());
 
@@ -35,5 +35,20 @@ public class AdminController {
     model.addAttribute("loginUser", loginUser);
 
     return "admin-management-customer";
+  }
+
+  @RequestMapping(value = "/manage/store", method = RequestMethod.GET)
+  public String storeManagePage(Model model) {
+    //HACK: 로그인 유저의 실제 seq 로 수정 필요
+    Long userSeq = 301L;
+    AdminVO loginUser = adminService.getAdminById(userSeq);
+    UserCode currentCode = UserCode.from(loginUser.getCode());
+
+    if (!currentCode.isAdmin()) {
+      return "common-error-404";
+    }
+    model.addAttribute("loginUser", loginUser);
+
+    return "admin-management-store";
   }
 }
