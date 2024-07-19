@@ -142,17 +142,24 @@
                     <tr>
                         <th class="fixed-width">모집 시작 일자</th>
                         <td>
-                            <span id="mojipView">${mojipPost.applyStartDate}</span>
+                            <fmt:formatDate value="${mojipPost.applyStartDate}" pattern="yyyy-MM-dd" var="formattedApplyStartDate"/>
+                            <span id="mojipView">${formattedApplyStartDate}</span>
                         </td>
                     </tr>
                     </tr>
                     <tr>
                         <th class="fixed-width">모집 종료 일자</th>
-                        <td>${mojipPost.applyEndDate}</td>
+                        <td>
+                            <fmt:formatDate value="${mojipPost.applyEndDate}" pattern="yyyy-MM-dd" var="formattedApplyEndDate"/>
+                            ${formattedApplyEndDate}
+                        </td>
                     </tr>
                     <tr>
                         <th class="fixed-width">체험 날짜</th>
-                        <td>${mojipPost.experienceDate}</td>
+                        <td>
+                            <fmt:formatDate value="${mojipPost.experienceDate}" pattern="yyyy-MM-dd" var="formattedExperienceDate"/>
+                            ${formattedExperienceDate}
+                        </td>
                     </tr>
                     <tr>
                         <th class="fixed-width">체험 장소</th>
@@ -184,13 +191,13 @@
                     <c:choose>
                         <c:when test="${isLiked}">
                             <button type="button" class="btn btn-primary like-button"
-                                    onclick="cancelLike(${mojipPost.seq}, ${applicantSeq})">
+                                    onclick="cancelLike(${mojipPost.seq})">
                                 <i class="bi bi-heart-fill me-1"></i> 좋아요
                             </button>
                         </c:when>
                         <c:otherwise>
                             <button type="button" class="btn btn-primary like-button"
-                                    onclick="addLike(${mojipPost.seq}, ${applicantSeq})">
+                                    onclick="addLike(${mojipPost.seq})">
                                 <i class="bi bi-heart me-1"></i> 좋아요
                             </button>
                         </c:otherwise>
@@ -358,15 +365,17 @@
   }
 
   function addLike(postSeq) {
-    fetch('/likes-add', {
+    let data = {
+      postSeq: postSeq,
+      userSeq: ${userSeq}
+    };
+
+    fetch('/api/common/post/like-add', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
       },
-      body: new URLSearchParams({
-        postSeq: postSeq,
-        userSeq: ${userSeq}
-      }).toString()
+      body: JSON.stringify(data),
     })
     .then(response => {
       if (response.ok) {
@@ -381,8 +390,8 @@
     });
   }
 
-  function cancelLike(postSeq, applicantSeq) {
-    fetch('/likes-cancel', {
+  function cancelLike(postSeq) {
+    fetch('/like-cancel', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
