@@ -133,4 +133,13 @@
     VALUES (#{userSeq}, #{title}, #{applyStartDate}, #{applyEndDate}, #{experienceDate}, #{content}, '모집')
   </insert>
 
+  <!-- 특정 모집글 수정 -->
+  <update id="updateMojip" parameterType="map">
+    UPDATE post
+    SET
+        title = #{title},
+        content = #{content}
+    WHERE seq = #{postSeq}
+  </update>
+
 </mapper>
