@@ -134,7 +134,7 @@
                 </div>
                 <c:if test="${code eq 'ADMIN'}">
                     <div>
-                        <a href="/notice/insert" class="btn btn-primary">
+                        <a href="/notice/create" class="btn btn-primary">
                             공지 등록
                         </a>
                     </div>

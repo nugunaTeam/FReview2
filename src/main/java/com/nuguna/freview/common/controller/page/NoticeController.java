@@ -51,7 +51,7 @@ public class NoticeController {
     return "common-notice-detail";
   }
 
-  @RequestMapping(value = "/insert", method = RequestMethod.GET)
+  @RequestMapping(value = "/create", method = RequestMethod.GET)
   public String noticeCreate(Model model) {
     //HACK: 로그인 유저의 실제 seq 로 수정 필요
     Long userSeq = 301L;
