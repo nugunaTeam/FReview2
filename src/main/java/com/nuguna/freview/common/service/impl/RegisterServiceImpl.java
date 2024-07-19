@@ -1,5 +1,6 @@
 package com.nuguna.freview.common.service.impl;
 
+import com.nuguna.freview.common.dto.request.RegisterCheckBusinessNumberDTO;
 import com.nuguna.freview.common.dto.request.RegisterCheckIdRequestDTO;
 import com.nuguna.freview.common.dto.request.RegisterCheckNickNameRequestDTO;
 import com.nuguna.freview.common.dto.request.RegisterRequestDTO;
@@ -52,7 +53,7 @@ public class RegisterServiceImpl implements RegisterService {
   }
 
   @Override
-  public void cutomerRegist(RegisterRequestDTO registerRequestDTO) throws RuntimeException {
+  public void cutomerRegist(RegisterRequestDTO registerRequestDTO) {
     log.info("회원가입 서비스");
     String shaPassword = shaUtil.sha256Encoding(registerRequestDTO.getPassword());
     UserVO uvo = UserVO.builder()
@@ -66,5 +67,36 @@ public class RegisterServiceImpl implements RegisterService {
         .isWithDrawn(false).build();
     log.info(uvo.toString());
     registerMapper.insertCustomerInfo(uvo);
+  }
+
+  @Override
+  public boolean checkBusinessNumber(
+      RegisterCheckBusinessNumberDTO registerCheckBusinessNumberDTO) {
+    int resultRow = 0;
+    boolean result = false;
+    String businessNumber = registerCheckBusinessNumberDTO.getBuisnessNumber();
+    resultRow = registerMapper.getCheckBusinessNumber(businessNumber);
+
+    if(resultRow!=0)
+      result = true;
+    log.info("사업자번호: "+result);
+    return result;
+  }
+
+  @Override
+  public void storeRegist(RegisterRequestDTO registerRequestDTO) {
+    log.info("회원가입 서비스");
+    String shaPassword = shaUtil.sha256Encoding(registerRequestDTO.getPassword());
+    UserVO uvo = UserVO.builder()
+        .email(registerRequestDTO.getEmail())
+        .password(shaPassword)
+        .subEmail(registerRequestDTO.getSubEmail())
+        .businessNumber(registerRequestDTO.getBusinessNumber())
+        .storeLocation(registerRequestDTO.getStoreLocation())
+        .code(registerRequestDTO.getCode())
+        .ageGroup(registerRequestDTO.getAgeGroup())
+        .loginType("FORM")
+        .isWithDrawn(false).build();
+    registerMapper.insertStoreInfo(uvo);
   }
 }
