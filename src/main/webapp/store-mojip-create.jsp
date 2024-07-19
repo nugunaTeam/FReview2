@@ -87,7 +87,7 @@
             <h5 class="card-title">새로운 모집글을 입력해주세요</h5>
 
             <!-- Form for creating a post -->
-            <form id="createPostForm" action="/mojip-create" method="post">
+            <form id="createPostForm" action="/api/common/mojip/create" method="post">
                 <div class="mb-3">
                     <label for="title" class="form-label">제목</label>
                     <input type="text" class="form-control" id="title" name="title" required>
@@ -158,28 +158,30 @@
           }
         });
       });
-    </script>
 
-    <script>
-      document.getElementById('createPostForm').addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevent the default form submission
+      document.getElementById('createPostForm').addEventListener('submit', function(event) {
+        event.preventDefault();
 
-        var formData = new URLSearchParams(new FormData(this));
+        var formData = {
+          userSeq: document.getElementById('userSeq').value,
+          title: document.getElementById('title').value,
+          applyStartDate: document.getElementById('applyStartDate').value,
+          applyEndDate: document.getElementById('applyEndDate').value,
+          experienceDate: document.getElementById('experienceDate').value,
+          content: document.getElementById('content').value
+        };
 
-        fetch("/mojip-create", {
+        fetch("/api/common/mojip/create", {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/json'
           },
-          body: formData.toString()
+          body: JSON.stringify(formData)
         })
         .then(response => {
           if (response.ok) {
-            return response.text().then(data => {
-              console.log(data);
-              alert('게시글이 성공적으로 등록되었습니다.');
-              location.replace("/mojip");
-            });
+            alert('게시글이 성공적으로 등록되었습니다.');
+            location.replace("/mojip");
           } else {
             response.text().then(data => {
               console.error(data);
@@ -187,7 +189,10 @@
             });
           }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+          console.error('Error:', error);
+          alert('네트워크 오류로 게시글 등록에 실패했습니다.');
+        });
       });
     </script>
 
