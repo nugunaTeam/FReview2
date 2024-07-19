@@ -10,4 +10,5 @@ public interface PostService {
   boolean isLikedPost(Long userSeq, Long postSeq);
   void addViewCount(Long postSeq);
   boolean updateNotice(Long postSeq, String title, String content, Timestamp now);
+  boolean deletePost(Long postSeq);
 }

@@ -37,4 +37,10 @@ public class PostServiceImpl implements PostService {
     int result = postMapper.updateNotice(postSeq, title, content, now);
     return result == 1;
   }
+
+  @Override
+  public boolean deletePost(Long postSeq) {
+    int result = postMapper.deletePost(postSeq);
+    return result == 1;
+  }
 }
