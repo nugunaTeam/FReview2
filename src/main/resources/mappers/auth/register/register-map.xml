@@ -30,5 +30,19 @@
     INSERT INTO user (code,email,password,nickname,sub_email,login_type,is_withdrawn,age_group)
     VALUES (#{code},#{email},#{password},#{nickname},#{subEmail},#{loginType},#{isWithDrawn},#{ageGroup})
   </insert>
+
+  <select id="getCheckBusinessNumber" parameterType="String" resultType="int">
+    select count(*)
+    from national_store_business_information
+    WHERE business_number = #{#businessNumber}
+  </select>
+
+  <insert id="insertStoreInfo" parameterType="com.nuguna.freview.common.vo.user.UserVO">
+    <selectKey resultType="String" keyProperty="nickname" order="BEFORE">
+      select store_name from national_store_business_information where business_number = #{businessNumber}
+    </selectKey>
+    INSERT INTO user (business_number,code,email,password,nickname,sub_email,login_type,is_withdrawn,age_Group,store_location)
+    values(#{businessNumber},#{code},#{email},#{password},#{nickname},#{subEmail},#{loginType},#{isWithDrawn},#{ageGroup},#{storeLocation})
+  </insert>
 </mapper>
 
