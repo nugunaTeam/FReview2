@@ -1,6 +1,7 @@
 package com.nuguna.freview.common.service.impl;
 
 import com.nuguna.freview.common.dto.response.page.NoticeDetailResponseDTO;
+import com.nuguna.freview.common.mapper.NoticeMapper;
 import com.nuguna.freview.common.mapper.PostMapper;
 import com.nuguna.freview.common.service.PostService;
 import java.sql.Timestamp;
@@ -11,15 +12,17 @@ import org.springframework.stereotype.Service;
 public class PostServiceImpl implements PostService {
 
   private final PostMapper postMapper;
+  private final NoticeMapper noticeMapper;
 
   @Autowired
-  public PostServiceImpl(PostMapper postMapper) {
+  public PostServiceImpl(PostMapper postMapper, NoticeMapper noticeMapper) {
     this.postMapper = postMapper;
+    this.noticeMapper = noticeMapper;
   }
 
   @Override
   public NoticeDetailResponseDTO getPostBySeq(Long postSeq) {
-    return postMapper.selectNotice(postSeq);
+    return noticeMapper.selectNotice(postSeq);
   }
 
   public boolean isLikedPost(Long userSeq, Long postSeq) {
@@ -34,7 +37,7 @@ public class PostServiceImpl implements PostService {
 
   @Override
   public boolean updateNotice(Long postSeq, String title, String content, Timestamp now) {
-    int result = postMapper.updateNotice(postSeq, title, content, now);
+    int result = noticeMapper.updateNotice(postSeq, title, content, now);
     return result == 1;
   }
 
@@ -46,7 +49,7 @@ public class PostServiceImpl implements PostService {
 
   @Override
   public boolean insertNotice(Long postSeq, String title, String content, Timestamp now) {
-    int result = postMapper.insertNotice(postSeq, title, content, now);
+    int result = noticeMapper.insertNotice(postSeq, title, content, now);
     return result == 1;
   }
 }
