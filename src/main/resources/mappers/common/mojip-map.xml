@@ -142,4 +142,10 @@
     WHERE seq = #{postSeq}
   </update>
 
+  <!-- 모집글 지원 -->
+  <insert id="applyMojip" parameterType="map">
+    insert into experience (from_user_seq, to_user_seq, from_post_seq, status)
+    VALUES (#{fromUserSeq}, #{toUserSeq}, #{fromPostSeq}, 'SENT')
+  </insert>
+
 </mapper>
