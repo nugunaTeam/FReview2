@@ -25,9 +25,10 @@ public class PostServiceImpl implements PostService {
     return noticeMapper.selectNotice(postSeq);
   }
 
+  @Override
   public boolean isLikedPost(Long userSeq, Long postSeq) {
     int result = postMapper.checkPostLiked(userSeq, postSeq);
-    return result == 1;
+    return result > 0;
   }
 
   @Override
@@ -50,6 +51,12 @@ public class PostServiceImpl implements PostService {
   @Override
   public boolean insertNotice(Long postSeq, String title, String content, Timestamp now) {
     int result = noticeMapper.insertNotice(postSeq, title, content, now);
+    return result == 1;
+  }
+
+  @Override
+  public boolean addLikeToPost(Long postSeq, Long userSeq) {
+    int result = postMapper.insertLike(postSeq, userSeq);
     return result == 1;
   }
 }
