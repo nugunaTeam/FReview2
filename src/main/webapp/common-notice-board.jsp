@@ -134,7 +134,7 @@
                 </div>
                 <c:if test="${code eq 'ADMIN'}">
                     <div>
-                        <a href="/notice-create" class="btn btn-primary">
+                        <a href="/notice/insert" class="btn btn-primary">
                             공지 등록
                         </a>
                     </div>
@@ -189,7 +189,7 @@
         let shortContent = val["content"].length > 30 ? val["content"].substring(0, 30) + "..." : val["content"];
 
         htmlStr += "<tr>";
-        htmlStr += "<td><a href='/board/notice/" + val["seq"] + "'>" + val["title"] + "</a></td>";
+        htmlStr += "<td><a href='/notice/" + val["seq"] + "'>" + val["title"] + "</a></td>";
         htmlStr += "<td>" + shortContent + "</td>";
         htmlStr += "<td>" + formattedCreatedAt + "</td>";
         htmlStr += "<td>" + val["viewCount"] + "</td>";

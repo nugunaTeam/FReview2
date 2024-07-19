@@ -144,7 +144,7 @@
                         </button>
                     </c:if>
                     <button type="button" class="btn btn-primary"
-                            onclick="location.href='/board/notice'">목록으로
+                            onclick="location.href='/notice'">목록으로
                     </button>
                 </div>
             </div>
@@ -249,7 +249,7 @@
           .then(response => {
             if (response.ok) {
               alert('게시글이 성공적으로 삭제되었습니다.');
-              location.replace("/board/notice");
+              location.replace("/notice");
             } else {
               response.text().then(text => alert('게시글 삭제 실패: ' + text));
             }
