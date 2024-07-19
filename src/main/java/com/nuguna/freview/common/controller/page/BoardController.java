@@ -42,10 +42,11 @@ public class BoardController {
     //HACK: 로그인 유저의 실제 seq 로 수정 필요
     Long userSeq = 301L;
     UserVO loginUser = userService.getUserInfo(userSeq);
-    model.addAttribute("loginUser", loginUser);
-
+    postService.addViewCount(postSeq);
     NoticeDetailResponseDTO currentPost = postService.getPostBySeq(postSeq);
+
     model.addAttribute("currentPost", currentPost);
+    model.addAttribute("loginUser", loginUser);
 
     return "common-notice-detail";
   }
