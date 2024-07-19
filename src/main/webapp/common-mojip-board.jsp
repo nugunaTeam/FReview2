@@ -146,7 +146,7 @@
             </div>
 
             <c:if test="${code eq 'STORE'}">
-                <a href="/mojip-create" class="btn btn-register">
+                <a href="/mojip/create" class="btn btn-register">
                     모집 등록
                 </a>
             </c:if>

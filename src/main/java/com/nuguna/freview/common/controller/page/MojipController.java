@@ -33,7 +33,7 @@ public class MojipController {
   @RequestMapping(value = "", method = RequestMethod.GET)
   public String mojipMainPage(Model model) {
     //HACK: 로그인 유저의 실제 seq 로 수정 필요
-    Long userSeq = 301L;
+    Long userSeq = 1L;
     UserVO loginUser = userService.getUserInfo(userSeq);
 
     model.addAttribute("loginUser", loginUser);
@@ -44,7 +44,7 @@ public class MojipController {
   @RequestMapping(value = "/{postSeq}", method = RequestMethod.GET)
   public String noticePostDetail(@PathVariable Long postSeq, Model model) {
     //HACK: 로그인 유저의 실제 seq 로 수정 필요
-    Long userSeq = 301L;
+    Long userSeq = 1L;
     UserVO loginUser = userService.getUserInfo(userSeq);
 
     postService.addViewCount(postSeq);
@@ -54,5 +54,16 @@ public class MojipController {
     model.addAttribute("loginUser", loginUser);
 
     return "common-mojip-detail";
+  }
+
+  @RequestMapping(value = "/create", method = RequestMethod.GET)
+  public String mojipCreatePage(Model model) {
+    //HACK: 로그인 유저의 실제 seq 로 수정 필요
+    Long userSeq = 1L; // STORE
+    UserVO loginUser = userService.getUserInfo(userSeq);
+
+    model.addAttribute("loginUser", loginUser);
+
+    return "store-mojip-create";
   }
 }
