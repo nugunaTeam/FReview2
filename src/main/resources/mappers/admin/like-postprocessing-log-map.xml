@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.admin.mapper.LikePostProcessingLogMapper">
+
+  <insert id="updateLastProcessedSeq">
+    INSERT INTO like_postprocessing_log (last_processed_like_seq)
+    VALUES (#{seq})
+  </insert>
+
+  <select id="getLastProcessedSeq" resultType="long">
+    SELECT last_processed_like_seq
+    FROM like_postprocessing_log
+    ORDER BY seq DESC
+    LIMIT 1
+  </select>
+
+</mapper>
