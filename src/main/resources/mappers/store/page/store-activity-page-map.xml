@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.store.mapper.StoreActivityPageMapper">
+
+  <resultMap id="StoreActivityPageSendLikeResultMap" type="com.nuguna.freview.store.dto.response.StoreActivitySendLikeResponseDTO">
+    <result property="writtenSeq" column="post_author_seq"/>
+    <result property="postSeq" column="post_seq"/>
+    <result property="title" column="post_title"/>
+    <result property="content" column="post_content"/>
+    <result property="likeCount" column="like_count"/>
+    <result property="createdAt" column="like_created_at"/>
+  </resultMap>
+
+  <select id="storeActivityPageSendLike" resultMap="StoreActivityPageSendLikeResultMap ">
+    SELECT p.seq AS post_seq,
+           p.title AS post_title,
+           p.content AS post_content,
+           u.seq AS post_author_seq,
+           l.created_at AS like_created_at,
+           COUNT(lk.seq) AS like_count
+    FROM `like` l
+           JOIN `post` p ON l.post_seq = p.seq
+           JOIN `user` u ON p.user_seq = u.seq
+           LEFT JOIN `like` lk ON p.seq = lk.post_seq
+    WHERE l.user_seq = #{userSeq}
+    GROUP BY l.seq, p.seq
+  </select>
+
+</mapper>
