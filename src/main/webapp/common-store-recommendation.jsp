@@ -58,7 +58,6 @@
         flex: 0 0 auto;
         width: 20%;
       }
-
     </style>
 
     <!-- =======================================================
@@ -91,15 +90,14 @@
     </div>
 </header>
 
-<main id="main" style="margin: auto; margin-top: 50px;">
+<main id="main" style="margin:auto; margin-top:50px">
     <div class="pagetitle">
-        <h1>체험단 추천 페이지</h1>
+        <h1>사장님 추천페이지</h1>
     </div>
 
     <section class="section profile">
         <div class="row">
-            <div class="tab-pane fade show active" id="customer" role="tabpanel"
-                 aria-labelledby="customer-tab">
+            <div class="tab-pane fade show active" id="store" role="tabpanel" aria-labelledby="store-tab">
                 <form id="filterForm">
                     <div>
                         <h3>음식 유형</h3>
@@ -112,10 +110,9 @@
                     </div>
                     <div>
                         <h3>태그</h3>
-                        <label><input type="checkbox" name="tag" value="초식"> 초식</label>
-                        <label><input type="checkbox" name="tag" value="육식"> 육식</label>
-                        <label><input type="checkbox" name="tag" value="맛집블로거"> 맛집블로거</label>
-                        <label><input type="checkbox" name="tag" value="정성리뷰어"> 정성리뷰어</label>
+                        <label><input type="checkbox" name="tag" value="뷰 맛집"> 뷰 맛집</label>
+                        <label><input type="checkbox" name="tag" value="오션뷰"> 오션뷰</label>
+                        <label><input type="checkbox" name="tag" value="반려동물 환영"> 반려동물 환영</label>
                     </div>
                     <div>
                         <button type="submit">필터링</button>
@@ -123,19 +120,18 @@
                 </form>
                 <br>
                 <button id="resetBtn">모든 필터 제거</button>
-                <div class="row" id="customerInfo"></div>
+                <div class="row" id="storeInfo"></div>
                 <div class="d-flex justify-content-center">
-                    <button class="btn btn-primary" id="loadMoreBtn" data-previous-user-seq="0">
-                        더보기
-                    </button>
+                    <button class="btn btn-primary" id="loadMoreBtn" data-previous-user-seq="0">더보기</button>
                 </div>
             </div>
         </div>
     </section>
+
 </main>
 
 <script>
-  $(document).ready(function () {
+  $(document).ready(function() {
 
     loadInitialData();
 
@@ -145,14 +141,14 @@
         previousUserSeq: $('#previousUserSeq').val(),
         foodTypes: $('input[name="foodType"]:checked').map(function(){ return this.value; }).get(),
         tags: $('input[name="tag"]:checked').map(function(){ return this.value; }).get(),
-        userCode: 'CUSTOMER'
+        userCode: 'STORE'
       };
 
       loadFilteredData(JSON.stringify(formData));
     });
 
-    $('#resetBtn').click(function () {
-      $('#customerInfo').empty();
+    $('#resetBtn').click(function() {
+      $('#storeInfo').empty();
       $('input[name="foodType"]').prop('checked', false);
       $('input[name="tag"]').prop('checked', false);
       loadInitialData();
@@ -185,7 +181,7 @@
         contentType: "application/json",
         data: JSON.stringify({
           previousUserSeq: null,
-          userCode: 'CUSTOMER'
+          userCode: 'STORE'
         }),
         dataType: "json",
         success: function (response) {
@@ -210,7 +206,7 @@
         contentType: "application/json",
         dataType: "json",
         success: function (response) {
-          $('#customerInfo').html('');
+          $('#storeInfo').html('');
           renderData(response.userList);
           if (response.hasMore) {
             $('#loadMoreBtn').data('previous-user-seq', response.userList[response.userList.length - 1].userSeq)
@@ -233,7 +229,7 @@
         contentType: "application/json",
         data: JSON.stringify({
           previousUserSeq: previousUserSeq,
-          userCode: 'CUSTOMER'
+          userCode: 'STORE'
         }),
         dataType: "json",
         success: function (response) {
@@ -261,7 +257,7 @@
           previousUserSeq: previousUserSeq,
           foodTypes: foodTypes,
           tags: tags,
-          userCode: 'CUSTOMER'
+          userCode: 'STORE'
         }),
         dataType: "json",
         success: function (response) {
@@ -303,7 +299,7 @@
         htmlStr += "</div>";
         htmlStr += "</div>";
       });
-      $('#customerInfo').append(htmlStr);
+      $('#storeInfo').append(htmlStr);
     }
   });
 </script>

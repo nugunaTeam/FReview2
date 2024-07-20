@@ -62,10 +62,10 @@ public class RecommendationApiController {
 
     RecommendationListResponseDTO responseDTO = new RecommendationListResponseDTO();
     try {
-      List<RecommendationResponseDTO> customerList = recommendationService.getFilteredRecommendationUserList(
+      List<RecommendationResponseDTO> userList = recommendationService.getFilteredRecommendationUserList(
           previousUserSeq, PAGE_SIZE, foodTypes, tags, userCode);
-      boolean hasMore = customerList.size() == PAGE_SIZE;
-      responseDTO.setUserList(customerList);
+      boolean hasMore = userList.size() == PAGE_SIZE;
+      responseDTO.setUserList(userList);
       responseDTO.setHasMore(hasMore);
     } catch (Exception e) {
       e.printStackTrace();
