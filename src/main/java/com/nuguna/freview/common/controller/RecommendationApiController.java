@@ -30,7 +30,6 @@ public class RecommendationApiController {
   public CustomerRecommendationListResponseDTO getRecommendation(
       @RequestBody CustomerRecommendationListRequestDTO requestDTO) {
     Long previousUserSeq = requestDTO.getPreviousUserSeq();
-    String searchWord = requestDTO.getSearchWord();
 
     if (previousUserSeq == null) {
       previousUserSeq = Long.MAX_VALUE;
@@ -52,7 +51,6 @@ public class RecommendationApiController {
   @RequestMapping(value = "/filter", method = RequestMethod.POST)
   public CustomerRecommendationListResponseDTO filterRecommendation(
       @RequestBody RecommendationFilteringRequestDTO requestDTO) {
-    log.info("Received filter request with foodTypes {} and tags {}", requestDTO.getFoodTypes(), requestDTO.getTags());
     Long previousUserSeq = requestDTO.getPreviousUserSeq();
     List<String> foodTypes = requestDTO.getFoodTypes();
     List<String> tags = requestDTO.getTags();

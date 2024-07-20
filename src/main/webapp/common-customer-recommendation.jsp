@@ -140,12 +140,6 @@
 
     loadInitialData();
 
-    // $('#filterForm').submit(function (event) {
-    //   event.preventDefault();
-    //   let formData = $(this).serialize();
-    //   loadFilteredData(formData);
-    // });
-
     $('#filterForm').submit(function (event) {
       event.preventDefault();
       let formData = {};
@@ -174,8 +168,23 @@
     });
 
     $('#loadMoreBtn').click(function () {
-      let previousMemberSeq = $(this).data('previous-user-seq');
-      loadMoreData(previousMemberSeq);
+      let previousUserSeq = $(this).data('previous-user-seq');
+      let isFiltered = $(this).data('isFiltered');
+      let foodTypes = [];
+      let tags = [];
+
+      if (isFiltered) {
+        $('input[name="foodType"]:checked').each(function() {
+          foodTypes.push($(this).val());
+        });
+        $('input[name="tag"]:checked').each(function() {
+          tags.push($(this).val());
+        });
+
+        loadMoreFilteredData(previousUserSeq, foodTypes, tags);
+      } else {
+        loadMoreData(previousUserSeq);
+      }
     });
 
     function loadInitialData() {
@@ -213,8 +222,9 @@
           $('#customerInfo').html('');
           renderData(response.customerList);
           if (response.hasMore) {
-            //TODO: 필터결과의 더보기버튼을 따로 구현할 것?
-            $('#loadMoreBtn').data('previous-user-seq', response.customerList[response.customerList.length - 1].userSeq).show(); // userSeq로 변경
+            $('#loadMoreBtn').data('previous-user-seq', response.customerList[response.customerList.length - 1].userSeq)
+            .data('isFiltered', true)
+            .show();
           } else {
             $('#loadMoreBtn').hide();
           }
@@ -246,6 +256,33 @@
         },
         error: function () {
           console.error("[ERROR] 추가 데이터 로딩 중 오류 발생");
+        }
+      });
+    }
+
+    function loadMoreFilteredData(previousUserSeq, foodTypes, tags) {
+      $.ajax({
+        method: "POST",
+        url: "/api/common/recommendation/customer/filter",
+        contentType: "application/json",
+        data: JSON.stringify({
+          previousUserSeq: previousUserSeq,
+          foodTypes: foodTypes,
+          tags: tags
+        }),
+        dataType: "json",
+        success: function (response) {
+          if (response.customerList.length > 0) {
+            renderData(response.customerList);
+            if (response.hasMore) {
+              $('#loadMoreBtn').data('previous-user-seq', response.customerList[response.customerList.length - 1].userSeq).show();
+            } else {
+              $('#loadMoreBtn').hide();
+            }
+          }
+        },
+        error: function (xhr, status, error) {
+          console.error("Error loading more filtered data: " + error);
         }
       });
     }
