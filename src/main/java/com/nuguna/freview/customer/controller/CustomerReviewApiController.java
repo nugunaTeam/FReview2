@@ -43,7 +43,6 @@ public class CustomerReviewApiController {
   ) {
     CustomerMyReviewsRetrieveResponseDTO responseDTO = reviewService.getCustomerMyReviews(
         customerMyReviewsRetrieveRequestDTO);
-    log.info("{}", responseDTO.getReviewPageInfo().toString());
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
