@@ -31,29 +31,10 @@ public class StoreActivityApiController {
     return sendLike;
   }
 
-
   public StoreActivityPageResponseDTO storeActivityPage(@RequestBody StoreActivityPageRequestDTO reqDto) {
     Long userSeq = reqDto.getUserSeq();
     List<StoreActivitySendLikeResponseDTO> sendLike = storeActivityPageService.storeActivityPageSendLike(userSeq);
     return new StoreActivityPageResponseDTO(sendLike);
   }
-
-//  @RequestMapping(value = "/send-like", method = RequestMethod.GET)
-//  public List<StoreActivitySendLikeResponseDTO> storeActivityPageSendLike(@RequestParam(value = "userSeq") Long userSeq) {
-//    //TODO: 필요한 파라미터 - userSeq
-//    //TODO: 보낼 데이터 - list
-//    log.info("1 - 과연 " + userSeq);
-////    List<StoreActivitySendLikeResponseDTO> sendLike = storeActivityPageService.storeActivityPageSendLike(
-////        userSeq);
-//    try {
-//      List<StoreActivitySendLikeResponseDTO> sendLikelist = storeActivityPageService.storeActivityPageSendLike(
-//          userSeq);
-//      log.info("헤이" + sendLikelist.toString());
-//      return sendLikelist;
-//    } catch (Exception e) {
-//      e.printStackTrace();
-//    }
-//    return null;
-//  }
 
 }
