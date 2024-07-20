@@ -1,18 +1,22 @@
 package com.nuguna.freview.common.service.impl;
 
+import com.nuguna.freview.common.mapper.LikeMapper;
 import com.nuguna.freview.common.mapper.PostMapper;
 import com.nuguna.freview.common.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PostServiceImpl implements PostService {
 
   private final PostMapper postMapper;
+  private final LikeMapper likeMapper;
 
   @Autowired
-  public PostServiceImpl(PostMapper postMapper) {
+  public PostServiceImpl(PostMapper postMapper, LikeMapper likeMapper) {
     this.postMapper = postMapper;
+    this.likeMapper = likeMapper;
   }
 
   @Override
@@ -33,14 +37,18 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
+  @Transactional
   public boolean addLikeToPost(Long postSeq, Long userSeq) {
     int result = postMapper.insertLike(postSeq, userSeq);
-    return result == 1;
+    int result2 = likeMapper.insertLikeLog(postSeq, userSeq, "LIKE");
+    return result == 1 && result2 == 1;
   }
 
   @Override
+  @Transactional
   public boolean cancelLikeToPost(Long postSeq, Long userSeq) {
     int result = postMapper.deleteLike(postSeq, userSeq);
-    return result == 1;
+    int result2 = likeMapper.insertLikeLog(postSeq, userSeq, "DISLIKE");
+    return result == 1 && result2 == 1;
   }
 }
