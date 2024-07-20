@@ -6,13 +6,13 @@
 
   <!-- resultMap 설정 -->
   <!-- noticeMap 설정 -->
-  <resultMap id="noticeMap" type="com.nuguna.freview.common.dto.response.NoticeListDTO">
+  <resultMap id="noticeMap" type="com.nuguna.freview.common.dto.response.NoticePostDTO">
     <id property="seq" column="seq"/>
     <result property="userSeq" column="user_seq"/>
     <result property="title" column="title"/>
     <result property="content" column="content"/>
     <result property="createdAt" column="created_at"/>
-    <result property="viewCount" column="view_count"/>
+    <result property="totalView" column="view_count"/>
   </resultMap>
 
   <!-- SQL 쿼리 -->
@@ -20,14 +20,14 @@
   <select id="selectTotalPage" parameterType="String" resultType="int">
     select
         count(*)
-    from freview2.post
+    from post
     where code = #{postCode}
   </select>
 
   <select id="selectTotalPageWithSearchWord" parameterType="map" resultType="int">
     select
       count(*)
-    from freview2.post
+    from post
     where code = #{postCode}
     AND (title LIKE CONCAT('%', #{searchWord}, '%') OR content LIKE CONCAT('%', #{searchWord}, '%'))
   </select>
@@ -36,7 +36,7 @@
   <select id="selectNoticeList" parameterType="map" resultMap="noticeMap">
     select
         seq, user_seq, title, content, created_at, view_count
-    from freview2.post
+    from post
     where code = '공지'
     order by seq DESC
     LIMIT #{pageSize}
@@ -47,7 +47,7 @@
   <select id="searchNoticeList" parameterType="map" resultMap="noticeMap">
     select
       seq, user_seq, title, content, created_at, view_count
-    from freview2.post
+    from post
     where code = '공지'
       AND (title LIKE CONCAT('%', #{searchWord}, '%') OR content LIKE CONCAT('%', #{searchWord}, '%'))
     order by seq DESC

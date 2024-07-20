@@ -23,7 +23,7 @@ public class Post {
   private Date applyEndDate;
   private Date experienceDate;
   private String content;
-  private Integer viewCount;
+  private Integer totalView;
   private String thumbnailPhotoUrl;
   private Timestamp createdAt;
   private Timestamp updatedAt;

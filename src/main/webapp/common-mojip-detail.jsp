@@ -1,11 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<c:set var="loginUser" value="${requestScope.loginUser}"/>
-<c:set var="memberSeq" value="${loginUser.memberSeq}"/>
+<c:set var="loginUser" value="${loginUser}"/>
+<c:set var="userSeq" value="${loginUser.seq}"/>
 <c:set var="nickname" value="${loginUser.nickname}"/>
-<c:set var="gubun" value="${loginUser.gubun}"/>
+<c:set var="profileUrl" value="${loginUser.profilePhotoUrl}" />
+<c:set var="code" value="${loginUser.code}"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -74,20 +76,17 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center header-hr">
     <div class="d-flex align-items-center justify-content-between ">
-        <a href="/main?seq=${memberSeq}&pagecode=Requester"
+        <a href="/main?seq=${userSeq}&pagecode=Requester"
            class="logo d-flex align-items-center">
-            <img src="assets/img/logo/logo-vertical.png" alt=""
+            <img src="/assets/img/logo/logo-vertical.png" alt=""
                  style="  width: 50px; margin-top: 20px;">
             <span class="d-none d-lg-block">FReview</span>
         </a>
     </div>
     <div class="header-hr-right">
-        <a href="/my-info?member_seq=${memberSeq}" style="margin-right: 20px">
+        <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
             ${nickname}
-            <img src="assets/img/basic/basic-profile-img.png" alt=" " style="width: 30px;
-                margin-top: 15px;">
-            <%--            <img src="<%=profileURL()%>" alt=" " style="width: 30px;--%>
-            <%--    margin-top: 15px;"> TODO: 세션의 프로필 url을 적용할 것--%>
+            <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
         </a>
         <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
     </div>
@@ -103,12 +102,12 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="card-title mb-0">모집글 상세보기</h5>
                 <div>
-                    <c:if test="${memberSeq == mojipPost.memberSeq || gubun == 'A'}">
+                    <c:if test="${userSeq == mojipPost.userSeq || code eq 'ADMIN'}">
                         <button type="button" class="btn btn-danger" onclick="confirmDelete()">
                             삭제
                         </button>
                     </c:if>
-                    <c:if test="${memberSeq == mojipPost.memberSeq}">
+                    <c:if test="${userSeq == mojipPost.userSeq}">
                         <button type="button" class="btn btn-primary" onclick="editPost()">수정
                         </button>
                     </c:if>
@@ -120,15 +119,15 @@
             <div class="d-flex mb-4">
                 <img src="${mojipPost.profilePhotoUrl}" alt="Profile" class="profile-img">
                 <div class="ml-4">
-                    <h3><a href='/brand-page?member_seq=${mojipPost.memberSeq}'>${mojipPost.storeName}</a></h3>
-                    <p>분야: ${mojipPost.codeName}</p>
-                    <p>태그: ${mojipPost.name}</p>
+                    <h3><a href='/brand-page?user_seq=${mojipPost.userSeq}'>${mojipPost.storeName}</a></h3>
+                    <p>분야: ${mojipPost.foodTypeWord}</p>
+                    <p>태그: ${mojipPost.tagWord}</p>
                 </div>
             </div>
             <form id="postForm" action="/mojip-detail-update" method="post">
-                <input type="hidden" name="postSeq" value="${mojipPost.postSeq}">
-                <input type="hidden" name="writerSeq" value="${mojipPost.memberSeq}">
-                <input type="hidden" name="memberSeq" value="${memberSeq}">
+                <input type="hidden" name="postSeq" value="${mojipPost.seq}">
+                <input type="hidden" name="writerSeq" value="${mojipPost.userSeq}">
+                <input type="hidden" name="userSeq" value="${userSeq}">
                 <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
                     <tbody>
                     <tr>
@@ -140,18 +139,27 @@
                         </td>
                     </tr>
                     <tr>
+                    <tr>
                         <th class="fixed-width">모집 시작 일자</th>
                         <td>
-                            <span id="mojipView">${mojipPost.applyStartDate}</span>
+                            <fmt:formatDate value="${mojipPost.applyStartDate}" pattern="yyyy-MM-dd" var="formattedApplyStartDate"/>
+                            <span id="mojipView">${formattedApplyStartDate}</span>
                         </td>
+                    </tr>
                     </tr>
                     <tr>
                         <th class="fixed-width">모집 종료 일자</th>
-                        <td>${mojipPost.applyEndDate}</td>
+                        <td>
+                            <fmt:formatDate value="${mojipPost.applyEndDate}" pattern="yyyy-MM-dd" var="formattedApplyEndDate"/>
+                            ${formattedApplyEndDate}
+                        </td>
                     </tr>
                     <tr>
                         <th class="fixed-width">체험 날짜</th>
-                        <td>${mojipPost.experienceDate}</td>
+                        <td>
+                            <fmt:formatDate value="${mojipPost.experienceDate}" pattern="yyyy-MM-dd" var="formattedExperienceDate"/>
+                            ${formattedExperienceDate}
+                        </td>
                     </tr>
                     <tr>
                         <th class="fixed-width">체험 장소</th>
@@ -168,7 +176,7 @@
                     </tr>
                     <tr>
                         <th class="fixed-width">좋아요 수</th>
-                        <td>${mojipPost.numberOfLikes}</td>
+                        <td>${mojipPost.totalLike}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -179,23 +187,23 @@
                 </div>
             </form>
             <div id="likeButtons" class="button-container text-center">
-                <c:if test="${gubun == 'B' || gubun == 'C'}">
+                <c:if test="${code eq 'STORE' || code eq 'CUSTOMER'}">
                     <c:choose>
                         <c:when test="${isLiked}">
                             <button type="button" class="btn btn-primary like-button"
-                                    onclick="cancelLike(${mojipPost.postSeq}, ${applicantSeq})">
+                                    onclick="cancelLike(${mojipPost.seq})">
                                 <i class="bi bi-heart-fill me-1"></i> 좋아요
                             </button>
                         </c:when>
                         <c:otherwise>
                             <button type="button" class="btn btn-primary like-button"
-                                    onclick="addLike(${mojipPost.postSeq}, ${applicantSeq})">
+                                    onclick="addLike(${mojipPost.seq})">
                                 <i class="bi bi-heart me-1"></i> 좋아요
                             </button>
                         </c:otherwise>
                     </c:choose>
                 </c:if>
-                <c:if test="${gubun == 'C'}">
+                <c:if test="${code eq 'CUSTOMER'}">
                     <button type="button" class="btn btn-primary apply-button"
                             data-bs-toggle="modal" data-bs-target="#applyModal">지원하기
                     </button>
@@ -267,21 +275,18 @@
   }
 
   function applyPost() {
-    var postSeq = document.querySelector('input[name="postSeq"]').value;
-    var writerSeq = document.querySelector('input[name="writerSeq"]').value;
-    var memberSeq = document.querySelector('input[name="memberSeq"]').value;
+    let formData = {
+      fromPostSeq: document.querySelector('input[name="postSeq"]').value,
+      fromUserSeq: document.querySelector('input[name="userSeq"]').value,
+      toUserSeq: document.querySelector('input[name="writerSeq"]').value
+    };
 
-    var formData = new URLSearchParams();
-    formData.append('postSeq', postSeq);
-    formData.append('writerSeq', writerSeq);
-    formData.append('memberSeq', memberSeq);
-
-    fetch('/mojip-detail-apply', {
+    fetch('/api/common/mojip/apply', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
       },
-      body: formData.toString()
+      body: JSON.stringify(formData)
     })
     .then(response => {
       if (response.ok) {
@@ -308,21 +313,25 @@
   document.getElementById('postForm').addEventListener('submit', function (event) {
     event.preventDefault();
 
-    var formData = new URLSearchParams(new FormData(this));
+    var formData = {
+      postSeq: this.postSeq.value,
+      title: this.title.value,
+      content: this.content.value
+    };
 
-    fetch('/mojip-detail-update', {
-      method: 'POST',
+    fetch('/api/common/mojip/update', {
+      method: 'PUT',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
       },
-      body: formData.toString()
+      body: JSON.stringify(formData)
     })
     .then(response => {
       if (response.ok) {
         return response.text().then(data => {
           console.log(data);
           alert('게시글이 성공적으로 수정되었습니다.');
-          location.replace("/mojip");
+          location.replace("/mojip/${mojipPost.seq}");
         });
       } else {
         response.text().then(data => {
@@ -335,14 +344,8 @@
   });
 
   function deletePost() {
-    var postSeq = document.querySelector('input[name="postSeq"]').value;
-
-    fetch('/mojip-detail-delete', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: new URLSearchParams({postSeq: postSeq}).toString()
+    fetch('/api/common/mojip/${mojipPost.seq}', {
+      method: 'DELETE',
     })
     .then(response => {
       if (response.ok) {
@@ -362,15 +365,17 @@
   }
 
   function addLike(postSeq) {
-    fetch('/likes-add', {
+    let data = {
+      postSeq: postSeq,
+      userSeq: ${userSeq}
+    };
+
+    fetch('/api/common/post/like-add', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
       },
-      body: new URLSearchParams({
-        postSeq: postSeq,
-        memberSeq: ${memberSeq}
-      }).toString()
+      body: JSON.stringify(data),
     })
     .then(response => {
       if (response.ok) {
@@ -385,16 +390,18 @@
     });
   }
 
-  function cancelLike(postSeq, applicantSeq) {
-    fetch('/likes-cancel', {
-      method: 'POST',
+  function cancelLike(postSeq) {
+    let data = {
+      postSeq: postSeq,
+      userSeq: ${userSeq}
+    };
+
+    fetch('/api/common/post/like-cancel', {
+      method: 'DELETE',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
       },
-      body: new URLSearchParams({
-        postSeq: postSeq,
-        memberSeq: ${memberSeq}
-      }).toString()
+      body: JSON.stringify(data),
     })
     .then(response => {
       if (response.ok) {

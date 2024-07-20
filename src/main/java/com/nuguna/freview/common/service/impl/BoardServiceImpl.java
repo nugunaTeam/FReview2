@@ -1,6 +1,6 @@
 package com.nuguna.freview.common.service.impl;
 
-import com.nuguna.freview.common.dto.response.NoticeListDTO;
+import com.nuguna.freview.common.dto.response.NoticePostDTO;
 import com.nuguna.freview.common.mapper.BoardMapper;
 import com.nuguna.freview.common.service.BoardService;
 import java.util.List;
@@ -27,7 +27,7 @@ public class BoardServiceImpl implements BoardService {
   }
 
   @Override
-  public List<NoticeListDTO> getNoticeList(int currentPage, int pageSize, String searchWord) {
+  public List<NoticePostDTO> getNoticeList(int currentPage, int pageSize, String searchWord) {
     int offset = (currentPage - 1) * pageSize;
 
     if (searchWord == null) {

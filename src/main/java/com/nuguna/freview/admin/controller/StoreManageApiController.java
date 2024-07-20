@@ -1,7 +1,7 @@
 package com.nuguna.freview.admin.controller;
 
 import com.nuguna.freview.admin.dto.request.StoreListRequestDTO;
-import com.nuguna.freview.admin.dto.response.StoreListDTO;
+import com.nuguna.freview.admin.dto.response.StoreInfoDTO;
 import com.nuguna.freview.admin.dto.response.page.StoreManageResponseDTO;
 import com.nuguna.freview.admin.service.AdminService;
 import com.nuguna.freview.global.util.ShaUtil;
@@ -37,7 +37,7 @@ public class StoreManageApiController {
     if (previousUserSeq == null) {
       previousUserSeq = Long.MAX_VALUE;
     }
-    List<StoreListDTO> storeList = adminService.getStoreList(previousUserSeq, searchWord, PAGE_SIZE);
+    List<StoreInfoDTO> storeList = adminService.getStoreList(previousUserSeq, searchWord, PAGE_SIZE);
     boolean hasMore = storeList.size() == PAGE_SIZE;
     StoreManageResponseDTO responseDTO = new StoreManageResponseDTO();
     responseDTO.setStoreList(storeList);

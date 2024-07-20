@@ -134,7 +134,7 @@
                 </div>
                 <c:if test="${code eq 'ADMIN'}">
                     <div>
-                        <a href="/notice/insert" class="btn btn-primary">
+                        <a href="/notice/create" class="btn btn-primary">
                             공지 등록
                         </a>
                     </div>
@@ -192,7 +192,7 @@
         htmlStr += "<td><a href='/notice/" + val["seq"] + "'>" + val["title"] + "</a></td>";
         htmlStr += "<td>" + shortContent + "</td>";
         htmlStr += "<td>" + formattedCreatedAt + "</td>";
-        htmlStr += "<td>" + val["viewCount"] + "</td>";
+        htmlStr += "<td>" + val["totalView"] + "</td>";
         htmlStr += "</tr>";
       });
       $('#noticeList').empty().append(htmlStr);

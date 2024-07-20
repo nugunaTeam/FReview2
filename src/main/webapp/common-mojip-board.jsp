@@ -2,10 +2,11 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<c:set var="loginUser" value="${requestScope.loginUser}"/>
-<c:set var="memberSeq" value="${loginUser.memberSeq}"/>
+<c:set var="loginUser" value="${loginUser}"/>
+<c:set var="userSeq" value="${loginUser.seq}"/>
 <c:set var="nickname" value="${loginUser.nickname}"/>
-<c:set var="gubun" value="${loginUser.gubun}"/>
+<c:set var="profileUrl" value="${loginUser.profilePhotoUrl}" />
+<c:set var="code" value="${loginUser.code}"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,8 +20,8 @@
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="assets/img/favicon.png" rel="icon">
-    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="/assets/img/favicon.png" rel="icon">
+    <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -28,16 +29,16 @@
           rel="stylesheet">
 
     <!-- Vendor CSS Files -->
-    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-    <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
-    <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-    <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-    <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/assets/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
     <!-- Template Main CSS File -->
-    <link href="assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
     <link href="/assets/css/hr.css" rel="stylesheet">
 
     <!-- JQuery -->
@@ -111,20 +112,17 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center header-hr">
     <div class="d-flex align-items-center justify-content-between ">
-        <a href="/main?seq=${memberSeq}&pagecode=Requester"
+        <a href="/main?seq=${userSeq}&pagecode=Requester"
            class="logo d-flex align-items-center">
-            <img src="assets/img/logo/logo-vertical.png" alt=""
+            <img src="/assets/img/logo/logo-vertical.png" alt=""
                  style="  width: 50px; margin-top: 20px;">
             <span class="d-none d-lg-block">FReview</span>
         </a>
     </div>
     <div class="header-hr-right">
-        <a href="/my-info?member_seq=${memberSeq}" style="margin-right: 20px">
+        <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
             ${nickname}
-            <img src="assets/img/basic/basic-profile-img.png" alt=" " style="width: 30px;
-                margin-top: 15px;">
-            <%--            <img src="<%=profileURL()%>" alt=" " style="width: 30px;--%>
-            <%--    margin-top: 15px;"> TODO: 세션의 프로필 url을 적용할 것--%>
+            <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
         </a>
         <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
     </div>
@@ -134,7 +132,7 @@
 
     <div class="pagetitle">
         <h1>모집</h1>
-    </div><!-- End Page Title -->
+    </div>
 
     <div class="card">
         <div class="card-body">
@@ -147,8 +145,8 @@
                 <input type="button" id="searchBtn" value="검색">
             </div>
 
-            <c:if test="${gubun == 'B'}">
-                <a href="/mojip-create" class="btn btn-register">
+            <c:if test="${code eq 'STORE'}">
+                <a href="/mojip/create" class="btn btn-register">
                     모집 등록
                 </a>
             </c:if>
@@ -166,7 +164,7 @@
 
 <script>
   $(document).ready(function () {
-    var currentSearchWord = '';
+    let currentSearchWord = '';
 
     loadInitialData();
 
@@ -177,25 +175,25 @@
     });
 
     $('#loadMoreBtn').click(function () {
-      var previousPostSeq = $(this).data('previous-post-seq');
+      let previousPostSeq = $(this).data('previous-post-seq');
       loadMoreData(previousPostSeq, currentSearchWord);
     });
 
     function loadInitialData(searchWord = '') {
-      var apiUrl = searchWord ? "/mojip-search" : "/mojip";
       $.ajax({
         method: "POST",
-        url: apiUrl,
-        data: {
+        url: "/api/common/mojip/list",
+        contentType: "application/json",
+        data: JSON.stringify({
           searchWord: searchWord
-        },
+        }),
         dataType: "json",
         success: function (response) {
           $('#postList').empty();
-          renderData(response.data);
+          renderData(response.mojipList); // 데이터 객체 접근 수정
           if (response.hasMore) {
             $('#loadMoreBtn').data('previous-post-seq',
-                response.data[response.data.length - 1].postSeq).show();
+                response.mojipList[response.mojipList.length - 1].seq).show();
           } else {
             $('#loadMoreBtn').hide();
           }
@@ -207,22 +205,21 @@
     }
 
     function loadMoreData(previousPostSeq, searchWord = '') {
-      var apiUrl = searchWord ? "/mojip-search" : "/mojip";
       $.ajax({
         method: "POST",
-        url: apiUrl,
-        data: {
+        url: "/api/common/mojip/list",
+        contentType: "application/json",
+        data: JSON.stringify({
           previousPostSeq: previousPostSeq,
           searchWord: searchWord
-        },
+        }),
         dataType: "json",
         success: function (response) {
-          if (response.data.length > 0) {
-            renderData(response.data);
+          if (response.mojipList.length > 0) {
+            renderData(response.mojipList);
             if (response.hasMore) {
               $('#loadMoreBtn').data('previous-post-seq',
-                  response.data[response.data.length - 1].postSeq).show();
-              console.log(response.data[response.data.length - 1].postSeq);
+                  response.mojipList[response.mojipList.length - 1].seq).show();
             } else {
               $('#loadMoreBtn').hide();
             }
@@ -239,15 +236,19 @@
     function renderData(data) {
       var htmlStr = "";
       $.map(data, function (post) {
-        htmlStr += "<a href='/mojip-detail?postSeq=" + post["postSeq"]
+        let formattedApplyStartDate = dayjs(post["applyStartDate"]).format('YYYY-MM-DD');
+        let formattedApplyEndDate = dayjs(post["applyEndDate"]).format('YYYY-MM-DD');
+        let formattedExperienceDate = dayjs(post["experienceDate"]).format('YYYY-MM-DD');
+
+        htmlStr += "<a href='/mojip/" + post["seq"]
             + "' class='post-item'>";
         htmlStr += "<img src='" + post["profilePhotoUrl"] + "' alt='Profile' class='profile-img'>";
         htmlStr += "<h5>" + post["title"] + "</h5>";
-        htmlStr += "<p>모집 가게: " + post["storeName"] + "</p>";
-        htmlStr += "<p>체험 장소: " + post["storeLocation"] + "</p>";
-        htmlStr += "<p>체험 기간: " + post["applyStartDate"] + " ~ " + post["applyEndDate"] + "</p>";
-        htmlStr += "<p>체험 날짜: " + post["experienceDate"] + "</p>";
-        htmlStr += "<p>좋아요 수: " + post["numberOfLikes"] + "</p>";
+        htmlStr += "<p>[모집 가게] " + post["storeName"] + "</p>";
+        htmlStr += "<p>[체험 장소] " + post["storeLocation"] + "</p>";
+        htmlStr += "<p>[체험 기간] " + formattedApplyStartDate + " ~ " + formattedApplyEndDate + "</p>";
+        htmlStr += "<p>[체험 날짜] " + formattedExperienceDate + "</p>";
+        htmlStr += "<p>[좋아요 수] " + post["totalLike"] + "</p>";
         htmlStr += "</a>";
       });
       $('#postList').append(htmlStr);
@@ -273,17 +274,17 @@
         class="bi bi-arrow-up-short"></i></a>
 
 <!-- Vendor JS Files -->
-<script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
-<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="assets/vendor/chart.js/chart.umd.js"></script>
-<script src="assets/vendor/echarts/echarts.min.js"></script>
-<script src="assets/vendor/quill/quill.js"></script>
-<script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
-<script src="assets/vendor/tinymce/tinymce.min.js"></script>
-<script src="assets/vendor/php-email-form/validate.js"></script>
+<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/assets/vendor/quill/quill.js"></script>
+<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
 
 <!-- Template Main JS File -->
-<script src="assets/js/main.js"></script>
+<script src="/assets/js/main.js"></script>
 
 </body>
 
