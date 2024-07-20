@@ -1,13 +1,12 @@
-<%@ page import="com.nuguna.freview.entity.member.Member" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<c:set var="loginUser" value="${requestScope.loginUser}" />
-<c:set var="memberSeq" value="${loginUser.memberSeq}" />
-<c:set var="nickname" value="${loginUser.nickname}" />
-<c:set var="gubun" value="${loginUser.gubun}" />
+<c:set var="loginUser" value="${loginUser}"/>
+<c:set var="userSeq" value="${loginUser.seq}"/>
+<c:set var="nickname" value="${loginUser.nickname}"/>
 <c:set var="profileUrl" value="${loginUser.profilePhotoUrl}" />
+<c:set var="code" value="${loginUser.code}"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,8 +19,8 @@
     <meta content="" name="description">
 
     <!-- Favicons -->
-    <link href="assets/img/favicon.png" rel="icon">
-    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="/assets/img/favicon.png" rel="icon">
+    <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -29,17 +28,17 @@
           rel="stylesheet">
 
     <!-- Vendor CSS Files -->
-    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-    <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
-    <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-    <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-    <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/assets/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
     <!-- Template Main CSS File -->
-    <link href="assets/css/style.css" rel="stylesheet">
-    <link href="assets/css/hr.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/hr.css" rel="stylesheet">
 
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
@@ -75,27 +74,26 @@
 <body>
 
 <header id="header" class="header fixed-top d-flex align-items-center header-hr">
-
     <div class="d-flex align-items-center justify-content-between ">
-        <a href="/main?seq=${memberSeq}&pagecode=Requester"
-       class="logo d-flex align-items-center">
-            <img src="assets/img/logo/logo-vertical.png" alt="" style="  width: 50px; margin-top: 20px;">
+        <a href="/main?seq=${userSeq}&pagecode=Requester"
+           class="logo d-flex align-items-center">
+            <img src="/assets/img/logo/logo-vertical.png" alt=""
+                 style="  width: 50px; margin-top: 20px;">
             <span class="d-none d-lg-block">FReview</span>
         </a>
     </div>
     <div class="header-hr-right">
-        <a href="/my-info?member_seq=${memberSeq}" style="margin-right: 20px">
+        <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
             ${nickname}
             <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
         </a>
-        <a href="COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
+        <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
     </div>
-
 </header>
 
-<main id="main" style="margin:auto; margin-top:50px">
+<main id="main" style="margin: auto; margin-top: 50px;">
     <div class="pagetitle">
-        <h1>체험단 추천페이지</h1>
+        <h1>체험단 추천 페이지</h1>
     </div>
 
     <section class="section profile">
@@ -110,14 +108,15 @@
                         <label><input type="checkbox" name="foodType" value="양식"> 양식</label>
                         <label><input type="checkbox" name="foodType" value="중식"> 중식</label>
                         <label><input type="checkbox" name="foodType" value="일식"> 일식</label>
-                        <label><input type="checkbox" name="foodType" value="빵&베이커리"> 빵&베이커리</label>
+                        <label><input type="checkbox" name="foodType" value="베이커리"> 베이커리</label>
                         <label><input type="checkbox" name="foodType" value="기타"> 기타</label>
                     </div>
                     <div>
                         <h3>태그</h3>
                         <label><input type="checkbox" name="tag" value="초식"> 초식</label>
                         <label><input type="checkbox" name="tag" value="육식"> 육식</label>
-                        <label><input type="checkbox" name="tag" value="빵빵이"> 빵빵이</label>
+                        <label><input type="checkbox" name="tag" value="맛집블로거"> 맛집블로거</label>
+                        <label><input type="checkbox" name="tag" value="정성리뷰어"> 정성리뷰어</label>
                     </div>
                     <div>
                         <button type="submit">필터링</button>
@@ -127,14 +126,13 @@
                 <button id="resetBtn">모든 필터 제거</button>
                 <div class="row" id="customerInfo"></div>
                 <div class="d-flex justify-content-center">
-                    <button class="btn btn-primary" id="loadMoreBtn" data-previous-member-seq="0">
+                    <button class="btn btn-primary" id="loadMoreBtn" data-previous-user-seq="0">
                         더보기
                     </button>
                 </div>
             </div>
         </div>
     </section>
-
 </main>
 
 <script>
@@ -142,10 +140,30 @@
 
     loadInitialData();
 
+    // $('#filterForm').submit(function (event) {
+    //   event.preventDefault();
+    //   let formData = $(this).serialize();
+    //   loadFilteredData(formData);
+    // });
+
     $('#filterForm').submit(function (event) {
       event.preventDefault();
-      var formData = $(this).serialize();
-      loadFilteredData(formData);
+      let formData = {};
+      let foodTypes = [];
+      let tags = [];
+
+      $('input[name="foodType"]:checked').each(function() {
+        foodTypes.push($(this).val());
+      });
+      $('input[name="tag"]:checked').each(function() {
+        tags.push($(this).val());
+      });
+
+      formData['previousUserSeq'] = $('#previousUserSeq').val();
+      formData['foodTypes'] = foodTypes;
+      formData['tags'] = tags;
+
+      loadFilteredData(JSON.stringify(formData));
     });
 
     $('#resetBtn').click(function () {
@@ -156,20 +174,24 @@
     });
 
     $('#loadMoreBtn').click(function () {
-      var previousMemberSeq = $(this).data('previous-member-seq');
+      let previousMemberSeq = $(this).data('previous-user-seq');
       loadMoreData(previousMemberSeq);
     });
 
     function loadInitialData() {
       $.ajax({
         method: "POST",
-        url: "/recommendation-customer",
+        url: "/api/common/recommendation/customer",
+        contentType: "application/json",
+        data: JSON.stringify({
+          previousUserSeq: null,
+          searchWord: null
+        }),
         dataType: "json",
         success: function (response) {
-          renderData(response.data);
+          renderData(response.customerList);
           if (response.hasMore) {
-            $('#loadMoreBtn').data('previous-member-seq',
-                response.data[response.data.length - 1].memberSeq).show();
+            $('#loadMoreBtn').data('previous-user-seq', response.customerList[response.customerList.length - 1].userSeq).show(); // userSeq로 변경
           } else {
             $('#loadMoreBtn').hide();
           }
@@ -182,16 +204,17 @@
 
     function loadFilteredData(formData) {
       $.ajax({
-        method: "GET",
-        url: "/recommendation-filter",
+        method: "POST",
+        url: "/api/common/recommendation/customer/filter",
         data: formData,
+        contentType: "application/json",
         dataType: "json",
         success: function (response) {
           $('#customerInfo').html('');
-          renderData(response.data);
+          renderData(response.customerList);
           if (response.hasMore) {
-            $('#loadMoreBtn').data('previous-member-seq',
-                response.data[response.data.length - 1].memberSeq).show();
+            //TODO: 필터결과의 더보기버튼을 따로 구현할 것?
+            $('#loadMoreBtn').data('previous-user-seq', response.customerList[response.customerList.length - 1].userSeq).show(); // userSeq로 변경
           } else {
             $('#loadMoreBtn').hide();
           }
@@ -202,25 +225,23 @@
       });
     }
 
-    function loadMoreData(previousMemberSeq) {
+    function loadMoreData(previousUserSeq) {
       $.ajax({
         method: "POST",
-        url: "/recommendation-customer",
-        data: {
-          previousMemberSeq: previousMemberSeq
-        },
+        url: "/api/common/recommendation/customer",
+        contentType: "application/json",
+        data: JSON.stringify({
+          previousUserSeq: previousUserSeq
+        }),
         dataType: "json",
         success: function (response) {
-          if (response.data.length > 0) {
-            renderData(response.data);
+          if (response.customerList.length > 0) {
+            renderData(response.customerList);
             if (response.hasMore) {
-              $('#loadMoreBtn').data('previous-member-seq',
-                  response.data[response.data.length - 1].memberSeq).show();
+              $('#loadMoreBtn').data('previous-user-seq', response.customerList[response.customerList.length - 1].userSeq).show();
             } else {
               $('#loadMoreBtn').hide();
             }
-          } else {
-            $('#loadMoreBtn').hide();
           }
         },
         error: function () {
@@ -230,21 +251,21 @@
     }
 
     function renderData(data) {
-      var htmlStr = "";
+      let htmlStr = "";
       $.map(data, function (val) {
         htmlStr += "<div class='col-xl-2'>";
         htmlStr += "<div class='card'>";
         htmlStr += "<div class='card-body profile-card pt-4 d-flex flex-column align-items-center'>";
-        htmlStr += "<a href='/brand-page?member_seq=" + val["memberSeq"] + "'>"; //TODO: admin-mynfo 페이지 생성 후 수정
+        htmlStr += "<a href='/brand-page?member_seq=" + val["memberSeq"] + "'>";
         htmlStr += "<img src='" + val["profilePhotoUrl"] + "' alt='Profile' class='profile-img'>";
         htmlStr += "<h2>" + val["nickname"] + "</h2>";
 
-        if (val["foodTypes"] != null && val["foodTypes"] !== "") {
-          htmlStr += "<h3>" + val["foodTypes"] + "</h3>";
+        if (val["foodTypeWord"] != null && val["foodTypeWord"] !== "") {
+          htmlStr += "<h3>" + val["foodTypeWord"] + "</h3>";
         }
 
-        if (val["tags"] != null && val["tags"] !== "") {
-          htmlStr += "<h3>" + val["tags"] + "</h3>";
+        if (val["tagWord"] != null && val["tagWord"] !== "") {
+          htmlStr += "<h3>" + val["tagWord"] + "</h3>";
         }
 
         htmlStr += "</a>";
@@ -275,17 +296,17 @@
         class="bi bi-arrow-up-short"></i></a>
 
 <!-- Vendor JS Files -->
-<script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
-<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="assets/vendor/chart.js/chart.umd.js"></script>
-<script src="assets/vendor/echarts/echarts.min.js"></script>
-<script src="assets/vendor/quill/quill.js"></script>
-<script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
-<script src="assets/vendor/tinymce/tinymce.min.js"></script>
-<script src="assets/vendor/php-email-form/validate.js"></script>
+<script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/assets/vendor/quill/quill.js"></script>
+<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
 
 <!-- Template Main JS File -->
-<script src="assets/js/main.js"></script>
+<script src="/assets/js/main.js"></script>
 
 </body>
 
