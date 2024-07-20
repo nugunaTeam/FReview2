@@ -41,4 +41,47 @@
     LIMIT #{limit}
   </select>
 
+  <select id="filterUsers" resultMap="recommendationMap" parameterType="map">
+    SELECT
+    u.seq,
+    u.email,
+    u.nickname,
+    u.profile_photo_url,
+    GROUP_CONCAT(DISTINCT ft.dish) AS food_types,
+    GROUP_CONCAT(DISTINCT t.name) AS tags
+    FROM
+    user u
+    LEFT JOIN
+    user_food_type uft ON u.seq = uft.user_seq
+    LEFT JOIN
+    food_type ft ON uft.food_type_seq = ft.seq
+    LEFT JOIN
+    user_tag ut ON u.seq = ut.user_seq
+    LEFT JOIN
+    tag t ON ut.tag_seq = t.seq
+    WHERE
+    u.code = #{code} AND u.seq
+    &lt;
+    #{previousUserSeq}
+    <if test="foodTypes != null and foodTypes.size > 0">
+      AND ft.code IN
+      <foreach item="type" index="index" collection="foodTypes"
+        open="(" separator="," close=")">
+        #{type}
+      </foreach>
+    </if>
+    <if test="tags != null and tags.size > 0">
+      AND t.name IN
+      <foreach item="tag" index="index" collection="tags"
+        open="(" separator="," close=")">
+        #{tag}
+      </foreach>
+    </if>
+    GROUP BY
+    u.seq, u.email, u.nickname, u.profile_photo_url
+    ORDER BY
+    u.seq DESC
+    LIMIT #{limit}
+  </select>
+
 </mapper>

@@ -9,4 +9,10 @@ import org.apache.ibatis.annotations.Param;
 public interface RecommendationMapper {
 
   List<CustomerRecommendationResponseDTO> selectCustomer(@Param("previousUserSeq") Long previousUserSeq, @Param("limit") int limit);
+  List<CustomerRecommendationResponseDTO> filterUsers(
+      @Param("previousUserSeq") Long previousSeq,
+      @Param("limit") int limit,
+      @Param("foodTypes") List<String> foodTypes,
+      @Param("tags") List<String> tags,
+      @Param("code") String code);
 }
