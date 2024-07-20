@@ -42,6 +42,13 @@
       .d-flex.justify-content-center {
         gap: 0.5rem;
       }
+
+      .btn-secondary {
+        background-color: rgb(128, 128, 128);
+        border-color: rgb(128, 128, 128);
+        color: white;
+      }
+
     </style>
 
     <link rel="stylesheet"
@@ -783,6 +790,7 @@
                                 });
                               });
                             </script>
+
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 label">리뷰 로그</div>
                                 <div class="col-lg-8 col-md-6">
@@ -793,7 +801,7 @@
                                             <tr>
                                                 <th>스토어명</th>
                                                 <th>방문일자</th>
-                                                <th>리뷰 작성여부</th>
+                                                <th>리뷰</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -810,13 +818,22 @@
                                                     <td>
                                                         <c:choose>
                                                             <c:when test="${review.status == 'WRITTEN' || review.status == 'STORE_HIDDEN'}">
-                                                                <a href="${review.url}">O</a>
+                                                                <a href="${review.url}"
+                                                                   class="btn btn-success btn-sm">리뷰
+                                                                    확인</a>
                                                             </c:when>
                                                             <c:when test="${review.status == 'UNWRITTEN'}">
-                                                                X
+                                                                <button class="btn btn-pink btn-sm"
+                                                                        data-toggle="modal"
+                                                                        data-target="#reviewModal"
+                                                                        data-review-seq="${review.seq}">
+                                                                    리뷰 등록하기
+                                                                </button>
                                                             </c:when>
                                                             <c:when test="${review.status == 'NOSHOW'}">
-                                                                노쇼
+                                                                <button class="btn btn-secondary btn-sm"
+                                                                        disabled>노쇼
+                                                                </button>
                                                             </c:when>
                                                         </c:choose>
                                                     </td>
@@ -840,6 +857,76 @@
                                 </div>
                             </div>
 
+                            <!-- 리뷰 등록 모달 -->
+                            <div class="modal fade" id="reviewModal" tabindex="-1" role="dialog"
+                                 aria-labelledby="reviewModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="reviewModalLabel">리뷰 등록</h5>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="reviewForm">
+                                                <div class="form-group">
+                                                    <label for="reviewUrl">리뷰 URL</label>
+                                                    <input type="url" class="form-control"
+                                                           id="reviewUrl" name="reviewUrl" required>
+                                                </div>
+                                                <input type="hidden" id="reviewSeq"
+                                                       name="reviewSeq">
+                                                <input type="hidden" id="userSeq" name="userSeq"
+                                                       value="${userSeq}">
+                                                <button type="submit" class="btn btn-primary">등록
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <script>
+                              $(document).ready(function () {
+                                $('#reviewModal').on('show.bs.modal', function (event) {
+                                  var button = $(event.relatedTarget);
+                                  var reviewSeq = button.data('review-seq');
+                                  var modal = $(this);
+                                  modal.find('#reviewSeq').val(reviewSeq);
+                                });
+
+                                $('#reviewForm').on('submit', function (event) {
+                                  event.preventDefault();
+                                  var formData = {
+                                    userSeq: $('#userSeq').val(),
+                                    reviewSeq: $('#reviewSeq').val(),
+                                    reviewUrl: $('#reviewUrl').val()
+                                  };
+
+                                  $.ajax({
+                                    url: '/api/customer/review',
+                                    method: 'POST',
+                                    contentType: 'application/json',
+                                    data: JSON.stringify(formData),
+                                    success: function (response) {
+                                      $('#reviewModal').modal('hide');
+                                      var reviewSeq = formData.reviewSeq;
+                                      var reviewUrl = response.reviewUrl;
+                                      var reviewButton = $(
+                                          'button[data-review-seq="' + reviewSeq + '"]');
+                                      reviewButton.replaceWith('<a href="' + reviewUrl
+                                          + '" class="btn btn-success btn-sm">리뷰 확인</a>');
+                                    },
+                                    error: function (xhr, status, error) {
+                                      alert('리뷰 등록에 실패했습니다. 다시 시도해주세요.');
+                                    }
+                                  });
+                                });
+                              });
+                            </script>
                             <%--<script>
                               $(document).ready(function () {
                                 var currentPage = ${reviewPageInfo.currentPage};
@@ -948,11 +1035,11 @@
 
 </main>
 
-
 <footer id="footer" class="footer">
     <div class="copyright">
         &copy; Copyright <strong><span><a
-            href="https://github.com/nugunaTeam/FReview2"> nugunaTeam </a></span></strong>. All
+            href="https://github.com/nugunaTeam/FReview2"> nugunaTeam </a></span></strong>.
+        All
         Rights
         Reserved
     </div>
@@ -961,12 +1048,14 @@
     </div>
 </footer><!-- End Footer -->
 
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+<a href="#"
+   class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>
 <!-- jquery  -->
 
 <!-- icon bootstrap -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 

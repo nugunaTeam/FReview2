@@ -31,6 +31,7 @@ public class CustomerReviewApiController {
   public ResponseEntity<CustomerReviewRegisterResponseDTO> registerCustomerReview(
       @Valid @RequestBody CustomerReviewRegisterRequestDTO customerReviewRegisterRequestDTO
   ) {
+    log.info("registerCustomerReview 들어옴");
     CustomerReviewRegisterResponseDTO responseDTO = reviewService.registerCustomerReview(
         customerReviewRegisterRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
