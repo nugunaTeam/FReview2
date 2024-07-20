@@ -39,15 +39,23 @@ public class CustomerPageServiceImpl implements CustomerPageService {
         CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE);
     int reviewCount = customerReviewMapper.getReviewCount(userSeq);
 
-    int endPage = (reviewCount / 5) + 1;
+    int endPage;
+    if (reviewCount % CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE == 0) {
+      endPage = reviewCount / CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE;
+    } else {
+      endPage = (reviewCount / CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE) + 1;
+    }
+
     if (reviewCount > CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE
         * (CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE - 1)) {
       endPage = CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE;
     }
 
+    boolean hasNext = (endPage > 1);
+
     ReviewPaginationInfoResponseDTO reviewPaginationInfo
         = new ReviewPaginationInfoResponseDTO(CUSTOMER_REVIEW_LOG_FIRST_PAGE_NUMBER,
-        CUSTOMER_REVIEW_LOG_FIRST_PAGE_NUMBER, endPage);
+        CUSTOMER_REVIEW_LOG_FIRST_PAGE_NUMBER, endPage, hasNext, false);
     return new CustomerMyBrandPageInfoResponseDTO(brandInfo, reviewsInfo, reviewPaginationInfo);
   }
 

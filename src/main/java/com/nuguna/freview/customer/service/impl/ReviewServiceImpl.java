@@ -48,22 +48,33 @@ public class ReviewServiceImpl implements ReviewService {
   public CustomerMyReviewsRetrieveResponseDTO getCustomerMyReviews(
       CustomerMyReviewsRetrieveRequestDTO customerMyReviewsRetrieveRequestDTO) {
     Long userSeq = customerMyReviewsRetrieveRequestDTO.getUserSeq();
-    Integer page = customerMyReviewsRetrieveRequestDTO.getPage();
+    Integer currentPage = customerMyReviewsRetrieveRequestDTO.getPage();
 
-    int offset = (page - 1) * CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE;
+    int offset = (currentPage - 1) * CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE;
     int reviewCount = customerReviewMapper.getReviewCount(userSeq);
     if (offset > reviewCount) {
       throw new IllegalReviewPageAccessException("해당하는 페이지에 대한 리뷰가 존재하지 않습니다.");
     }
     List<ReviewLogInfoDTO> reviewsInfo = customerReviewMapper.getReviewsInfo(userSeq, offset,
         CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE);
+
     int startPage =
-        ((page - 1) / CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE) * CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE
+        ((currentPage - 1) / CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE)
+            * CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE
             + 1;
-    int endPage = (startPage - 1) + CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE;
+    int endPage;
+    int pageBlockThreshold = startPage + CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE - 1;
+    if (reviewCount >= pageBlockThreshold * CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE) {
+      endPage = pageBlockThreshold;
+    } else {
+      endPage = (int) Math.ceil((double) reviewCount / CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE);
+    }
+    boolean hasNext = ((currentPage < endPage) || (reviewCount
+        > pageBlockThreshold * CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE));
+    boolean hasPrevious = (currentPage > 1);
 
     ReviewPaginationInfoResponseDTO reviewPaginationInfoResponseDTO = new ReviewPaginationInfoResponseDTO(
-        page, startPage, endPage);
+        currentPage, startPage, endPage, hasNext, hasPrevious);
     return new CustomerMyReviewsRetrieveResponseDTO(reviewsInfo, reviewPaginationInfoResponseDTO);
   }
 }

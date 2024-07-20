@@ -847,17 +847,74 @@
                                              style="font-size: medium; color: indianred;">
                                             노쇼 상태인 리뷰는 노출되지 않습니다.
                                         </div>
-                                        <div class="pagination-container">
-                                            <button id="prev-block-button"
-                                                    class="btn btn-primary edit-btn" disabled>&lt;
-                                            </button>
+                                        <%--<div class="pagination-container">
+                                            <c:if test="${reviewPageInfo.hasPrevious}">
+                                                <button id="prev-block-button"
+                                                        class="btn btn-primary edit-btn">&lt;
+                                                </button>
+                                            </c:if>
                                             <div id="page-buttons"
                                                  class="d-flex justify-content-center mx-2">
-                                                <!-- 페이지 번호 버튼들이 여기에 추가됩니다 -->
+                                                <c:forEach var="page"
+                                                           begin="${reviewPageInfo.startPage}"
+                                                           end="${reviewPageInfo.endPage}">
+                                                    <c:choose>
+                                                        <c:when test="${page == reviewPageInfo.currentPage}">
+                                                            <button class="btn btn-secondary edit-btn"
+                                                                    disabled>${page}</button>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <button class="btn btn-primary edit-btn"
+                                                                    onclick="loadPage(${page})">${page}</button>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:forEach>
+                                            </div>
+                                            <c:if test="${reviewPageInfo.hasNext}">
+                                                <button id="next-block-button"
+                                                        class="btn btn-primary edit-btn">&gt;
+                                                </button>
+                                            </c:if>
+                                        </div>--%>
+                                        <div class="pagination-container">
+                                            <%--<c:if test="${reviewPageInfo.hasPrevious}">
+                                                <button id="prev-block-button"
+                                                        class="btn btn-primary edit-btn">&lt;
+                                                </button>
+                                            </c:if>--%>
+                                            <button id="prev-block-button"
+                                                    class="btn btn-primary edit-btn"
+                                                    style="${reviewPageInfo.hasPrevious ? '' : 'display:none;'}">
+                                                &lt;
+                                            </button>
+
+                                            <div id="page-buttons"
+                                                 class="d-flex justify-content-center mx-2">
+                                                <c:forEach var="page"
+                                                           begin="${reviewPageInfo.startPage}"
+                                                           end="${reviewPageInfo.endPage}">
+                                                    <c:choose>
+                                                        <c:when test="${page == reviewPageInfo.currentPage}">
+                                                            <button class="btn btn-secondary edit-btn"
+                                                                    disabled>${page}</button>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <button class="btn btn-primary edit-btn"
+                                                                    data-page="${page}">${page}</button>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:forEach>
                                             </div>
                                             <button id="next-block-button"
-                                                    class="btn btn-primary edit-btn" disabled>&gt;
+                                                    class="btn btn-primary edit-btn"
+                                                    style="${reviewPageInfo.hasNext ? '' : 'display:none;'}">
+                                                &gt;
                                             </button>
+                                            <%--<c:if test="${reviewPageInfo.hasNext}">
+                                                <button id="next-block-button"
+                                                        class="btn btn-primary edit-btn">&gt;
+                                                </button>
+                                            </c:if>--%>
                                         </div>
                                     </div>
                                 </div>
@@ -907,7 +964,7 @@
                                 });
 
                                 $('#reviewForm').on('submit', function (event) {
-                                  // event.preventDefault();
+                                  event.preventDefault();
                                   var formData = {
                                     userSeq: $('#userSeq').val(),
                                     reviewSeq: $('#reviewSeq').val(),
@@ -935,112 +992,110 @@
                                   });
                                 });
                               });
-                            </script>
-                            <%--<script>
-                              $(document).ready(function () {
-                                var currentPage = ${reviewPageInfo.currentPage};
-                                var startPage = ${reviewPageInfo.startPage};
-                                var endPage = ${reviewPageInfo.endPage};
-                                var hasNext = ${reviewPageInfo.hasNext};
-                                var hasPrevious = ${reviewPageInfo.hasPrevious};
 
-                                function fetchReviewLogs(page) {
-                                  $.ajax({
-                                    url: '/api/customer/reviews',
-                                    method: 'GET',
-                                    data: {page: page},
-                                    success: function (response) {
-                                      var reviewLogs = response.logs;
-                                      var hasPrevious = response.hasPrevious;
-                                      var hasNext = response.hasNext;
-                                      totalPages = response.totalPages;
+                              function initializePagination(reviewPageInfo) {
 
-                                      renderReviewLogs(reviewLogs);
-                                      renderPageButtons();
-                                      updatePaginationButtons(hasPrevious, hasNext);
-                                    },
-                                    error: function (err) {
-                                      alert('리뷰 로그 데이터를 가져오는데 실패하였습니다.');
-                                      renderPageButtons();
-                                    }
+                                $('#prev-block-button').off('click').on('click', function () {
+                                  if (reviewPageInfo.hasPrevious) {
+                                    loadPage(reviewPageInfo.currentPage - 1);
+                                  }
+                                });
+
+                                $('#next-block-button').off('click').on('click', function () {
+                                  if (reviewPageInfo.hasNext) {
+                                    loadPage(reviewPageInfo.currentPage + 1);
+                                  }
+                                });
+
+                                $('#page-buttons').empty();
+                                for (var i = reviewPageInfo.startPage; i <= reviewPageInfo.endPage;
+                                    i++) {
+                                  var pageButton = $(
+                                      '<button class="btn btn-primary edit-btn" data-page="' + i
+                                      + '">' + i + '</button>');
+                                  if (i === reviewPageInfo.currentPage) {
+                                    pageButton.addClass('btn-secondary').prop('disabled', true);
+                                  }
+                                  pageButton.on('click', function () {
+                                    var pageNumber = $(this).data('page');
+                                    loadPage(pageNumber);
                                   });
+                                  $('#page-buttons').append(pageButton);
                                 }
 
-                                function renderReviewLogs(reviewLogs) {
-                                  var tbody = $('#review-log-table tbody');
-                                  tbody.empty(); // 기존 데이터를 제거합니다.
-
-                                  reviewLogs.forEach(function (log) {
-                                    var row = $('<tr>');
-                                    row.append($('<td>').text(log.storeName));
-                                    row.append($('<td>').text(log.visitDate));
-                                    row.append($('<td>').text(log.reviewWritten));
-                                    tbody.append(row);
-                                  });
+                                if (reviewPageInfo.hasPrevious) {
+                                  $('#prev-block-button').show();
+                                } else {
+                                  $('#prev-block-button').hide();
                                 }
 
-                                function renderPageButtons() {
-                                  var pageButtonsDiv = $('#page-buttons');
-                                  pageButtonsDiv.empty(); // 기존 페이지 버튼을 제거합니다.
+                                if (reviewPageInfo.hasNext) {
+                                  $('#next-block-button').show();
+                                } else {
+                                  $('#next-block-button').hide();
+                                }
+                              }
 
-                                  var currentBlock = Math.floor(
-                                      (currentPage - 1) / pagesPerBlock);
-                                  var startPage = currentBlock * pagesPerBlock + 1;
-                                  var endPage = Math.min(startPage + pagesPerBlock - 1,
-                                      totalPages);
+                              function loadPage(page) {
+                                var userSeq = $('#userSeq').val();
 
-                                  for (var i = startPage; i <= endPage; i++) {
-                                    var pageButton = $('<button>')
-                                    .text(i)
-                                    .addClass(
-                                        'btn btn-outline-primary mx-1 datatable-pagination-list-item-link')
-                                    .attr('data-page', i)
-                                    .attr('aria-label', 'Page ' + i);
-                                    if (i === currentPage) {
-                                      pageButton.addClass('active');
-                                    }
-                                    pageButton.on('click', function () {
-                                      var page = parseInt($(this).attr('data-page'));
-                                      currentPage = page;
-                                      fetchReviewLogs(currentPage);
+                                $.ajax({
+                                  url: '/api/customer/reviews',
+                                  method: 'POST',
+                                  contentType: 'application/json',
+                                  data: JSON.stringify({'userSeq': userSeq, 'page': page}),
+                                  success: function (response) {
+                                    // 리뷰 목록 업데이트
+                                    var reviewInfos = response.reviewInfos;
+                                    var reviewLogTableBody = $('#review-log-table tbody');
+                                    reviewLogTableBody.empty();
+                                    $.each(reviewInfos, function (index, review) {
+                                      var visitDate = review.visitDate;
+                                      if (review.status === 'NOSHOW') {
+                                        visitDate = '노쇼';
+                                      }
+                                      var reviewRow = '<tr>' +
+                                          '<td><a href="/brand/' + review.storeSeq + '">'
+                                          + review.storeName + '</a></td>' +
+                                          '<td>' + visitDate + '</td>' +
+                                          '<td>' + renderReviewButton(review) + '</td>' +
+                                          '</tr>';
+                                      reviewLogTableBody.append(reviewRow);
                                     });
-                                    pageButtonsDiv.append(pageButton);
+                                    initializePagination(response.reviewPageInfo);
+                                  },
+                                  error: function (err) {
+                                    alert('페이지를 로드하는데 실패했습니다. 다시 시도해주세요.');
                                   }
+                                })
+                                ;
+                              }
+
+                              function renderReviewButton(review) {
+                                if (review.status === 'WRITTEN' || review.status
+                                    === 'STORE_HIDDEN') {
+                                  return '<a href="' + review.url
+                                      + '" class="btn btn-success btn-sm">리뷰 확인</a>';
+                                } else if (review.status === 'UNWRITTEN') {
+                                  return '<button class="btn btn-sm" style="background-color: indianred; border-color: indianred; color: white;" data-toggle="modal" data-target="#reviewModal" data-review-seq="'
+                                      + review.seq + '">리뷰 등록하기</button>';
+                                } else if (review.status === 'NOSHOW') {
+                                  return '<button class="btn btn-secondary btn-sm" disabled>노쇼</button>';
                                 }
+                                return '';
+                              }
 
-                                function updatePaginationButtons(hasPrevious, hasNext) {
-                                  var currentBlock = Math.floor(
-                                      (currentPage - 1) / pagesPerBlock);
-                                  var totalBlocks = Math.ceil(totalPages / pagesPerBlock);
-
-                                  $('#prev-block-button').prop('disabled', currentBlock === 0);
-                                  $('#next-block-button').prop('disabled',
-                                      currentBlock >= totalBlocks - 1);
-                                }
-
-                                $('#prev-block-button').click(function () {
-                                  var currentBlock = Math.floor(
-                                      (currentPage - 1) / pagesPerBlock);
-                                  if (currentBlock > 0) {
-                                    currentPage = (currentBlock - 1) * pagesPerBlock + 1;
-                                    fetchReviewLogs(currentPage);
-                                  }
-                                });
-
-                                $('#next-block-button').click(function () {
-                                  var currentBlock = Math.floor(
-                                      (currentPage - 1) / pagesPerBlock);
-                                  var totalBlocks = Math.ceil(totalPages / pagesPerBlock);
-                                  if (currentBlock < totalBlocks - 1) {
-                                    currentPage = (currentBlock + 1) * pagesPerBlock + 1;
-                                    fetchReviewLogs(currentPage);
-                                  }
-                                });
-
-                                // 초기 데이터 로드
-                                fetchReviewLogs(currentPage);
-                              });
-                            </script>--%>
+                              var reviewPageInfo = {
+                                currentPage: ${reviewPageInfo.currentPage},
+                                startPage: ${reviewPageInfo.startPage},
+                                endPage: ${reviewPageInfo.endPage},
+                                hasPrevious: ${reviewPageInfo.hasPrevious},
+                                hasNext: ${reviewPageInfo.hasNext}
+                              };
+                              // 초기 페이지 로드 시 페이지네이션 초기화
+                              <%--var initialPageInfo = ${reviewPageInfo}; // 서버에서 전달받은 초기 페이지 정보--%>
+                              initializePagination(reviewPageInfo);
+                            </script>
 
 </main>
 

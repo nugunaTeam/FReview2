@@ -37,13 +37,14 @@ public class CustomerReviewApiController {
     return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
   }
 
-  @RequestMapping(value = "/reviews", method = RequestMethod.GET)
+  @RequestMapping(value = "/reviews", method = RequestMethod.POST)
   public ResponseEntity<CustomerMyReviewsRetrieveResponseDTO> registerCustomerReview(
       @Valid @RequestBody CustomerMyReviewsRetrieveRequestDTO customerMyReviewsRetrieveRequestDTO
   ) {
     CustomerMyReviewsRetrieveResponseDTO responseDTO = reviewService.getCustomerMyReviews(
         customerMyReviewsRetrieveRequestDTO);
-    return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+    log.info("{}", responseDTO.getReviewPageInfo().toString());
+    return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
 }
