@@ -132,7 +132,8 @@
     <link href="/assets/css/style.css" rel="stylesheet">
     <link href="/assets/css/style-h.css" rel="stylesheet">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet"
@@ -823,7 +824,8 @@
                                                                     확인</a>
                                                             </c:when>
                                                             <c:when test="${review.status == 'UNWRITTEN'}">
-                                                                <button class="btn btn-pink btn-sm"
+                                                                <button class="btn btn-sm"
+                                                                        style="background-color: indianred; border-color: indianred; color: white;"
                                                                         data-toggle="modal"
                                                                         data-target="#reviewModal"
                                                                         data-review-seq="${review.seq}">
@@ -841,6 +843,10 @@
                                             </c:forEach>
                                             </tbody>
                                         </table>
+                                        <div class="d-flex justify-content-end mt-1"
+                                             style="font-size: medium; color: indianred;">
+                                            노쇼 상태인 리뷰는 노출되지 않습니다.
+                                        </div>
                                         <div class="pagination-container">
                                             <button id="prev-block-button"
                                                     class="btn btn-primary edit-btn" disabled>&lt;
@@ -875,6 +881,8 @@
                                                     <label for="reviewUrl">리뷰 URL</label>
                                                     <input type="url" class="form-control"
                                                            id="reviewUrl" name="reviewUrl" required>
+                                                    <small style="color: indianred;">한번 등록한 리뷰의 URL은
+                                                        수정 불가능합니다.</small>
                                                 </div>
                                                 <input type="hidden" id="reviewSeq"
                                                        name="reviewSeq">
@@ -899,7 +907,7 @@
                                 });
 
                                 $('#reviewForm').on('submit', function (event) {
-                                  event.preventDefault();
+                                  // event.preventDefault();
                                   var formData = {
                                     userSeq: $('#userSeq').val(),
                                     reviewSeq: $('#reviewSeq').val(),
@@ -912,15 +920,16 @@
                                     contentType: 'application/json',
                                     data: JSON.stringify(formData),
                                     success: function (response) {
-                                      $('#reviewModal').modal('hide');
                                       var reviewSeq = formData.reviewSeq;
                                       var reviewUrl = response.reviewUrl;
                                       var reviewButton = $(
                                           'button[data-review-seq="' + reviewSeq + '"]');
                                       reviewButton.replaceWith('<a href="' + reviewUrl
                                           + '" class="btn btn-success btn-sm">리뷰 확인</a>');
+                                      alert('리뷰 등록이 완료되었습니다.');
+                                      $('#reviewModal').modal('hide');
                                     },
-                                    error: function (xhr, status, error) {
+                                    error: function (err) {
                                       alert('리뷰 등록에 실패했습니다. 다시 시도해주세요.');
                                     }
                                   });
