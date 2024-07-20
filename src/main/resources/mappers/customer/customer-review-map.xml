@@ -13,6 +13,13 @@
     <result property="createdAt" column="created_at"/>
   </resultMap>
 
+  <select id="checkAlreadyExistReview" resultType="Boolean">
+    select count(1) > 0
+    from review
+    where seq = #{reviewSeq}
+      and status = 'WRITTEN'
+  </select>
+
 
   <select id="checkIsValidReview" resultType="Boolean">
     select count(1) > 0

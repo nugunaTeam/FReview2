@@ -987,7 +987,12 @@
                                       $('#reviewModal').modal('hide');
                                     },
                                     error: function (err) {
-                                      alert('리뷰 등록에 실패했습니다. 다시 시도해주세요.');
+                                      console.log(err);
+                                      if (err.responseJSON && err.responseJSON.message) {
+                                        alert(err.responseJSON.message);
+                                      } else {
+                                        alert('리뷰 등록에 실패했습니다. 다시 시도해주세요.');
+                                      }
                                     }
                                   });
                                 });

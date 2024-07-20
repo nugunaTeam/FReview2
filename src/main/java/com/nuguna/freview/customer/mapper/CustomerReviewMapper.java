@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Param;
 
 public interface CustomerReviewMapper {
 
+  Boolean checkAlreadyExistReview(@Param("reviewSeq") Long reviewSeq);
+
   Boolean checkIsValidReview(@Param("userSeq") Long userSeq, @Param("reviewSeq") Long reviewSeq);
 
   void registerReview(@Param("reviewSeq") Long reviewSeq, @Param("reviewUrl") String reviewUrl);

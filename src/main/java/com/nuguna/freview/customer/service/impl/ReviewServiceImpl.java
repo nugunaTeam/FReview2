@@ -9,6 +9,7 @@ import com.nuguna.freview.customer.dto.response.CustomerMyReviewsRetrieveRespons
 import com.nuguna.freview.customer.dto.response.CustomerReviewRegisterResponseDTO;
 import com.nuguna.freview.customer.dto.response.ReviewLogInfoDTO;
 import com.nuguna.freview.customer.dto.response.ReviewPaginationInfoResponseDTO;
+import com.nuguna.freview.customer.exception.AlreadyExistReviewException;
 import com.nuguna.freview.customer.exception.IllegalReviewException;
 import com.nuguna.freview.customer.exception.IllegalReviewPageAccessException;
 import com.nuguna.freview.customer.mapper.CustomerReviewMapper;
@@ -39,6 +40,11 @@ public class ReviewServiceImpl implements ReviewService {
     if (!customerReviewMapper.checkIsValidReview(userSeq, reviewSeq)) {
       throw new IllegalReviewException("존재하지 않는 리뷰입니다.");
     }
+
+    if (customerReviewMapper.checkAlreadyExistReview(reviewSeq)) {
+      throw new AlreadyExistReviewException("이미 등록완료 처리된 리뷰입니다.");
+    }
+
     customerReviewMapper.registerReview(reviewSeq, reviewUrl);
     return new CustomerReviewRegisterResponseDTO(reviewUrl);
   }
