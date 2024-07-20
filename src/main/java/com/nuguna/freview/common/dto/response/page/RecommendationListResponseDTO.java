@@ -1,6 +1,6 @@
 package com.nuguna.freview.common.dto.response.page;
 
-import com.nuguna.freview.common.dto.response.CustomerRecommendationResponseDTO;
+import com.nuguna.freview.common.dto.response.RecommendationResponseDTO;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,8 +11,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerRecommendationListResponseDTO {
+public class RecommendationListResponseDTO {
 
-  private List<CustomerRecommendationResponseDTO> customerList;
+  private List<RecommendationResponseDTO> userList;
   private boolean hasMore;
 }

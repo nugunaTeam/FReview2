@@ -1,9 +1,9 @@
 package com.nuguna.freview.common.controller;
 
-import com.nuguna.freview.common.dto.request.CustomerRecommendationListRequestDTO;
+import com.nuguna.freview.common.dto.request.RecommendationListRequestDTO;
 import com.nuguna.freview.common.dto.request.RecommendationFilteringRequestDTO;
-import com.nuguna.freview.common.dto.response.CustomerRecommendationResponseDTO;
-import com.nuguna.freview.common.dto.response.page.CustomerRecommendationListResponseDTO;
+import com.nuguna.freview.common.dto.response.RecommendationResponseDTO;
+import com.nuguna.freview.common.dto.response.page.RecommendationListResponseDTO;
 import com.nuguna.freview.common.service.RecommendationService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -15,32 +15,33 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/common/recommendation/customer")
+@RequestMapping("/api/common/recommendation")
 public class RecommendationApiController {
 
-  private final RecommendationService customerService;
+  private final RecommendationService recommendationService;
   private final int PAGE_SIZE = 20;
 
   @Autowired
   public RecommendationApiController(RecommendationService customerService) {
-    this.customerService = customerService;
+    this.recommendationService = customerService;
   }
 
   @RequestMapping(value = "", method = RequestMethod.POST)
-  public CustomerRecommendationListResponseDTO getRecommendation(
-      @RequestBody CustomerRecommendationListRequestDTO requestDTO) {
+  public RecommendationListResponseDTO getRecommendation(
+      @RequestBody RecommendationListRequestDTO requestDTO) {
     Long previousUserSeq = requestDTO.getPreviousUserSeq();
+    String userCode = requestDTO.getUserCode();
 
     if (previousUserSeq == null) {
       previousUserSeq = Long.MAX_VALUE;
     }
 
-    CustomerRecommendationListResponseDTO responseDTO = new CustomerRecommendationListResponseDTO();
+    RecommendationListResponseDTO responseDTO = new RecommendationListResponseDTO();
     try {
-      List<CustomerRecommendationResponseDTO> customerList = customerService.getRecommendationCustomerList(
-          previousUserSeq, PAGE_SIZE);
-      boolean hasMore = customerList.size() == PAGE_SIZE;
-      responseDTO.setCustomerList(customerList);
+      List<RecommendationResponseDTO> userList = recommendationService.getRecommendationUserList(
+          previousUserSeq, PAGE_SIZE, userCode);
+      boolean hasMore = userList.size() == PAGE_SIZE;
+      responseDTO.setUserList(userList);
       responseDTO.setHasMore(hasMore);
     } catch (Exception e) {
       e.printStackTrace();
@@ -49,7 +50,7 @@ public class RecommendationApiController {
   }
 
   @RequestMapping(value = "/filter", method = RequestMethod.POST)
-  public CustomerRecommendationListResponseDTO filterRecommendation(
+  public RecommendationListResponseDTO filterRecommendation(
       @RequestBody RecommendationFilteringRequestDTO requestDTO) {
     Long previousUserSeq = requestDTO.getPreviousUserSeq();
     List<String> foodTypes = requestDTO.getFoodTypes();
@@ -57,14 +58,14 @@ public class RecommendationApiController {
     if (previousUserSeq == null) {
       previousUserSeq = Long.MAX_VALUE;
     }
-    String code = "CUSTOMER";
+    String userCode = requestDTO.getUserCode();
 
-    CustomerRecommendationListResponseDTO responseDTO = new CustomerRecommendationListResponseDTO();
+    RecommendationListResponseDTO responseDTO = new RecommendationListResponseDTO();
     try {
-      List<CustomerRecommendationResponseDTO> customerList = customerService.getFilteredRecommendationCustomerList(
-          previousUserSeq, PAGE_SIZE, foodTypes, tags, code);
+      List<RecommendationResponseDTO> customerList = recommendationService.getFilteredRecommendationUserList(
+          previousUserSeq, PAGE_SIZE, foodTypes, tags, userCode);
       boolean hasMore = customerList.size() == PAGE_SIZE;
-      responseDTO.setCustomerList(customerList);
+      responseDTO.setUserList(customerList);
       responseDTO.setHasMore(hasMore);
     } catch (Exception e) {
       e.printStackTrace();

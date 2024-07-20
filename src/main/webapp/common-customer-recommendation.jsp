@@ -142,20 +142,12 @@
 
     $('#filterForm').submit(function (event) {
       event.preventDefault();
-      let formData = {};
-      let foodTypes = [];
-      let tags = [];
-
-      $('input[name="foodType"]:checked').each(function() {
-        foodTypes.push($(this).val());
-      });
-      $('input[name="tag"]:checked').each(function() {
-        tags.push($(this).val());
-      });
-
-      formData['previousUserSeq'] = $('#previousUserSeq').val();
-      formData['foodTypes'] = foodTypes;
-      formData['tags'] = tags;
+      let formData = {
+        previousUserSeq: $('#previousUserSeq').val(),
+        foodTypes: $('input[name="foodType"]:checked').map(function(){ return this.value; }).get(),
+        tags: $('input[name="tag"]:checked').map(function(){ return this.value; }).get(),
+        userCode: 'CUSTOMER' // Ensure userCode is included in filtered requests
+      };
 
       loadFilteredData(JSON.stringify(formData));
     });
@@ -190,17 +182,17 @@
     function loadInitialData() {
       $.ajax({
         method: "POST",
-        url: "/api/common/recommendation/customer",
+        url: "/api/common/recommendation",
         contentType: "application/json",
         data: JSON.stringify({
           previousUserSeq: null,
-          searchWord: null
+          userCode: 'CUSTOMER'
         }),
         dataType: "json",
         success: function (response) {
-          renderData(response.customerList);
+          renderData(response.userList);
           if (response.hasMore) {
-            $('#loadMoreBtn').data('previous-user-seq', response.customerList[response.customerList.length - 1].userSeq).show(); // userSeq로 변경
+            $('#loadMoreBtn').data('previous-user-seq', response.userList[response.userList.length - 1].userSeq).show();
           } else {
             $('#loadMoreBtn').hide();
           }
@@ -214,15 +206,15 @@
     function loadFilteredData(formData) {
       $.ajax({
         method: "POST",
-        url: "/api/common/recommendation/customer/filter",
+        url: "/api/common/recommendation",
         data: formData,
         contentType: "application/json",
         dataType: "json",
         success: function (response) {
           $('#customerInfo').html('');
-          renderData(response.customerList);
+          renderData(response.userList);
           if (response.hasMore) {
-            $('#loadMoreBtn').data('previous-user-seq', response.customerList[response.customerList.length - 1].userSeq)
+            $('#loadMoreBtn').data('previous-user-seq', response.userList[response.userList.length - 1].userSeq)
             .data('isFiltered', true)
             .show();
           } else {
@@ -238,17 +230,18 @@
     function loadMoreData(previousUserSeq) {
       $.ajax({
         method: "POST",
-        url: "/api/common/recommendation/customer",
+        url: "/api/common/recommendation",
         contentType: "application/json",
         data: JSON.stringify({
-          previousUserSeq: previousUserSeq
+          previousUserSeq: previousUserSeq,
+          userCode: 'CUSTOMER'
         }),
         dataType: "json",
         success: function (response) {
-          if (response.customerList.length > 0) {
-            renderData(response.customerList);
+          if (response.userList.length > 0) {
+            renderData(response.userList);
             if (response.hasMore) {
-              $('#loadMoreBtn').data('previous-user-seq', response.customerList[response.customerList.length - 1].userSeq).show();
+              $('#loadMoreBtn').data('previous-user-seq', response.userList[response.userList.length - 1].userSeq).show();
             } else {
               $('#loadMoreBtn').hide();
             }
@@ -263,7 +256,7 @@
     function loadMoreFilteredData(previousUserSeq, foodTypes, tags) {
       $.ajax({
         method: "POST",
-        url: "/api/common/recommendation/customer/filter",
+        url: "/api/common/recommendation/filter",
         contentType: "application/json",
         data: JSON.stringify({
           previousUserSeq: previousUserSeq,
@@ -272,10 +265,10 @@
         }),
         dataType: "json",
         success: function (response) {
-          if (response.customerList.length > 0) {
-            renderData(response.customerList);
+          if (response.userList.length > 0) {
+            renderData(response.userList);
             if (response.hasMore) {
-              $('#loadMoreBtn').data('previous-user-seq', response.customerList[response.customerList.length - 1].userSeq).show();
+              $('#loadMoreBtn').data('previous-user-seq', response.userList[response.userList.length - 1].userSeq).show();
             } else {
               $('#loadMoreBtn').hide();
             }

@@ -7,7 +7,7 @@
   <!-- ResultMap 설정 -->
   <!-- RecommendationMap 설정 -->
   <resultMap id="recommendationMap"
-    type="com.nuguna.freview.common.dto.response.CustomerRecommendationResponseDTO">
+    type="com.nuguna.freview.common.dto.response.RecommendationResponseDTO">
     <id property="userSeq" column="seq"/>
     <result property="email" column="email"/>
     <result property="nickname" column="nickname"/>
@@ -17,8 +17,8 @@
   </resultMap>
 
   <!-- SQL 매핑 문 -->
-  <!-- 체험단 추천리스트 -->
-  <select id="selectCustomer" parameterType="map" resultMap="recommendationMap">
+  <!-- 체험단/스토어 추천리스트 -->
+  <select id="selectUsers" parameterType="map" resultMap="recommendationMap">
     SELECT u.seq,
            u.email,
            u.nickname,
@@ -35,12 +35,13 @@
            LEFT JOIN
          tag t ON ut.tag_seq = t.seq
     WHERE u.seq &lt; #{previousUserSeq}
-      and u.code = 'CUSTOMER'
+      and u.code = #{code}
     GROUP BY u.seq, u.email, u.nickname, u.profile_photo_url
     ORDER BY u.seq DESC
     LIMIT #{limit}
   </select>
 
+  <!-- 체험단/스토어 추천리스트 - 필터 결과 -->
   <select id="filterUsers" resultMap="recommendationMap" parameterType="map">
     SELECT
     u.seq,

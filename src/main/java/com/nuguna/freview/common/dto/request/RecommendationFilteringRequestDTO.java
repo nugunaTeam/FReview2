@@ -15,4 +15,5 @@ public class RecommendationFilteringRequestDTO {
   private Long previousUserSeq;
   private List<String> foodTypes;
   private List<String> tags;
+  private String userCode;
 }
