@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.admin.mapper.LikeLogMapper">
+
+  <!-- LikeLogVO resultMap -->
+  <resultMap id="likeLogResultMap" type="com.nuguna.freview.admin.vo.LikeLogVO">
+    <id property="seq" column="seq"/>
+    <result property="postSeq" column="post_seq"/>
+    <result property="userSeq" column="user_seq"/>
+    <result property="code" column="code"/>
+    <result property="createdAt" column="created_at"/>
+  </resultMap>
+
+  <!-- SQL 쿼리문 -->
+  <insert id="insertLikeLog" parameterType="map">
+    insert into like_log (user_seq, post_seq, code)
+    values (#{userSeq}, #{postSeq}, #{code})
+  </insert>
+
+  <select id="getNewLogs" resultMap="likeLogResultMap">
+    SELECT seq, post_seq, user_seq, code, created_at
+    FROM like_log
+    WHERE seq &gt; #{lastProcessedSeq}
+    ORDER BY seq ASC
+    LIMIT 100
+  </select>
+
+</mapper>
