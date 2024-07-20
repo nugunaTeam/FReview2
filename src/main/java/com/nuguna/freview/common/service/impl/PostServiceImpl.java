@@ -1,6 +1,6 @@
 package com.nuguna.freview.common.service.impl;
 
-import com.nuguna.freview.common.mapper.LikeMapper;
+import com.nuguna.freview.admin.mapper.LikeLogMapper;
 import com.nuguna.freview.common.mapper.PostMapper;
 import com.nuguna.freview.common.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostServiceImpl implements PostService {
 
   private final PostMapper postMapper;
-  private final LikeMapper likeMapper;
+  private final LikeLogMapper likeMapper;
 
   @Autowired
-  public PostServiceImpl(PostMapper postMapper, LikeMapper likeMapper) {
+  public PostServiceImpl(PostMapper postMapper, LikeLogMapper likeMapper) {
     this.postMapper = postMapper;
     this.likeMapper = likeMapper;
   }
