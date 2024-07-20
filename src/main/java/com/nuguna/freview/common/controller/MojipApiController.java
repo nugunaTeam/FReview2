@@ -44,7 +44,6 @@ public class MojipApiController {
     if (previousPostSeq == null) {
       previousPostSeq = Long.MAX_VALUE;
     }
-    try {
       List<MojipPostDetailDTO> mojipList = mojipService.getMojipList(previousPostSeq, searchWord, PAGE_SIZE);
       boolean hasMore = mojipList.size() == PAGE_SIZE;
       MojipResponseDTO responseDTO = new MojipResponseDTO();
@@ -52,10 +51,6 @@ public class MojipApiController {
       responseDTO.setHasMore(hasMore);
 
       return responseDTO;
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return new MojipResponseDTO();
   }
 
   @RequestMapping(value = "/create", method = RequestMethod.POST)

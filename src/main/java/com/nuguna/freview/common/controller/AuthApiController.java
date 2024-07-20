@@ -9,7 +9,6 @@ import com.nuguna.freview.common.dto.response.RegisterCheckInfoResponseDTO;
 import com.nuguna.freview.common.dto.response.RegisterSendEmailResponseDTO;
 import com.nuguna.freview.common.service.RegisterService;
 import com.nuguna.freview.global.util.SendMailUtil;
-import com.nuguna.freview.global.util.ShaUtil;
 import java.util.Properties;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -28,11 +27,8 @@ public class AuthApiController {
   private RegisterService registerService;
   private SendMailUtil sendMailUtil;
 
-
   @Autowired
-  public AuthApiController(RegisterService registerService, SendMailUtil sendEmail) {this.registerService = registerService;
-
-
+  public AuthApiController(RegisterService registerService, SendMailUtil sendEmail) {this.registerService = registerService; }
 
   @RequestMapping(value = "/api/auth/check-id", method = RequestMethod.POST)
   public ResponseEntity<RegisterCheckInfoResponseDTO> checkDuplicatedId(@Valid @RequestBody RegisterCheckIdRequestDTO registerCheckIdRequestDTO) {
@@ -48,7 +44,7 @@ public class AuthApiController {
 
   @RequestMapping(value = "/api/auth/send-randomNumber-toEmail", method = RequestMethod.POST)
   public ResponseEntity<RegisterSendEmailResponseDTO> sendEmail(@Valid @RequestBody RegisterSendEmailRequestDTO registerSendEmailRequestDTO) {
-    
+
     log.info("이메일 보내기 확인");
     log.info(registerSendEmailRequestDTO.getEmail());
     log.info(registerSendEmailRequestDTO.getRandomNumber());
@@ -92,7 +88,6 @@ public class AuthApiController {
     }
   }
 
-
   @RequestMapping(value = "/api/auth/business-number-check", method = RequestMethod.POST)
   public ResponseEntity<RegisterCheckInfoResponseDTO> checkBuisnessNumber(@Valid @RequestBody RegisterCheckBusinessNumberDTO registerCheckBusinessNumberDTO) {
     log.info("사업자번호 확인");
@@ -101,6 +96,4 @@ public class AuthApiController {
     RegisterCheckInfoResponseDTO registerCheckInfoResponseDTO = new RegisterCheckInfoResponseDTO(result);
     return new ResponseEntity<>(registerCheckInfoResponseDTO,HttpStatus.OK);
   }
-
-
 }

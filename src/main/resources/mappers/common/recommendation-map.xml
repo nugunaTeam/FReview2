@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.common.mapper.RecommendationMapper">
+
+  <!-- ResultMap 설정 -->
+  <!-- RecommendationMap 설정 -->
+  <resultMap id="recommendationMap"
+    type="com.nuguna.freview.common.dto.response.RecommendationResponseDTO">
+    <id property="userSeq" column="seq"/>
+    <result property="email" column="email"/>
+    <result property="nickname" column="nickname"/>
+    <result property="profilePhotoUrl" column="profile_photo_url"/>
+    <result property="foodTypeWord" column="food_types"/>
+    <result property="tagWord" column="tags"/>
+  </resultMap>
+
+  <!-- SQL 매핑 문 -->
+  <!-- 체험단/스토어 추천리스트 -->
+  <select id="selectUsers" parameterType="map" resultMap="recommendationMap">
+    SELECT u.seq,
+           u.email,
+           u.nickname,
+           u.profile_photo_url,
+           GROUP_CONCAT(DISTINCT ft.dish) AS food_types,
+           GROUP_CONCAT(DISTINCT t.name)  AS tags
+    FROM user u
+           LEFT JOIN
+         user_food_type uft ON u.seq = uft.seq
+           LEFT JOIN
+         food_type ft ON uft.food_type_seq = ft.seq
+           LEFT JOIN
+         user_tag ut ON u.seq = ut.seq
+           LEFT JOIN
+         tag t ON ut.tag_seq = t.seq
+    WHERE u.seq &lt; #{previousUserSeq}
+      and u.code = #{code}
+    GROUP BY u.seq, u.email, u.nickname, u.profile_photo_url
+    ORDER BY u.seq DESC
+    LIMIT #{limit}
+  </select>
+
+  <!-- 체험단/스토어 추천리스트 - 필터 결과 -->
+  <select id="filterUsers" resultMap="recommendationMap" parameterType="map">
+    SELECT
+    u.seq,
+    u.email,
+    u.nickname,
+    u.profile_photo_url,
+    GROUP_CONCAT(DISTINCT ft.dish) AS food_types,
+    GROUP_CONCAT(DISTINCT t.name) AS tags
+    FROM
+    user u
+    LEFT JOIN
+    user_food_type uft ON u.seq = uft.user_seq
+    LEFT JOIN
+    food_type ft ON uft.food_type_seq = ft.seq
+    LEFT JOIN
+    user_tag ut ON u.seq = ut.user_seq
+    LEFT JOIN
+    tag t ON ut.tag_seq = t.seq
+    WHERE
+    u.code = #{code} AND u.seq
+    &lt;
+    #{previousUserSeq}
+    <if test="foodTypes != null and foodTypes.size > 0">
+      AND ft.code IN
+      <foreach item="type" index="index" collection="foodTypes"
+        open="(" separator="," close=")">
+        #{type}
+      </foreach>
+    </if>
+    <if test="tags != null and tags.size > 0">
+      AND t.name IN
+      <foreach item="tag" index="index" collection="tags"
+        open="(" separator="," close=")">
+        #{tag}
+      </foreach>
+    </if>
+    GROUP BY
+    u.seq, u.email, u.nickname, u.profile_photo_url
+    ORDER BY
+    u.seq DESC
+    LIMIT #{limit}
+  </select>
+
+</mapper>
