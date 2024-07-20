@@ -1,10 +1,7 @@
 package com.nuguna.freview.common.service.impl;
 
-import com.nuguna.freview.common.dto.response.page.NoticeDetailResponseDTO;
-import com.nuguna.freview.common.mapper.NoticeMapper;
 import com.nuguna.freview.common.mapper.PostMapper;
 import com.nuguna.freview.common.service.PostService;
-import java.sql.Timestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,33 +9,21 @@ import org.springframework.stereotype.Service;
 public class PostServiceImpl implements PostService {
 
   private final PostMapper postMapper;
-  private final NoticeMapper noticeMapper;
 
   @Autowired
-  public PostServiceImpl(PostMapper postMapper, NoticeMapper noticeMapper) {
+  public PostServiceImpl(PostMapper postMapper) {
     this.postMapper = postMapper;
-    this.noticeMapper = noticeMapper;
   }
 
   @Override
-  public NoticeDetailResponseDTO getPostBySeq(Long postSeq) {
-    return noticeMapper.selectNotice(postSeq);
-  }
-
   public boolean isLikedPost(Long userSeq, Long postSeq) {
     int result = postMapper.checkPostLiked(userSeq, postSeq);
-    return result == 1;
+    return result > 0;
   }
 
   @Override
   public void addViewCount(Long postSeq) {
     postMapper.insertPostViewCount(postSeq);
-  }
-
-  @Override
-  public boolean updateNotice(Long postSeq, String title, String content, Timestamp now) {
-    int result = noticeMapper.updateNotice(postSeq, title, content, now);
-    return result == 1;
   }
 
   @Override
@@ -48,8 +33,14 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
-  public boolean insertNotice(Long postSeq, String title, String content, Timestamp now) {
-    int result = noticeMapper.insertNotice(postSeq, title, content, now);
+  public boolean addLikeToPost(Long postSeq, Long userSeq) {
+    int result = postMapper.insertLike(postSeq, userSeq);
+    return result == 1;
+  }
+
+  @Override
+  public boolean cancelLikeToPost(Long postSeq, Long userSeq) {
+    int result = postMapper.deleteLike(postSeq, userSeq);
     return result == 1;
   }
 }

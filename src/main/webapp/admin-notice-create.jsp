@@ -120,7 +120,7 @@
           content: document.getElementById('content').value // 내용 입력 필드
         };
 
-        fetch('/api/common/notice/insert', { // 컨트롤러 URL과 일치해야 함
+        fetch('/api/common/notice/create', { // 컨트롤러 URL과 일치해야 함
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

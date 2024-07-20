@@ -1,4 +1,4 @@
-package com.nuguna.freview.common.dto.response;
+package com.nuguna.freview.common.dto.request;
 
 import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
@@ -10,12 +10,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NoticeListDTO {
+public class MojipInsertRequestDTO {
 
-  private Long seq;
   private Long userSeq;
   private String title;
+  private Timestamp applyStartDate;
+  private Timestamp applyEndDate;
+  private Timestamp experienceDate;
   private String content;
-  private Timestamp createdAt;
-  private int viewCount;
 }

@@ -179,7 +179,7 @@
                     </tr>
                     <tr>
                         <th class="fixed-width">조회수</th>
-                        <td id="displayViewCount">${currentPost.viewCount}</td>
+                        <td id="displayViewCount">${currentPost.totalView}</td>
                     </tr>
                     </tbody>
                 </table>

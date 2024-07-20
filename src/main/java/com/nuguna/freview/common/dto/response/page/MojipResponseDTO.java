@@ -1,6 +1,6 @@
 package com.nuguna.freview.common.dto.response.page;
 
-import com.nuguna.freview.common.dto.response.NoticePostDTO;
+import com.nuguna.freview.common.dto.response.MojipPostDetailDTO;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,8 +11,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NoticeResponseDTO {
+public class MojipResponseDTO {
 
-  private List<NoticePostDTO> noticeList;
-  private int pageTotalCount;
+  private List<MojipPostDetailDTO> mojipList;
+  private boolean hasMore;
 }

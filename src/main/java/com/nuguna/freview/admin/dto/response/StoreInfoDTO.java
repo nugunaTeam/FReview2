@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StoreListDTO {
+public class StoreInfoDTO {
 
   private Long seq;
   private String code;

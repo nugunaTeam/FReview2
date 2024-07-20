@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.common.mapper.MojipMapper">
+
+  <!-- ResultMap 설정 -->
+  <!-- mojipListMap 설정 -->
+  <resultMap id="mojipPostMap" type="com.nuguna.freview.common.dto.response.MojipPostDetailDTO">
+    <id property="seq" column="post_seq"/>
+    <result property="userSeq" column="user_seq"/>
+    <result property="businessNumber" column="business_number"/>
+    <result property="profilePhotoUrl" column="profile_photo_url"/>
+    <result property="storeLocation" column="store_location"/>
+    <result property="foodTypeWord" column="food_type_word"/>
+    <result property="tagWord" column="tag_word"/>
+    <result property="storeName" column="store_name"/>
+    <result property="title" column="title"/>
+    <result property="applyStartDate" column="apply_start_date"/>
+    <result property="applyEndDate" column="apply_end_date"/>
+    <result property="experienceDate" column="experience_date"/>
+    <result property="content" column="content"/>
+    <result property="totalLike" column="number_of_likes"/>
+    <result property="totalView" column="view_count"/>
+  </resultMap>
+
+  <select id="selectMojipList" parameterType="map" resultMap="mojipPostMap">
+    SELECT
+    p.seq AS post_seq,
+    m.seq AS user_seq,
+    m.business_number,
+    m.profile_photo_url,
+    m.store_location,
+    GROUP_CONCAT(DISTINCT ft.dish ORDER BY ft.dish ASC SEPARATOR ', ') AS food_type_word,
+    GROUP_CONCAT(DISTINCT t.name ORDER BY t.name ASC SEPARATOR ', ') AS tag_word,
+    s.store_name,
+    p.title,
+    p.apply_start_date,
+    p.apply_end_date,
+    p.experience_date,
+    p.content,
+    (SELECT COUNT(*) FROM `like` l WHERE l.post_seq = p.seq) AS number_of_likes,
+    p.view_count
+    FROM
+    post p
+    LEFT JOIN user m ON p.user_seq = m.seq
+    LEFT JOIN user_food_type mft ON m.seq = mft.user_seq
+    LEFT JOIN food_type ft ON mft.food_type_seq = ft.seq
+    LEFT JOIN user_tag mt ON m.seq = mt.user_seq
+    LEFT JOIN tag t ON mt.tag_seq = t.seq
+    LEFT JOIN national_store_business_information s ON m.business_number = s.business_number
+    WHERE
+    p.code = '모집' AND p.seq &lt; #{previousPostSeq}
+    GROUP BY
+    p.seq
+    ORDER BY
+    p.seq DESC
+    LIMIT #{limit}
+  </select>
+
+  <select id="searchMojipList" parameterType="map" resultMap="mojipPostMap">
+    SELECT
+      p.seq AS post_seq,
+      m.seq AS user_seq,
+      m.business_number,
+      m.profile_photo_url,
+      m.store_location,
+      GROUP_CONCAT(DISTINCT ft.dish ORDER BY ft.dish ASC SEPARATOR ', ') AS food_type_word,
+      GROUP_CONCAT(DISTINCT t.name ORDER BY t.name ASC SEPARATOR ', ') AS tag_word,
+      s.store_name,
+      p.title,
+      p.apply_start_date,
+      p.apply_end_date,
+      p.experience_date,
+      p.content,
+      (SELECT COUNT(*) FROM `like` l WHERE l.post_seq = p.seq) AS number_of_likes,
+      p.view_count
+    FROM
+      post p
+        LEFT JOIN user m ON p.user_seq = m.seq
+        LEFT JOIN user_food_type mft ON m.seq = mft.user_seq
+        LEFT JOIN food_type ft ON mft.food_type_seq = ft.seq
+        LEFT JOIN user_tag mt ON m.seq = mt.user_seq
+        LEFT JOIN tag t ON mt.tag_seq = t.seq
+        LEFT JOIN national_store_business_information s ON m.business_number = s.business_number
+    WHERE
+      p.code = '모집' AND p.seq &lt; #{previousPostSeq}
+      AND (
+      s.store_name LIKE CONCAT('%', #{searchWord}, '%')
+        OR m.store_location LIKE CONCAT('%', #{searchWord}, '%')
+        OR p.title LIKE CONCAT('%', #{searchWord}, '%')
+        OR ft.dish LIKE CONCAT('%', #{searchWord}, '%')
+        OR t.name LIKE CONCAT('%', #{searchWord}, '%')
+      )
+    GROUP BY
+      p.seq
+    ORDER BY
+      p.seq DESC
+    LIMIT #{limit}
+  </select>
+
+  <select id="selectMojipDetail" parameterType="map" resultMap="mojipPostMap">
+    SELECT
+      p.seq AS post_seq,
+      m.seq AS user_seq,
+      m.business_number,
+      m.profile_photo_url,
+      m.store_location,
+      GROUP_CONCAT(DISTINCT ft.dish ORDER BY ft.dish ASC SEPARATOR ', ') AS food_type_word,
+      GROUP_CONCAT(DISTINCT t.name ORDER BY t.name ASC SEPARATOR ', ') AS tag_word,
+      s.store_name,
+      p.title,
+      p.apply_start_date,
+      p.apply_end_date,
+      p.experience_date,
+      p.content,
+      (SELECT COUNT(*) FROM `like` l WHERE l.post_seq = p.seq) AS number_of_likes,
+      p.view_count
+    FROM
+      post p
+        LEFT JOIN user m ON p.user_seq = m.seq
+        LEFT JOIN user_food_type mft ON m.seq = mft.user_seq
+        LEFT JOIN food_type ft ON mft.food_type_seq = ft.seq
+        LEFT JOIN user_tag mt ON m.seq = mt.user_seq
+        LEFT JOIN tag t ON mt.tag_seq = t.seq
+        LEFT JOIN national_store_business_information s ON m.business_number = s.business_number
+    WHERE
+      p.seq = #{postSeq}
+  </select>
+
+  <insert id="insertMojip" parameterType="map">
+    INSERT INTO post (user_seq, title, apply_start_date, apply_end_date, experience_date, content, code)
+    VALUES (#{userSeq}, #{title}, #{applyStartDate}, #{applyEndDate}, #{experienceDate}, #{content}, '모집')
+  </insert>
+
+  <!-- 특정 모집글 수정 -->
+  <update id="updateMojip" parameterType="map">
+    UPDATE post
+    SET
+        title = #{title},
+        content = #{content}
+    WHERE seq = #{postSeq}
+  </update>
+
+  <!-- 모집글 지원 -->
+  <insert id="applyMojip" parameterType="map">
+    insert into experience (from_user_seq, to_user_seq, from_post_seq, status)
+    VALUES (#{fromUserSeq}, #{toUserSeq}, #{fromPostSeq}, 'SENT')
+  </insert>
+
+</mapper>

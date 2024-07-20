@@ -1,22 +1,21 @@
-package com.nuguna.freview.common.dto.response.page;
+package com.nuguna.freview.common.dto.response;
 
 import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@Builder
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NoticeDetailResponseDTO {
+public class NoticePostDTO {
 
   private Long seq;
   private Long userSeq;
   private String title;
-  private Timestamp createdAt;
-  private Timestamp updatedAt;
   private String content;
+  private Timestamp createdAt;
   private int totalView;
 }
