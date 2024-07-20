@@ -6,4 +6,5 @@ import java.util.List;
 public interface RecommendationService {
 
   List<CustomerRecommendationResponseDTO> getRecommendationCustomerList(Long previousSeq, int limit);
+  List<CustomerRecommendationResponseDTO> getFilteredRecommendationCustomerList(Long previousSeq, int limit, List<String> foodTypes, List<String> tags, String code);
 }

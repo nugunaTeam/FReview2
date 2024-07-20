@@ -22,4 +22,10 @@ public class RecommendationServiceImpl implements RecommendationService {
       int limit) {
     return recommendationMapper.selectCustomer(previousSeq, limit);
   }
+
+  @Override
+  public List<CustomerRecommendationResponseDTO> getFilteredRecommendationCustomerList(
+      Long previousSeq, int limit, List<String> foodTypes, List<String> tags, String code) {
+    return recommendationMapper.filterUsers(previousSeq, limit, foodTypes, tags, code);
+  }
 }
