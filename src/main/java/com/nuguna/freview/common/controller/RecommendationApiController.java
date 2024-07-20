@@ -1,6 +1,7 @@
 package com.nuguna.freview.common.controller;
 
 import com.nuguna.freview.common.dto.request.CustomerRecommendationListRequestDTO;
+import com.nuguna.freview.common.dto.request.RecommendationFilteringRequestDTO;
 import com.nuguna.freview.common.dto.response.CustomerRecommendationResponseDTO;
 import com.nuguna.freview.common.dto.response.page.CustomerRecommendationListResponseDTO;
 import com.nuguna.freview.common.service.RecommendationService;
@@ -47,4 +48,30 @@ public class RecommendationApiController {
     }
     return responseDTO;
   }
+
+  @RequestMapping(value = "/filter", method = RequestMethod.POST)
+  public CustomerRecommendationListResponseDTO filterRecommendation(
+      @RequestBody RecommendationFilteringRequestDTO requestDTO) {
+    log.info("Received filter request with foodTypes {} and tags {}", requestDTO.getFoodTypes(), requestDTO.getTags());
+    Long previousUserSeq = requestDTO.getPreviousUserSeq();
+    List<String> foodTypes = requestDTO.getFoodTypes();
+    List<String> tags = requestDTO.getTags();
+    if (previousUserSeq == null) {
+      previousUserSeq = Long.MAX_VALUE;
+    }
+    String code = "CUSTOMER";
+
+    CustomerRecommendationListResponseDTO responseDTO = new CustomerRecommendationListResponseDTO();
+    try {
+      List<CustomerRecommendationResponseDTO> customerList = customerService.getFilteredRecommendationCustomerList(
+          previousUserSeq, PAGE_SIZE, foodTypes, tags, code);
+      boolean hasMore = customerList.size() == PAGE_SIZE;
+      responseDTO.setCustomerList(customerList);
+      responseDTO.setHasMore(hasMore);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return responseDTO;
+  }
 }
+
