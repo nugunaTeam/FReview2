@@ -282,7 +282,7 @@
         htmlStr += "<div class='col-xl-2'>";
         htmlStr += "<div class='card'>";
         htmlStr += "<div class='card-body profile-card pt-4 d-flex flex-column align-items-center'>";
-        htmlStr += "<a href='/brand-page?member_seq=" + val["memberSeq"] + "'>";
+        htmlStr += "<a href='/brand-page?user_seq=" + val["userSeq"] + "'>";
         htmlStr += "<img src='" + val["profilePhotoUrl"] + "' alt='Profile' class='profile-img'>";
         htmlStr += "<h2>" + val["nickname"] + "</h2>";
 
