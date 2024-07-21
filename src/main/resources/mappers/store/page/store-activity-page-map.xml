@@ -6,6 +6,7 @@
 
   <resultMap id="StoreActivityPageSendLikeResultMap"
     type="com.nuguna.freview.store.dto.response.StoreActivitySendLikeResponseDTO">
+    <result property="userSeq" column="user_seq"/>
     <result property="writtenSeq" column="post_author_seq"/>
     <result property="postSeq" column="post_seq"/>
     <result property="title" column="post_title"/>
@@ -45,7 +46,8 @@
   </resultMap>
 
   <select id="storeActivityPageSendLike" resultMap="StoreActivityPageSendLikeResultMap ">
-    SELECT p.seq         AS post_seq,
+    SELECT l.user_seq    AS user_seq,
+           p.seq         AS post_seq,
            p.title       AS post_title,
            p.content     AS post_content,
            u.seq         AS post_author_seq,

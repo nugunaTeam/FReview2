@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StoreActivitySendLikeResponseDTO {
+  private Long userSeq;
   private Long writtenSeq;
   private Long postSeq;
   private String title;
