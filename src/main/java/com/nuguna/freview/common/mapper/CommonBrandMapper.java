@@ -2,8 +2,10 @@ package com.nuguna.freview.common.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
 @Mapper
+@Component
 public interface CommonBrandMapper {
 
   Boolean isZzimed(@Param("userSeq") Long userSeq, @Param("toUserSeq") Long toUserSeq);

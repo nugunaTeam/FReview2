@@ -6,8 +6,11 @@ import com.nuguna.freview.admin.vo.AdminVO;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
+
 
 @Mapper
+@Component
 public interface AdminMapper {
 
   AdminVO selectAdmin(Long userSeq);
