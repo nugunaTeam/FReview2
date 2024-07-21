@@ -19,4 +19,9 @@
     limit 100
   </select>
 
+  <insert id="insertZzimLog" parameterType="map">
+    insert into zzim_log (from_user_seq, to_user_seq, code)
+    values (#{fromUserSeq}, #{toUseSeq}, #{code})
+  </insert>
+
 </mapper>
