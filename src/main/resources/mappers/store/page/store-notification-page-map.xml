@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.store.mapper.StoreNotificationPageMapper">
+
+  <resultMap id="storeNotificationReceivedLikeResultMap"
+    type="com.nuguna.freview.store.dto.response.StoreNotificationReceivedLikeResponseDTO">
+    <result property="userSeq" column="user_seq"/>
+    <result property="postSeq" column="post_seq"/>
+    <result property="title" column="post_title"/>
+    <result property="content" column="post_content"/>
+    <result property="writtenSeq" column="post_author_seq"/>
+    <result property="createdAt" column="like_created_at"/>
+    <result property="likeCount" column="like_count"/>
+  </resultMap>
+
+  <resultMap id="storeNotificationReceivedZzimResultMap"
+    type="com.nuguna.freview.store.dto.response.StoreNotificationReceivedZzimResponseDTO">
+    <result property="userSeq" column="to_user_seq"/>
+    <result property="zzimUserSeq" column="from_user_seq"/>
+    <result property="code" column="code"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="zzimCount" column="zzimCount"/>
+  </resultMap>
+
+  <resultMap id="storeNotificationReceivedReplyResultMap"
+    type="com.nuguna.freview.store.dto.response.StoreNotificationReceivedReplyResponseDTO">
+    <result property="userSeq" column="user_seq"/>
+    <result property="postSeq" column="post_seq"/>
+    <result property="title" column="post_title"/>
+    <result property="content" column="reply_content"/>
+    <result property="createdAt" column="reply_created_at"/>
+  </resultMap>
+
+  <resultMap id="storeNotificationExperienceResultMap"
+    type="com.nuguna.freview.store.dto.response.StoreNotificationExperienceResponseDTO">
+    <result property="userSeq" column="user_seq"/>
+    <result property="fromUserSeq" column="from_user_seq"/>
+    <result property="toUserSeq" column="to_user_seq"/>
+    <result property="postSeq" column="from_post_seq"/>
+    <result property="title" column="title"/>
+    <result property="proposalDetail" column="proposal_detail"/>
+    <result property="experienceUser" column="user_nickname"/>
+    <result property="createdAt" column="created_at"/>
+  </resultMap>
+
+  <select id="storeNotificationReceivedLike" resultMap="storeNotificationReceivedLikeResultMap">
+    SELECT l.user_seq    AS user_seq,
+           p.seq         AS post_seq,
+           p.title       AS post_title,
+           p.content     AS post_content,
+           u.seq         AS post_author_seq,
+           l.created_at  AS like_created_at,
+           COUNT(lk.seq) AS like_count
+    FROM `like` l
+           JOIN `post` p ON l.post_seq = p.seq
+           JOIN `user` u ON p.user_seq = u.seq
+           LEFT JOIN `like` lk ON p.seq = lk.post_seq AND lk.user_seq = #{userSeq}
+    WHERE l.user_seq = #{userSeq}
+    GROUP BY l.seq, p.seq
+  </select>
+
+  <select id="storeNotificationReceivedZzim" resultMap="storeNotificationReceivedZzimResultMap">
+    SELECT u.nickname,
+           u.code,
+           zz.from_user_seq,
+           zz.to_user_seq,
+           zz.created_at,
+           IFNULL(zzc.zzimCount, 0) AS zzimCount
+    FROM `user` u
+           JOIN (SELECT z.from_user_seq, z.to_user_seq, z.created_at
+                 FROM ZZIM z
+                 WHERE z.to_user_seq = #{userSeq}) zz ON u.seq = zz.from_user_seq
+           LEFT JOIN (SELECT from_user_seq, COUNT(*) AS zzimCount
+                      FROM ZZIM
+                      GROUP BY from_user_seq) zzc ON u.seq = zzc.from_user_seq
+  </select>
+
+  <select id="storeNotificationReceivedReply" resultMap="storeNotificationReceivedReplyResultMap">
+    SELECT r.user_seq   AS user_seq,
+           p.seq        AS post_seq,
+           p.title      AS post_title,
+           r.content    AS reply_content,
+           r.created_at AS reply_created_at
+    FROM `reply` r
+           JOIN `post` p ON r.post_seq = p.seq
+    WHERE r.user_seq != #{userSeq}
+      AND p.user_seq = #{userSeq}
+      AND CASE p.code
+            WHEN '공지' THEN 0
+            ELSE 1
+            END = 1
+  </select>
+
+  <select id="storeNotificationExperience" resultMap="storeNotificationExperienceResultMap">
+    SELECT e.from_user_seq,
+           e.to_user_seq,
+           e.from_post_seq,
+           e.proposal_detail,
+           e.created_at,
+           p.title,
+           CASE
+             WHEN e.from_user_seq = #{userSeq} AND e.from_post_seq IS NULL AND e.proposal_detail IS NOT NULL
+               THEN u_to.nickname
+             WHEN e.to_user_seq = #{userSeq} AND e.from_post_seq IS NULL AND e.proposal_detail IS NOT NULL
+               THEN u_from.nickname
+             WHEN e.from_user_seq = #{userSeq} AND e.from_post_seq IS NOT NULL AND e.proposal_detail IS NULL
+               THEN u_from.nickname
+             WHEN e.to_user_seq = #{userSeq} AND e.from_post_seq IS NOT NULL AND e.proposal_detail IS NULL
+               THEN u_to.nickname
+             ELSE NULL
+             END AS user_nickname,
+           #{userSeq} AS user_seq
+    FROM experience e
+           LEFT JOIN post p ON p.seq = e.from_post_seq
+           LEFT JOIN `user` u_from ON u_from.seq = e.from_user_seq
+           LEFT JOIN `user` u_to ON u_to.seq = e.to_user_seq
+    WHERE ((e.from_post_seq IS NULL AND e.proposal_detail IS NOT NULL AND e.to_user_seq IS NOT NULL)
+      OR (e.from_post_seq IS NOT NULL AND e.proposal_detail IS NULL AND e.from_user_seq IS NOT NULL)
+      )
+      AND (e.from_user_seq = #{userSeq} OR e.to_user_seq = #{userSeq})
+  </select>
+
+</mapper>
