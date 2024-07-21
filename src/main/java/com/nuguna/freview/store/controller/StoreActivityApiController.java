@@ -3,6 +3,7 @@ package com.nuguna.freview.store.controller;
 import com.nuguna.freview.store.dto.request.page.StoreActivityPageRequestDTO;
 import com.nuguna.freview.store.dto.response.StoreActivitySendLikeResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreActivitySendZzimResponseDTO;
+import com.nuguna.freview.store.dto.response.StoreActivityWrittenPostResponseDTO;
 import com.nuguna.freview.store.dto.response.page.StoreActivityPageResponseDTO;
 import com.nuguna.freview.store.service.StoreActivityPageService;
 import java.util.List;
@@ -38,11 +39,18 @@ public class StoreActivityApiController {
     return sendZzim;
   }
 
+  @RequestMapping(value = "/written-post", method = RequestMethod.GET)
+  public List<StoreActivityWrittenPostResponseDTO> storeActivityWrittenPost(@RequestParam("userSeq") Long userSeq) {
+    List<StoreActivityWrittenPostResponseDTO> writtenPost = storeActivityPageService.storeActivityPageWrittenPost(userSeq);
+    return writtenPost;
+  }
+
   public StoreActivityPageResponseDTO storeActivityPage(@RequestBody StoreActivityPageRequestDTO reqDto) {
     Long userSeq = reqDto.getUserSeq();
     List<StoreActivitySendLikeResponseDTO> sendLike = storeActivityPageService.storeActivityPageSendLike(userSeq);
     List<StoreActivitySendZzimResponseDTO> sendZzim = storeActivityPageService.storeActivityPageSendZzim(userSeq);
-    return new StoreActivityPageResponseDTO(sendLike, sendZzim);
+    List<StoreActivityWrittenPostResponseDTO> writtenPost = storeActivityPageService.storeActivityPageWrittenPost(userSeq);
+    return new StoreActivityPageResponseDTO(sendLike, sendZzim, writtenPost);
   }
 
 }
