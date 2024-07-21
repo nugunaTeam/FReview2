@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.admin.mapper.ExperienceMapper">
+
+  <!-- resultMap -->
+  <!-- Experience resultMap -->
+  <resultMap id="experienceResultMap" type="com.nuguna.freview.admin.dto.ExperienceLogDTO">
+    <id property="seq" column="seq"/>
+    <result property="fromUserSeq" column="from_user_seq"/>
+    <result property="toUserSeq" column="to_user_seq"/>
+    <result property="fromPostSeq" column="from_post_seq"/>
+    <result property="status" column="status"/>
+  </resultMap>
+
+  <!-- 'NOSHOW'인 experience 데이터 조회 -->
+  <select id="selectExperiencesToNoShow" parameterType="long" resultMap="experienceResultMap">
+    SELECT seq, from_user_seq, to_user_seq, from_post_seq, status
+    FROM experience
+    WHERE status = 'NOSHOW' AND seq > #{lastProcessedSeq}
+    ORDER BY seq ASC
+    LIMIT 100
+  </select>
+
+</mapper>
