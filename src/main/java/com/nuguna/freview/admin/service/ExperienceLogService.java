@@ -27,9 +27,9 @@ public class ExperienceLogService {
     this.experiencePostProcessingLogMapper = experiencePostProcessingLogMapper;
   }
 
-  @Scheduled(fixedRate = 1000)
+  @Scheduled(cron = "0 0 12,0 * * *")
   @Transactional
-  public void processExperiences() {
+  public void processNoShowExperiences() {
 
     Long lastProcessedSeq = experiencePostProcessingLogMapper.getLastProcessedSeq();
     if (lastProcessedSeq == null) {
