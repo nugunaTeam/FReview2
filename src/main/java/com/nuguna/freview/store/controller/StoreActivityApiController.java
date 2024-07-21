@@ -2,6 +2,7 @@ package com.nuguna.freview.store.controller;
 
 import com.nuguna.freview.store.dto.request.page.StoreActivityPageRequestDTO;
 import com.nuguna.freview.store.dto.response.StoreActivitySendLikeResponseDTO;
+import com.nuguna.freview.store.dto.response.StoreActivitySendZzimResponseDTO;
 import com.nuguna.freview.store.dto.response.page.StoreActivityPageResponseDTO;
 import com.nuguna.freview.store.service.StoreActivityPageService;
 import java.util.List;
@@ -31,10 +32,17 @@ public class StoreActivityApiController {
     return sendLike;
   }
 
+  @RequestMapping(value = "/send-zzim", method = RequestMethod.GET)
+  public List<StoreActivitySendZzimResponseDTO> storeActivitySendZzim(@RequestParam("userSeq") Long userSeq) {
+    List<StoreActivitySendZzimResponseDTO> sendZzim = storeActivityPageService.storeActivityPageSendZzim(userSeq);
+    return sendZzim;
+  }
+
   public StoreActivityPageResponseDTO storeActivityPage(@RequestBody StoreActivityPageRequestDTO reqDto) {
     Long userSeq = reqDto.getUserSeq();
     List<StoreActivitySendLikeResponseDTO> sendLike = storeActivityPageService.storeActivityPageSendLike(userSeq);
-    return new StoreActivityPageResponseDTO(sendLike);
+    List<StoreActivitySendZzimResponseDTO> sendZzim = storeActivityPageService.storeActivityPageSendZzim(userSeq);
+    return new StoreActivityPageResponseDTO(sendLike, sendZzim);
   }
 
 }

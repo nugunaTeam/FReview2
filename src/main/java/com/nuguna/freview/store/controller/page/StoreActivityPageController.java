@@ -2,6 +2,7 @@ package com.nuguna.freview.store.controller.page;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nuguna.freview.store.dto.response.StoreActivitySendLikeResponseDTO;
+import com.nuguna.freview.store.dto.response.StoreActivitySendZzimResponseDTO;
 import com.nuguna.freview.store.service.StoreActivityPageService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,9 @@ public class StoreActivityPageController {
   @RequestMapping("/store/activity")
   public String storeActivityPage(@RequestParam Long userSeq, Model model) throws JsonProcessingException {
     List<StoreActivitySendLikeResponseDTO> sendLike = storeActivityPageService.storeActivityPageSendLike(userSeq);
+    List<StoreActivitySendZzimResponseDTO> sendZzim = storeActivityPageService.storeActivityPageSendZzim(userSeq);
     model.addAttribute("sendLike", sendLike);
+    model.addAttribute("sendZzim", sendZzim);
     return "store-activity-page";
   }
 }
