@@ -24,6 +24,16 @@
     <result property="createdAt" column="created_at"/>
   </resultMap>
 
+  <resultMap id="StoreActivityPageWrittenPostResultMap"
+    type="com.nuguna.freview.store.dto.response.StoreActivityWrittenPostResponseDTO">
+    <result property="userSeq" column="user_seq"/>
+    <result property="title" column="title"/>
+    <result property="content" column="content"/>
+    <result property="experienceDate" column="experience_date"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="likeCount" column="likeCount"/>
+  </resultMap>
+
   <select id="storeActivityPageSendLike" resultMap="StoreActivityPageSendLikeResultMap ">
     SELECT p.seq         AS post_seq,
            p.title       AS post_title,
@@ -40,18 +50,28 @@
   </select>
 
   <select id="storeActivityPageSendZzim" resultMap="StoreActivityPageSendZzimResultMap">
-    SELECT u.nickname, u.code, zz.from_user_seq, zz.to_user_seq, zz.created_at, IFNULL(zzc.zzimCount, 0) AS zzimCount
+    SELECT u.nickname,
+           u.code,
+           zz.from_user_seq,
+           zz.to_user_seq,
+           zz.created_at,
+           IFNULL(zzc.zzimCount, 0) AS zzimCount
     FROM `user` u
-           JOIN (
-      SELECT z.from_user_seq, z.to_user_seq, z.created_at
-      FROM ZZIM z
-      WHERE z.from_user_seq = 41
-    ) zz ON u.seq = zz.to_user_seq
-           LEFT JOIN (
-      SELECT to_user_seq, COUNT(*) AS zzimCount
-      FROM ZZIM
-      GROUP BY to_user_seq
-    ) zzc ON u.seq = zzc.to_user_seq
+           JOIN (SELECT z.from_user_seq, z.to_user_seq, z.created_at
+                 FROM ZZIM z
+                 WHERE z.from_user_seq = #{userSeq}) zz ON u.seq = zz.to_user_seq
+           LEFT JOIN (SELECT to_user_seq, COUNT(*) AS zzimCount
+                      FROM ZZIM
+                      GROUP BY to_user_seq) zzc ON u.seq = zzc.to_user_seq
   </select>
+
+  <select id="storeActivityPageWrittenPost" resultMap="StoreActivityPageWrittenPostResultMap">
+    SELECT p.user_seq, p.title, p.content, p.experience_date, p.created_at, COUNT(l.post_seq) AS likeCount
+    FROM post p
+           LEFT JOIN `like` l ON l.post_seq = p.seq
+    WHERE p.user_seq = #{userSeq}
+    GROUP BY p.seq, p.title, p.content, p.experience_date, p.created_at
+  </select>
+
 
 </mapper>
