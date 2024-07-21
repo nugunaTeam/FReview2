@@ -31,7 +31,7 @@ public class LikeLogService {
     this.likePostProcessingLogMapper = likePostProcessingLogMapper;
   }
 
-  @Scheduled(fixedRate = 1000)
+  @Scheduled(fixedRate = 100000000)
   @Transactional
   public void processLikeLogs() {
 
