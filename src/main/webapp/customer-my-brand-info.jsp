@@ -51,8 +51,8 @@
 
     </style>
 
-    <link rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <%-- <link rel="stylesheet"
+           href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">--%>
     <style>
       .alert-custom {
         background-color: transparent;
@@ -135,10 +135,10 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    <%--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossorigin="anonymous">
+          crossorigin="anonymous">--%>
 
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -847,47 +847,12 @@
                                              style="font-size: medium; color: indianred;">
                                             노쇼 상태인 리뷰는 노출되지 않습니다.
                                         </div>
-                                        <%--<div class="pagination-container">
-                                            <c:if test="${reviewPageInfo.hasPrevious}">
-                                                <button id="prev-block-button"
-                                                        class="btn btn-primary edit-btn">&lt;
-                                                </button>
-                                            </c:if>
-                                            <div id="page-buttons"
-                                                 class="d-flex justify-content-center mx-2">
-                                                <c:forEach var="page"
-                                                           begin="${reviewPageInfo.startPage}"
-                                                           end="${reviewPageInfo.endPage}">
-                                                    <c:choose>
-                                                        <c:when test="${page == reviewPageInfo.currentPage}">
-                                                            <button class="btn btn-secondary edit-btn"
-                                                                    disabled>${page}</button>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <button class="btn btn-primary edit-btn"
-                                                                    onclick="loadPage(${page})">${page}</button>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </c:forEach>
-                                            </div>
-                                            <c:if test="${reviewPageInfo.hasNext}">
-                                                <button id="next-block-button"
-                                                        class="btn btn-primary edit-btn">&gt;
-                                                </button>
-                                            </c:if>
-                                        </div>--%>
                                         <div class="pagination-container">
-                                            <%--<c:if test="${reviewPageInfo.hasPrevious}">
-                                                <button id="prev-block-button"
-                                                        class="btn btn-primary edit-btn">&lt;
-                                                </button>
-                                            </c:if>--%>
                                             <button id="prev-block-button"
                                                     class="btn btn-primary edit-btn"
                                                     style="${reviewPageInfo.hasPrevious ? '' : 'display:none;'}">
                                                 &lt;
                                             </button>
-
                                             <div id="page-buttons"
                                                  class="d-flex justify-content-center mx-2">
                                                 <c:forEach var="page"
@@ -910,11 +875,6 @@
                                                     style="${reviewPageInfo.hasNext ? '' : 'display:none;'}">
                                                 &gt;
                                             </button>
-                                            <%--<c:if test="${reviewPageInfo.hasNext}">
-                                                <button id="next-block-button"
-                                                        class="btn btn-primary edit-btn">&gt;
-                                                </button>
-                                            </c:if>--%>
                                         </div>
                                     </div>
                                 </div>
@@ -945,7 +905,8 @@
                                                        name="reviewSeq">
                                                 <input type="hidden" id="userSeq" name="userSeq"
                                                        value="${userSeq}">
-                                                <button type="submit" class="btn btn-primary">등록
+                                                <button id="reviewInsert" <%--type="submit"--%>
+                                                        class="btn btn-primary">등록
                                                 </button>
                                             </form>
                                         </div>
@@ -955,7 +916,10 @@
 
 
                             <script>
+                              currentReviewLogPage = 1;
+
                               $(document).ready(function () {
+
                                 $('#reviewModal').on('show.bs.modal', function (event) {
                                   var button = $(event.relatedTarget);
                                   var reviewSeq = button.data('review-seq');
@@ -977,14 +941,15 @@
                                     contentType: 'application/json',
                                     data: JSON.stringify(formData),
                                     success: function (response) {
+                                      console.log(response);
                                       var reviewSeq = formData.reviewSeq;
                                       var reviewUrl = response.reviewUrl;
                                       var reviewButton = $(
                                           'button[data-review-seq="' + reviewSeq + '"]');
                                       reviewButton.replaceWith('<a href="' + reviewUrl
                                           + '" class="btn btn-success btn-sm">리뷰 확인</a>');
-                                      alert('리뷰 등록이 완료되었습니다.');
                                       $('#reviewModal').modal('hide');
+                                      alert('리뷰 등록이 완료되었습니다.');
                                     },
                                     error: function (err) {
                                       console.log(err);
@@ -1067,6 +1032,7 @@
                                           '</tr>';
                                       reviewLogTableBody.append(reviewRow);
                                     });
+                                    currentReviewLogPage = page;
                                     initializePagination(response.reviewPageInfo);
                                   },
                                   error: function (err) {
@@ -1097,8 +1063,6 @@
                                 hasPrevious: ${reviewPageInfo.hasPrevious},
                                 hasNext: ${reviewPageInfo.hasNext}
                               };
-                              // 초기 페이지 로드 시 페이지네이션 초기화
-                              <%--var initialPageInfo = ${reviewPageInfo}; // 서버에서 전달받은 초기 페이지 정보--%>
                               initializePagination(reviewPageInfo);
                             </script>
 
@@ -1123,10 +1087,10 @@
 <!-- jquery  -->
 
 <!-- icon bootstrap -->
-<script
+<%--<script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>--%>
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
