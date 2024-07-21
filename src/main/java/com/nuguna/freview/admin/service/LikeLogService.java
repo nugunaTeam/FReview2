@@ -22,7 +22,6 @@ public class LikeLogService {
   private final LikeAccumulationMapper likeAccumulationMapper;
   private final LikePostProcessingLogMapper likePostProcessingLogMapper;
 
-
   @Autowired
   public LikeLogService(LikeLogMapper likeMapper, LikeAccumulationMapper likeAccumulationMapper,
       LikePostProcessingLogMapper likePostProcessingLogMapper) {
@@ -34,7 +33,6 @@ public class LikeLogService {
   @Scheduled(fixedRate = 1000)
   @Transactional
   public void processLikeLogs() {
-
     Long lastProcessedSeq = likePostProcessingLogMapper.getLastProcessedSeq();
     if (lastProcessedSeq == null) {
       lastProcessedSeq = 0L;
@@ -48,7 +46,7 @@ public class LikeLogService {
               Collectors.summingLong(log -> log.getCode().equals("LIKE") ? 1L : -1L)));
 
       likeCounts.forEach((postSeq, count) -> {
-        LikeAccumulationVO currentAccumulation = likeAccumulationMapper.findByPostSeq(postSeq);
+        LikeAccumulationVO currentAccumulation = likeAccumulationMapper.getByPostSeq(postSeq);
         if (currentAccumulation == null) {
           currentAccumulation = new LikeAccumulationVO(postSeq, count);
           likeAccumulationMapper.insert(currentAccumulation);

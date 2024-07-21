@@ -12,14 +12,16 @@
   </resultMap>
 
   <!-- SQL 쿼리문 -->
-  <select id="findByPostSeq" parameterType="long" resultMap="likeAccumulationMap">
+  <select id="getByPostSeq" parameterType="long" resultMap="likeAccumulationMap">
     SELECT post_seq, total_like FROM like_accumulation
     WHERE post_seq = #{postSeq}
   </select>
+
   <insert id="insert">
     INSERT INTO like_accumulation (post_seq, total_like)
     VALUES (#{postSeq}, #{totalLike})
   </insert>
+
   <update id="update">
     UPDATE like_accumulation
     SET total_like = #{totalLike}
