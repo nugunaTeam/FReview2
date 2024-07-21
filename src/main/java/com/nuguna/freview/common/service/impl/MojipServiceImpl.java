@@ -5,9 +5,11 @@ import com.nuguna.freview.common.mapper.MojipMapper;
 import com.nuguna.freview.common.service.MojipService;
 import java.util.Date;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class MojipServiceImpl implements MojipService {
 
@@ -20,7 +22,7 @@ public class MojipServiceImpl implements MojipService {
 
   @Override
   public List<MojipPostDetailDTO> getMojipList(Long previousPostSeq, String searchWord, int pageSize) {
-    if (searchWord == null) {
+    if (searchWord == null || searchWord.isEmpty()) {
       return mojipMapper.selectMojipList(previousPostSeq, pageSize);
     } else {
       return mojipMapper.searchMojipList(previousPostSeq, pageSize, searchWord);
