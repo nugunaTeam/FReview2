@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.admin.mapper.ExperiencePostProcessingLogMapper">
+
+  <!-- 마지막으로 처리한 seq 로깅 -->
+  <insert id="updateLastProcessedSeq" parameterType="long">
+    insert into experience_postprocessing_log (last_processed_seq, purpose)
+    values (#{seq}, 'NOSHOW_ACCUMULATION')
+  </insert>
+
+  <!-- 최근 처리된 작업 번호 가져오기 -->
+  <select id="getLastProcessedSeq" resultType="long">
+    SELECT last_processed_seq
+    FROM experience_postprocessing_log
+    WHERE purpose = 'NOSHOW_ACCUMULATION'
+    order by seq DESC
+    limit 1
+  </select>
+
+</mapper>
