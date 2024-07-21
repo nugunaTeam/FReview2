@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StoreActivityWrittenPostResponseDTO {
+  private Long postSeq;
   private Long userSeq;
   private String title;
   private String content;
