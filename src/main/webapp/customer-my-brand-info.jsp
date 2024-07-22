@@ -149,7 +149,9 @@
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
                     <img src="/user/${userSeq}/profile"
                          alt="Profile"
-                         class="rounded-circle">
+                         class="rounded-circle profile-img"
+                         style="position: relative;
+                         overflow: hidden; border-radius: 50%;">
                     <span id="nickname-holder-head"
                           class="d-none d-md-block">${brandInfo.nickname}</span>
                 </a>
@@ -206,8 +208,9 @@
                     <img id="profile-img"
                          src="/user/${userSeq}/profile"
                          alt="Profile"
-                         class="rounded-circle clickable img-fluid"
-                         style="max-width: 100px; max-height: 100px; position: relative; overflow: hidden; border-radius: 50%;">
+                         class="rounded-circle clickable img-fluid profile-img"
+                         style="position: relative;
+                         overflow: hidden; border-radius: 50%;">
                     <input type="file" id="profile-img-upload" style="display: none;">
                     <h2 id="nickname-holder-section">${brandInfo.nickname}
                     </h2>
@@ -225,17 +228,17 @@
                     $('#profile-img-upload').change(function () {
                       var formData = new FormData();
                       formData.append('userSeq', ${userSeq});
-                      formData.append('profilePhoto', this.files[0]);
+                      formData.append('profileFile', this.files[0]);
 
                       $.ajax({
                         url: '<%=request.getContextPath()%>/api/customer/my/brand-info/profile-photo-url',
-                        method: 'PUT',
+                        method: 'POST',
                         data: formData,
                         contentType: false, // 필수
                         processData: false, // 필수
                         success: function (response) {
-                          // 서버에서 성공적으로 처리한 후의 작업
-                          $('#profile-img').attr('src', response.profilePhotoUrl);
+                          var newImageUrl = "/user/${userSeq}/profile?" + new Date().getTime();
+                          $('.profile-img').attr('src', newImageUrl);
                           alert('프로필 사진이 업데이트 되었습니다.');
                         },
                         error: function (error) {
