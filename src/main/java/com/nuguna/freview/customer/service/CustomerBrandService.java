@@ -1,35 +1,35 @@
 package com.nuguna.freview.customer.service;
 
-import com.nuguna.freview.customer.dto.request.CustomerAgeGroupUpdateRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerFoodTypesUpdateRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerIntroduceUpdateRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerNicknameUpdateRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerProfilePhotoUpdateRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerTagsUpdateRequestDTO;
-import com.nuguna.freview.customer.dto.response.CustomerAgeGroupUpdateResponseDTO;
-import com.nuguna.freview.customer.dto.response.CustomerFoodTypesUpdateResponseDTO;
-import com.nuguna.freview.customer.dto.response.CustomerIntroduceUpdateResponseDTO;
-import com.nuguna.freview.customer.dto.response.CustomerNicknameUpdateResponseDTO;
-import com.nuguna.freview.customer.dto.response.CustomerProfilePhotoUpdateResponseDTO;
-import com.nuguna.freview.customer.dto.response.CustomerTagsUpdateResponseDTO;
+import com.nuguna.freview.customer.dto.request.CustomerMyAgeGroupUpdateRequestDTO;
+import com.nuguna.freview.customer.dto.request.CustomerMyFoodTypesUpdateRequestDTO;
+import com.nuguna.freview.customer.dto.request.CustomerMyIntroduceUpdateRequestDTO;
+import com.nuguna.freview.customer.dto.request.CustomerMyNicknameUpdateRequestDTO;
+import com.nuguna.freview.customer.dto.request.CustomerMyProfilePhotoUpdateRequestDTO;
+import com.nuguna.freview.customer.dto.request.CustomerMyTagsUpdateRequestDTO;
+import com.nuguna.freview.customer.dto.response.CustomerMyAgeGroupUpdateResponseDTO;
+import com.nuguna.freview.customer.dto.response.CustomerMyFoodTypesUpdateResponseDTO;
+import com.nuguna.freview.customer.dto.response.CustomerMyIntroduceUpdateResponseDTO;
+import com.nuguna.freview.customer.dto.response.CustomerMyNicknameUpdateResponseDTO;
+import com.nuguna.freview.customer.dto.response.CustomerMyProfilePhotoUpdateResponseDTO;
+import com.nuguna.freview.customer.dto.response.CustomerMyTagsUpdateResponseDTO;
 
 public interface CustomerBrandService {
 
-  CustomerNicknameUpdateResponseDTO updateCustomerNickname(
-      CustomerNicknameUpdateRequestDTO customerNicknameUpdateRequestDTO);
+  CustomerMyNicknameUpdateResponseDTO updateCustomerNickname(
+      CustomerMyNicknameUpdateRequestDTO customerMyNicknameUpdateRequestDTO);
 
-  CustomerAgeGroupUpdateResponseDTO updateCustomerAgeGroup(
-      CustomerAgeGroupUpdateRequestDTO customerAgeGroupUpdateRequestDTO);
+  CustomerMyAgeGroupUpdateResponseDTO updateCustomerAgeGroup(
+      CustomerMyAgeGroupUpdateRequestDTO customerMyAgeGroupUpdateRequestDTO);
 
-  CustomerProfilePhotoUpdateResponseDTO updateCustomerPhotoUrl(
-      CustomerProfilePhotoUpdateRequestDTO customerProfilePhotoUpdateRequestDTO);
+  CustomerMyProfilePhotoUpdateResponseDTO updateCustomerPhotoUrl(
+      CustomerMyProfilePhotoUpdateRequestDTO customerMyProfilePhotoUpdateRequestDTO);
 
-  CustomerIntroduceUpdateResponseDTO updateCustomerIntroduce(
-      CustomerIntroduceUpdateRequestDTO customerIntroduceUpdateRequestDTO);
+  CustomerMyIntroduceUpdateResponseDTO updateCustomerIntroduce(
+      CustomerMyIntroduceUpdateRequestDTO customerMyIntroduceUpdateRequestDTO);
 
-  CustomerFoodTypesUpdateResponseDTO updateCustomerFoodTypes(
-      CustomerFoodTypesUpdateRequestDTO customerFoodTypesUpdateRequestDTO);
+  CustomerMyFoodTypesUpdateResponseDTO updateCustomerFoodTypes(
+      CustomerMyFoodTypesUpdateRequestDTO customerMyFoodTypesUpdateRequestDTO);
 
-  CustomerTagsUpdateResponseDTO updateCustomerTags(
-      CustomerTagsUpdateRequestDTO customerTagsUpdateRequestDTO);
+  CustomerMyTagsUpdateResponseDTO updateCustomerTags(
+      CustomerMyTagsUpdateRequestDTO customerMyTagsUpdateRequestDTO);
 }

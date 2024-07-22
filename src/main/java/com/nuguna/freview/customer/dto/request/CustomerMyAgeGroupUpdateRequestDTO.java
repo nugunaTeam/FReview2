@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerAgeGroupUpdateRequestDTO {
+public class CustomerMyAgeGroupUpdateRequestDTO {
 
   @Min(1)
   private Long userSeq;

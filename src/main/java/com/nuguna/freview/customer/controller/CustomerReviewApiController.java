@@ -1,8 +1,8 @@
 package com.nuguna.freview.customer.controller;
 
+import com.nuguna.freview.customer.dto.request.CustomerMyReviewRegisterRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerMyReviewsRetrieveRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerReviewRegisterRequestDTO;
-import com.nuguna.freview.customer.dto.response.CustomerReviewRegisterResponseDTO;
+import com.nuguna.freview.customer.dto.response.CustomerMyReviewRegisterResponseDTO;
 import com.nuguna.freview.customer.dto.response.ReviewLogInfoDTO;
 import com.nuguna.freview.customer.service.CustomerReviewService;
 import java.util.List;
@@ -29,11 +29,11 @@ public class CustomerReviewApiController {
   }
 
   @RequestMapping(value = "/review", method = RequestMethod.POST)
-  public ResponseEntity<CustomerReviewRegisterResponseDTO> registerCustomerReview(
-      @Valid @RequestBody CustomerReviewRegisterRequestDTO customerReviewRegisterRequestDTO
+  public ResponseEntity<CustomerMyReviewRegisterResponseDTO> registerCustomerReview(
+      @Valid @RequestBody CustomerMyReviewRegisterRequestDTO customerMyReviewRegisterRequestDTO
   ) {
-    CustomerReviewRegisterResponseDTO responseDTO = customerReviewService.registerCustomerReview(
-        customerReviewRegisterRequestDTO);
+    CustomerMyReviewRegisterResponseDTO responseDTO = customerReviewService.registerCustomerReview(
+        customerMyReviewRegisterRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
   }
 
