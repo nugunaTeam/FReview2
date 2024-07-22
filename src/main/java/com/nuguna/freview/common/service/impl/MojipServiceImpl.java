@@ -1,5 +1,6 @@
 package com.nuguna.freview.common.service.impl;
 
+import com.nuguna.freview.admin.mapper.UserFoodTypeMapper;
 import com.nuguna.freview.admin.mapper.UserInterestLogMapper;
 import com.nuguna.freview.common.dto.response.MojipPostDetailDTO;
 import com.nuguna.freview.common.mapper.MojipMapper;
@@ -8,6 +9,7 @@ import com.nuguna.freview.common.vo.user.foodType.FoodDish;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,11 +21,14 @@ public class MojipServiceImpl implements MojipService {
 
   private final MojipMapper mojipMapper;
   private final UserInterestLogMapper userInterestLogMapper;
+  private final UserFoodTypeMapper userFoodTypeMapper;
 
   @Autowired
-  public MojipServiceImpl(MojipMapper mojipMapper, UserInterestLogMapper userInterestLogMapper) {
+  public MojipServiceImpl(MojipMapper mojipMapper, UserInterestLogMapper userInterestLogMapper,
+      UserFoodTypeMapper userFoodTypeMapper) {
     this.mojipMapper = mojipMapper;
     this.userInterestLogMapper = userInterestLogMapper;
+    this.userFoodTypeMapper = userFoodTypeMapper;
   }
 
   @Override
@@ -56,8 +61,10 @@ public class MojipServiceImpl implements MojipService {
   }
 
   @Override
+  @Transactional
   public boolean applyMojip(Long fromUserSeq, Long toUserSeq, Long fromPostSeq) {
     int result = mojipMapper.applyMojip(fromUserSeq, toUserSeq, fromPostSeq);
+    insertMojipLog(fromUserSeq, toUserSeq);
     return result == 1;
   }
 
@@ -65,5 +72,15 @@ public class MojipServiceImpl implements MojipService {
     Arrays.stream(FoodDish.values())
         .filter(food -> searchWord.contains(food.getCode()))
         .forEach(food -> userInterestLogMapper.insertInterestLog(requesterSeq, "SEARCH", food.getFoodType().getCode(), food.getCode()));
+  }
+
+  private void insertMojipLog(Long fromUserSeq, Long toUserSeq) {
+    List<Map<String, Object>> foodTypes = userFoodTypeMapper.getUserFoodTypes(toUserSeq);
+
+    foodTypes.stream()
+        .forEach(foodType -> {
+          userInterestLogMapper.insertInterestLog(fromUserSeq, "APPLY",
+              (String) foodType.get("code"), (String) foodType.get("dish"));
+        });
   }
 }
