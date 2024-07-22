@@ -9,6 +9,7 @@
     <result property="userSeq" column="user_seq"/>
     <result property="writtenSeq" column="post_author_seq"/>
     <result property="postSeq" column="post_seq"/>
+    <result property="postCode" column="post_code"/>
     <result property="title" column="post_title"/>
     <result property="content" column="post_content"/>
     <result property="likeCount" column="like_count"/>
@@ -21,7 +22,10 @@
     <result property="toUserSeq" column="to_user_seq"/>
     <result property="nickname" column="nickname"/>
     <result property="code" column="code"/>
+    <result property="storeLocation" column="store_location" />
     <result property="zzimCount" column="zzimCount"/>
+    <result property="foodTypeCodes" column="foodTypeCodes" />
+    <result property="dishes" column="dishes" />
     <result property="createdAt" column="created_at"/>
   </resultMap>
 
@@ -30,25 +34,18 @@
     <result property="postSeq" column="seq"/>
     <result property="userSeq" column="user_seq"/>
     <result property="title" column="title"/>
+    <result property="code" column="code"/>
     <result property="content" column="content"/>
     <result property="experienceDate" column="experience_date"/>
     <result property="createdAt" column="created_at"/>
     <result property="likeCount" column="likeCount"/>
   </resultMap>
 
-  <resultMap id="StoreActivityPageWrittenReplyResultMap"
-    type="com.nuguna.freview.store.dto.response.StoreActivityWrittenReplyResponseDTO">
-    <result property="userSeq" column="user_seq"/>
-    <result property="postSeq" column="post_seq"/>
-    <result property="title" column="post_title"/>
-    <result property="content" column="reply_content"/>
-    <result property="createdAt" column="reply_created_at"/>
-  </resultMap>
-
   <select id="storeActivityPageSendLike" resultMap="StoreActivityPageSendLikeResultMap ">
     SELECT l.user_seq    AS user_seq,
            p.seq         AS post_seq,
            p.title       AS post_title,
+           p.code        AS post_code,
            p.content     AS post_content,
            u.seq         AS post_author_seq,
            l.created_at  AS like_created_at,
@@ -62,25 +59,55 @@
   </select>
 
   <select id="storeActivityPageSendZzim" resultMap="StoreActivityPageSendZzimResultMap">
-    SELECT u.nickname,
-           u.code,
-           zz.from_user_seq,
-           zz.to_user_seq,
-           zz.created_at,
-           IFNULL(zzc.zzimCount, 0) AS zzimCount
-    FROM `user` u
-           JOIN (SELECT z.from_user_seq, z.to_user_seq, z.created_at
-                 FROM ZZIM z
-                 WHERE z.from_user_seq = #{userSeq}) zz ON u.seq = zz.to_user_seq
-           LEFT JOIN (SELECT to_user_seq, COUNT(*) AS zzimCount
-                      FROM ZZIM
-                      GROUP BY to_user_seq) zzc ON u.seq = zzc.to_user_seq
+    SELECT
+      u.nickname,
+      u.code,
+      u.store_location,
+      zz.from_user_seq,
+      zz.to_user_seq,
+      zz.created_at,
+      IFNULL(zzc.zzimCount, 0) AS zzimCount,
+      GROUP_CONCAT(ft.code SEPARATOR ', ') AS foodTypeCodes,
+      GROUP_CONCAT(ft.dish SEPARATOR ', ') AS dishes
+    FROM
+      `user` u
+        JOIN (
+        SELECT
+          z.from_user_seq,
+          z.to_user_seq,
+          z.created_at
+        FROM
+          ZZIM z
+        WHERE
+          z.from_user_seq = #{userSeq}
+      ) zz ON u.seq = zz.to_user_seq
+        LEFT JOIN (
+        SELECT
+          to_user_seq,
+          COUNT(*) AS zzimCount
+        FROM
+          ZZIM
+        GROUP BY
+          to_user_seq
+      ) zzc ON u.seq = zzc.to_user_seq
+        LEFT JOIN food_type ft ON u.code = ft.code
+    WHERE
+      zz.from_user_seq = #{userSeq}
+    GROUP BY
+      u.nickname,
+      u.code,
+      u.store_location,
+      zz.from_user_seq,
+      zz.to_user_seq,
+      zz.created_at,
+      zzc.zzimCount;
   </select>
 
   <select id="storeActivityPageWrittenPost" resultMap="StoreActivityPageWrittenPostResultMap">
     SELECT p.seq,
            p.user_seq,
            p.title,
+           p.code,
            p.content,
            p.experience_date,
            p.created_at,
@@ -89,17 +116,6 @@
            LEFT JOIN `like` l ON l.post_seq = p.seq
     WHERE p.user_seq = #{userSeq}
     GROUP BY p.seq, p.title, p.content, p.experience_date, p.created_at
-  </select>
-
-  <select id="storeActivityPageWrittenReply" resultMap="StoreActivityPageWrittenReplyResultMap">
-    SELECT r.seq AS user_seq,
-           r.content AS reply_content,
-           r.created_at AS reply_created_at,
-           p.seq AS post_seq,
-           p.title AS post_title
-    FROM `reply` r
-           JOIN `post` p ON r.post_seq = p.seq
-    WHERE r.user_seq = 1
   </select>
 
 </mapper>

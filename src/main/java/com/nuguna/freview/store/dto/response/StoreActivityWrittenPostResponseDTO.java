@@ -12,6 +12,7 @@ public class StoreActivityWrittenPostResponseDTO {
   private Long postSeq;
   private Long userSeq;
   private String title;
+  private String code;
   private String content;
   private Timestamp experienceDate;
   private Timestamp createdAt;
