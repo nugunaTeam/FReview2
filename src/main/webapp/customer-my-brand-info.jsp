@@ -132,7 +132,8 @@
         <ul class="d-flex align-items-center">
             <li class="nav-item dropdown pe-3">
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-                    <img src="${brandInfo.profilePhotoUrl}" alt="Profile"
+                    <img src="/user/${userSeq}/profile"
+                         alt="Profile"
                          class="rounded-circle">
                     <span id="nickname-holder-head"
                           class="d-none d-md-block">${brandInfo.nickname}</span>
@@ -187,7 +188,8 @@
             <div class="card">
                 <!-- profile  -->
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                    <img id="profile-img" src="${brandInfo.profilePhotoUrl}"
+                    <img id="profile-img"
+                         src="/user/${userSeq}/profile"
                          alt="Profile"
                          class="rounded-circle clickable">
                     <input type="file" id="profile-img-upload" style="display: none;">

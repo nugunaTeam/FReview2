@@ -14,7 +14,7 @@ import com.nuguna.freview.customer.dto.response.CustomerTagsUpdateResponseDTO;
 import com.nuguna.freview.customer.exception.AlreadyExistNicknameException;
 import com.nuguna.freview.customer.mapper.CustomerBrandMapper;
 import com.nuguna.freview.customer.service.CustomerBrandService;
-import com.nuguna.freview.global.FileConstants;
+import com.nuguna.freview.global.FileUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -63,22 +63,18 @@ public class CustomerBrandServiceImpl implements CustomerBrandService {
   @Override
   public CustomerProfilePhotoUpdateResponseDTO updateCustomerPhotoUrl(
       Long userSeq, MultipartFile profileFile) throws IOException {
-    
-    File uploadDirFile = new File(FileConstants.PROFILE_UPLOAD_DIR);
-    if (!uploadDirFile.exists()) {
-      uploadDirFile.mkdirs();
+
+    File uploadDir = new File(FileUtil.PROFILE_UPLOAD_DIR);
+    if (!uploadDir.exists()) {
+      uploadDir.mkdirs();
     }
 
-    String originalFilename = profileFile.getOriginalFilename();
-    String uuid = UUID.randomUUID().toString();
-    String newFilename = uuid + "-" + originalFilename;
-    File destinationFile = new File(uploadDirFile, newFilename);
+    String newFilename = UUID.randomUUID().toString();
+    File destinationFile = new File(uploadDir, newFilename);
     profileFile.transferTo(destinationFile);
 
-    String profilePhotoUrl = FileConstants.PROFILE_UPLOAD_DIR + newFilename;
-
-    customerBrandMapper.updateProfilePhotoUrl(userSeq, profilePhotoUrl);
-    return new CustomerProfilePhotoUpdateResponseDTO(profilePhotoUrl);
+    customerBrandMapper.updateProfilePhotoUrl(userSeq, newFilename);
+    return new CustomerProfilePhotoUpdateResponseDTO(newFilename);
   }
 
   @Override
