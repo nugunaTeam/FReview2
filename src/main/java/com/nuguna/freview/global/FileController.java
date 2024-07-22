@@ -1,6 +1,6 @@
 package com.nuguna.freview.global;
 
-import static com.nuguna.freview.global.FileUtil.getFullPath;
+import static com.nuguna.freview.global.FileUtil.getProfileFullPath;
 
 import com.nuguna.freview.customer.mapper.UserFileMapper;
 import java.net.MalformedURLException;
@@ -26,7 +26,7 @@ public class FileController {
   @RequestMapping("/user/{userSeq}/profile")
   public Resource downloadImage(@PathVariable Long userSeq) throws MalformedURLException {
     String filename = userFileMapper.getFilename(userSeq);
-    return new UrlResource("file:" + getFullPath(filename));
+    return new UrlResource("file:" + getProfileFullPath(filename));
   }
 
 }

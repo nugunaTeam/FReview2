@@ -1,7 +1,9 @@
 package com.nuguna.freview.customer.service.impl;
 
-import static com.nuguna.freview.global.FileUtil.PROFILE_UPLOAD_DIR;
-import static com.nuguna.freview.global.FileUtil.getNewFileName;
+import static com.nuguna.freview.global.FileUtil.getProfileDestinationFilePath;
+import static com.nuguna.freview.global.FileUtil.getResizedProfileFilePath;
+import static com.nuguna.freview.global.FileUtil.getSaveProfileFileName;
+import static com.nuguna.freview.global.FileUtil.resizeAndSave;
 
 import com.nuguna.freview.customer.dto.request.CustomerAgeGroupUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerFoodTypesUpdateRequestDTO;
@@ -65,18 +67,17 @@ public class CustomerBrandServiceImpl implements CustomerBrandService {
   public CustomerProfilePhotoUpdateResponseDTO updateCustomerPhotoUrl(
       Long userSeq, MultipartFile profileFile) throws IOException {
 
-    File uploadDir = new File(PROFILE_UPLOAD_DIR);
-    if (!uploadDir.exists()) {
-      uploadDir.mkdirs();
-    }
+    // 저장할 프로필 파일 이름
+    String saveProfileFilename = getSaveProfileFileName(profileFile.getOriginalFilename());
+    // 프로필 파일 원본이 저장될 위치
+    File destinationFilePath = getProfileDestinationFilePath(saveProfileFilename);
+    profileFile.transferTo(destinationFilePath);
 
-    String newFilename = getNewFileName(profileFile.getOriginalFilename());
-    File destinationFile = new File(uploadDir, newFilename);
-    profileFile.transferTo(destinationFile);
-    log.info("newFilename = {}", newFilename);
+    File resizedFilePath = getResizedProfileFilePath(saveProfileFilename);
+    resizeAndSave(destinationFilePath, resizedFilePath);
 
-    customerBrandMapper.updateProfilePhotoUrl(userSeq, newFilename);
-    return new CustomerProfilePhotoUpdateResponseDTO(newFilename);
+    customerBrandMapper.updateProfilePhotoUrl(userSeq, saveProfileFilename);
+    return new CustomerProfilePhotoUpdateResponseDTO(saveProfileFilename);
   }
 
   @Override
