@@ -19,18 +19,10 @@
     type="com.nuguna.freview.store.dto.response.StoreNotificationReceivedZzimResponseDTO">
     <result property="userSeq" column="to_user_seq"/>
     <result property="zzimUserSeq" column="from_user_seq"/>
+    <result property="nickname" column="nickname" />
     <result property="code" column="code"/>
     <result property="createdAt" column="created_at"/>
     <result property="zzimCount" column="zzimCount"/>
-  </resultMap>
-
-  <resultMap id="storeNotificationReceivedReplyResultMap"
-    type="com.nuguna.freview.store.dto.response.StoreNotificationReceivedReplyResponseDTO">
-    <result property="userSeq" column="user_seq"/>
-    <result property="postSeq" column="post_seq"/>
-    <result property="title" column="post_title"/>
-    <result property="content" column="reply_content"/>
-    <result property="createdAt" column="reply_created_at"/>
   </resultMap>
 
   <resultMap id="storeNotificationExperienceResultMap"
@@ -75,22 +67,6 @@
            LEFT JOIN (SELECT from_user_seq, COUNT(*) AS zzimCount
                       FROM ZZIM
                       GROUP BY from_user_seq) zzc ON u.seq = zzc.from_user_seq
-  </select>
-
-  <select id="storeNotificationReceivedReply" resultMap="storeNotificationReceivedReplyResultMap">
-    SELECT r.user_seq   AS user_seq,
-           p.seq        AS post_seq,
-           p.title      AS post_title,
-           r.content    AS reply_content,
-           r.created_at AS reply_created_at
-    FROM `reply` r
-           JOIN `post` p ON r.post_seq = p.seq
-    WHERE r.user_seq != #{userSeq}
-      AND p.user_seq = #{userSeq}
-      AND CASE p.code
-            WHEN '공지' THEN 0
-            ELSE 1
-            END = 1
   </select>
 
   <select id="storeNotificationExperience" resultMap="storeNotificationExperienceResultMap">

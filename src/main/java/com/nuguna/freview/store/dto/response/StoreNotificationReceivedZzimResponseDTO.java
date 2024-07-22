@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class StoreNotificationReceivedZzimResponseDTO {
   private Long userSeq;
   private Long zzimUserSeq;
+  private String nickname;
   private String code;
   private Timestamp createdAt;
   private Long zzimCount;
