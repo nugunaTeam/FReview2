@@ -48,9 +48,11 @@ public class MojipServiceImpl implements MojipService {
   }
 
   @Override
+  @Transactional
   public boolean createMojip(Long userSeq, String title, Date applyStartDate,
       Date applyEndDate, Date experienceDate, String content) {
     int result = mojipMapper.insertMojip(userSeq, title, applyStartDate, applyEndDate, experienceDate, content);
+    insertMojipLog(userSeq, title + " " + content);
     return result == 1;
   }
 
@@ -64,7 +66,7 @@ public class MojipServiceImpl implements MojipService {
   @Transactional
   public boolean applyMojip(Long fromUserSeq, Long toUserSeq, Long fromPostSeq) {
     int result = mojipMapper.applyMojip(fromUserSeq, toUserSeq, fromPostSeq);
-    insertMojipLog(fromUserSeq, toUserSeq);
+    insertApplyLog(fromUserSeq, toUserSeq);
     return result == 1;
   }
 
@@ -74,7 +76,7 @@ public class MojipServiceImpl implements MojipService {
         .forEach(food -> userInterestLogMapper.insertInterestLog(requesterSeq, "SEARCH", food.getFoodType().getCode(), food.getCode()));
   }
 
-  private void insertMojipLog(Long fromUserSeq, Long toUserSeq) {
+  private void insertApplyLog(Long fromUserSeq, Long toUserSeq) {
     List<Map<String, Object>> foodTypes = userFoodTypeMapper.getUserFoodTypes(toUserSeq);
 
     foodTypes.stream()
@@ -82,5 +84,13 @@ public class MojipServiceImpl implements MojipService {
           userInterestLogMapper.insertInterestLog(fromUserSeq, "APPLY",
               (String) foodType.get("code"), (String) foodType.get("dish"));
         });
+  }
+
+  private void insertMojipLog(Long fromUserSeq, String text) {
+    for (FoodDish dish : FoodDish.values()) {
+      if (text.contains(dish.getCode())) {
+        userInterestLogMapper.insertInterestLog(fromUserSeq, "POST", dish.getFoodType().getCode(), dish.getCode());
+      }
+    }
   }
 }
