@@ -69,6 +69,21 @@
         opacity: 1;
       }
 
+      .profile-container {
+        width: 150px; /* 원하는 고정 가로 길이 */
+        height: 150px; /* 원하는 고정 세로 길이 */
+        position: relative;
+        overflow: hidden;
+        border-radius: 50%; /* 원형으로 만들기 위한 설정 */
+      }
+
+      .profile-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* 이미지의 중앙을 맞추고, 자르기 */
+        object-position: center; /* 중앙 위치 */
+      }
+
     </style>
 
     <meta charset="utf-8">
@@ -191,7 +206,8 @@
                     <img id="profile-img"
                          src="/user/${userSeq}/profile"
                          alt="Profile"
-                         class="rounded-circle clickable">
+                         class="rounded-circle clickable img-fluid"
+                         style="max-width: 100px; max-height: 100px; position: relative; overflow: hidden; border-radius: 50%;">
                     <input type="file" id="profile-img-upload" style="display: none;">
                     <h2 id="nickname-holder-section">${brandInfo.nickname}
                     </h2>

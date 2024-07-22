@@ -1,5 +1,8 @@
 package com.nuguna.freview.customer.service.impl;
 
+import static com.nuguna.freview.global.FileUtil.PROFILE_UPLOAD_DIR;
+import static com.nuguna.freview.global.FileUtil.getNewFileName;
+
 import com.nuguna.freview.customer.dto.request.CustomerAgeGroupUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerFoodTypesUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerIntroduceUpdateRequestDTO;
@@ -14,11 +17,9 @@ import com.nuguna.freview.customer.dto.response.CustomerTagsUpdateResponseDTO;
 import com.nuguna.freview.customer.exception.AlreadyExistNicknameException;
 import com.nuguna.freview.customer.mapper.CustomerBrandMapper;
 import com.nuguna.freview.customer.service.CustomerBrandService;
-import com.nuguna.freview.global.FileUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,14 +65,15 @@ public class CustomerBrandServiceImpl implements CustomerBrandService {
   public CustomerProfilePhotoUpdateResponseDTO updateCustomerPhotoUrl(
       Long userSeq, MultipartFile profileFile) throws IOException {
 
-    File uploadDir = new File(FileUtil.PROFILE_UPLOAD_DIR);
+    File uploadDir = new File(PROFILE_UPLOAD_DIR);
     if (!uploadDir.exists()) {
       uploadDir.mkdirs();
     }
 
-    String newFilename = UUID.randomUUID().toString();
+    String newFilename = getNewFileName(profileFile.getOriginalFilename());
     File destinationFile = new File(uploadDir, newFilename);
     profileFile.transferTo(destinationFile);
+    log.info("newFilename = {}", newFilename);
 
     customerBrandMapper.updateProfilePhotoUrl(userSeq, newFilename);
     return new CustomerProfilePhotoUpdateResponseDTO(newFilename);
