@@ -2,7 +2,6 @@ package com.nuguna.freview.store.controller;
 
 import com.nuguna.freview.store.dto.response.StoreNotificationExperienceResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreNotificationReceivedLikeResponseDTO;
-import com.nuguna.freview.store.dto.response.StoreNotificationReceivedReplyResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreNotificationReceivedZzimResponseDTO;
 import com.nuguna.freview.store.dto.response.page.StoreNotificationPageResponseDTO;
 import com.nuguna.freview.store.service.StoreNotificationPageService;
@@ -37,12 +36,6 @@ public class StoreNotificationApiController {
     return receivedZzim;
   }
 
-  @RequestMapping(value = "/received-reply", method = RequestMethod.GET)
-  public List<StoreNotificationReceivedReplyResponseDTO> receivedReply(@RequestParam("userSeq") Long userSeq) {
-    List<StoreNotificationReceivedReplyResponseDTO> receivedReply = storeNotificationPageService.storeNotificationReceivedReply(userSeq);
-    return receivedReply;
-  }
-
   @RequestMapping(value = "/experience-list", method = RequestMethod.GET)
   public List<StoreNotificationExperienceResponseDTO> experienceList(@RequestParam("userSeq") Long userSeq) {
     List<StoreNotificationExperienceResponseDTO> experience = storeNotificationPageService.storeNotificationExperience(userSeq);
@@ -52,9 +45,8 @@ public class StoreNotificationApiController {
   public StoreNotificationPageResponseDTO storeNotificationPage(@RequestParam("userSeq") Long userSeq) {
     List<StoreNotificationReceivedLikeResponseDTO> receivedLike = storeNotificationPageService.storeNotificationReceivedLike(userSeq);
     List<StoreNotificationReceivedZzimResponseDTO> receivedZzim = storeNotificationPageService.storeNotificationReceivedZzim(userSeq);
-    List<StoreNotificationReceivedReplyResponseDTO> receivedReply = storeNotificationPageService.storeNotificationReceivedReply(userSeq);
     List<StoreNotificationExperienceResponseDTO> experience = storeNotificationPageService.storeNotificationExperience(userSeq);
-    return new StoreNotificationPageResponseDTO(receivedLike, receivedZzim, receivedReply, experience);
+    return new StoreNotificationPageResponseDTO(receivedLike, receivedZzim, experience);
   }
 
 }
