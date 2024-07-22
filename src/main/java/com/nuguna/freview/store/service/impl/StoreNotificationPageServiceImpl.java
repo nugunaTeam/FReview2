@@ -2,7 +2,6 @@ package com.nuguna.freview.store.service.impl;
 
 import com.nuguna.freview.store.dto.response.StoreNotificationExperienceResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreNotificationReceivedLikeResponseDTO;
-import com.nuguna.freview.store.dto.response.StoreNotificationReceivedReplyResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreNotificationReceivedZzimResponseDTO;
 import com.nuguna.freview.store.mapper.StoreNotificationPageMapper;
 import com.nuguna.freview.store.service.StoreNotificationPageService;
@@ -29,11 +28,6 @@ public class StoreNotificationPageServiceImpl implements StoreNotificationPageSe
   @Override
   public List<StoreNotificationReceivedZzimResponseDTO> storeNotificationReceivedZzim(Long userSeq){
     return storeNotificationPageMapper.storeNotificationReceivedZzim(userSeq);
-  }
-
-  @Override
-  public List<StoreNotificationReceivedReplyResponseDTO> storeNotificationReceivedReply(Long userSeq){
-    return storeNotificationPageMapper.storeNotificationReceivedReply(userSeq);
   }
 
   @Override
