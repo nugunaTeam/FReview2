@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context allowCasualMultipartParsing="true"> <!-- 파일 업로드위해 허용한 것 :: allowCasualMultipartParsing="true" -->
+<Context allowCasualMultipartParsing="true">
+
 
 </Context>

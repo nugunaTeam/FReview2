@@ -4,7 +4,6 @@ import com.nuguna.freview.customer.dto.request.CustomerAgeGroupUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerFoodTypesUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerIntroduceUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerNicknameUpdateRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerProfilePhotoUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerTagsUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerAgeGroupUpdateResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerFoodTypesUpdateResponseDTO;
@@ -15,11 +14,18 @@ import com.nuguna.freview.customer.dto.response.CustomerTagsUpdateResponseDTO;
 import com.nuguna.freview.customer.exception.AlreadyExistNicknameException;
 import com.nuguna.freview.customer.mapper.CustomerBrandMapper;
 import com.nuguna.freview.customer.service.CustomerBrandService;
+import com.nuguna.freview.global.FileConstants;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Service
 @Transactional
 public class CustomerBrandServiceImpl implements CustomerBrandService {
@@ -56,12 +62,23 @@ public class CustomerBrandServiceImpl implements CustomerBrandService {
 
   @Override
   public CustomerProfilePhotoUpdateResponseDTO updateCustomerPhotoUrl(
-      CustomerProfilePhotoUpdateRequestDTO customerProfilePhotoUpdateRequestDTO) {
-    Long userSeq = customerProfilePhotoUpdateRequestDTO.getUserSeq();
-    String toProfilePhotoUrl = customerProfilePhotoUpdateRequestDTO.getToProfilePhotoUrl();
+      Long userSeq, MultipartFile profileFile) throws IOException {
+    
+    File uploadDirFile = new File(FileConstants.PROFILE_UPLOAD_DIR);
+    if (!uploadDirFile.exists()) {
+      uploadDirFile.mkdirs();
+    }
 
-    customerBrandMapper.updateProfilePhotoUrl(userSeq, toProfilePhotoUrl);
-    return new CustomerProfilePhotoUpdateResponseDTO(toProfilePhotoUrl);
+    String originalFilename = profileFile.getOriginalFilename();
+    String uuid = UUID.randomUUID().toString();
+    String newFilename = uuid + "-" + originalFilename;
+    File destinationFile = new File(uploadDirFile, newFilename);
+    profileFile.transferTo(destinationFile);
+
+    String profilePhotoUrl = FileConstants.PROFILE_UPLOAD_DIR + newFilename;
+
+    customerBrandMapper.updateProfilePhotoUrl(userSeq, profilePhotoUrl);
+    return new CustomerProfilePhotoUpdateResponseDTO(profilePhotoUrl);
   }
 
   @Override

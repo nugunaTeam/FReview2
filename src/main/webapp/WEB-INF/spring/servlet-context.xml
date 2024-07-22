@@ -5,7 +5,6 @@
   xmlns:mvc="http://www.springframework.org/schema/mvc"
   xmlns:context="http://www.springframework.org/schema/context"
   xmlns:tx="http://www.springframework.org/schema/tx"
-  xmlns:task="http://www.springframework.org/schema/task"
   xsi:schemaLocation="http://www.springframework.org/schema/mvc
 	http://www.springframework.org/schema/mvc/spring-mvc.xsd
 	http://www.springframework.org/schema/beans
@@ -13,8 +12,7 @@
 	http://www.springframework.org/schema/context
 	http://www.springframework.org/schema/context/spring-context.xsd
 	http://www.springframework.org/schema/tx
-	http://www.springframework.org/schema/tx/spring-tx.xsd
-	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd">
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
   <!--
   MariaDB ID/PW (src/main/resources/maria.properties)
   MyBatis 매퍼파일 (src/main/resources/mappers/ *-map.xml)
@@ -26,6 +24,7 @@
   <!-- ===============================[어노테이션 기반으로 동작]================================== -->
   <!--  어노테이션 기반 -->
   <mvc:annotation-driven/>
+
   <!-- 적용 대상 패키지 -->
   <context:component-scan base-package="com.nuguna.freview"/>
 
@@ -35,7 +34,8 @@
   <mvc:resources mapping="/assets/**" location="/assets/"/>
 
   <!-- Property Placeholder 설정 -->
-  <context:property-placeholder location="classpath:maria.properties,classpath:sendEmail.properties"/>
+  <context:property-placeholder
+    location="classpath:maria.properties,classpath:sendEmail.properties"/>
 
   <!-- =============================== /  +  @Controllers 리턴값 + .jsp     -->
   <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -115,7 +115,7 @@
   <!-- ################################################################################  -->
   <!-- =============================== datasource : 프로퍼티 파일을 사용한 형태 -->
 
-  <bean id="sendEmail" class="com.nuguna.freview.global.util.SendMailUtil" >
+  <bean id="sendEmail" class="com.nuguna.freview.global.util.SendMailUtil">
     <constructor-arg name="ENCODING" value="${gmail-encoding}"/>
     <constructor-arg name="PORT" value="${gmail-port}"/>
     <constructor-arg name="SMTPHOST" value="${gmail-smtphost}"/>
@@ -124,7 +124,7 @@
   </bean>
 
   <!-- =============================== scheduler 사용 -->
-  <task:scheduler id="jobScheduler" pool-size="10" />
-  <task:annotation-driven scheduler="jobScheduler" />
+  <!--<task:scheduler id="jobScheduler" pool-size="10" />
+  <task:annotation-driven scheduler="jobScheduler" />-->
 
 </beans>
