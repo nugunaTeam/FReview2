@@ -296,6 +296,7 @@
       <version>3.0.0</version>
     </dependency>
 
+    <!-- 프로필 파일을 썸네일화 시키기 위한 의존성 -->
     <dependency>
       <groupId>net.coobird</groupId>
       <artifactId>thumbnailator</artifactId>
