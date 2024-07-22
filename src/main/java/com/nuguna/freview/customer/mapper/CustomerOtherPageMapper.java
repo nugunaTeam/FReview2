@@ -8,6 +8,9 @@ public interface CustomerOtherPageMapper {
 
   String getUserCode(@Param("userSeq") Long userSeq);
 
+  Boolean checkProposalExist(@Param("storeSeq") Long storeSeq,
+      @Param("customerSeq") Long customerSeq);
+
   void makeProposalToCustomer(@Param("storeSeq") Long storeSeq,
       @Param("customerSeq") Long customerSeq, @Param("proposalDetail") String proposalDetail);
 

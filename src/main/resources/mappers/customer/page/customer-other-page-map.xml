@@ -10,6 +10,14 @@
     where seq = #{userSeq}
   </select>
 
+  <select id="checkProposalExist" resultType="java.lang.Boolean">
+    select count(1) > 0
+    from experience
+    where from_user_seq = #{storeSeq}
+      and to_user_seq = #{customerSeq}
+      and status IN ('SENT', 'ACCEPTED')
+  </select>
+
   <insert id="makeProposalToCustomer">
     insert into experience(from_user_seq, to_user_seq, from_post_seq, is_come, proposal_detail,
                            confirm_date, visit_date, status)

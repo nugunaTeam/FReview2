@@ -2,6 +2,7 @@ package com.nuguna.freview.customer.service.impl;
 
 import com.nuguna.freview.common.vo.user.UserCode;
 import com.nuguna.freview.customer.dto.request.ProposalToCustomerRequestDTO;
+import com.nuguna.freview.customer.exception.AlreadyExistProposalException;
 import com.nuguna.freview.customer.exception.IllegalUserSeqException;
 import com.nuguna.freview.customer.mapper.CustomerOtherPageMapper;
 import com.nuguna.freview.customer.service.CustomerOtherPageService;
@@ -35,6 +36,10 @@ public class CustomerOtherPageServiceImpl implements CustomerOtherPageService {
     String customerCode = customerOtherPageMapper.getUserCode(customerSeq);
     if (!UserCode.from(customerCode).isCustomer()) {
       throw new IllegalUserSeqException("제안받는 유저는 체험단 유저여야 합니다.");
+    }
+
+    if (customerOtherPageMapper.checkProposalExist(storeSeq, customerSeq)) {
+      throw new AlreadyExistProposalException("이미 진행중인 제안이 있습니다.");
     }
 
     customerOtherPageMapper.makeProposalToCustomer(storeSeq, customerSeq, proposalDetail);
