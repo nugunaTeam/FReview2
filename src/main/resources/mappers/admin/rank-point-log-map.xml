@@ -11,6 +11,12 @@
     <result property="createdAt" column="created_at" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
   </resultMap>
 
+  <!-- SQL 쿼리문 -->
+  <insert id="insertPointLog" parameterType="map">
+    insert into point_log (user_seq, code)
+    values (#{userSeq}, #{code})
+  </insert>
+
   <select id="getNewLogs" resultMap="pointLogResultMap">
     SELECT seq, user_seq, code, created_at
     FROM point_log
