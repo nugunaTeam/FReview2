@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface MojipService {
 
-  List<MojipPostDetailDTO> getMojipList(Long previousPostSeq, String searchWord, int pageSize);
+  List<MojipPostDetailDTO> getMojipList(Long requesterSeq, Long previousPostSeq, String searchWord, int pageSize);
   MojipPostDetailDTO getMojipDetail(Long postSeq);
   boolean createMojip(Long userSeq, String title, Date applyStartDate, Date applyEndDate, Date experienceDate, String content);
   boolean updateMojip(Long postSeq, String title, String content);
