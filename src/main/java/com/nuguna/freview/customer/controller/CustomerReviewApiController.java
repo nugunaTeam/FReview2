@@ -2,10 +2,9 @@ package com.nuguna.freview.customer.controller;
 
 import com.nuguna.freview.customer.dto.request.CustomerMyReviewsRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerReviewRegisterRequestDTO;
+import com.nuguna.freview.customer.dto.response.CustomerMyReviewsRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerReviewRegisterResponseDTO;
-import com.nuguna.freview.customer.dto.response.ReviewLogInfoDTO;
-import com.nuguna.freview.customer.service.CustomerReviewService;
-import java.util.List;
+import com.nuguna.freview.customer.service.ReviewService;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,32 +17,33 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/customer/review")
+@RequestMapping("/api/customer")
 public class CustomerReviewApiController {
 
-  private final CustomerReviewService customerReviewService;
+  private final ReviewService reviewService;
 
   @Autowired
-  public CustomerReviewApiController(CustomerReviewService customerReviewService) {
-    this.customerReviewService = customerReviewService;
+  public CustomerReviewApiController(ReviewService reviewService) {
+    this.reviewService = reviewService;
   }
 
   @RequestMapping(value = "/review", method = RequestMethod.POST)
   public ResponseEntity<CustomerReviewRegisterResponseDTO> registerCustomerReview(
       @Valid @RequestBody CustomerReviewRegisterRequestDTO customerReviewRegisterRequestDTO
   ) {
-    CustomerReviewRegisterResponseDTO responseDTO = customerReviewService.registerCustomerReview(
+    log.info("registerCustomerReview 들어옴");
+    CustomerReviewRegisterResponseDTO responseDTO = reviewService.registerCustomerReview(
         customerReviewRegisterRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
   }
 
-  @RequestMapping(value = "/reviews", method = RequestMethod.GET)
-  public ResponseEntity<List<ReviewLogInfoDTO>> registerCustomerReview(
+  @RequestMapping(value = "/reviews", method = RequestMethod.POST)
+  public ResponseEntity<CustomerMyReviewsRetrieveResponseDTO> registerCustomerReview(
       @Valid @RequestBody CustomerMyReviewsRetrieveRequestDTO customerMyReviewsRetrieveRequestDTO
   ) {
-    List<ReviewLogInfoDTO> responseDTO = customerReviewService.getReviews(
+    CustomerMyReviewsRetrieveResponseDTO responseDTO = reviewService.getCustomerMyReviews(
         customerMyReviewsRetrieveRequestDTO);
-    return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+    return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
 }
