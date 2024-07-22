@@ -4,7 +4,6 @@ import com.nuguna.freview.store.dto.request.page.StoreActivityPageRequestDTO;
 import com.nuguna.freview.store.dto.response.StoreActivitySendLikeResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreActivitySendZzimResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreActivityWrittenPostResponseDTO;
-import com.nuguna.freview.store.dto.response.StoreActivityWrittenReplyResponseDTO;
 import com.nuguna.freview.store.dto.response.page.StoreActivityPageResponseDTO;
 import com.nuguna.freview.store.service.StoreActivityPageService;
 import java.util.List;
@@ -45,19 +44,13 @@ public class StoreActivityApiController {
     List<StoreActivityWrittenPostResponseDTO> writtenPost = storeActivityPageService.storeActivityPageWrittenPost(userSeq);
     return writtenPost;
   }
-  @RequestMapping(value = "/written-reply", method = RequestMethod.GET)
-  public List<StoreActivityWrittenReplyResponseDTO> writtenReply(@RequestParam("userSeq") Long userSeq) {
-    List<StoreActivityWrittenReplyResponseDTO> writtenReply = storeActivityPageService.storeActivityPageWrittenReply(userSeq);
-    return writtenReply;
-  }
 
   public StoreActivityPageResponseDTO storeActivityPage(@RequestBody StoreActivityPageRequestDTO reqDto) {
     Long userSeq = reqDto.getUserSeq();
     List<StoreActivitySendLikeResponseDTO> sendLike = storeActivityPageService.storeActivityPageSendLike(userSeq);
     List<StoreActivitySendZzimResponseDTO> sendZzim = storeActivityPageService.storeActivityPageSendZzim(userSeq);
     List<StoreActivityWrittenPostResponseDTO> writtenPost = storeActivityPageService.storeActivityPageWrittenPost(userSeq);
-    List<StoreActivityWrittenReplyResponseDTO> writtenReply = storeActivityPageService.storeActivityPageWrittenReply(userSeq);
-    return new StoreActivityPageResponseDTO(sendLike, sendZzim, writtenPost, writtenReply);
+    return new StoreActivityPageResponseDTO(sendLike, sendZzim, writtenPost);
   }
 
 }

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nuguna.freview.store.dto.response.StoreActivitySendLikeResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreActivitySendZzimResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreActivityWrittenPostResponseDTO;
-import com.nuguna.freview.store.dto.response.StoreActivityWrittenReplyResponseDTO;
 import com.nuguna.freview.store.service.StoreActivityPageService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -31,11 +30,9 @@ public class StoreActivityPageController {
     List<StoreActivitySendLikeResponseDTO> sendLike = storeActivityPageService.storeActivityPageSendLike(userSeq);
     List<StoreActivitySendZzimResponseDTO> sendZzim = storeActivityPageService.storeActivityPageSendZzim(userSeq);
     List<StoreActivityWrittenPostResponseDTO> writtenPost = storeActivityPageService.storeActivityPageWrittenPost(userSeq);
-    List<StoreActivityWrittenReplyResponseDTO> writtenReply = storeActivityPageService.storeActivityPageWrittenReply(userSeq);
     model.addAttribute("sendLike", sendLike);
     model.addAttribute("sendZzim", sendZzim);
     model.addAttribute("writtenPost", writtenPost);
-    model.addAttribute("writtenReply", writtenReply);
     return "store-activity-page";
   }
 }
