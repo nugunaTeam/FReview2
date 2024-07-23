@@ -11,4 +11,5 @@ public interface PostMapper {
   int deletePost(Long postSeq);
   int insertLike(@Param("postSeq") Long postSeq, @Param("userSeq") Long userSeq);
   int deleteLike(@Param("postSeq") Long postSeq, @Param("userSeq") Long userSeq);
+  Long selectWriterSeqByPostSeq(Long postSeq);
 }
