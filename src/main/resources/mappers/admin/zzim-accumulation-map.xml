@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.admin.mapper.ZzimAccumulationMapper">
+
+  <!-- ZzimAccumulationVO resultMap -->
+  <resultMap id="zzimAccumulationResultMap" type="com.nuguna.freview.admin.vo.ZzimAccumulationVO">
+    <id property="userSeq" column="user_seq" />
+    <result property="totalZzim" column="total_zzim" />
+  </resultMap>
+
+  <select id="getByUserSeq" resultMap="zzimAccumulationResultMap">
+    SELECT user_seq, total_zzim FROM zzim_accumulation
+    WHERE user_seq = #{userSeq}
+  </select>
+
+  <insert id="insert">
+    INSERT INTO zzim_accumulation (user_seq, total_zzim)
+    VALUES (#{userSeq}, #{totalZzim})
+  </insert>
+
+  <update id="update">
+    UPDATE zzim_accumulation
+    SET total_zzim = #{totalZzim}
+    WHERE user_seq = #{userSeq}
+  </update>
+
+</mapper>

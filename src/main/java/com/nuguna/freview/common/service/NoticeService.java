@@ -8,4 +8,5 @@ public interface NoticeService {
   NoticeDetailResponseDTO getNoticeBySeq(Long postSeq);
   boolean updateNotice(Long postSeq, String title, String content, Timestamp now);
   boolean insertNotice(Long postSeq, String title, String content, Timestamp now);
+  boolean deletePost(Long postSeq);
 }

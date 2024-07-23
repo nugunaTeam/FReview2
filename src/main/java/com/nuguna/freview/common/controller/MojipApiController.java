@@ -96,7 +96,7 @@ public class MojipApiController {
 
   @RequestMapping(value = "/{deletePostSeq}", method = RequestMethod.DELETE)
   public ResponseEntity<?> deleteMojipPost(@PathVariable Long deletePostSeq) {
-    if (postService.deletePost(deletePostSeq)) {
+    if (mojipService.deletePost(deletePostSeq)) {
       return new ResponseEntity<>(HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
