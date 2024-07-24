@@ -20,10 +20,6 @@
         margin-bottom: 5px;
       }
 
-      #review-log-table {
-        border-collapse: collapse;
-      }
-
       #review-log-table th,
       #review-log-table td {
         border: 2px solid #dee2e6; /* 선 두께를 2px로 설정 */
@@ -137,40 +133,6 @@
         </ul>
     </nav>
 </header>
-
-<!-- ======= Sidebar ======= -->
-<aside id="sidebar" class="sidebar">
-    <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item">
-            <a class="nav-link" data-bs-target="#components-nav"
-               href="#">
-                <i class="bi bi-person-lines-fill"></i><span>브랜딩</span>
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="${pageContext.request.contextPath}/my/activity">
-                <i class="bi bi-layout-text-window-reverse"></i>
-                <span>활동</span>
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="${pageContext.request.contextPath}/my/notification">
-                <i class="bi bi-envelope"></i>
-                <span>알림</span>
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/my/personal-info">
-                <i class="ri-edit-box-line"></i>
-                <span>개인정보수정</span>
-            </a>
-        </li>
-    </ul>
-</aside><!-- End Sidebar-->
 
 <main id="main" class="main">
 

@@ -4,7 +4,7 @@ import com.nuguna.freview.customer.dto.request.CustomerMyReviewRegisterRequestDT
 import com.nuguna.freview.customer.dto.request.CustomerMyReviewsRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyReviewRegisterResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyReviewsRetrieveResponseDTO;
-import com.nuguna.freview.customer.service.ReviewService;
+import com.nuguna.freview.customer.service.CustomerReviewService;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/customer")
 public class CustomerReviewApiController {
 
-  private final ReviewService reviewService;
+  private final CustomerReviewService reviewService;
 
   @Autowired
-  public CustomerReviewApiController(ReviewService reviewService) {
+  public CustomerReviewApiController(CustomerReviewService reviewService) {
     this.reviewService = reviewService;
   }
 

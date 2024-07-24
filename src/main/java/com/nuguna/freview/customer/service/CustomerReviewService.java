@@ -5,7 +5,7 @@ import com.nuguna.freview.customer.dto.request.CustomerMyReviewsRetrieveRequestD
 import com.nuguna.freview.customer.dto.response.CustomerMyReviewRegisterResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyReviewsRetrieveResponseDTO;
 
-public interface ReviewService {
+public interface CustomerReviewService {
 
   CustomerMyReviewRegisterResponseDTO registerCustomerReview(
       CustomerMyReviewRegisterRequestDTO customerMyReviewRegisterRequestDTO);
