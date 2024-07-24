@@ -21,4 +21,10 @@ public class AuthController {
     return "common-register";
   }
 
+  @RequestMapping(value = "/login-fail-page", method = RequestMethod.GET)
+  public String goToLoginFail() {
+    log.info("로그인 에러 페이지로 이동");
+    return "common-login-fail";
+  }
+
 }
