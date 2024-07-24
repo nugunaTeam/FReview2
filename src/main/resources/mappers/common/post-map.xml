@@ -40,4 +40,9 @@
     where user_seq = #{userSeq} and post_seq = #{postSeq}
   </delete>
 
+  <!-- 특정 게시글 작성자 조회 -->
+  <select id="selectWriterSeqByPostSeq" parameterType="Long">
+    select seq from post where seq = #{postSeq}
+  </select>
+
 </mapper>

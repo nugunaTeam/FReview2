@@ -4,7 +4,6 @@ import com.nuguna.freview.customer.dto.request.CustomerMyAgeGroupUpdateRequestDT
 import com.nuguna.freview.customer.dto.request.CustomerMyFoodTypesUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerMyIntroduceUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerMyNicknameUpdateRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerMyProfilePhotoUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerMyTagsUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyAgeGroupUpdateResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyFoodTypesUpdateResponseDTO;
@@ -13,6 +12,7 @@ import com.nuguna.freview.customer.dto.response.CustomerMyNicknameUpdateResponse
 import com.nuguna.freview.customer.dto.response.CustomerMyProfilePhotoUpdateResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyTagsUpdateResponseDTO;
 import com.nuguna.freview.customer.service.CustomerBrandService;
+import java.io.IOException;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
@@ -35,12 +37,18 @@ public class CustomerMyBrandInfoApiController {
     this.customerBrandService = customerBrandService;
   }
 
-  @RequestMapping(value = "/profile-photo-url", method = RequestMethod.PUT)
+  @RequestMapping(value = "/profile-photo-url", method = RequestMethod.POST)
   public ResponseEntity<CustomerMyProfilePhotoUpdateResponseDTO> updateCustomerProfilePhoto(
-      @Valid @RequestBody CustomerMyProfilePhotoUpdateRequestDTO customerMyProfilePhotoUpdateRequestDTO
-  ) {
+      @RequestParam("userSeq") Long userSeq,
+      @RequestParam("profileFile") MultipartFile profileFile)
+      throws IOException {
+
+    if (profileFile == null || profileFile.isEmpty()) {
+      throw new IllegalArgumentException("프로필 파일은 필수값입니다.");
+    }
+
     CustomerMyProfilePhotoUpdateResponseDTO responseDTO = customerBrandService.updateCustomerPhotoUrl(
-        customerMyProfilePhotoUpdateRequestDTO);
+        userSeq, profileFile);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 

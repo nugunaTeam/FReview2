@@ -26,6 +26,7 @@ public class CustomerMyPageController {
         userSeq);
     model.addAttribute("brandInfo", brandPageInfo.getBrandInfo());
     model.addAttribute("reviewInfos", brandPageInfo.getReviewInfos());
+    model.addAttribute("reviewPageInfo", brandPageInfo.getReviewPaginationInfo());
     model.addAttribute("userSeq", userSeq);
     return "customer-my-brand-info";
   }

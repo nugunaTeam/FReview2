@@ -6,7 +6,7 @@
 
   <update id="updateProfilePhotoUrl">
     update user
-    set profile_photo_url = #{toProfilePhotoUrl}
+    set profile_photo_url = #{profilePhotoUrl}
     where seq = #{userSeq}
   </update>
 

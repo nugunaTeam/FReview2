@@ -3,14 +3,13 @@ package com.nuguna.freview.customer.service;
 import com.nuguna.freview.customer.dto.request.CustomerMyReviewRegisterRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerMyReviewsRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyReviewRegisterResponseDTO;
-import com.nuguna.freview.customer.dto.response.ReviewLogInfoDTO;
-import java.util.List;
+import com.nuguna.freview.customer.dto.response.CustomerMyReviewsRetrieveResponseDTO;
 
-public interface CustomerReviewService {
+public interface ReviewService {
 
   CustomerMyReviewRegisterResponseDTO registerCustomerReview(
       CustomerMyReviewRegisterRequestDTO customerMyReviewRegisterRequestDTO);
 
-  List<ReviewLogInfoDTO> getReviews(
+  CustomerMyReviewsRetrieveResponseDTO getCustomerMyReviews(
       CustomerMyReviewsRetrieveRequestDTO customerMyReviewsRetrieveRequestDTO);
 }

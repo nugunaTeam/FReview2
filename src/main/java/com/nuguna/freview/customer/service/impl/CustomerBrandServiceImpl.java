@@ -1,10 +1,14 @@
 package com.nuguna.freview.customer.service.impl;
 
+import static com.nuguna.freview.global.FileUtil.getProfileDestinationFilePath;
+import static com.nuguna.freview.global.FileUtil.getResizedProfileFilePath;
+import static com.nuguna.freview.global.FileUtil.getSaveProfileFileName;
+import static com.nuguna.freview.global.FileUtil.resizeAndSave;
+
 import com.nuguna.freview.customer.dto.request.CustomerMyAgeGroupUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerMyFoodTypesUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerMyIntroduceUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerMyNicknameUpdateRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerMyProfilePhotoUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerMyTagsUpdateRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyAgeGroupUpdateResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyFoodTypesUpdateResponseDTO;
@@ -15,11 +19,16 @@ import com.nuguna.freview.customer.dto.response.CustomerMyTagsUpdateResponseDTO;
 import com.nuguna.freview.customer.exception.AlreadyExistNicknameException;
 import com.nuguna.freview.customer.mapper.CustomerBrandMapper;
 import com.nuguna.freview.customer.service.CustomerBrandService;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Service
 @Transactional
 public class CustomerBrandServiceImpl implements CustomerBrandService {
@@ -56,12 +65,19 @@ public class CustomerBrandServiceImpl implements CustomerBrandService {
 
   @Override
   public CustomerMyProfilePhotoUpdateResponseDTO updateCustomerPhotoUrl(
-      CustomerMyProfilePhotoUpdateRequestDTO customerMyProfilePhotoUpdateRequestDTO) {
-    Long userSeq = customerMyProfilePhotoUpdateRequestDTO.getUserSeq();
-    String toProfilePhotoUrl = customerMyProfilePhotoUpdateRequestDTO.getToProfilePhotoUrl();
+      Long userSeq, MultipartFile profileFile) throws IOException {
 
-    customerBrandMapper.updateProfilePhotoUrl(userSeq, toProfilePhotoUrl);
-    return new CustomerMyProfilePhotoUpdateResponseDTO(toProfilePhotoUrl);
+    // 저장할 프로필 파일 이름
+    String saveProfileFilename = getSaveProfileFileName(profileFile.getOriginalFilename());
+    // 프로필 파일 원본이 저장될 위치
+    File destinationFilePath = getProfileDestinationFilePath(saveProfileFilename);
+    profileFile.transferTo(destinationFilePath);
+
+    File resizedFilePath = getResizedProfileFilePath(saveProfileFilename);
+    resizeAndSave(destinationFilePath, resizedFilePath);
+
+    customerBrandMapper.updateProfilePhotoUrl(userSeq, saveProfileFilename);
+    return new CustomerMyProfilePhotoUpdateResponseDTO(saveProfileFilename);
   }
 
   @Override
