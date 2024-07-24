@@ -3,9 +3,9 @@ package com.nuguna.freview.customer.mapper;
 import com.nuguna.freview.customer.dto.response.ReviewLogInfoDTO;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Component;
 
-@Component
+
+
 public interface CustomerReviewMapper {
 
   Boolean checkIsValidReview(@Param("userSeq") Long userSeq, @Param("reviewSeq") Long reviewSeq);

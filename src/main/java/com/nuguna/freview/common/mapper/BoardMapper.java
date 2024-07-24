@@ -4,10 +4,8 @@ import com.nuguna.freview.common.dto.response.NoticePostDTO;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Component;
 
 @Mapper
-@Component
 public interface BoardMapper {
 
   int selectTotalPage(String postCode);
