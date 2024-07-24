@@ -74,7 +74,7 @@
       p.apply_end_date,
       p.experience_date,
       p.content,
-      (SELECT COUNT(*) FROM `like` l WHERE l.post_seq = p.seq) AS number_of_likes,
+      COALESCE(la.total_like, 0) AS total_like,
       p.view_count
     FROM
       post p

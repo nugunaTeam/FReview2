@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.admin.mapper.RankPointLogMapper">
+
+  <resultMap id="pointLogResultMap" type="com.nuguna.freview.admin.vo.PointLogVO">
+    <id property="seq" column="seq"/>
+    <result property="userSeq" column="user_seq"/>
+    <result property="code" column="code"/>
+    <result property="createdAt" column="created_at" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+  </resultMap>
+
+  <!-- SQL 쿼리문 -->
+  <insert id="insertLog" parameterType="map">
+    insert into point_log (user_seq, code)
+    values (#{userSeq}, #{code})
+  </insert>
+
+  <select id="getNewLogs" resultMap="pointLogResultMap">
+    SELECT seq, user_seq, code, created_at
+    FROM point_log
+    WHERE seq &gt; #{lastProcessedSeq}
+    limit 100;
+  </select>
+
+</mapper>

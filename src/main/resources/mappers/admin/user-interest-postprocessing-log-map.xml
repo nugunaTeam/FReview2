@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.admin.mapper.UserInterestPostprocessingLogMapper">
+
+  <!-- 마지막으로 처리된 시퀀스 번호를 가져옴 -->
+  <select id="getLastProcessedSeq" resultType="java.lang.Long">
+    SELECT last_processed_interest_seq
+    FROM interest_postprocessing_log
+    ORDER BY seq DESC
+    LIMIT 1
+  </select>
+
+  <!-- 마지막으로 처리한 시퀀스 번호를 업데이트 -->
+  <insert id="updateLastProcessedSeq">
+    insert into interest_postprocessing_log (last_processed_interest_seq)
+    values (#{lastProcessedSeq})
+  </insert>
+
+
+</mapper>

@@ -5,12 +5,20 @@
 <mapper namespace="com.nuguna.freview.customer.mapper.CustomerReviewMapper">
   <resultMap id="reviewLogInfoMap" type="com.nuguna.freview.customer.dto.response.ReviewLogInfoDTO">
     <id property="seq" column="seq"/>
+    <result property="storeSeq" column="store_seq"/>
     <result property="storeName" column="store_name"/>
     <result property="status" column="status"/>
     <result property="url" column="url"/>
     <result property="visitDate" column="visit_date"/>
     <result property="createdAt" column="created_at"/>
   </resultMap>
+
+  <select id="checkAlreadyExistReview" resultType="Boolean">
+    select count(1) > 0
+    from review
+    where seq = #{reviewSeq}
+      and status = 'WRITTEN'
+  </select>
 
 
   <select id="checkIsValidReview" resultType="Boolean">
@@ -30,6 +38,7 @@
   <select id="getReviewsInfo"
     resultMap="reviewLogInfoMap">
     SELECT r.seq,
+           r.store_seq,
            nsbi.store_name,
            r.status,
            r.url,
@@ -44,4 +53,11 @@
     ORDER BY r.created_at ASC
     LIMIT #{offset}, #{pageSize}
   </select>
+
+  <select id="getReviewCount" resultType="java.lang.Integer">
+    select count(*)
+    from review
+    where customer_seq = #{userSeq}
+  </select>
+
 </mapper>
