@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Controller
-public class CustomerPageController {
+public class CustomerMyPageController {
 
   private final CustomerPageService customerPageService;
 
   @Autowired
-  public CustomerPageController(CustomerPageService customerPageService) {
+  public CustomerMyPageController(CustomerPageService customerPageService) {
     this.customerPageService = customerPageService;
   }
 
@@ -24,7 +24,6 @@ public class CustomerPageController {
   public String customerMyBrandPage(@RequestParam Long userSeq, Model model) {
     CustomerMyBrandPageInfoResponseDTO brandPageInfo = customerPageService.getBrandPageInfo(
         userSeq);
-    log.info("reviewPagination INFO = {}", brandPageInfo.getReviewPaginationInfo());
     model.addAttribute("brandInfo", brandPageInfo.getBrandInfo());
     model.addAttribute("reviewInfos", brandPageInfo.getReviewInfos());
     model.addAttribute("reviewPageInfo", brandPageInfo.getReviewPaginationInfo());

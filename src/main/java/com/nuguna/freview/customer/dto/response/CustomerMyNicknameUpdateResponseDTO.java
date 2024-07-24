@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerIntroduceUpdateResponseDTO {
+public class CustomerMyNicknameUpdateResponseDTO {
 
-  private String introduce;
+  private String nickname;
 }

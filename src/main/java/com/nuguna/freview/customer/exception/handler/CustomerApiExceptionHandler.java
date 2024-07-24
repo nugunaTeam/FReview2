@@ -1,9 +1,11 @@
 package com.nuguna.freview.customer.exception.handler;
 
 import com.nuguna.freview.customer.exception.AlreadyExistNicknameException;
+import com.nuguna.freview.customer.exception.AlreadyExistProposalException;
 import com.nuguna.freview.customer.exception.AlreadyExistReviewException;
 import com.nuguna.freview.customer.exception.IllegalReviewException;
 import com.nuguna.freview.customer.exception.IllegalReviewPageAccessException;
+import com.nuguna.freview.customer.exception.IllegalUserSeqException;
 import com.nuguna.freview.customer.exception.MalformedReviewUrlException;
 import com.nuguna.freview.global.exception.ErrorResponse;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,17 @@ public class CustomerApiExceptionHandler {
   @ExceptionHandler(IllegalReviewException.class)
   public ResponseEntity<ErrorResponse> handleReviewException(IllegalReviewException ex) {
     return new ResponseEntity<>(new ErrorResponse(ex.getMessage(), null), HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(IllegalUserSeqException.class)
+  public ResponseEntity<ErrorResponse> handleIllegalUserSeqException(IllegalUserSeqException ex) {
+    return new ResponseEntity<>(new ErrorResponse(ex.getMessage(), null), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(AlreadyExistProposalException.class)
+  public ResponseEntity<ErrorResponse> handleAlreadyExistProposalException(
+      AlreadyExistProposalException ex) {
+    return new ResponseEntity<>(new ErrorResponse(ex.getMessage(), null), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(AlreadyExistReviewException.class)

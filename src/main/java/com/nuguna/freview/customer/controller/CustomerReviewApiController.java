@@ -1,9 +1,9 @@
 package com.nuguna.freview.customer.controller;
 
+import com.nuguna.freview.customer.dto.request.CustomerMyReviewRegisterRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerMyReviewsRetrieveRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerReviewRegisterRequestDTO;
+import com.nuguna.freview.customer.dto.response.CustomerMyReviewRegisterResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyReviewsRetrieveResponseDTO;
-import com.nuguna.freview.customer.dto.response.CustomerReviewRegisterResponseDTO;
 import com.nuguna.freview.customer.service.ReviewService;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -28,12 +28,11 @@ public class CustomerReviewApiController {
   }
 
   @RequestMapping(value = "/review", method = RequestMethod.POST)
-  public ResponseEntity<CustomerReviewRegisterResponseDTO> registerCustomerReview(
-      @Valid @RequestBody CustomerReviewRegisterRequestDTO customerReviewRegisterRequestDTO
+  public ResponseEntity<CustomerMyReviewRegisterResponseDTO> registerCustomerReview(
+      @Valid @RequestBody CustomerMyReviewRegisterRequestDTO customerMyReviewRegisterRequestDTO
   ) {
-    log.info("registerCustomerReview 들어옴");
-    CustomerReviewRegisterResponseDTO responseDTO = reviewService.registerCustomerReview(
-        customerReviewRegisterRequestDTO);
+    CustomerMyReviewRegisterResponseDTO responseDTO = reviewService.registerCustomerReview(
+        customerMyReviewRegisterRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
   }
 

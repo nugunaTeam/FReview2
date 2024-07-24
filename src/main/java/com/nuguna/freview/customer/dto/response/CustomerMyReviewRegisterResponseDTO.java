@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerAgeGroupUpdateResponseDTO {
+public class CustomerMyReviewRegisterResponseDTO {
 
-  private String ageGroup;
+  private String reviewUrl;
 }

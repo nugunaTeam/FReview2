@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerNicknameUpdateRequestDTO {
+public class CustomerMyNicknameUpdateRequestDTO {
 
   @Min(value = 1, message = "유저 번호는 1번 이상이어야 합니다.")
   private Long userSeq;

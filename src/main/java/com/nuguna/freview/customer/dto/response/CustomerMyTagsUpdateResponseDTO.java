@@ -1,5 +1,6 @@
 package com.nuguna.freview.customer.dto.response;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerNicknameUpdateResponseDTO {
+public class CustomerMyTagsUpdateResponseDTO {
 
-  private String nickname;
+  private List<String> tags;
 }

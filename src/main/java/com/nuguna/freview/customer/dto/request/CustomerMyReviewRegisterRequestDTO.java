@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerReviewRegisterRequestDTO {
+public class CustomerMyReviewRegisterRequestDTO {
 
   @Min(1)
   private Long userSeq;
