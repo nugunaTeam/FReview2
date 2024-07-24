@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/security
-                                 http://www.springframework.org/schema/security/spring-security-4.2.xsd
+                                 http://www.springframework.org/schema/security/spring-security-4.0.xsd
                                  http://www.springframework.org/schema/beans
                                  http://www.springframework.org/schema/beans/spring-beans.xsd
 																 http://www.springframework.org/schema/context
@@ -13,24 +13,42 @@
 
 	<context:component-scan base-package="com.nuguna.freview" use-default-filters="false">
 		<context:include-filter expression="org.springframework.stereotype.Service" type="annotation" />
-		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
-		<context:include-filter type="annotation" expression="org.springframework.stereotype.Component"/>
-		<context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+		<context:include-filter expression="org.springframework.stereotype.Repository" type="annotation" />
 	</context:component-scan>
 
+	<http pattern="/assets/**"  security="none"/>
+
 	<http>
-		<intercept-url pattern="/login" access="permitAll"/>
-		<intercept-url pattern="/logout" access="permitAll"/>
-		<intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
-		<form-login login-page="/login" default-target-url="/home"/>
-		<logout logout-url="/logout" logout-success-url="/login"/>
+		<csrf disabled="true"/>
+		<intercept-url pattern="/resources/**" 		access="permitAll" />
+		<intercept-url pattern="/member/loginPage" 	access="permitAll" />
+		<intercept-url pattern="/member/denied" 	access="permitAll" />
+		<intercept-url pattern="/member/logout" 	access="permitAll" />
+		<intercept-url pattern="/member/map" 		access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/**" 				access="permitAll" />
+
+		<form-login
+			login-processing-url="/login"
+			username-parameter="id"
+			password-parameter="password"
+			login-page="/login-page"
+			always-use-default-target='true'
+			authentication-success-handler-ref="authSuccessHandler"
+			authentication-failure-handler-ref="authFailureHandler"
+		/>
 	</http>
 
+
 	<authentication-manager>
-		<authentication-provider>
-			<user-service>
-				<user name="user" password="{noop}password" authorities="ROLE_USER"/>
-			</user-service>
-		</authentication-provider>
+		<authentication-provider ref="customAuthenticationProvider"/>
+		<authentication-provider user-service-ref="customUserDetailsService"/>
 	</authentication-manager>
+
+	<beans:bean id="authSuccessHandler" class="com.nuguna.freview.security.login.SuccessHandler">
+		<beans:constructor-arg name="jwtUtil" ref="jwtUtil"/>
+	</beans:bean>
+	<beans:bean id="authFailureHandler"	class="com.nuguna.freview.security.login.FailureHandler"/>
+	<beans:bean id="customAuthenticationProvider" class="com.nuguna.freview.security.login.CustomAuthenticationProvider"/>
+	<beans:bean id="customUserDetailsService" class="com.nuguna.freview.security.login.CustomUserDetailsService"/>
+	<beans:bean id="jwtUtil" class="com.nuguna.freview.security.JwtUtil"/>
 </beans:beans>
