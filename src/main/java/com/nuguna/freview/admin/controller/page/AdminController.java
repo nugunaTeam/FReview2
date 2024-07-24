@@ -51,4 +51,19 @@ public class AdminController {
 
     return "admin-management-store";
   }
+
+  @RequestMapping(value = "/manage/experience", method = RequestMethod.GET)
+  public String experienceManagePage(Model model) {
+    //HACK: 로그인 유저의 실제 seq 로 수정 필요
+    Long userSeq = 301L;
+    AdminVO loginUser = adminService.getAdminById(userSeq);
+    UserCode currentCode = UserCode.from(loginUser.getCode());
+
+    if (!currentCode.isAdmin()) {
+      return "common-error-404";
+    }
+    model.addAttribute("loginUser", loginUser);
+
+    return "admin-management-experience";
+  }
 }
