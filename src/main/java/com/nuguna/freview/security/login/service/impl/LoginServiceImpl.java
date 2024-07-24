@@ -22,4 +22,9 @@ public class LoginServiceImpl implements LoginService {
     return loginMapper.selectUserInfo(email);
 
   }
+
+  @Override
+  public boolean checkPassword(String shaPassword) {
+    return loginMapper.selectCheckPassword(shaPassword);
+  }
 }

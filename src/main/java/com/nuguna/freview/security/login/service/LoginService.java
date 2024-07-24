@@ -5,4 +5,6 @@ import com.nuguna.freview.common.vo.user.UserVO;
 public interface LoginService {
 
   UserVO searchUserByID(String email);
+
+  boolean checkPassword(String shaPassword);
 }

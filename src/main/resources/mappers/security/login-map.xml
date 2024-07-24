@@ -30,5 +30,11 @@
     where email = #{email}
   </select>
 
+  <select id="selectCheckPassword" parameterType="String" resultType="boolean">
+    SELECT count(1) > 0
+    FROM user
+    WHERE email = #{shaPassword}
+  </select>
+
 </mapper>
 

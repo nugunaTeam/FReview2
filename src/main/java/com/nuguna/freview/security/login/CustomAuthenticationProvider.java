@@ -28,6 +28,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     String username = authentication.getName();
     String password = authentication.getCredentials().toString();
     String shaPassword = ShaUtil.sha256Encoding(password);
+
+    userDetailsService.checkPassword(shaPassword);
     CustomUserDetail customUserDetails = userDetailsService.loadUserByUsername(username);
 
     return new UsernamePasswordAuthenticationToken(customUserDetails, shaPassword, customUserDetails.getAuthorities());

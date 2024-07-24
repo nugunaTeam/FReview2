@@ -4,7 +4,9 @@ import com.nuguna.freview.common.vo.user.UserVO;
 import com.nuguna.freview.security.login.service.LoginService;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,7 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     UserVO userVO = loginService.searchUserByID(email);
     if(userVO == null) {
-      throw new UsernameNotFoundException("이메일을 찾을 수 없습니다");
+      throw new UsernameNotFoundException("email");
     }
     List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
     if(userVO.getCode().equals("ADMIN")){
@@ -38,5 +40,14 @@ public class CustomUserDetailsService implements UserDetailsService {
       authorities.add(new SimpleGrantedAuthority("ROLE_STORE"));
     }
     return new CustomUserDetail(email, userVO.getPassword(), authorities,userVO);
+  }
+
+  public void checkPassword(String shaPassword) {
+
+    boolean passwordCheck = loginService.checkPassword(shaPassword);
+    if(!passwordCheck) {
+      throw new UsernameNotFoundException("password") {
+      };
+    }
   }
 }
