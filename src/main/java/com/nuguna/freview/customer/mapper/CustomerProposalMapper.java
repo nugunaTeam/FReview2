@@ -4,7 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 @Mapper
-public interface CustomerOtherPageMapper {
+public interface CustomerProposalMapper {
 
   String getUserCode(@Param("userSeq") Long userSeq);
 
