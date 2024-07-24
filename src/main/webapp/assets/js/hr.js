@@ -38,7 +38,7 @@ $(function(){
         success: function(myval){
           console.log("성공"+myval.checkDuplicated);
 
-          if (!myval.checkDuplicated) {
+          if (myval.checkDuplicated) {
             $("#COMM_register_IDdeny").removeClass("remove");
             $("#COMM_register_IDavail").addClass("remove");
             $("#Input_ID").val("");
@@ -175,7 +175,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
       success: function(myval){
         console.log("성공"+myval);
 
-        if (!myval.checkDuplicated) {
+        if (myval.checkDuplicated) {
           $("#COMM_register_NickNamedeny").removeClass("remove");
           $("#COMM_register_NickNameavail").addClass("remove");
           $("#Input_NickName").val("");
@@ -228,7 +228,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
           console.log("성공"+myval);
 
           alert("회원가입 완료되었습니다");
-          location.replace("/login");
+          location.replace("/login-page");
 
         }
       })
@@ -266,7 +266,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
         success: function(myval){
           console.log("성공"+myval);
 
-          if (!myval.checkDuplicated) {
+          if (myval.checkDuplicated) {
             $("#COMM_register_Boss_IDdeny").removeClass("remove");
             $("#COMM_register_Boss_IDavail").addClass("remove");
             $("#Boss_Input_ID").val("");
@@ -525,7 +525,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
           console.log("성공"+myval);
 
           alert("회원가입 완료되었습니다");
-          location.replace("/login");
+          location.replace("/login-page");
 
         }
       })
