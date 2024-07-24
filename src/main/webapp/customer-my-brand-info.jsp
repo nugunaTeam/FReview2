@@ -43,6 +43,9 @@
         gap: 0.5rem;
       }
 
+      .clickable {
+        cursor: pointer;
+        
       .btn-secondary {
         background-color: rgb(128, 128, 128);
         border-color: rgb(128, 128, 128);
@@ -99,6 +102,21 @@
       .form-control-readonly {
         background-color: #e9ecef;
         opacity: 1;
+      }
+
+      .profile-container {
+        width: 150px; /* 원하는 고정 가로 길이 */
+        height: 150px; /* 원하는 고정 세로 길이 */
+        position: relative;
+        overflow: hidden;
+        border-radius: 50%; /* 원형으로 만들기 위한 설정 */
+      }
+
+      .profile-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* 이미지의 중앙을 맞추고, 자르기 */
+        object-position: center; /* 중앙 위치 */
       }
 
     </style>
@@ -165,8 +183,11 @@
         <ul class="d-flex align-items-center">
             <li class="nav-item dropdown pe-3">
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-                    <img src="/assets/img/basic/basic-profile-img.png" alt="Profile"
-                         class="rounded-circle">
+                    <img src="/user/${userSeq}/profile"
+                         alt="Profile"
+                         class="rounded-circle profile-img"
+                         style="position: relative;
+                         overflow: hidden; border-radius: 50%;">
                     <span id="nickname-holder-head"
                           class="d-none d-md-block">${brandInfo.nickname}</span>
                 </a>
@@ -220,14 +241,50 @@
             <div class="card">
                 <!-- profile  -->
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                    <img src="/assets/img/basic/basic-profile-img.png" alt="Profile"
-                         class="rounded-circle">
+                    <img id="profile-img"
+                         src="/user/${userSeq}/profile"
+                         alt="Profile"
+                         class="rounded-circle clickable img-fluid profile-img"
+                         style="position: relative;
+                         overflow: hidden; border-radius: 50%;">
+                    <input type="file" id="profile-img-upload" style="display: none;">
                     <h2 id="nickname-holder-section">${brandInfo.nickname}
                     </h2>
                     <div class="social-links mt-2 ri-heart-3-fill">
                         ${brandInfo.zzimCount}
                     </div>
                 </div>
+
+                <script>
+                  $(document).ready(function () {
+                    $('#profile-img').click(function () {
+                      $('#profile-img-upload').click(); // 파일 선택 창 열기
+                    });
+
+                    $('#profile-img-upload').change(function () {
+                      var formData = new FormData();
+                      formData.append('userSeq', ${userSeq});
+                      formData.append('profileFile', this.files[0]);
+
+                      $.ajax({
+                        url: '<%=request.getContextPath()%>/api/customer/my/brand-info/profile-photo-url',
+                        method: 'POST',
+                        data: formData,
+                        contentType: false, // 필수
+                        processData: false, // 필수
+                        success: function (response) {
+                          var newImageUrl = "/user/${userSeq}/profile?" + new Date().getTime();
+                          $('.profile-img').attr('src', newImageUrl);
+                          alert('프로필 사진이 업데이트 되었습니다.');
+                        },
+                        error: function (error) {
+                          console.log(error);
+                          alert('프로필 사진 업데이트에 실패하였습니다.');
+                        }
+                      });
+                    });
+                  });
+                </script>
 
                 <div class="card-body pt-3">
                     <!-- Bordered Tabs -->
