@@ -8,6 +8,8 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 public class SendMailUtil {
 
@@ -16,6 +18,7 @@ public class SendMailUtil {
   private final String SMTPHOST;
   private final String userName;
   private final String password;
+
 
   public SendMailUtil(String ENCODING, String PORT, String SMTPHOST, String userName, String password) {
     this.ENCODING = ENCODING;
