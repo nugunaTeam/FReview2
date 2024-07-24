@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class AuthController {
 
-  @RequestMapping(value = "/login", method = RequestMethod.GET)
+  @RequestMapping(value = "/login-page", method = RequestMethod.GET)
   public String goToLogin() {
     log.info("로그인 페이지로 이동");
     return "common-login";
   }
 
-  @RequestMapping(value = "/register", method = RequestMethod.GET)
+  @RequestMapping(value = "/register-page", method = RequestMethod.GET)
   public String goToRegister() {
     log.info("회원가입 페이지로 이동");
     return "common-register";
