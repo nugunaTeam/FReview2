@@ -7,7 +7,6 @@ import com.nuguna.freview.common.dto.request.MojipUpdateRequestDTO;
 import com.nuguna.freview.common.dto.response.MojipPostDetailDTO;
 import com.nuguna.freview.common.dto.response.page.MojipResponseDTO;
 import com.nuguna.freview.common.service.MojipService;
-import com.nuguna.freview.common.service.PostService;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -26,13 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class MojipApiController {
 
   private final MojipService mojipService;
-  private final PostService postService;
   private final int PAGE_SIZE = 12;
 
   @Autowired
-  public MojipApiController(MojipService mojipService, PostService postService) {
+  public MojipApiController(MojipService mojipService) {
     this.mojipService = mojipService;
-    this.postService = postService;
   }
 
   //TODO: 모집글의 지원자 수 함께 보여주기
