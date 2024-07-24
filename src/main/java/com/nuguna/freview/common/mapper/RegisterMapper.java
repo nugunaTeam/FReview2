@@ -2,10 +2,8 @@ package com.nuguna.freview.common.mapper;
 
 import com.nuguna.freview.common.vo.user.UserVO;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Component;
 
 @Mapper
-@Component
 public interface RegisterMapper {
   boolean getDuplicatedEmail(String email);
   boolean getDuplicatedNickName(String nickName);

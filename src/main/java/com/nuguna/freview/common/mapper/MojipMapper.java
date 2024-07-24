@@ -5,10 +5,8 @@ import java.util.Date;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Component;
 
 @Mapper
-@Component
 public interface MojipMapper {
 
   List<MojipPostDetailDTO> selectMojipList(@Param("previousPostSeq") Long previousPostSeq, @Param("limit") int limit);

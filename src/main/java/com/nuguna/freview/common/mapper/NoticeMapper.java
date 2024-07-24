@@ -4,11 +4,9 @@ import com.nuguna.freview.common.dto.response.page.NoticeDetailResponseDTO;
 import java.sql.Timestamp;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Component;
 
 
 @Mapper
-@Component
 public interface NoticeMapper {
 
   NoticeDetailResponseDTO selectNotice(Long postSeq);
