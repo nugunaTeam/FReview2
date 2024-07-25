@@ -33,7 +33,7 @@
   <select id="selectCheckPassword" parameterType="String" resultType="boolean">
     SELECT count(1) > 0
     FROM user
-    WHERE email = #{shaPassword}
+    WHERE password = #{shaPassword}
   </select>
 
 </mapper>
