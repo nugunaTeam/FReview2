@@ -1,6 +1,6 @@
 package com.nuguna.freview.customer.controller.page;
 
-import com.nuguna.freview.customer.dto.response.page.CustomerOtherPageInfoResponseDTO;
+import com.nuguna.freview.customer.dto.response.page.CustomerOtherBrandPageInfoResponseDTO;
 import com.nuguna.freview.customer.service.CustomerPageService;
 import com.nuguna.freview.customer.service.CustomerUtilService;
 import lombok.extern.slf4j.Slf4j;
@@ -30,14 +30,14 @@ public class CommonPageController {
   @RequestMapping(value = "/brand/{userSeq}", method = RequestMethod.GET)
   public String customerOtherBrandPage(@PathVariable("userSeq") Long userSeq,
       @RequestParam("fromUserSeq") Long fromUserSeq, Model model) {
-    CustomerOtherPageInfoResponseDTO otherBrandPageInfo = customerPageService.getOtherBrandPageInfo(
+    CustomerOtherBrandPageInfoResponseDTO otherBrandPageInfo = customerPageService.getOtherBrandPageInfo(
         userSeq);
 
     // TODO : 시큐리티로 변경 시, @AuthenticationPrincipal 에서 가져오는 작업 필요
     String userNickname = customerUtilService.getUserNickname(fromUserSeq);
     log.info("userNickname = {}", userNickname);
 
-    model.addAttribute("brandInfo", otherBrandPageInfo.getBrandInfo());
+    model.addAttribute("otherBrandInfo", otherBrandPageInfo.getBrandInfo());
     model.addAttribute("reviewInfos", otherBrandPageInfo.getReviewInfos());
     model.addAttribute("reviewPaginationInfo", otherBrandPageInfo.getReviewPaginationInfo());
     model.addAttribute("userNickname", userNickname);

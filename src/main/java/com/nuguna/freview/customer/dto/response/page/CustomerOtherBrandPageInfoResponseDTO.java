@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerOtherPageInfoResponseDTO {
+public class CustomerOtherBrandPageInfoResponseDTO {
 
   private CustomerBrandInfoResponseDTO brandInfo;
   private List<ReviewLogInfoDTO> reviewInfos;
