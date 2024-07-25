@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
@@ -20,7 +21,7 @@ public class CustomerMyPageController {
     this.customerPageService = customerPageService;
   }
 
-  @RequestMapping("/my/brand-info")
+  @RequestMapping(value = "/my/brand-info", method = RequestMethod.GET)
   public String customerMyBrandPage(@RequestParam Long userSeq, Model model) {
     CustomerMyBrandPageInfoResponseDTO brandPageInfo = customerPageService.getBrandPageInfo(
         userSeq);
@@ -31,17 +32,17 @@ public class CustomerMyPageController {
     return "customer-my-brand-info";
   }
 
-  @RequestMapping("/my/activity")
+  @RequestMapping(value = "/my/activity", method = RequestMethod.GET)
   public String customerMyActivity(@RequestParam(required = false) Long userSeq) {
     return "customer-my-activity-info";
   }
 
-  @RequestMapping("/my/notification")
+  @RequestMapping(value = "/my/notification", method = RequestMethod.GET)
   public String customerMyNotification(@RequestParam(required = false) Long userSeq) {
     return "customer-my-notification";
   }
 
-  @RequestMapping("/my/personal-info")
+  @RequestMapping(value = "/my/personal-info", method = RequestMethod.GET)
   public String customerMyPersonalInfo(@RequestParam(required = false) Long userSeq) {
     return "customer-my-personal-info";
   }
