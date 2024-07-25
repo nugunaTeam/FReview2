@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.admin.mapper.ZzimPostprocessingLogMapper">
+
+  <select id="getLastProcessedSeq" resultType="long">
+    SELECT last_processed_zzim_seq
+    FROM zzim_postprocessing_log
+    ORDER BY seq DESC
+    limit 1
+  </select>
+
+  <insert id="updateLastProcessedSeq">
+    INSERT into zzim_postprocessing_log (last_processed_zzim_seq)
+    VALUES (#{seq})
+  </insert>
+
+</mapper>

@@ -28,7 +28,7 @@ public enum UserCode {
     return this == ADMIN;
   }
 
-  public boolean isBoss() {
+  public boolean isStore() {
     return this == STORE;
   }
 

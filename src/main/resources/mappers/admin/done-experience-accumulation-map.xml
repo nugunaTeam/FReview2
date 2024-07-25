@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.admin.mapper.DoneExperienceAccumulationMapper">
+
+  <resultMap id="doneExperienceResultMap" type="com.nuguna.freview.admin.dto.DoneExperienceDTO">
+    <result property="date" column="created_at" javaType="java.time.LocalDate"/>
+    <result property="totalCount" column="total_count"/>
+  </resultMap>
+
+  <select id="findByDate" resultMap="doneExperienceResultMap">
+    SELECT date, total_count
+    FROM done_experience_accumulation
+    WHERE date = #{date}
+  </select>
+
+  <insert id="insert">
+    INSERT INTO done_experience_accumulation (date, total_count)
+    VALUES (#{date}, #{totalDone})
+  </insert>
+
+  <update id="update">
+    UPDATE done_experience_accumulation
+    SET total_count = #{totalDone}
+    WHERE date = #{date}
+  </update>
+
+</mapper>

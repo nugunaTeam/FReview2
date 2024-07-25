@@ -26,6 +26,7 @@
     <result property="nickname" column="nickname"/>
     <result property="email" column="email"/>
     <result property="createdAt" column="created_at"/>
+    <result property="totalNoshow" column="total_no_show"/>
   </resultMap>
 
   <!-- storeManageMap 설정 -->
@@ -50,27 +51,30 @@
   <!-- 체험단 목록 조회 -->
   <select id="selectCustomerList" parameterType="map" resultMap="customerManageMap">
     SELECT
-      seq, code, nickname, email, created_at
-    FROM user
-    WHERE code = 'CUSTOMER'
-      AND seq &lt; #{previousUserSeq}
-      AND is_withdrawn = 0
-    ORDER BY seq DESC
+      u.seq, u.code, u.nickname, u.email, u.created_at, COALESCE(na.total_no_show, 0) AS total_no_show
+    FROM user u
+           LEFT JOIN noshow_accumulation na ON u.seq = na.user_seq
+    WHERE u.code = 'CUSTOMER'
+      AND u.seq &lt; #{previousUserSeq}
+      AND u.is_withdrawn = 0
+    ORDER BY u.seq DESC
       LIMIT #{limit}
   </select>
 
   <!-- 검색 조건에 부합하는 체험단 목록 조회 -->
   <select id="searchCustomer" parameterType="map" resultMap="customerManageMap">
     SELECT
-      seq, code, nickname, email, created_at
-    FROM user
-    WHERE code = 'CUSTOMER'
-      AND seq &lt; #{previousUserSeq}
-      AND (email LIKE CONCAT('%', #{searchWord}, '%') OR nickname LIKE CONCAT('%', #{searchWord}, '%'))
-      AND is_withdrawn = 0
-    ORDER BY seq DESC
+      u.seq, u.code, u.nickname, u.email, u.created_at, COALESCE(na.total_no_show, 0) AS total_no_show
+    FROM user u
+        LEFT JOIN noshow_accumulation na ON u.seq = na.user_seq
+    WHERE u.code = 'CUSTOMER'
+      AND u.seq &lt; #{previousUserSeq}
+      AND (u.email LIKE CONCAT('%', #{searchWord}, '%') OR u.nickname LIKE CONCAT('%', #{searchWord}, '%'))
+      AND u.is_withdrawn = 0
+    ORDER BY u.seq DESC
       LIMIT #{limit}
   </select>
+
   <!-- 스토어 목록 조회 -->
   <select id="selectStoreList" parameterType="map" resultMap="customerManageMap">
     SELECT

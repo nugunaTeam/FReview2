@@ -93,7 +93,6 @@
         <a href="/my-info" style="margin-right: 20px">
             <%=memberInfo.getNickname()%>
             <img src="<%=memberInfo.getPhotoUrl()%>" alt=" " style="width: 30px;
-<<<<<<< HEAD
     margin-top: 15px;">
         </a>
         <a href="COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>

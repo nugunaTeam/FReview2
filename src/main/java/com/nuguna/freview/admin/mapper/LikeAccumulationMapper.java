@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface LikeAccumulationMapper {
 
-  LikeAccumulationVO findByPostSeq(Long postSeq);
+  LikeAccumulationVO getByPostSeq(Long postSeq);
   void insert(LikeAccumulationVO accumulation);
   void update(LikeAccumulationVO accumulation);
 }

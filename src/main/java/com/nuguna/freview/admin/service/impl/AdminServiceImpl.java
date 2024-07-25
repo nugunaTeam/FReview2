@@ -26,7 +26,7 @@ public class AdminServiceImpl implements AdminService {
 
   @Override
   public List<CustomerInfoDTO> getCustomerList(Long previousUserSeq, String searchWord, Integer pageSize) {
-    if (searchWord == null) {
+    if (searchWord == null || searchWord.isEmpty()) {
       return adminMapper.selectCustomerList(previousUserSeq, pageSize);
     } else {
       return adminMapper.searchCustomer(previousUserSeq, searchWord, pageSize);

@@ -63,6 +63,11 @@
     background: none;
     cursor: pointer;
   }
+
+  .high-noshow {
+    color: red !important;
+  }
+
 </style>
 
 <body>
@@ -130,6 +135,11 @@
             <i class="bi bi-circle"></i><span>스토어</span>
           </a>
         </li>
+        <li>
+          <a href="/admin/manage/experience">
+            <i class="bi bi-circle"></i><span>체험</span>
+          </a>
+        </li>
       </ul>
     </li>
     <ul class="sidebar-nav">
@@ -169,7 +179,7 @@
                 <th>닉네임</th>
                 <th>아이디</th>
                 <th>가입일자</th>
-                <th>노쇼횟수</th>
+                <th>누적 노쇼 횟수</th>
                 <th>탈퇴</th>
               </tr>
               </thead>
@@ -270,12 +280,13 @@
       let htmlStr = "";
       $.map(data, function (user) {
         let formattedCreatedAt = dayjs(user["createdAt"]).format('YYYY-MM-DD HH:mm');
+        let highlightClass = user["totalNoshow"] > 3 ? 'high-noshow' : '';
 
         htmlStr += "<tr>";
         htmlStr += "<td>" + user["nickname"] + "</td>";
         htmlStr += "<td><a href='/brand-page?user_seq=" + user["seq"] + "'>" + user["email"] + "</a></td>";
         htmlStr += "<td>" + formattedCreatedAt + "</td>";
-        htmlStr += "<td>" + "0" + "</td>";
+        htmlStr += "<td class='" + highlightClass + "'>" + user["totalNoshow"] + "</td>"; // 여기에 클래스 적용
         htmlStr += "<td><button class='btn btn-danger btn-sm delete-btn' data-bs-toggle='modal' data-bs-target='#deleteModal' data-id='" + user["email"] + "' data-seq='" + user["seq"] + "'>X</button></td>";
         htmlStr += "</tr>";
       });

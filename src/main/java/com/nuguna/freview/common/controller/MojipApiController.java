@@ -7,7 +7,6 @@ import com.nuguna.freview.common.dto.request.MojipUpdateRequestDTO;
 import com.nuguna.freview.common.dto.response.MojipPostDetailDTO;
 import com.nuguna.freview.common.dto.response.page.MojipResponseDTO;
 import com.nuguna.freview.common.service.MojipService;
-import com.nuguna.freview.common.service.PostService;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -26,25 +25,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class MojipApiController {
 
   private final MojipService mojipService;
-  private final PostService postService;
   private final int PAGE_SIZE = 12;
 
   @Autowired
-  public MojipApiController(MojipService mojipService, PostService postService) {
+  public MojipApiController(MojipService mojipService) {
     this.mojipService = mojipService;
-    this.postService = postService;
   }
 
   //TODO: 모집글의 지원자 수 함께 보여주기
   @RequestMapping(value = "/list", method = RequestMethod.POST)
   public MojipResponseDTO getMojipList(@RequestBody MojipListRequestDTO requestDTO) {
+    Long requesterSeq = requestDTO.getRequesterSeq();
     Long previousPostSeq = requestDTO.getPreviousPostSeq();
     String searchWord = requestDTO.getSearchWord();
-
     if (previousPostSeq == null) {
       previousPostSeq = Long.MAX_VALUE;
     }
-      List<MojipPostDetailDTO> mojipList = mojipService.getMojipList(previousPostSeq, searchWord, PAGE_SIZE);
+      List<MojipPostDetailDTO> mojipList = mojipService.getMojipList(requesterSeq, previousPostSeq, searchWord, PAGE_SIZE);
       boolean hasMore = mojipList.size() == PAGE_SIZE;
       MojipResponseDTO responseDTO = new MojipResponseDTO();
       responseDTO.setMojipList(mojipList);
@@ -96,7 +93,7 @@ public class MojipApiController {
 
   @RequestMapping(value = "/{deletePostSeq}", method = RequestMethod.DELETE)
   public ResponseEntity<?> deleteMojipPost(@PathVariable Long deletePostSeq) {
-    if (postService.deletePost(deletePostSeq)) {
+    if (mojipService.deletePost(deletePostSeq)) {
       return new ResponseEntity<>(HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -272,7 +272,7 @@
             data: JSON.stringify(postData),
             success: function(response) {
               alert('게시글이 성공적으로 업데이트되었습니다.');
-              window.location.reload(); // 성공 후 페이지 새로고침
+              window.location.reload();
             },
             error: function(xhr, status, error) {
               alert('업데이트 실패: ' + error);

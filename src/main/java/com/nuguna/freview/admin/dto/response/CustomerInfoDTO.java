@@ -17,4 +17,5 @@ public class CustomerInfoDTO {
   private String nickname;
   private String email;
   private Timestamp createdAt;
+  private int totalNoshow;
 }
