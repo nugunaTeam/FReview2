@@ -8,6 +8,7 @@ import com.nuguna.freview.customer.dto.response.ReviewLogInfoDTO;
 import com.nuguna.freview.customer.dto.response.ReviewPaginationInfoResponseDTO;
 import com.nuguna.freview.customer.dto.response.page.CustomerBrandInfoResponseDTO;
 import com.nuguna.freview.customer.dto.response.page.CustomerMyBrandPageInfoResponseDTO;
+import com.nuguna.freview.customer.dto.response.page.CustomerOtherPageInfoResponseDTO;
 import com.nuguna.freview.customer.mapper.CustomerPageMapper;
 import com.nuguna.freview.customer.mapper.CustomerReviewMapper;
 import com.nuguna.freview.customer.service.CustomerPageService;
@@ -57,6 +58,11 @@ public class CustomerPageServiceImpl implements CustomerPageService {
         = new ReviewPaginationInfoResponseDTO(CUSTOMER_REVIEW_LOG_FIRST_PAGE_NUMBER,
         CUSTOMER_REVIEW_LOG_FIRST_PAGE_NUMBER, endPage, hasNext, false);
     return new CustomerMyBrandPageInfoResponseDTO(brandInfo, reviewsInfo, reviewPaginationInfo);
+  }
+
+  @Override
+  public CustomerOtherPageInfoResponseDTO getOtherBrandPageInfo(Long userSeq) {
+    return null;
   }
 
 
