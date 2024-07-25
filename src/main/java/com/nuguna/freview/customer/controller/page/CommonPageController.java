@@ -41,6 +41,7 @@ public class CommonPageController {
     model.addAttribute("reviewInfos", otherBrandPageInfo.getReviewInfos());
     model.addAttribute("reviewPaginationInfo", otherBrandPageInfo.getReviewPaginationInfo());
     model.addAttribute("userNickname", userNickname);
+    model.addAttribute("fromUserSeq", fromUserSeq);
 
     return "customer-brand-info";
   }
