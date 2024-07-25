@@ -9,10 +9,9 @@ import java.util.Date;
 public class JwtUtil {
 
   private String secretKey = "secret";
-  private long tokenValidTime = 1000L * 60 * 60;
 
   // JWT 토큰 생성
-  public String createToken(Long userSeq, String userEmail, String role) {
+  public String createToken(Long userSeq, String userEmail, String role, long tokenValidTime) {
     byte[] decoded = Base64.getDecoder().decode(secretKey);
     String decodedSecretKey = new String(decoded);
     Claims claims = Jwts.claims();

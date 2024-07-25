@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -33,9 +34,19 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
     GrantedAuthority grantedAuthority = iterator.next();
     String role = grantedAuthority.getAuthority();
 
-    String AccessToken = jwtUtil.createToken(userSeq, userEmail, role);
+    //jwt 생성
+    String accessToken = jwtUtil.createToken(userSeq, userEmail, role,1000L * 60 * 60);
+    String refreshToken = jwtUtil.createToken(userSeq, userEmail, role,1000L * 60 * 180);
+
+    // 리프레시 토큰 쿠키에 저장
+    Cookie refreshCookie = new Cookie("refresh", refreshToken);
+    refreshCookie.setPath("/");
+    refreshCookie.setMaxAge(60*180);
+    refreshCookie.setSecure(true);
+
+    httpServletResponse.setHeader("Authorization", "Bearer " + accessToken);
+    httpServletResponse.addCookie(refreshCookie);
     String targetUrl = determinTargetUrl(role);
-    httpServletResponse.setHeader("Authorization", "Bearer " + AccessToken);
     httpServletResponse.sendRedirect(targetUrl);
   }
 
