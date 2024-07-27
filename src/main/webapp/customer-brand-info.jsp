@@ -270,7 +270,7 @@
 
                                 </div>
                                 <p id="food-type-buttons-message" class="text-primary"
-                                   style="font-size: 14px;"></p>
+                                   style="font-size: 18px;"></p>
                             </div>
                         </div>
 
@@ -343,7 +343,7 @@
                             <div class="col-lg-8 col-md-6">
                                 <div id="tag-buttons"></div>
                                 <p id="tag-select-message" class="text-primary"
-                                   style="font-size: 14px;"></p>
+                                   style="font-size: 18px;"></p>
                             </div>
                         </div>
 
@@ -391,71 +391,80 @@
                             <div class="col-lg-3 col-md-4 label" style="color:blue">리뷰 로그</div>
                             <div class="col-lg-8 col-md-6">
                                 <div class="table-container">
-                                    <table class="table table-striped table-bordered text-center"
-                                           id="review-log-table">
-                                        <thead>
-                                        <tr>
-                                            <th>스토어명</th>
-                                            <th>방문일자</th>
-                                            <th>리뷰</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <c:forEach var="review" items="${reviewInfos}">
-                                            <c:set var="visitDate" value="${review.visitDate}"/>
+                                    <!-- 리뷰가 있는 경우 테이블 표시 -->
+                                    <c:if test="${not empty reviewInfos}">
+                                        <table class="table table-striped table-bordered text-center"
+                                               id="review-log-table">
+                                            <thead>
                                             <tr>
-                                                <td>
-                                                    <a href="/brand/${review.storeSeq}">${review.storeName}</a>
-                                                </td>
-                                                <td>${visitDate}</td>
-                                                <td>
-                                                    <c:choose>
-                                                        <c:when test="${review.status == 'WRITTEN'}">
-                                                            <a href="${review.url}"
-                                                               class="btn btn-success btn-sm">리뷰
-                                                                보러가기</a>
-                                                        </c:when>
-                                                        <c:when test="${review.status == 'UNWRITTEN'}">
-                                                            <button class="btn btn-sm"
-                                                                    style="background-color: indianred; border-color: indianred; color: white;">
-                                                                미등록
-                                                            </button>
-                                                        </c:when>
-                                                    </c:choose>
-                                                </td>
+                                                <th>스토어명</th>
+                                                <th>방문일자</th>
+                                                <th>리뷰</th>
                                             </tr>
-                                        </c:forEach>
-                                        </tbody>
-                                    </table>
-                                    <div class="pagination-container">
-                                        <button id="prev-block-button"
-                                                class="btn btn-primary edit-btn"
-                                                style="${reviewPageInfo.hasPrevious ? '' : 'display:none;'}">
-                                            &lt;
-                                        </button>
-                                        <div id="page-buttons"
-                                             class="d-flex justify-content-center mx-2">
-                                            <c:forEach var="page"
-                                                       begin="${reviewPageInfo.startPage}"
-                                                       end="${reviewPageInfo.endPage}">
-                                                <c:choose>
-                                                    <c:when test="${page == reviewPageInfo.currentPage}">
-                                                        <button class="btn btn-secondary edit-btn"
-                                                                disabled>${page}</button>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <button class="btn btn-primary edit-btn"
-                                                                data-page="${page}">${page}</button>
-                                                    </c:otherwise>
-                                                </c:choose>
+                                            </thead>
+                                            <tbody>
+                                            <c:forEach var="review" items="${reviewInfos}">
+                                                <c:set var="visitDate" value="${review.visitDate}"/>
+                                                <tr>
+                                                    <td>
+                                                        <a href="/brand/${review.storeSeq}">${review.storeName}</a>
+                                                    </td>
+                                                    <td>${visitDate}</td>
+                                                    <td>
+                                                        <c:choose>
+                                                            <c:when test="${review.status == 'WRITTEN'}">
+                                                                <a href="${review.url}"
+                                                                   class="btn btn-success btn-sm">리뷰
+                                                                    보러가기</a>
+                                                            </c:when>
+                                                            <c:when test="${review.status == 'UNWRITTEN'}">
+                                                                <button class="btn btn-sm"
+                                                                        style="background-color: indianred; border-color: indianred; color: white;">
+                                                                    미등록
+                                                                </button>
+                                                            </c:when>
+                                                        </c:choose>
+                                                    </td>
+                                                </tr>
                                             </c:forEach>
+                                            </tbody>
+                                        </table>
+                                        <div class="pagination-container">
+                                            <button id="prev-block-button"
+                                                    class="btn btn-primary edit-btn"
+                                                    style="${reviewPageInfo.hasPrevious ? '' : 'display:none;'}">
+                                                &lt;
+                                            </button>
+                                            <div id="page-buttons"
+                                                 class="d-flex justify-content-center mx-2">
+                                                <c:forEach var="page"
+                                                           begin="${reviewPageInfo.startPage}"
+                                                           end="${reviewPageInfo.endPage}">
+                                                    <c:choose>
+                                                        <c:when test="${page == reviewPageInfo.currentPage}">
+                                                            <button class="btn btn-secondary edit-btn"
+                                                                    disabled>${page}</button>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <button class="btn btn-primary edit-btn"
+                                                                    data-page="${page}">${page}</button>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:forEach>
+                                            </div>
+                                            <button id="next-block-button"
+                                                    class="btn btn-primary edit-btn"
+                                                    style="${reviewPageInfo.hasNext ? '' : 'display:none;'}">
+                                                &gt;
+                                            </button>
                                         </div>
-                                        <button id="next-block-button"
-                                                class="btn btn-primary edit-btn"
-                                                style="${reviewPageInfo.hasNext ? '' : 'display:none;'}">
-                                            &gt;
-                                        </button>
-                                    </div>
+                                    </c:if>
+
+                                    <!-- 리뷰가 없는 경우 메시지 표시 -->
+                                    <c:if test="${empty reviewInfos}">
+                                        <p style="font-size: 18px; color : hotpink">아직 리뷰 기록이
+                                            없어요.</p>
+                                    </c:if>
                                 </div>
                             </div>
                         </div>
