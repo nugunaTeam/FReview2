@@ -2,8 +2,10 @@ package com.nuguna.freview.customer.service;
 
 import com.nuguna.freview.customer.dto.request.CustomerMyReviewRegisterRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerMyReviewsRetrieveRequestDTO;
+import com.nuguna.freview.customer.dto.request.CustomerOtherReviewsRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyReviewRegisterResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyReviewsRetrieveResponseDTO;
+import com.nuguna.freview.customer.dto.response.CustomerOtherReviewsRetrieveResponseDTO;
 
 public interface CustomerReviewService {
 
@@ -12,4 +14,7 @@ public interface CustomerReviewService {
 
   CustomerMyReviewsRetrieveResponseDTO getCustomerMyReviews(
       CustomerMyReviewsRetrieveRequestDTO customerMyReviewsRetrieveRequestDTO);
+
+  CustomerOtherReviewsRetrieveResponseDTO getOtherCustomerReviews(
+      CustomerOtherReviewsRetrieveRequestDTO customerOtherReviewsRetrieveRequestDTO);
 }

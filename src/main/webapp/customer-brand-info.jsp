@@ -30,6 +30,16 @@
       .d-flex.justify-content-center {
         gap: 0.5rem;
       }
+
+      #review-log-table th {
+        font-weight: bold;
+      }
+
+      #page-buttons .btn {
+        margin: 0 2px;
+      }
+
+
     </style>
 
     <style>
@@ -46,6 +56,24 @@
         border-radius: 4px;
         box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
         transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+      }
+
+      .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .table-container {
+        position: relative;
+      }
+
+      .profile-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* 이미지의 중앙을 맞추고, 자르기 */
+        object-position: center; /* 중앙 위치 */
       }
 
     </style>
@@ -318,9 +346,6 @@
                                         <tbody>
                                         <c:forEach var="review" items="${reviewInfos}">
                                             <c:set var="visitDate" value="${review.visitDate}"/>
-                                            <c:if test="${review.status == 'NOSHOW'}">
-                                                <c:set var="visitDate" value="노쇼"/>
-                                            </c:if>
                                             <tr>
                                                 <td>
                                                     <a href="/brand/${review.storeSeq}">${review.storeName}</a>
@@ -335,10 +360,7 @@
                                                         </c:when>
                                                         <c:when test="${review.status == 'UNWRITTEN'}">
                                                             <button class="btn btn-sm"
-                                                                    style="background-color: indianred; border-color: indianred; color: white;"
-                                                                    data-toggle="modal"
-                                                                    data-target="#reviewModal"
-                                                                    data-review-seq="${review.seq}">
+                                                                    style="background-color: indianred; border-color: indianred; color: white;">
                                                                 미등록
                                                             </button>
                                                         </c:when>
@@ -382,54 +404,9 @@
                         </div>
 
 
+                        <input type="hidden" id="userSeq" name="userSeq"
+                               value="${userSeq}">
                         <script>
-                          currentReviewLogPage = 1;
-
-                          $(document).ready(function () {
-
-                            $('#reviewModal').on('show.bs.modal', function (event) {
-                              var button = $(event.relatedTarget);
-                              var reviewSeq = button.data('review-seq');
-                              var modal = $(this);
-                              modal.find('#reviewSeq').val(reviewSeq);
-                            });
-
-                            $('#reviewForm').on('submit', function (event) {
-                              event.preventDefault();
-                              var formData = {
-                                userSeq: $('#userSeq').val(),
-                                reviewSeq: $('#reviewSeq').val(),
-                                reviewUrl: $('#reviewUrl').val()
-                              };
-
-                              $.ajax({
-                                url: '/api/customer/review',
-                                method: 'POST',
-                                contentType: 'application/json',
-                                data: JSON.stringify(formData),
-                                success: function (response) {
-                                  console.log(response);
-                                  var reviewSeq = formData.reviewSeq;
-                                  var reviewUrl = response.reviewUrl;
-                                  var reviewButton = $(
-                                      'button[data-review-seq="' + reviewSeq + '"]');
-                                  reviewButton.replaceWith('<a href="' + reviewUrl
-                                      + '" class="btn btn-success btn-sm">리뷰 확인</a>');
-                                  $('#reviewModal').modal('hide');
-                                  alert('리뷰 등록이 완료되었습니다.');
-                                },
-                                error: function (err) {
-                                  console.log(err);
-                                  if (err.responseJSON && err.responseJSON.message) {
-                                    alert(err.responseJSON.message);
-                                  } else {
-                                    alert('리뷰 등록에 실패했습니다. 다시 시도해주세요.');
-                                  }
-                                }
-                              });
-                            });
-                          });
-
                           function initializePagination(reviewPageInfo) {
 
                             $('#prev-block-button').off('click').on('click', function () {
@@ -476,8 +453,10 @@
                           function loadPage(page) {
                             var userSeq = $('#userSeq').val();
 
+                            console.log('userSeq:', userSeq, 'page:', page); // 디버깅용
+
                             $.ajax({
-                              url: '/api/customer/reviews',
+                              url: '/api/customer/other/reviews',
                               method: 'POST',
                               contentType: 'application/json',
                               data: JSON.stringify({'userSeq': userSeq, 'page': page}),
@@ -488,9 +467,6 @@
                                 reviewLogTableBody.empty();
                                 $.each(reviewInfos, function (index, review) {
                                   var visitDate = review.visitDate;
-                                  if (review.status === 'NOSHOW') {
-                                    visitDate = '노쇼';
-                                  }
                                   var reviewRow = '<tr>' +
                                       '<td><a href="/brand/' + review.storeSeq + '">'
                                       + review.storeName + '</a></td>' +
@@ -499,7 +475,6 @@
                                       '</tr>';
                                   reviewLogTableBody.append(reviewRow);
                                 });
-                                currentReviewLogPage = page;
                                 initializePagination(response.reviewPageInfo);
                               },
                               error: function (err) {
@@ -548,17 +523,30 @@
     </div>
 </footer><!-- End Footer -->
 
-<a href="#"
-   class="back-to-top d-flex align-items-center justify-content-center"><i
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>
+<!-- jquery  -->
+
+<!-- icon bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
 <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/assets/vendor/quill/quill.js"></script>
+<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
 
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
 
+
 </body>
 
+</html>
 </html>
