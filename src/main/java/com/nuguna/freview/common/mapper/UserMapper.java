@@ -11,7 +11,7 @@ public interface UserMapper {
 
   void insertCustomer(UserVO uservo);
   UserVO selectUser(@Param("userSeq") Long userSeq);
-  List<PersonalizedUserDTO> findByDish(String dish);
-  List<PersonalizedUserDTO> findByCategoryExcludingDish(@Param("category") String category, @Param("dish") String dish);
-  List<PersonalizedUserDTO> findRandomUsers(@Param("limit") int limit);
+  List<PersonalizedUserDTO> findByDish(@Param("dish") String dish, @Param("pageCode") String pageCode);
+  List<PersonalizedUserDTO> findByCategoryExcludingDish(@Param("category") String category, @Param("dish") String dish, @Param("pageCode") String pageCode);
+  List<PersonalizedUserDTO> findRandomUsers(@Param("limit") int limit, @Param("pageCode") String pageCode);
 }

@@ -46,7 +46,7 @@ public class RecommendationServiceImpl implements RecommendationService {
   }
 
   @Override
-  public List<PersonalizedUserDTO> getPersonalizedRecommendationUsers(Long userSeq) {
+  public List<PersonalizedUserDTO> getPersonalizedRecommendationUsers(Long userSeq, String pageCode) {
     List<PersonalizedUserDTO> recommendations = new ArrayList<>();
     Set<Long> userIds = new HashSet<>();
 
@@ -66,7 +66,7 @@ public class RecommendationServiceImpl implements RecommendationService {
       String topDish = topDishInterest.getDish();
       String topCategory = topDishInterest.getCategory();
 
-      List<PersonalizedUserDTO> dishUsers = userMapper.findByDish(topDish);
+      List<PersonalizedUserDTO> dishUsers = userMapper.findByDish(topDish, pageCode);
       for (PersonalizedUserDTO user : dishUsers) {
         if (recommendations.size() < 3 && userIds.add(user.getUserSeq())) {
           recommendations.add(user);
@@ -74,7 +74,7 @@ public class RecommendationServiceImpl implements RecommendationService {
       }
 
       if (recommendations.size() < 5) {
-        List<PersonalizedUserDTO> additionalUsers = userMapper.findByCategoryExcludingDish(topCategory, topDish).stream()
+        List<PersonalizedUserDTO> additionalUsers = userMapper.findByCategoryExcludingDish(topCategory, topDish, pageCode).stream()
             .filter(user -> userIds.add(user.getUserSeq()))
             .limit(2)
             .collect(Collectors.toList());
@@ -83,7 +83,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     if (recommendations.size() < 5) {
-      List<PersonalizedUserDTO> randomUsers = userMapper.findRandomUsers(5 - recommendations.size());
+      List<PersonalizedUserDTO> randomUsers = userMapper.findRandomUsers(5 - recommendations.size(), pageCode);
       for (PersonalizedUserDTO user : randomUsers) {
         if (recommendations.size() < 5 && userIds.add(user.getUserSeq())) {
           recommendations.add(user);

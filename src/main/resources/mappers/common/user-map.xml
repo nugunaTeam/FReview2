@@ -56,7 +56,7 @@
            LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
            LEFT JOIN user_tag ut ON u.seq = ut.user_seq
            LEFT JOIN tag t ON ut.tag_seq = t.seq
-    WHERE ft.dish = #{dish}
+    WHERE ft.dish = #{dish} AND u.code = #{pageCode}
     GROUP BY u.seq, u.nickname, u.email, u.profile_photo_url
     ORDER BY RAND()
   </select>
@@ -70,7 +70,7 @@
            LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
            LEFT JOIN user_tag ut ON u.seq = ut.user_seq
            LEFT JOIN tag t ON ut.tag_seq = t.seq
-    WHERE ft.code = #{category} AND ft.dish != #{dish}
+    WHERE ft.code = #{category} AND ft.dish != #{dish} AND u.code = #{pageCode}
     GROUP BY u.seq, u.nickname, u.email, u.profile_photo_url
     ORDER BY RAND()
   </select>
@@ -85,6 +85,7 @@
            LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
            LEFT JOIN user_tag ut ON u.seq = ut.user_seq
            LEFT JOIN tag t ON ut.tag_seq = t.seq
+    WHERE u.code = #{pageCode}
     GROUP BY u.seq, u.nickname, u.email, u.profile_photo_url
     ORDER BY RAND() LIMIT #{limit}
   </select>
