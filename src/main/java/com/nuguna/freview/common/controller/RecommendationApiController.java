@@ -1,16 +1,21 @@
 package com.nuguna.freview.common.controller;
 
-import com.nuguna.freview.common.dto.request.RecommendationListRequestDTO;
+import com.nuguna.freview.common.dto.PersonalizedUserDTO;
 import com.nuguna.freview.common.dto.request.RecommendationFilteringRequestDTO;
+import com.nuguna.freview.common.dto.request.RecommendationListRequestDTO;
+import com.nuguna.freview.common.dto.response.PersonalizedUsersResponseDTO;
 import com.nuguna.freview.common.dto.response.RecommendationResponseDTO;
 import com.nuguna.freview.common.dto.response.page.RecommendationListResponseDTO;
 import com.nuguna.freview.common.service.RecommendationService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -72,5 +77,15 @@ public class RecommendationApiController {
     }
     return responseDTO;
   }
-}
 
+  @RequestMapping(value = "/personalization", method = RequestMethod.POST)
+  public ResponseEntity<PersonalizedUsersResponseDTO> customizeRecommendation(
+      @RequestParam Long userSeq) {
+    List<PersonalizedUserDTO> recommendedUsers = recommendationService.getPersonalizedRecommendationUsers(
+        userSeq);
+
+    PersonalizedUsersResponseDTO responseDTO = new PersonalizedUsersResponseDTO(recommendedUsers);
+
+    return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+  }
+}
