@@ -173,18 +173,19 @@
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div>
-
+    
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
             <li class="nav-item dropdown pe-3">
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
+
                     <img src="/user/${userSeq}/profile"
                          alt="Profile"
                          class="rounded-circle profile-img"
-                         style="position: relative;
-                         overflow: hidden; border-radius: 50%;">
+                         style="margin-right: 5px;">
                     <span id="nickname-holder-head"
-                          class="d-none d-md-block">${brandInfo.nickname}</span>
+                          class="d-none d-md-block"
+                          style="font-size : 18px;">${brandInfo.nickname}</span>
                 </a>
             </li>
         </ul>
@@ -1117,7 +1118,12 @@
                               };
                               initializePagination(reviewPageInfo);
                             </script>
-
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
 
 <footer id="footer" class="footer">
@@ -1136,23 +1142,10 @@
 <a href="#"
    class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>
-<!-- jquery  -->
-
-<!-- icon bootstrap -->
-<%--<script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>--%>
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
 <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="/assets/vendor/chart.js/chart.umd.js"></script>
-<script src="/assets/vendor/echarts/echarts.min.js"></script>
-<script src="/assets/vendor/quill/quill.js"></script>
-<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
-<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
-<script src="/assets/vendor/php-email-form/validate.js"></script>
 
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
