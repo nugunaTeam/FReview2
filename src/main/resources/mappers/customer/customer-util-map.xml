@@ -10,11 +10,26 @@
     where seq = #{userSeq}
   </select>
 
+
+  <select id="checkUserIsStore" resultType="java.lang.Boolean">
+    select count(1) > 0
+    from user u
+    where u.seq = #{userSeq}
+      and u.code = 'STORE'
+  </select>
+
   <select id="checkZzimedOtherUser" resultType="java.lang.Boolean">
     select count(1) > 0
     from zzim
     where from_user_seq = #{fromUserSeq}
       and to_user_seq = #{toUserSeq}
+  </select>
+
+  <select id="checkStoreProposedToUser" resultType="java.lang.Boolean">
+    select count(1) > 0
+    from experience
+    where from_user_seq = #{storeSeq}
+      and to_user_seq = #{customerSeq}
   </select>
 
 </mapper>

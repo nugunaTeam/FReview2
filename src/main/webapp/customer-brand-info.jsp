@@ -175,13 +175,9 @@
                         </button>
 
                         <!-- 제안하기 버튼 -->
-                        <button id="openProposalModal"
-                                style="background-color: mediumvioletred; color: white; border: none; border-radius: 5px; padding: 0.5rem 1rem; font-size: 1rem; cursor: pointer; margin-left: 1rem; outline: none;">
-                            제안하기
-                        </button>
+                        <div id="proposalButtonContainer"></div>
                     </div>
                 </div>
-
 
                 <!-- 모달 HTML -->
                 <div class="modal fade" id="proposalModal" tabindex="-1" role="dialog"
@@ -217,21 +213,61 @@
 
                 <script>
                   $(document).ready(function () {
-                    // 버튼 클릭 시 모달 띄우기
-                    $('#openProposalModal').on('click', function () {
+                    var proposed = ${proposed};  // false 또는 true
+                    var isFromUserStore = ${isFromUserStore};  // true 또는 false
+                    var fromUserSeq = ${fromUserSeq};
+                    var userSeq = ${userSeq};
+
+                    // 버튼을 삽입할 컨테이너
+                    var $buttonContainer = $('#proposalButtonContainer');
+
+                    // 버튼 스타일
+                    var buttonStyles = {
+                      border: 'none',
+                      borderRadius: '5px',
+                      padding: '0.5rem 1rem',
+                      fontSize: '1rem',
+                      marginLeft: '1rem',
+                      outline: 'none'
+                    };
+
+                    var disabledButtonStyles = $.extend({}, buttonStyles, {
+                      backgroundColor: 'gray',
+                      color: 'white',
+                      pointerEvents: 'none'
+                    });
+
+                    var enabledButtonStyles = $.extend({}, buttonStyles, {
+                      backgroundColor: 'mediumvioletred',
+                      color: 'white',
+                      cursor: 'pointer'
+                    });
+
+                    // 버튼 생성 함수
+                    function createButton(text, styles, id, disabled) {
+                      var $button = $('<button></button>').text(text).css(styles);
+                      if (id) $button.attr('id', id);
+                      if (disabled) $button.prop('disabled', true);
+                      $buttonContainer.empty().append($button);
+                    }
+
+                    if (isFromUserStore) {
+                      if (proposed) {
+                        createButton('제안 진행 중', disabledButtonStyles, null, true);
+                      } else {
+                        createButton('제안하기', enabledButtonStyles, 'openProposalModal');
+                      }
+                    }
+
+                    $(document).on('click', '#openProposalModal', function () {
                       $('#proposalModal').modal('show');
                     });
 
-                    // 폼 제출 시 처리
                     $('#proposalForm').on('submit', function (event) {
                       event.preventDefault();
 
-                      // 폼 데이터 수집
                       var proposalDetail = $('#proposalDetail').val();
-                      var fromUserSeq = ${fromUserSeq};
-                      var userSeq = ${userSeq};
 
-                      // 데이터 객체 생성
                       var dataObject = {
                         storeSeq: fromUserSeq,
                         customerSeq: userSeq,
@@ -245,6 +281,7 @@
                         data: JSON.stringify(dataObject),
                         success: function () {
                           alert('해당 체험단에게 제안을 보냈습니다.');
+                          createButton('제안 진행 중', disabledButtonStyles, null, true);
                           $('#proposalModal').modal('hide');
                         },
                         error: function (xhr) {

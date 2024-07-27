@@ -8,7 +8,12 @@ public interface CustomerUtilMapper {
 
   String getUserNickname(Long userSeq);
 
+  Boolean checkUserIsStore(Long userSeq);
+
   Boolean checkZzimedOtherUser(@Param("fromUserSeq") Long fromUserSeq,
       @Param("toUserSeq") Long toUserSeq);
+
+  Boolean checkStoreProposedToUser(@Param("storeSeq") Long storeSeq,
+      @Param("customerSeq") Long customerSeq);
 
 }

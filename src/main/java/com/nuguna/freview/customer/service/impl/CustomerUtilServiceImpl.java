@@ -23,8 +23,18 @@ public class CustomerUtilServiceImpl implements CustomerUtilService {
   }
 
   @Override
+  public boolean checkUserIsStore(Long userSeq) {
+    return customerUtilMapper.checkUserIsStore(userSeq);
+  }
+
+  @Override
   @Transactional(readOnly = true)
   public boolean checkZzimedOtherUser(Long fromUserSeq, Long toUserSeq) {
     return customerUtilMapper.checkZzimedOtherUser(fromUserSeq, toUserSeq);
+  }
+
+  @Override
+  public boolean checkStoreProposedToUser(Long storeSeq, Long customerSeq) {
+    return customerUtilMapper.checkStoreProposedToUser(storeSeq, customerSeq);
   }
 }
