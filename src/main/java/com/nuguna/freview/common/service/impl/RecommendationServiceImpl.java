@@ -8,10 +8,9 @@ import com.nuguna.freview.common.mapper.RecommendationMapper;
 import com.nuguna.freview.common.mapper.UserMapper;
 import com.nuguna.freview.common.service.RecommendationService;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -53,11 +52,17 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     List<InterestAccumulationDTO> interests = interestAccumulationMapper.getByUserSeq(userSeq);
 
-    Optional<InterestAccumulationDTO> topDishInterestOpt = interests.stream()
-            .max(Comparator.comparing(InterestAccumulationDTO::getTotalScore));
+    int maxTotalScore = interests.stream()
+        .mapToInt(InterestAccumulationDTO::getTotalScore)
+        .max()
+        .orElse(0);
 
-    if (topDishInterestOpt.isPresent()) {
-      InterestAccumulationDTO topDishInterest = topDishInterestOpt.get();
+    List<InterestAccumulationDTO> topDishInterests = interests.stream()
+        .filter(interest -> interest.getTotalScore() == maxTotalScore)
+        .collect(Collectors.toList());
+
+    if (!topDishInterests.isEmpty()) {
+      InterestAccumulationDTO topDishInterest = topDishInterests.get(new Random().nextInt(topDishInterests.size()));
       String topDish = topDishInterest.getDish();
       String topCategory = topDishInterest.getCategory();
 
