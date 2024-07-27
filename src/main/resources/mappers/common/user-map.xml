@@ -22,15 +22,6 @@
     <result property="updatedAt" column="updated_at"/>
   </resultMap>
 
-  <resultMap id="personalizedUserResultMap" type="com.nuguna.freview.common.dto.PersonalizedUserDTO">
-    <id property="userSeq" column="seq" />
-    <result property="nickname" column="nickname" />
-    <result property="email" column="email" />
-    <result property="profilePhotoUrl" column="profile_photo_url" />
-    <result property="foodTypeWord" column="food_types" />
-    <result property="tagWord" column="tags" />
-  </resultMap>
-
   <insert id="insertCustomer" parameterType="com.nuguna.freview.common.vo.user.UserVO">
     insert into freview2.user(business_number, code, email, password, nickname, profile_photo_url,
                      sub_email, login_type, is_withdrawn, age_group, store_location,
@@ -45,49 +36,6 @@
       seq, business_number, code, email, password, nickname, profile_photo_url, introduce, sub_email, login_type, is_withdrawn, age_group, store_location, created_at, updated_at
     from user
     where seq = #{userSeq}
-  </select>
-
-  <select id="findByDish" parameterType="string" resultMap="personalizedUserResultMap">
-    SELECT u.seq, u.nickname, u.email, u.profile_photo_url,
-           GROUP_CONCAT(DISTINCT ft.dish) AS food_types,
-           GROUP_CONCAT(DISTINCT t.name) AS tags
-    FROM user u
-           LEFT JOIN user_food_type uft ON u.seq = uft.user_seq
-           LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
-           LEFT JOIN user_tag ut ON u.seq = ut.user_seq
-           LEFT JOIN tag t ON ut.tag_seq = t.seq
-    WHERE ft.dish = #{dish} AND u.code = #{pageCode}
-    GROUP BY u.seq, u.nickname, u.email, u.profile_photo_url
-    ORDER BY RAND()
-  </select>
-
-  <select id="findByCategoryExcludingDish" parameterType="map" resultMap="personalizedUserResultMap">
-    SELECT u.seq, u.nickname, u.email, u.profile_photo_url,
-           GROUP_CONCAT(DISTINCT ft.dish) AS food_types,
-           GROUP_CONCAT(DISTINCT t.name) AS tags
-    FROM user u
-           LEFT JOIN user_food_type uft ON u.seq = uft.user_seq
-           LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
-           LEFT JOIN user_tag ut ON u.seq = ut.user_seq
-           LEFT JOIN tag t ON ut.tag_seq = t.seq
-    WHERE ft.code = #{category} AND ft.dish != #{dish} AND u.code = #{pageCode}
-    GROUP BY u.seq, u.nickname, u.email, u.profile_photo_url
-    ORDER BY RAND()
-  </select>
-
-
-  <select id="findRandomUsers" parameterType="int" resultMap="personalizedUserResultMap">
-    SELECT u.seq, u.nickname, u.email, u.profile_photo_url,
-           GROUP_CONCAT(DISTINCT ft.dish) AS food_types,
-           GROUP_CONCAT(DISTINCT t.name) AS tags
-    FROM user u
-           LEFT JOIN user_food_type uft ON u.seq = uft.user_seq
-           LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
-           LEFT JOIN user_tag ut ON u.seq = ut.user_seq
-           LEFT JOIN tag t ON ut.tag_seq = t.seq
-    WHERE u.code = #{pageCode}
-    GROUP BY u.seq, u.nickname, u.email, u.profile_photo_url
-    ORDER BY RAND() LIMIT #{limit}
   </select>
 
 </mapper>
