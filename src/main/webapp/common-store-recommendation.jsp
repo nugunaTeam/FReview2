@@ -58,6 +58,24 @@
         flex: 0 0 auto;
         width: 20%;
       }
+
+      #personalizedInfoContainer {
+        border: 2px solid #007bff; /* 테두리 강조 */
+        border-radius: 10px; /* 테두리 둥글게 */
+        padding: 20px; /* 내부 여백 */
+        margin-bottom: 20px; /* 아래 여백 */
+      }
+
+      #personalizedInfo {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      #personalizedInfo .col-xl-2 {
+        flex: 0 0 auto;
+        width: 20%; /* 한 행에 5개의 카드가 들어가도록 설정 */
+      }
+
     </style>
 
     <!-- =======================================================
@@ -115,11 +133,15 @@
                         <label><input type="checkbox" name="tag" value="반려동물 환영"> 반려동물 환영</label>
                     </div>
                     <div>
-                        <button type="submit">필터링</button>
+                        <button type="submit">필터링</button> <button id="resetBtn">모든 필터 제거</button>
                     </div>
                 </form>
                 <br>
-                <button id="resetBtn">모든 필터 제거</button>
+                ${nickname}님이 요즘 관심있을만한 스토어들을 추천해드려요
+                <div id="personalizedInfoContainer">
+                    <div class="row" id="personalizedInfo"></div>
+                </div>
+                전체 보기
                 <div class="row" id="storeInfo"></div>
                 <div class="d-flex justify-content-center">
                     <button class="btn btn-primary" id="loadMoreBtn" data-previous-user-seq="0">더보기</button>
@@ -134,6 +156,7 @@
   $(document).ready(function() {
 
     loadInitialData();
+    loadInitialPersonalizationData();
 
     $('#filterForm').submit(function (event) {
       event.preventDefault();
@@ -185,7 +208,7 @@
         }),
         dataType: "json",
         success: function (response) {
-          renderData(response.userList);
+          renderData(response.userList, 'storeInfo');
           if (response.hasMore) {
             $('#loadMoreBtn').data('previous-user-seq', response.userList[response.userList.length - 1].userSeq).show();
           } else {
@@ -193,9 +216,28 @@
           }
         },
         error: function () {
-          console.error("[ERROR] 데이터 초기화 중 오류 발생");
+          console.error("[ERROR] 추천 데이터 초기화 중 오류 발생");
         }
       });
+    }
+
+    function loadInitialPersonalizationData() {
+      $.ajax({
+        method: "POST",
+        url: "/api/common/recommendation/personalization",
+        contentType: "application/json",
+        data: JSON.stringify({
+          requesterSeq: ${userSeq},
+          pageCode: "STORE"
+        }),
+        dataType: "json",
+        success: function (response) {
+          renderData(response.userList, 'personalizedInfo');
+        },
+        error: function() {
+          console.error("[ERROR] 개인화 추천 데이터 초기화 중 오류 발생");
+        }
+      })
     }
 
     function loadFilteredData(formData) {
@@ -207,7 +249,7 @@
         dataType: "json",
         success: function (response) {
           $('#storeInfo').html('');
-          renderData(response.userList);
+          renderData(response.userList, 'storeInfo');
           if (response.hasMore) {
             $('#loadMoreBtn').data('previous-user-seq', response.userList[response.userList.length - 1].userSeq)
             .data('isFiltered', true)
@@ -234,7 +276,7 @@
         dataType: "json",
         success: function (response) {
           if (response.userList.length > 0) {
-            renderData(response.userList);
+            renderData(response.userList, 'storeInfo');
             if (response.hasMore) {
               $('#loadMoreBtn').data('previous-user-seq', response.userList[response.userList.length - 1].userSeq).show();
             } else {
@@ -262,7 +304,7 @@
         dataType: "json",
         success: function (response) {
           if (response.userList.length > 0) {
-            renderData(response.userList);
+            renderData(response.userList, 'storeInfo');
             if (response.hasMore) {
               $('#loadMoreBtn').data('previous-user-seq', response.userList[response.userList.length - 1].userSeq).show();
             } else {
@@ -276,7 +318,7 @@
       });
     }
 
-    function renderData(data) {
+    function renderData(data, targetId) {
       let htmlStr = "";
       $.map(data, function (val) {
         htmlStr += "<div class='col-xl-2'>";
@@ -299,7 +341,7 @@
         htmlStr += "</div>";
         htmlStr += "</div>";
       });
-      $('#storeInfo').append(htmlStr);
+      $('#' + targetId).append(htmlStr);
     }
   });
 </script>

@@ -5,7 +5,6 @@ import com.nuguna.freview.common.dto.PersonalizedUserDTO;
 import com.nuguna.freview.common.dto.response.RecommendationResponseDTO;
 import com.nuguna.freview.common.mapper.InterestAccumulationMapper;
 import com.nuguna.freview.common.mapper.RecommendationMapper;
-import com.nuguna.freview.common.mapper.UserMapper;
 import com.nuguna.freview.common.service.RecommendationService;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,14 +21,12 @@ import org.springframework.stereotype.Service;
 public class RecommendationServiceImpl implements RecommendationService {
 
   private final RecommendationMapper recommendationMapper;
-  private final UserMapper userMapper;
   private final InterestAccumulationMapper interestAccumulationMapper;
 
   @Autowired
-  public RecommendationServiceImpl(RecommendationMapper recommendationMapper, UserMapper userMapper,
+  public RecommendationServiceImpl(RecommendationMapper recommendationMapper,
       InterestAccumulationMapper interestAccumulationMapper) {
     this.recommendationMapper = recommendationMapper;
-    this.userMapper = userMapper;
     this.interestAccumulationMapper = interestAccumulationMapper;
   }
 
@@ -46,7 +43,8 @@ public class RecommendationServiceImpl implements RecommendationService {
   }
 
   @Override
-  public List<PersonalizedUserDTO> getPersonalizedRecommendationUsers(Long userSeq, String pageCode) {
+  public List<PersonalizedUserDTO> getPersonalizedRecommendationUsers(Long userSeq,
+      String pageCode) {
     List<PersonalizedUserDTO> recommendations = new ArrayList<>();
     Set<Long> userIds = new HashSet<>();
 
@@ -62,7 +60,8 @@ public class RecommendationServiceImpl implements RecommendationService {
         .collect(Collectors.toList());
 
     if (!topDishInterests.isEmpty()) {
-      InterestAccumulationDTO topDishInterest = topDishInterests.get(new Random().nextInt(topDishInterests.size()));
+      InterestAccumulationDTO topDishInterest = topDishInterests.get(
+          new Random().nextInt(topDishInterests.size()));
       String topDish = topDishInterest.getDish();
       String topCategory = topDishInterest.getCategory();
 
@@ -74,7 +73,8 @@ public class RecommendationServiceImpl implements RecommendationService {
       }
 
       if (recommendations.size() < 5) {
-        List<PersonalizedUserDTO> additionalUsers = recommendationMapper.findByCategoryExcludingDish(topCategory, topDish, pageCode).stream()
+        List<PersonalizedUserDTO> additionalUsers = recommendationMapper.findByCategoryExcludingDish(
+                topCategory, topDish, pageCode).stream()
             .filter(user -> userIds.add(user.getUserSeq()))
             .limit(2)
             .collect(Collectors.toList());
@@ -83,7 +83,8 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     if (recommendations.size() < 5) {
-      List<PersonalizedUserDTO> randomUsers = recommendationMapper.findRandomUsers(5 - recommendations.size(), pageCode);
+      List<PersonalizedUserDTO> randomUsers = recommendationMapper.findRandomUsers(
+          5 - recommendations.size(), pageCode);
       for (PersonalizedUserDTO user : randomUsers) {
         if (recommendations.size() < 5 && userIds.add(user.getUserSeq())) {
           recommendations.add(user);
