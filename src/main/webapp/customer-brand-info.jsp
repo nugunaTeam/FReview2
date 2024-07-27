@@ -624,7 +624,7 @@
                           }
 
                           function loadPage(page) {
-                            var userSeq = $('#userSeq').val();
+                            var userSeq = ${userSeq};
 
                             $.ajax({
                               url: '/api/customer/other/reviews',
