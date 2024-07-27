@@ -10,4 +10,11 @@
     where seq = #{userSeq}
   </select>
 
+  <select id="checkZzimedOtherUser" resultType="java.lang.Boolean">
+    select count(1) > 0
+    from zzim
+    where from_user_seq = #{fromUserSeq}
+      and to_user_seq = #{toUserSeq}
+  </select>
+
 </mapper>

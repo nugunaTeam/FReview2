@@ -13,10 +13,10 @@ public class CannotZzimMyselfValidator implements
       return true; // null인 경우 검증 통과 (다른 검증에서 처리)
     }
 
-    Long userSeq = dto.getUserSeq();
+    Long fromUserSeq = dto.getFromUserSeq();
     Long toUserSeq = dto.getToUserSeq();
 
     // userSeq와 toUserSeq가 같으면 검증 실패
-    return !userSeq.equals(toUserSeq);
+    return !fromUserSeq.equals(toUserSeq);
   }
 }

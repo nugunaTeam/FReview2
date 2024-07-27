@@ -3,10 +3,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<%
-    Gson gson = new Gson();
-%>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -75,8 +71,8 @@
         object-fit: cover; /* 이미지의 중앙을 맞추고, 자르기 */
         object-position: center; /* 중앙 위치 */
       }
-
     </style>
+
 
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -124,6 +120,11 @@
 
 <body>
 
+<input type="hidden" id="userSeq" name="userSeq"
+       value="${userSeq}">
+<input type="hidden" id="fromUserSeq" name="fromUserSeq"
+       value="${fromUserSeq}">
+
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
@@ -161,14 +162,70 @@
             <div class="card">
                 <!-- profile  -->
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                    <img src="/user/${userSeq}/profile" alt="Profile"
-                         class="rounded-circle">
-                    <h2 id="nickname-holder-section">${otherBrandInfo.nickname}
+                    <img src="/user/${userSeq}/profile" alt="Profile" class="rounded-circle">
+                    <h2 id="nickname-holder-section" style="font-size: 1.5rem; margin: 0.5rem 0;">
+                        ${otherBrandInfo.nickname}
                     </h2>
-                    <div class="social-links mt-2 ri-heart-3-fill">
-                        ${otherBrandInfo.zzimCount}
+                    <div class="social-links mt-2"
+                         style="display: flex; align-items: center; justify-content: center;">
+                        <!-- 찜 버튼 -->
+                        <button id="zzimButton"
+                                style="background-color: #ffe6e6; border: none; font-size: 1.5rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 5px; display: flex; align-items: center; outline: none; height: 40px;">
+                            <i id="heartIcon" class="ri-heart-3-fill"
+                               style="margin-right: 0.7rem; color: pink;"></i>
+                            <span id="zzimCount" style="font-size: 1rem; color: #333;">
+                                ${otherBrandInfo.zzimCount}
+                            </span>
+                        </button>
+
+                        <!-- 제안하기 버튼 -->
+                        <button style="background-color: mediumvioletred; color: white; border: none; border-radius: 5px; padding: 0.5rem 1rem; font-size: 1rem; cursor: pointer; margin-left: 1rem; outline: none;">
+                            제안하기
+                        </button>
                     </div>
                 </div>
+
+
+                <script>
+                  $(document).ready(function () {
+                    var zzimed = ${zzimed};
+                    if (zzimed) {
+                      $('#heartIcon').css('color', 'red');
+                    } else {
+                      $('#heartIcon').css('color', 'white');
+                    }
+
+                    $('#zzimButton').on('click', function () {
+                      const fromUserSeq = $('#fromUserSeq').val();
+                      const userSeq = $('#userSeq').val();
+
+                      const data = {
+                        fromUserSeq: fromUserSeq,
+                        toUserSeq: userSeq
+                      };
+
+                      $.ajax({
+                        url: '/api/other/zzim',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(data),
+                        success: function (response) {
+                          if (response.zzimed) {
+                            alert("해당 체험단을 찜했습니다.");
+                            $('#heartIcon').css('color', 'red'); // 찜 활성화
+                          } else {
+                            alert("해당 체험단을 찜 취소했습니다.");
+                            $('#heartIcon').css('color', 'white'); // 찜 비활성화
+                          }
+                          $('#zzimCount').text(response.zzimCount);
+                        },
+                        error: function (error) {
+                          console.error('Error:', error);
+                        }
+                      });
+                    });
+                  });
+                </script>
 
                 <div class="card-body pt-3">
                     <div class="tab-content pt-2">
@@ -403,9 +460,6 @@
                             </div>
                         </div>
 
-
-                        <input type="hidden" id="userSeq" name="userSeq"
-                               value="${userSeq}">
                         <script>
                           function initializePagination(reviewPageInfo) {
 
@@ -452,8 +506,6 @@
 
                           function loadPage(page) {
                             var userSeq = $('#userSeq').val();
-
-                            console.log('userSeq:', userSeq, 'page:', page); // 디버깅용
 
                             $.ajax({
                               url: '/api/customer/other/reviews',

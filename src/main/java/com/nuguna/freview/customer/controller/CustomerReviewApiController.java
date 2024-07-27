@@ -51,7 +51,6 @@ public class CustomerReviewApiController {
   public ResponseEntity<CustomerOtherReviewsRetrieveResponseDTO> getOtherCustomerReviews(
       @Valid @RequestBody CustomerOtherReviewsRetrieveRequestDTO customerOtherReviewsRetrieveRequestDTO
   ) {
-    log.info("여기 들어옴");
     CustomerOtherReviewsRetrieveResponseDTO responseDTO = reviewService.getOtherCustomerReviews(
         customerOtherReviewsRetrieveRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);

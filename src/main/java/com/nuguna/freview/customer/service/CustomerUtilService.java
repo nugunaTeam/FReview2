@@ -4,4 +4,6 @@ public interface CustomerUtilService {
 
   String getUserNickname(Long userSeq);
 
+  boolean checkZzimedOtherUser(Long fromUserSeq, Long toUserSeq);
+
 }
