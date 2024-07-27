@@ -30,6 +30,7 @@
     from experience
     where from_user_seq = #{storeSeq}
       and to_user_seq = #{customerSeq}
+      and status IN ('SENT', 'ACCEPTED')
   </select>
 
 </mapper>
