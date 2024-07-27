@@ -120,10 +120,6 @@
 
 <body>
 
-<input type="hidden" id="userSeq" name="userSeq"
-       value="${userSeq}">
-<input type="hidden" id="fromUserSeq" name="fromUserSeq"
-       value="${fromUserSeq}">
 
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
@@ -179,11 +175,88 @@
                         </button>
 
                         <!-- 제안하기 버튼 -->
-                        <button style="background-color: mediumvioletred; color: white; border: none; border-radius: 5px; padding: 0.5rem 1rem; font-size: 1rem; cursor: pointer; margin-left: 1rem; outline: none;">
+                        <button id="openProposalModal"
+                                style="background-color: mediumvioletred; color: white; border: none; border-radius: 5px; padding: 0.5rem 1rem; font-size: 1rem; cursor: pointer; margin-left: 1rem; outline: none;">
                             제안하기
                         </button>
                     </div>
                 </div>
+
+
+                <!-- 모달 HTML -->
+                <div class="modal fade" id="proposalModal" tabindex="-1" role="dialog"
+                     aria-labelledby="proposalModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="proposalModalLabel">제안하기</h5>
+                                <button type="button" class="close" data-dismiss="modal"
+                                        aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="proposalForm">
+                                    <div class="form-group">
+                                        <label for="proposalDetail">제안 내용</label>
+                                        <textarea class="form-control" id="proposalDetail"
+                                                  name="proposalDetail" rows="3"
+                                                  required></textarea>
+                                        <small style="color: mediumvioletred;">한번 전송한 제안 내용은 수정
+                                            불가합니다. ( 100글자까지 입력 가능 )</small>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary"
+                                            style="border:none; background-color: mediumvioletred">
+                                        제안하기
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                  $(document).ready(function () {
+                    // 버튼 클릭 시 모달 띄우기
+                    $('#openProposalModal').on('click', function () {
+                      $('#proposalModal').modal('show');
+                    });
+
+                    // 폼 제출 시 처리
+                    $('#proposalForm').on('submit', function (event) {
+                      event.preventDefault();
+
+                      // 폼 데이터 수집
+                      var proposalDetail = $('#proposalDetail').val();
+                      var fromUserSeq = ${fromUserSeq};
+                      var userSeq = ${userSeq};
+
+                      // 데이터 객체 생성
+                      var dataObject = {
+                        storeSeq: fromUserSeq,
+                        customerSeq: userSeq,
+                        proposalDetail: proposalDetail
+                      };
+
+                      $.ajax({
+                        url: '/api/other/customer/proposal',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(dataObject),
+                        success: function () {
+                          alert('해당 체험단에게 제안을 보냈습니다.');
+                          $('#proposalModal').modal('hide');
+                        },
+                        error: function (xhr) {
+                          var errorMessage = xhr.responseJSON && xhr.responseJSON.message
+                              ? xhr.responseJSON.message : '제안 전송에 실패했습니다.';
+                          alert(errorMessage);
+                          console.error('Error:', errorMessage); // 디버깅을 위한 로그
+                        }
+                      });
+                    });
+                  });
+                </script>
 
 
                 <script>
@@ -196,8 +269,8 @@
                     }
 
                     $('#zzimButton').on('click', function () {
-                      const fromUserSeq = $('#fromUserSeq').val();
-                      const userSeq = $('#userSeq').val();
+                      const fromUserSeq = ${fromUserSeq};
+                      const userSeq = ${userSeq};
 
                       const data = {
                         fromUserSeq: fromUserSeq,
