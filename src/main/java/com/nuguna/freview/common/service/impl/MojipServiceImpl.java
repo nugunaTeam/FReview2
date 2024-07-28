@@ -58,7 +58,7 @@ public class MojipServiceImpl implements MojipService {
   public boolean deletePost(Long postSeq) {
     int result = postMapper.deletePost(postSeq);
     Long writerSeq = postMapper.selectWriterSeqByPostSeq(postSeq);
-    int result2 = rankPointLogMapper.insertLog(writerSeq, "UNPOST");
+    int result2 = rankPointLogMapper.insertPointLog(writerSeq, "UNPOST");
     return result == 1 && result2 == 1;
   }
 
@@ -67,7 +67,7 @@ public class MojipServiceImpl implements MojipService {
   public boolean createMojip(Long userSeq, String title, Date applyStartDate,
       Date applyEndDate, Date experienceDate, String content) {
     int result = mojipMapper.insertMojip(userSeq, title, applyStartDate, applyEndDate, experienceDate, content);
-    int result2 = rankPointLogMapper.insertLog(userSeq, "POST");
+    int result2 = rankPointLogMapper.insertPointLog(userSeq, "POST");
     insertMojipLog(userSeq, title + " " + content);
     return result == 1 && result2 == 1;
   }
