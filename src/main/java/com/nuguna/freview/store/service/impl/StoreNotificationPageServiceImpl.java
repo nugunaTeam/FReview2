@@ -1,8 +1,10 @@
 package com.nuguna.freview.store.service.impl;
 
-import com.nuguna.freview.store.dto.response.StoreNotificationExperienceResponseDTO;
+import com.nuguna.freview.store.dto.response.StoreNotificationExperienceApplyResponseDTO;
+import com.nuguna.freview.store.dto.response.StoreNotificationExperienceProposeResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreNotificationReceivedLikeResponseDTO;
-import com.nuguna.freview.store.dto.response.StoreNotificationReceivedZzimResponseDTO;
+import com.nuguna.freview.store.dto.response.StoreNotificationReceivedZzimCustomerResponseDTO;
+import com.nuguna.freview.store.dto.response.StoreNotificationReceivedZzimStoreResponseDTO;
 import com.nuguna.freview.store.mapper.StoreNotificationPageMapper;
 import com.nuguna.freview.store.service.StoreNotificationPageService;
 import java.util.List;
@@ -26,14 +28,23 @@ public class StoreNotificationPageServiceImpl implements StoreNotificationPageSe
   }
 
   @Override
-  public List<StoreNotificationReceivedZzimResponseDTO> storeNotificationReceivedZzim(Long userSeq){
-    return storeNotificationPageMapper.storeNotificationReceivedZzim(userSeq);
+  public List<StoreNotificationReceivedZzimCustomerResponseDTO> storeNotificationReceivedZzimCustomer(Long userSeq){
+    return storeNotificationPageMapper.storeNotificationReceivedZzimCustomer(userSeq);
   }
 
   @Override
-  public List<StoreNotificationExperienceResponseDTO> storeNotificationExperience(Long userSeq){
-    return storeNotificationPageMapper.storeNotificationExperience(userSeq);
+  public List<StoreNotificationReceivedZzimStoreResponseDTO> storeNotificationReceivedZzimStore(Long userSeq){
+    return storeNotificationPageMapper.storeNotificationReceivedZzimStore(userSeq);
   }
 
+  @Override
+  public List<StoreNotificationExperienceApplyResponseDTO> storeNotificationExperienceApply(Long userSeq){
+    return storeNotificationPageMapper.storeNotificationExperienceApply(userSeq);
+  }
+
+  @Override
+  public List<StoreNotificationExperienceProposeResponseDTO> storeNotificationExperiencePropose(Long userSeq){
+    return storeNotificationPageMapper.storeNotificationExperiencePropose(userSeq);
+  }
 
 }
