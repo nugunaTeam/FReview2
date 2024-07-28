@@ -8,14 +8,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StoreNotificationExperienceResponseDTO {
+public class StoreNotificationExperienceProposeResponseDTO {
   private Long userSeq;
-  private Long fromUserSeq;
   private Long toUserSeq;
-  private Long postSeq;
-  private String title;
-  private String proposalDetail;
-  private String experienceUser;
+  private String nickname;
+  private String status;
+  private String proposeDetail;
   private Timestamp createdAt;
-
 }

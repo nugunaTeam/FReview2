@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class StoreNotificationPageRequestDTO {
   private Long userSeq;
+  private String code;
 }

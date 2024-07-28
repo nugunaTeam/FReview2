@@ -5,14 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Setter
 @Getter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class StoreNotificationReceivedZzimResponseDTO {
-  List<StoreNotificationReceivedZzimCustomerResponseDTO>  zzimCustomers;
-  List<StoreNotificationReceivedZzimStoreResponseDTO>  zzimStores;
+public class StoreNotificationExperienceListResponseDTO {
+  private List<StoreNotificationExperienceApplyResponseDTO> applyList;
+  private List<StoreNotificationExperienceProposeResponseDTO> proposeList;
 }
