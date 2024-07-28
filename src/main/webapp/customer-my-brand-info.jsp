@@ -42,6 +42,45 @@
       .d-flex.justify-content-center {
         gap: 0.5rem;
       }
+
+      .clickable {
+        cursor: pointer;
+        
+      .btn-secondary {
+        background-color: rgb(128, 128, 128);
+        border-color: rgb(128, 128, 128);
+        color: white;
+      }
+
+    </style>
+
+    <%-- <link rel="stylesheet"
+           href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">--%>
+    <style>
+      .alert-custom {
+        background-color: transparent;
+        color: orange;
+        border: none;
+        text-align: right;
+        font-size: 1rem;
+      }
+
+      .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .table-container {
+        position: relative;
+      }
+
+      .alert-custom-bottom {
+        position: absolute;
+        bottom: -30px;
+        right: 0;
+      }
     </style>
 
     <style>
@@ -63,6 +102,21 @@
       .form-control-readonly {
         background-color: #e9ecef;
         opacity: 1;
+      }
+
+      .profile-container {
+        width: 150px; /* 원하는 고정 가로 길이 */
+        height: 150px; /* 원하는 고정 세로 길이 */
+        position: relative;
+        overflow: hidden;
+        border-radius: 50%; /* 원형으로 만들기 위한 설정 */
+      }
+
+      .profile-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* 이미지의 중앙을 맞추고, 자르기 */
+        object-position: center; /* 중앙 위치 */
       }
 
     </style>
@@ -96,12 +150,13 @@
     <link href="/assets/css/style.css" rel="stylesheet">
     <link href="/assets/css/style-h.css" rel="stylesheet">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    <%--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossorigin="anonymous">
+          crossorigin="anonymous">--%>
 
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -128,8 +183,11 @@
         <ul class="d-flex align-items-center">
             <li class="nav-item dropdown pe-3">
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-                    <img src="/assets/img/basic/basic-profile-img.png" alt="Profile"
-                         class="rounded-circle">
+                    <img src="/user/${userSeq}/profile"
+                         alt="Profile"
+                         class="rounded-circle profile-img"
+                         style="position: relative;
+                         overflow: hidden; border-radius: 50%;">
                     <span id="nickname-holder-head"
                           class="d-none d-md-block">${brandInfo.nickname}</span>
                 </a>
@@ -183,14 +241,50 @@
             <div class="card">
                 <!-- profile  -->
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                    <img src="/assets/img/basic/basic-profile-img.png" alt="Profile"
-                         class="rounded-circle">
+                    <img id="profile-img"
+                         src="/user/${userSeq}/profile"
+                         alt="Profile"
+                         class="rounded-circle clickable img-fluid profile-img"
+                         style="position: relative;
+                         overflow: hidden; border-radius: 50%;">
+                    <input type="file" id="profile-img-upload" style="display: none;">
                     <h2 id="nickname-holder-section">${brandInfo.nickname}
                     </h2>
                     <div class="social-links mt-2 ri-heart-3-fill">
                         ${brandInfo.zzimCount}
                     </div>
                 </div>
+
+                <script>
+                  $(document).ready(function () {
+                    $('#profile-img').click(function () {
+                      $('#profile-img-upload').click(); // 파일 선택 창 열기
+                    });
+
+                    $('#profile-img-upload').change(function () {
+                      var formData = new FormData();
+                      formData.append('userSeq', ${userSeq});
+                      formData.append('profileFile', this.files[0]);
+
+                      $.ajax({
+                        url: '<%=request.getContextPath()%>/api/customer/my/brand-info/profile-photo-url',
+                        method: 'POST',
+                        data: formData,
+                        contentType: false, // 필수
+                        processData: false, // 필수
+                        success: function (response) {
+                          var newImageUrl = "/user/${userSeq}/profile?" + new Date().getTime();
+                          $('.profile-img').attr('src', newImageUrl);
+                          alert('프로필 사진이 업데이트 되었습니다.');
+                        },
+                        error: function (error) {
+                          console.log(error);
+                          alert('프로필 사진 업데이트에 실패하였습니다.');
+                        }
+                      });
+                    });
+                  });
+                </script>
 
                 <div class="card-body pt-3">
                     <!-- Bordered Tabs -->
@@ -643,121 +737,6 @@
                                 </div>
                             </div>
 
-                            <%--<script>
-                              $(document).ready(function () {
-                                $('#tag-select').select2({
-                                  width: '100%',
-                                  templateSelection: function (option) {
-                                    var color = $(option.element).data('custom-color');
-                                    return $('<span style="color: ' + color + '">' + option.text
-                                        + '</span>');
-                                  }
-                                });
-
-                                var selectedTags = ${brandInfo.tagInfos};
-
-                                function initializeTagSelect() {
-                                  var tagSelect = $('#tag-select');
-                                  tagSelect.val(selectedTags).trigger('change');
-                                  updateTagMessage();
-                                }
-
-                                function updateTagMessage() {
-                                  var selectedOptions = $('#tag-select').val();
-                                  var messageElement = $('#tag-select-message');
-
-                                  if (selectedOptions === null || selectedOptions.length === 0) {
-                                    messageElement.text('아직 선택한 태그가 없어요.');
-                                  } else {
-                                    messageElement.text('');
-                                  }
-                                }
-
-                                initializeTagSelect();
-
-                                $('#tag-select').on('select2:select',
-                                    function (e) {
-                                      var selectedOptions = $(this).val();
-                                      if (selectedOptions.length > 2) {
-                                        var $element = $(e.params.data.element);
-                                        $element.prop("selected", false);
-                                        $(this).trigger('change');
-                                        alert('태그는 2개까지만 선택할 수 있습니다');
-                                      } else {
-                                        updateTagMessage();
-                                      }
-                                    });
-
-                                $('#tag-select').on('change', function () {
-                                  $(this).find('option:selected').addClass('selected-option');
-                                  $(this).find('option:not(:selected)').removeClass(
-                                      'selected-option');
-                                  updateTagMessage();
-                                });
-
-                                $("#tag-update-btn").click(function () {
-                                  $(this).hide();
-                                  $("#tag-cancel-btn, #tag-submit-btn").show();
-                                  $('#tag-select').prop('disabled', false).select2({
-                                    width: '100%',
-                                    templateSelection: function (option) {
-                                      var color = $(option.element).data('custom-color');
-                                      return $('<span style="color: ' + color + '">' + option.text
-                                          + '</span>');
-                                    }
-                                  });
-                                });
-
-                                $('#tag-cancel-btn').click(function () {
-                                  $(this).hide();
-                                  $("#tag-submit-btn").hide();
-                                  $("#tag-update-btn").show();
-                                  $('#tag-select').prop('disabled', true).select2({
-                                    width: '100%',
-                                    templateSelection: function (option) {
-                                      var color = $(option.element).data('custom-color');
-                                      return $('<span style="color: ' + color + '">' + option.text
-                                          + '</span>');
-                                    }
-                                  });
-                                  initializeTagSelect();
-                                });
-
-                                $('#tag-submit-btn').click(function () {
-                                  var selectedTags = $('#tag-select').val();
-
-                                  $.ajax({
-                                    url: '<%=request.getContextPath()%>/api/my-brand/tag',
-                                    method: 'POST',
-                                    contentType: 'application/json',
-                                    data: JSON.stringify({
-                                      'userSeq': ${userSeq},
-                                      'toTags': selectedTags
-                                    }),
-                                    success: function (response) {
-                                      alert('태그 변경에 성공하였습니다.');
-                                      $('#tag-select').prop('disabled', true).select2({
-                                        width: '100%',
-                                        templateSelection: function (option) {
-                                          var color = $(option.element).data('custom-color');
-                                          return $(
-                                              '<span style="color: ' + color + '">' + option.text
-                                              + '</span>');
-                                        }
-                                      });
-                                      $('#tag-submit-btn, #tag-cancel-btn').hide();
-                                      $('#tag-update-btn').show();
-                                      updateTagMessage();
-                                    },
-                                    error: function (err) {
-                                      alert('태그 변경에 실패하였습니다.');
-                                    }
-                                  });
-                                });
-
-                                initializeTagSelect();
-                              });
-                            </script>--%>
                             <script>
                               $(document).ready(function () {
                                 // Initialize the selectedTags array using EL
@@ -869,187 +848,306 @@
                                 });
                               });
                             </script>
-                            <%--
-                                                        <div class="row">
-                                                            <div class="col-lg-3 col-md-4 label">리뷰 로그</div>
-                                                            <div class="col-lg-8 col-md-6">
-                                                                <table class="table table-striped table-bordered text-center"
-                                                                       id="review-log-table">
-                                                                    <thead>
-                                                                    <tr>
-                                                                        <th>스토어명</th>
-                                                                        <th>방문일자</th>
-                                                                        <th>리뷰 작성여부</th>
-                                                                    </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                    <tr>
-                                                                        <th scope="row">1</th>
-                                                                        <td>Brandon Jacob</td>
-                                                                        <td>Designer</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="row">2</th>
-                                                                        <td>Bridie Kessler</td>
-                                                                        <td>Developer</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="row">3</th>
-                                                                        <td>Ashleigh Langosh</td>
-                                                                        <td>Finance</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="row">4</th>
-                                                                        <td>Angus Grady</td>
-                                                                        <td>HR</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="row">5</th>
-                                                                        <td>Raheem Lehner</td>
-                                                                        <td>Dynamic Division Officer</td>
-                                                                    </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                                <div class="d-flex justify-content-between mt-3">
-                                                                    <button id="prev-block-button"
-                                                                            class="btn btn-primary edit-btn" disabled>&lt;
-                                                                    </button>
-                                                                    <div id="page-buttons"
-                                                                         class="d-flex justify-content-center mx-2">
-                                                                        <!-- 페이지 번호 버튼들이 여기에 추가됩니다 -->
-                                                                    </div>
-                                                                    <button id="next-block-button"
-                                                                            class="btn btn-primary edit-btn" disabled>&gt;
-                                                                    </button>
-                                                                </div>
-                                                            </div>
 
-                                                            <script>
-                                                              $(document).ready(function () {
-                                                                var currentPage = 1;
-                                                                var totalPages = 50; // 예시: 총 페이지 수는 50이라고 가정
-                                                                var pagesPerBlock = 5;
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">리뷰 로그</div>
+                                <div class="col-lg-8 col-md-6">
+                                    <div class="table-container">
+                                        <table class="table table-striped table-bordered text-center"
+                                               id="review-log-table">
+                                            <thead>
+                                            <tr>
+                                                <th>스토어명</th>
+                                                <th>방문일자</th>
+                                                <th>리뷰</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <c:forEach var="review" items="${reviewInfos}">
+                                                <c:set var="visitDate" value="${review.visitDate}"/>
+                                                <c:if test="${review.status == 'NOSHOW'}">
+                                                    <c:set var="visitDate" value="노쇼"/>
+                                                </c:if>
+                                                <tr>
+                                                    <td>
+                                                        <a href="/brand/${review.storeSeq}">${review.storeName}</a>
+                                                    </td>
+                                                    <td>${visitDate}</td>
+                                                    <td>
+                                                        <c:choose>
+                                                            <c:when test="${review.status == 'WRITTEN' || review.status == 'STORE_HIDDEN'}">
+                                                                <a href="${review.url}"
+                                                                   class="btn btn-success btn-sm">리뷰
+                                                                    확인</a>
+                                                            </c:when>
+                                                            <c:when test="${review.status == 'UNWRITTEN'}">
+                                                                <button class="btn btn-sm"
+                                                                        style="background-color: indianred; border-color: indianred; color: white;"
+                                                                        data-toggle="modal"
+                                                                        data-target="#reviewModal"
+                                                                        data-review-seq="${review.seq}">
+                                                                    리뷰 등록하기
+                                                                </button>
+                                                            </c:when>
+                                                            <c:when test="${review.status == 'NOSHOW'}">
+                                                                <button class="btn btn-secondary btn-sm"
+                                                                        disabled>노쇼
+                                                                </button>
+                                                            </c:when>
+                                                        </c:choose>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                            </tbody>
+                                        </table>
+                                        <div class="d-flex justify-content-end mt-1"
+                                             style="font-size: medium; color: indianred;">
+                                            노쇼 상태인 리뷰는 노출되지 않습니다.
+                                        </div>
+                                        <div class="pagination-container">
+                                            <button id="prev-block-button"
+                                                    class="btn btn-primary edit-btn"
+                                                    style="${reviewPageInfo.hasPrevious ? '' : 'display:none;'}">
+                                                &lt;
+                                            </button>
+                                            <div id="page-buttons"
+                                                 class="d-flex justify-content-center mx-2">
+                                                <c:forEach var="page"
+                                                           begin="${reviewPageInfo.startPage}"
+                                                           end="${reviewPageInfo.endPage}">
+                                                    <c:choose>
+                                                        <c:when test="${page == reviewPageInfo.currentPage}">
+                                                            <button class="btn btn-secondary edit-btn"
+                                                                    disabled>${page}</button>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <button class="btn btn-primary edit-btn"
+                                                                    data-page="${page}">${page}</button>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:forEach>
+                                            </div>
+                                            <button id="next-block-button"
+                                                    class="btn btn-primary edit-btn"
+                                                    style="${reviewPageInfo.hasNext ? '' : 'display:none;'}">
+                                                &gt;
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                                                                function fetchReviewLogs(page) {
-                                                                  $.ajax({
-                                                                    url: '/api/review-logs',
-                                                                    method: 'GET',
-                                                                    data: {page: page},
-                                                                    success: function (response) {
-                                                                      var reviewLogs = response.logs;
-                                                                      var hasPrevious = response.hasPrevious;
-                                                                      var hasNext = response.hasNext;
-                                                                      totalPages = response.totalPages;
-
-                                                                      renderReviewLogs(reviewLogs);
-                                                                      renderPageButtons();
-                                                                      updatePaginationButtons(hasPrevious, hasNext);
-                                                                    },
-                                                                    error: function (err) {
-                                                                      alert('리뷰 로그 데이터를 가져오는데 실패하였습니다.');
-                                                                      renderPageButtons();
-                                                                    }
-                                                                  });
-                                                                }
-
-                                                                function renderReviewLogs(reviewLogs) {
-                                                                  var tbody = $('#review-log-table tbody');
-                                                                  tbody.empty(); // 기존 데이터를 제거합니다.
-
-                                                                  reviewLogs.forEach(function (log) {
-                                                                    var row = $('<tr>');
-                                                                    row.append($('<td>').text(log.storeName));
-                                                                    row.append($('<td>').text(log.visitDate));
-                                                                    row.append($('<td>').text(log.reviewWritten));
-                                                                    tbody.append(row);
-                                                                  });
-                                                                }
-
-                                                                function renderPageButtons() {
-                                                                  var pageButtonsDiv = $('#page-buttons');
-                                                                  pageButtonsDiv.empty(); // 기존 페이지 버튼을 제거합니다.
-
-                                                                  var currentBlock = Math.floor(
-                                                                      (currentPage - 1) / pagesPerBlock);
-                                                                  var startPage = currentBlock * pagesPerBlock + 1;
-                                                                  var endPage = Math.min(startPage + pagesPerBlock - 1,
-                                                                      totalPages);
-
-                                                                  for (var i = startPage; i <= endPage; i++) {
-                                                                    var pageButton = $('<button>')
-                                                                    .text(i)
-                                                                    .addClass(
-                                                                        'btn btn-outline-primary mx-1 datatable-pagination-list-item-link')
-                                                                    .attr('data-page', i)
-                                                                    .attr('aria-label', 'Page ' + i);
-                                                                    if (i === currentPage) {
-                                                                      pageButton.addClass('active');
-                                                                    }
-                                                                    pageButton.on('click', function () {
-                                                                      var page = parseInt($(this).attr('data-page'));
-                                                                      currentPage = page;
-                                                                      fetchReviewLogs(currentPage);
-                                                                    });
-                                                                    pageButtonsDiv.append(pageButton);
-                                                                  }
-                                                                }
-
-                                                                function updatePaginationButtons(hasPrevious, hasNext) {
-                                                                  var currentBlock = Math.floor(
-                                                                      (currentPage - 1) / pagesPerBlock);
-                                                                  var totalBlocks = Math.ceil(totalPages / pagesPerBlock);
-
-                                                                  $('#prev-block-button').prop('disabled', currentBlock === 0);
-                                                                  $('#next-block-button').prop('disabled',
-                                                                      currentBlock >= totalBlocks - 1);
-                                                                }
-
-                                                                $('#prev-block-button').click(function () {
-                                                                  var currentBlock = Math.floor(
-                                                                      (currentPage - 1) / pagesPerBlock);
-                                                                  if (currentBlock > 0) {
-                                                                    currentPage = (currentBlock - 1) * pagesPerBlock + 1;
-                                                                    fetchReviewLogs(currentPage);
-                                                                  }
-                                                                });
-
-                                                                $('#next-block-button').click(function () {
-                                                                  var currentBlock = Math.floor(
-                                                                      (currentPage - 1) / pagesPerBlock);
-                                                                  var totalBlocks = Math.ceil(totalPages / pagesPerBlock);
-                                                                  if (currentBlock < totalBlocks - 1) {
-                                                                    currentPage = (currentBlock + 1) * pagesPerBlock + 1;
-                                                                    fetchReviewLogs(currentPage);
-                                                                  }
-                                                                });
-
-                                                                // 초기 데이터 로드
-                                                                fetchReviewLogs(currentPage);
-                                                              });
-
-                                                            </script>--%>
+                            <!-- 리뷰 등록 모달 -->
+                            <div class="modal fade" id="reviewModal" tabindex="-1" role="dialog"
+                                 aria-labelledby="reviewModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="reviewModalLabel">리뷰 등록</h5>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="reviewForm">
+                                                <div class="form-group">
+                                                    <label for="reviewUrl">리뷰 URL</label>
+                                                    <input type="url" class="form-control"
+                                                           id="reviewUrl" name="reviewUrl" required>
+                                                    <small style="color: indianred;">한번 등록한 리뷰의 URL은
+                                                        수정 불가능합니다.</small>
+                                                </div>
+                                                <input type="hidden" id="reviewSeq"
+                                                       name="reviewSeq">
+                                                <input type="hidden" id="userSeq" name="userSeq"
+                                                       value="${userSeq}">
+                                                <button id="reviewInsert" <%--type="submit"--%>
+                                                        class="btn btn-primary">등록
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
 
-</main><!-- End #main -->
+                            <script>
+                              currentReviewLogPage = 1;
 
-<!-- ======= Footer ======= -->
+                              $(document).ready(function () {
+
+                                $('#reviewModal').on('show.bs.modal', function (event) {
+                                  var button = $(event.relatedTarget);
+                                  var reviewSeq = button.data('review-seq');
+                                  var modal = $(this);
+                                  modal.find('#reviewSeq').val(reviewSeq);
+                                });
+
+                                $('#reviewForm').on('submit', function (event) {
+                                  event.preventDefault();
+                                  var formData = {
+                                    userSeq: $('#userSeq').val(),
+                                    reviewSeq: $('#reviewSeq').val(),
+                                    reviewUrl: $('#reviewUrl').val()
+                                  };
+
+                                  $.ajax({
+                                    url: '/api/customer/review',
+                                    method: 'POST',
+                                    contentType: 'application/json',
+                                    data: JSON.stringify(formData),
+                                    success: function (response) {
+                                      console.log(response);
+                                      var reviewSeq = formData.reviewSeq;
+                                      var reviewUrl = response.reviewUrl;
+                                      var reviewButton = $(
+                                          'button[data-review-seq="' + reviewSeq + '"]');
+                                      reviewButton.replaceWith('<a href="' + reviewUrl
+                                          + '" class="btn btn-success btn-sm">리뷰 확인</a>');
+                                      $('#reviewModal').modal('hide');
+                                      alert('리뷰 등록이 완료되었습니다.');
+                                    },
+                                    error: function (err) {
+                                      console.log(err);
+                                      if (err.responseJSON && err.responseJSON.message) {
+                                        alert(err.responseJSON.message);
+                                      } else {
+                                        alert('리뷰 등록에 실패했습니다. 다시 시도해주세요.');
+                                      }
+                                    }
+                                  });
+                                });
+                              });
+
+                              function initializePagination(reviewPageInfo) {
+
+                                $('#prev-block-button').off('click').on('click', function () {
+                                  if (reviewPageInfo.hasPrevious) {
+                                    loadPage(reviewPageInfo.currentPage - 1);
+                                  }
+                                });
+
+                                $('#next-block-button').off('click').on('click', function () {
+                                  if (reviewPageInfo.hasNext) {
+                                    loadPage(reviewPageInfo.currentPage + 1);
+                                  }
+                                });
+
+                                $('#page-buttons').empty();
+                                for (var i = reviewPageInfo.startPage; i <= reviewPageInfo.endPage;
+                                    i++) {
+                                  var pageButton = $(
+                                      '<button class="btn btn-primary edit-btn" data-page="' + i
+                                      + '">' + i + '</button>');
+                                  if (i === reviewPageInfo.currentPage) {
+                                    pageButton.addClass('btn-secondary').prop('disabled', true);
+                                  }
+                                  pageButton.on('click', function () {
+                                    var pageNumber = $(this).data('page');
+                                    loadPage(pageNumber);
+                                  });
+                                  $('#page-buttons').append(pageButton);
+                                }
+
+                                if (reviewPageInfo.hasPrevious) {
+                                  $('#prev-block-button').show();
+                                } else {
+                                  $('#prev-block-button').hide();
+                                }
+
+                                if (reviewPageInfo.hasNext) {
+                                  $('#next-block-button').show();
+                                } else {
+                                  $('#next-block-button').hide();
+                                }
+                              }
+
+                              function loadPage(page) {
+                                var userSeq = $('#userSeq').val();
+
+                                $.ajax({
+                                  url: '/api/customer/reviews',
+                                  method: 'POST',
+                                  contentType: 'application/json',
+                                  data: JSON.stringify({'userSeq': userSeq, 'page': page}),
+                                  success: function (response) {
+                                    // 리뷰 목록 업데이트
+                                    var reviewInfos = response.reviewInfos;
+                                    var reviewLogTableBody = $('#review-log-table tbody');
+                                    reviewLogTableBody.empty();
+                                    $.each(reviewInfos, function (index, review) {
+                                      var visitDate = review.visitDate;
+                                      if (review.status === 'NOSHOW') {
+                                        visitDate = '노쇼';
+                                      }
+                                      var reviewRow = '<tr>' +
+                                          '<td><a href="/brand/' + review.storeSeq + '">'
+                                          + review.storeName + '</a></td>' +
+                                          '<td>' + visitDate + '</td>' +
+                                          '<td>' + renderReviewButton(review) + '</td>' +
+                                          '</tr>';
+                                      reviewLogTableBody.append(reviewRow);
+                                    });
+                                    currentReviewLogPage = page;
+                                    initializePagination(response.reviewPageInfo);
+                                  },
+                                  error: function (err) {
+                                    alert('페이지를 로드하는데 실패했습니다. 다시 시도해주세요.');
+                                  }
+                                })
+                                ;
+                              }
+
+                              function renderReviewButton(review) {
+                                if (review.status === 'WRITTEN' || review.status
+                                    === 'STORE_HIDDEN') {
+                                  return '<a href="' + review.url
+                                      + '" class="btn btn-success btn-sm">리뷰 확인</a>';
+                                } else if (review.status === 'UNWRITTEN') {
+                                  return '<button class="btn btn-sm" style="background-color: indianred; border-color: indianred; color: white;" data-toggle="modal" data-target="#reviewModal" data-review-seq="'
+                                      + review.seq + '">리뷰 등록하기</button>';
+                                } else if (review.status === 'NOSHOW') {
+                                  return '<button class="btn btn-secondary btn-sm" disabled>노쇼</button>';
+                                }
+                                return '';
+                              }
+
+                              var reviewPageInfo = {
+                                currentPage: ${reviewPageInfo.currentPage},
+                                startPage: ${reviewPageInfo.startPage},
+                                endPage: ${reviewPageInfo.endPage},
+                                hasPrevious: ${reviewPageInfo.hasPrevious},
+                                hasNext: ${reviewPageInfo.hasNext}
+                              };
+                              initializePagination(reviewPageInfo);
+                            </script>
+
+</main>
+
 <footer id="footer" class="footer">
     <div class="copyright">
-        &copy; Copyright <strong><span>nugunaTeam</span></strong>. All Rights Reserved
+        &copy; Copyright <strong><span><a
+            href="https://github.com/nugunaTeam/FReview2"> nugunaTeam </a></span></strong>.
+        All
+        Rights
+        Reserved
     </div>
     <div class="credits">
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
     </div>
 </footer><!-- End Footer -->
 
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+<a href="#"
+   class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>
 <!-- jquery  -->
 
 <!-- icon bootstrap -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+<%--<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>--%>
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>

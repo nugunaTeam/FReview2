@@ -4,6 +4,7 @@
 
 <mapper namespace="com.nuguna.freview.admin.mapper.LikePostProcessingLogMapper">
 
+  <!-- Sql 쿼리문 -->
   <insert id="updateLastProcessedSeq">
     INSERT INTO like_postprocessing_log (last_processed_like_seq)
     VALUES (#{seq})

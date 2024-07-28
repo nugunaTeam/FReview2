@@ -92,7 +92,7 @@
 
 <main id="main" style="margin:auto; margin-top:50px">
     <div class="pagetitle">
-        <h1>사장님 추천페이지</h1>
+        <h1>스토어 추천페이지</h1>
     </div>
 
     <section class="section profile">

@@ -1,5 +1,7 @@
 package com.nuguna.freview.customer.dto.request;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,8 +15,12 @@ public class CustomerMyReviewsRetrieveRequestDTO {
   // 추후 다른 유저가 해당 체험단의 리뷰를 보기 위한 ReviewsRetrieveRequestDTO를 통해서는
   // NOSHOW 상태의 리뷰를 조회할 수 없음.
 
+  @Min(1)
+  @NotNull
   private Long userSeq;
 
-  private Integer currentPage;
+  @Min(1)
+  @NotNull
+  private Integer page;
 
 }
