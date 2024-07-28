@@ -8,6 +8,7 @@
     type="com.nuguna.freview.store.dto.response.StoreNotificationReceivedLikeResponseDTO">
     <result property="userSeq" column="user_seq"/>
     <result property="postSeq" column="post_seq"/>
+    <result property="postCode" column="post_code"/>
     <result property="title" column="post_title"/>
     <result property="content" column="post_content"/>
     <result property="writtenSeq" column="post_author_seq"/>
@@ -15,87 +16,124 @@
     <result property="likeCount" column="like_count"/>
   </resultMap>
 
-  <resultMap id="storeNotificationReceivedZzimResultMap"
-    type="com.nuguna.freview.store.dto.response.StoreNotificationReceivedZzimResponseDTO">
-    <result property="userSeq" column="to_user_seq"/>
+  <resultMap id="storeNotificationReceivedZzimCustomerResultMap"
+    type="com.nuguna.freview.store.dto.response.StoreNotificationReceivedZzimCustomerResponseDTO">
+    <id property="userSeq" column="to_user_seq"/>
     <result property="zzimUserSeq" column="from_user_seq"/>
-    <result property="nickname" column="nickname" />
+    <result property="nickname" column="nickname"/>
     <result property="code" column="code"/>
-    <result property="createdAt" column="created_at"/>
-    <result property="zzimCount" column="zzimCount"/>
+    <result property="foodTypes" column="food_type_codes"/>
+  </resultMap>
+  <resultMap id="storeNotificationReceivedZzimStoreResultMap"
+    type="com.nuguna.freview.store.dto.response.StoreNotificationReceivedZzimStoreResponseDTO">
+    <id property="userSeq" column="to_user_seq"/>
+    <result property="zzimUserSeq" column="from_user_seq"/>
+    <result property="nickname" column="nickname"/>
+    <result property="code" column="code"/>
+    <result property="storeLocation" column="store_location"/>
+    <result property="foodTypes" column="food_type_codes"/>
   </resultMap>
 
-  <resultMap id="storeNotificationExperienceResultMap"
-    type="com.nuguna.freview.store.dto.response.StoreNotificationExperienceResponseDTO">
-    <result property="userSeq" column="user_seq"/>
+  <resultMap id="storeNotificationExperienceApplyResultMap"
+    type="com.nuguna.freview.store.dto.response.StoreNotificationExperienceApplyResponseDTO">
+    <id property="userSeq" column="user_seq"/>
     <result property="fromUserSeq" column="from_user_seq"/>
-    <result property="toUserSeq" column="to_user_seq"/>
     <result property="postSeq" column="from_post_seq"/>
     <result property="title" column="title"/>
-    <result property="proposalDetail" column="proposal_detail"/>
-    <result property="experienceUser" column="user_nickname"/>
+    <result property="nickname" column="nickname"/>
+    <result property="status" column="status"/>
     <result property="createdAt" column="created_at"/>
   </resultMap>
+  <resultMap id="storeNotificationExperienceProposeResultMap"
+    type="com.nuguna.freview.store.dto.response.StoreNotificationExperienceProposeResponseDTO">
+    <id property="userSeq" column="user_seq"/>
+    <result property="toUserSeq" column="to_user_seq"/>
+    <result property="nickname" column="toUserNickname"/>
+    <result property="status" column="status"/>
+    <result property="proposeDetail" column="proposal_detail"/>
+    <result property="createdAt" column="created_at"/>
+  </resultMap>
+
 
   <select id="storeNotificationReceivedLike" resultMap="storeNotificationReceivedLikeResultMap">
     SELECT l.user_seq    AS user_seq,
            p.seq         AS post_seq,
+           p.code        AS post_code,
            p.title       AS post_title,
            p.content     AS post_content,
            u.seq         AS post_author_seq,
            l.created_at  AS like_created_at,
            COUNT(lk.seq) AS like_count
     FROM `like` l
-           JOIN `post` p ON l.post_seq = p.seq
+           JOIN `post` p ON l.post_seq = p.seq  # AND p.code = '모집'
            JOIN `user` u ON p.user_seq = u.seq
            LEFT JOIN `like` lk ON p.seq = lk.post_seq AND lk.user_seq = #{userSeq}
     WHERE l.user_seq = #{userSeq}
     GROUP BY l.seq, p.seq
   </select>
 
-  <select id="storeNotificationReceivedZzim" resultMap="storeNotificationReceivedZzimResultMap">
-    SELECT u.nickname,
-           u.code,
-           zz.from_user_seq,
-           zz.to_user_seq,
-           zz.created_at,
-           IFNULL(zzc.zzimCount, 0) AS zzimCount
-    FROM `user` u
-           JOIN (SELECT z.from_user_seq, z.to_user_seq, z.created_at
-                 FROM ZZIM z
-                 WHERE z.to_user_seq = #{userSeq}) zz ON u.seq = zz.from_user_seq
-           LEFT JOIN (SELECT from_user_seq, COUNT(*) AS zzimCount
-                      FROM ZZIM
-                      GROUP BY from_user_seq) zzc ON u.seq = zzc.from_user_seq
+  <select id="storeNotificationReceivedZzimCustomer"
+    resultMap="storeNotificationReceivedZzimCustomerResultMap">
+    SELECT
+      u.nickname,
+      u.code,
+      zz.from_user_seq,
+      zz.to_user_seq,
+      GROUP_CONCAT(DISTINCT ft.code ORDER BY ft.code ASC SEPARATOR ', ') AS food_type_codes
+    FROM
+      `user` u
+        JOIN zzim zz ON u.seq = zz.from_user_seq
+        LEFT JOIN user_food_type uft ON u.seq = uft.user_seq
+        LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
+    WHERE
+      zz.to_user_seq = #{userSeq}
+      AND u.code = 'CUSTOMER'
+    GROUP BY
+      u.seq, zz.from_user_seq, zz.to_user_seq;
+  </select>
+  <select id="storeNotificationReceivedZzimStore"
+    resultMap="storeNotificationReceivedZzimStoreResultMap">
+    SELECT
+      u.nickname,
+      u.code,
+      u.store_location,
+      z.from_user_seq,
+      z.to_user_seq,
+      GROUP_CONCAT(DISTINCT ft.code ORDER BY ft.code ASC SEPARATOR ', ') AS food_type_codes
+    FROM
+      `user` u
+        JOIN zzim z ON u.seq = z.from_user_seq
+        LEFT JOIN user_food_type uft ON u.seq = uft.user_seq
+        LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
+    WHERE
+      z.to_user_seq = #{userSeq}
+      AND u.code = 'STORE'
+    GROUP BY
+      u.seq, z.from_user_seq, z.to_user_seq;
   </select>
 
-  <select id="storeNotificationExperience" resultMap="storeNotificationExperienceResultMap">
-    SELECT e.from_user_seq,
-           e.to_user_seq,
-           e.from_post_seq,
-           e.proposal_detail,
-           e.created_at,
-           p.title,
-           CASE
-             WHEN e.from_user_seq = #{userSeq} AND e.from_post_seq IS NULL AND e.proposal_detail IS NOT NULL
-               THEN u_to.nickname
-             WHEN e.to_user_seq = #{userSeq} AND e.from_post_seq IS NULL AND e.proposal_detail IS NOT NULL
-               THEN u_from.nickname
-             WHEN e.from_user_seq = #{userSeq} AND e.from_post_seq IS NOT NULL AND e.proposal_detail IS NULL
-               THEN u_from.nickname
-             WHEN e.to_user_seq = #{userSeq} AND e.from_post_seq IS NOT NULL AND e.proposal_detail IS NULL
-               THEN u_to.nickname
-             ELSE NULL
-             END AS user_nickname,
-           #{userSeq} AS user_seq
+
+  <select id="storeNotificationExperienceApply"
+    resultMap="storeNotificationExperienceApplyResultMap">
+    SELECT e.from_user_seq, e.from_post_seq, e.`status`, e.created_at, u.nickname, p.title
     FROM experience e
-           LEFT JOIN post p ON p.seq = e.from_post_seq
-           LEFT JOIN `user` u_from ON u_from.seq = e.from_user_seq
-           LEFT JOIN `user` u_to ON u_to.seq = e.to_user_seq
-    WHERE ((e.from_post_seq IS NULL AND e.proposal_detail IS NOT NULL AND e.to_user_seq IS NOT NULL)
-      OR (e.from_post_seq IS NOT NULL AND e.proposal_detail IS NULL AND e.from_user_seq IS NOT NULL)
-      )
-      AND (e.from_user_seq = #{userSeq} OR e.to_user_seq = #{userSeq})
+           INNER JOIN post p ON p.seq = e.from_post_seq
+           INNER JOIN user u ON u.seq = e.from_user_seq
+    WHERE e.to_user_seq = #{userSeq};
   </select>
+  <select id="storeNotificationExperiencePropose"
+    resultMap="storeNotificationExperienceProposeResultMap">
+    # user_seq, to_user_seq, nickname, status, proposal_detail, created_at
+    SELECT e.to_user_seq,
+           e.proposal_detail,
+           e.status,
+           e.created_at,
+           ut.nickname as toUserNickname
+    FROM experience e
+           INNER JOIN user u ON u.seq = e.from_user_seq
+           LEFT JOIN user ut ON ut.seq = e.to_user_seq
+    WHERE e.from_user_seq = #{userSeq};
+  </select>
+
 
 </mapper>
