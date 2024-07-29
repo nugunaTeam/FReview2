@@ -11,7 +11,7 @@ import com.nuguna.freview.customer.dto.response.CustomerMyIntroduceUpdateRespons
 import com.nuguna.freview.customer.dto.response.CustomerMyNicknameUpdateResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyProfilePhotoUpdateResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyTagsUpdateResponseDTO;
-import com.nuguna.freview.customer.service.CustomerBrandService;
+import com.nuguna.freview.customer.service.CustomerMyBrandService;
 import java.io.IOException;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -30,11 +30,11 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/customer/my/brand-info")
 public class CustomerMyBrandInfoApiController {
 
-  private final CustomerBrandService customerBrandService;
+  private final CustomerMyBrandService customerMyBrandService;
 
   @Autowired
-  public CustomerMyBrandInfoApiController(CustomerBrandService customerBrandService) {
-    this.customerBrandService = customerBrandService;
+  public CustomerMyBrandInfoApiController(CustomerMyBrandService customerMyBrandService) {
+    this.customerMyBrandService = customerMyBrandService;
   }
 
   @RequestMapping(value = "/profile-photo-url", method = RequestMethod.POST)
@@ -47,7 +47,7 @@ public class CustomerMyBrandInfoApiController {
       throw new IllegalArgumentException("프로필 파일은 필수값입니다.");
     }
 
-    CustomerMyProfilePhotoUpdateResponseDTO responseDTO = customerBrandService.updateCustomerPhotoUrl(
+    CustomerMyProfilePhotoUpdateResponseDTO responseDTO = customerMyBrandService.updateCustomerPhotoUrl(
         userSeq, profileFile);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
@@ -56,7 +56,7 @@ public class CustomerMyBrandInfoApiController {
   public ResponseEntity<CustomerMyNicknameUpdateResponseDTO> updateCustomerNickname(
       @Valid @RequestBody CustomerMyNicknameUpdateRequestDTO customerMyNicknameUpdateRequestDTO
   ) {
-    CustomerMyNicknameUpdateResponseDTO responseDTO = customerBrandService.updateCustomerNickname(
+    CustomerMyNicknameUpdateResponseDTO responseDTO = customerMyBrandService.updateCustomerNickname(
         customerMyNicknameUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
@@ -65,7 +65,7 @@ public class CustomerMyBrandInfoApiController {
   public ResponseEntity<CustomerMyAgeGroupUpdateResponseDTO> updateCustomerAgeGroup(
       @Valid @RequestBody CustomerMyAgeGroupUpdateRequestDTO customerMyAgeGroupUpdateRequestDTO
   ) {
-    CustomerMyAgeGroupUpdateResponseDTO responseDTO = customerBrandService.updateCustomerAgeGroup(
+    CustomerMyAgeGroupUpdateResponseDTO responseDTO = customerMyBrandService.updateCustomerAgeGroup(
         customerMyAgeGroupUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
@@ -74,7 +74,7 @@ public class CustomerMyBrandInfoApiController {
   public ResponseEntity<CustomerMyIntroduceUpdateResponseDTO> updateCustomerIntroduce(
       @Valid @RequestBody CustomerMyIntroduceUpdateRequestDTO customerMyIntroduceUpdateRequestDTO
   ) {
-    CustomerMyIntroduceUpdateResponseDTO responseDTO = customerBrandService.updateCustomerIntroduce(
+    CustomerMyIntroduceUpdateResponseDTO responseDTO = customerMyBrandService.updateCustomerIntroduce(
         customerMyIntroduceUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
@@ -83,7 +83,7 @@ public class CustomerMyBrandInfoApiController {
   public ResponseEntity<CustomerMyFoodTypesUpdateResponseDTO> updateCustomerFoodTypes(
       @Valid @RequestBody CustomerMyFoodTypesUpdateRequestDTO customerMyFoodTypesUpdateRequestDTO
   ) {
-    CustomerMyFoodTypesUpdateResponseDTO responseDTO = customerBrandService.updateCustomerFoodTypes(
+    CustomerMyFoodTypesUpdateResponseDTO responseDTO = customerMyBrandService.updateCustomerFoodTypes(
         customerMyFoodTypesUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
@@ -92,7 +92,7 @@ public class CustomerMyBrandInfoApiController {
   public ResponseEntity<CustomerMyTagsUpdateResponseDTO> updateCustomerTags(
       @Valid @RequestBody CustomerMyTagsUpdateRequestDTO customerMyTagsUpdateRequestDTO
   ) {
-    CustomerMyTagsUpdateResponseDTO responseDTO = customerBrandService.updateCustomerTags(
+    CustomerMyTagsUpdateResponseDTO responseDTO = customerMyBrandService.updateCustomerTags(
         customerMyTagsUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
