@@ -5,6 +5,7 @@
   xmlns:mvc="http://www.springframework.org/schema/mvc"
   xmlns:context="http://www.springframework.org/schema/context"
   xmlns:tx="http://www.springframework.org/schema/tx"
+  xmlns:task="http://www.springframework.org/schema/task"
   xsi:schemaLocation="http://www.springframework.org/schema/mvc
 	http://www.springframework.org/schema/mvc/spring-mvc.xsd
 	http://www.springframework.org/schema/beans
@@ -12,7 +13,7 @@
 	http://www.springframework.org/schema/context
 	http://www.springframework.org/schema/context/spring-context.xsd
 	http://www.springframework.org/schema/tx
-	http://www.springframework.org/schema/tx/spring-tx.xsd">
+	http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
   <!--
   MariaDB ID/PW (src/main/resources/maria.properties)
   MyBatis 매퍼파일 (src/main/resources/mappers/ *-map.xml)
@@ -124,7 +125,7 @@
   </bean>
 
   <!-- =============================== scheduler 사용 -->
-  <!--<task:scheduler id="jobScheduler" pool-size="10" />
-  <task:annotation-driven scheduler="jobScheduler" />-->
+  <task:scheduler id="jobScheduler" pool-size="10" />
+  <task:annotation-driven scheduler="jobScheduler" />
 
 </beans>
