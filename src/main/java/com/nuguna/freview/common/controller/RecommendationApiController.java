@@ -4,8 +4,11 @@ import com.nuguna.freview.common.dto.PersonalizedUserDTO;
 import com.nuguna.freview.common.dto.request.PersonalizedUserRequestDTO;
 import com.nuguna.freview.common.dto.request.RecommendationFilteringRequestDTO;
 import com.nuguna.freview.common.dto.request.RecommendationListRequestDTO;
+import com.nuguna.freview.common.dto.request.TopPerformersRequestDTO;
 import com.nuguna.freview.common.dto.response.PersonalizedUsersResponseDTO;
 import com.nuguna.freview.common.dto.response.RecommendationResponseDTO;
+import com.nuguna.freview.common.dto.TopPerformersDTO;
+import com.nuguna.freview.common.dto.response.TopPerformersResponseDTO;
 import com.nuguna.freview.common.dto.response.page.RecommendationListResponseDTO;
 import com.nuguna.freview.common.service.RecommendationService;
 import java.util.List;
@@ -88,6 +91,18 @@ public class RecommendationApiController {
         userSeq, pageCode);
 
     PersonalizedUsersResponseDTO responseDTO = new PersonalizedUsersResponseDTO(recommendedUsers);
+
+    return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+  }
+
+  @RequestMapping(value = "/topPerformers", method = RequestMethod.POST)
+  public ResponseEntity<TopPerformersResponseDTO> topPerformersRecommendation(@RequestBody TopPerformersRequestDTO requestDTO) {
+    String pageCode = requestDTO.getPageCode();
+    int displayLimit = 10;
+
+    List<TopPerformersDTO> topPerformers = recommendationService.getTopPerformers(pageCode, displayLimit);
+
+    TopPerformersResponseDTO responseDTO = new TopPerformersResponseDTO(topPerformers);
 
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
