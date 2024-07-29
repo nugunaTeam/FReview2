@@ -4,7 +4,7 @@ import com.nuguna.freview.admin.dto.DoneExperienceDTO;
 import com.nuguna.freview.admin.dto.DoneExperienceLogDTO;
 import com.nuguna.freview.admin.dto.NoShowExperienceLogDTO;
 import com.nuguna.freview.admin.mapper.DoneExperienceAccumulationMapper;
-import com.nuguna.freview.admin.mapper.ExperienceMapper;
+import com.nuguna.freview.admin.mapper.ExperienceLogMapper;
 import com.nuguna.freview.admin.mapper.ExperiencePostProcessingLogMapper;
 import com.nuguna.freview.admin.mapper.NoshowAccumulationMapper;
 import java.time.LocalDate;
@@ -21,13 +21,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ExperienceLogService {
 
-  private final ExperienceMapper experienceMapper;
+  private final ExperienceLogMapper experienceMapper;
   private final NoshowAccumulationMapper noshowAccumulationMapper;
   private final ExperiencePostProcessingLogMapper experiencePostProcessingLogMapper;
   private final DoneExperienceAccumulationMapper doneExperienceAccumulationMapper;
 
   @Autowired
-  public ExperienceLogService(ExperienceMapper experienceMapper,
+  public ExperienceLogService(ExperienceLogMapper experienceMapper,
       NoshowAccumulationMapper noshowAccumulationMapper,
       ExperiencePostProcessingLogMapper experiencePostProcessingLogMapper,
       DoneExperienceAccumulationMapper doneExperienceAccumulationMapper) {

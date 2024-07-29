@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Param;
 public interface RankPointLogMapper {
 
   List<PointLogVO> getNewLogs(Long lastProcessedSeq);
-  int insertLog(@Param("userSeq") Long userSeq, @Param("code") String code);
+  int insertPointLog(@Param("userSeq") Long userSeq, @Param("code") String code);
 }
