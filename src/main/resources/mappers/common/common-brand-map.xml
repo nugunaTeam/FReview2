@@ -7,20 +7,20 @@
   <select id="isZzimed" parameterType="java.util.Map" resultType="java.lang.Boolean">
     SELECT COUNT(1) > 0
     FROM zzim
-    WHERE from_user_seq = #{userSeq}
+    WHERE from_user_seq = #{fromUserSeq}
       AND to_user_seq = #{toUserSeq}
   </select>
 
   <delete id="deleteZzim" parameterType="java.util.Map">
     DELETE
     FROM zzim
-    WHERE from_user_seq = #{userSeq}
+    WHERE from_user_seq = #{fromUserSeq}
       AND to_user_seq = #{toUserSeq}
   </delete>
 
   <insert id="insertZzim" parameterType="java.util.Map">
     INSERT INTO zzim (from_user_seq, to_user_seq)
-    VALUES (#{userSeq}, #{toUserSeq})
+    VALUES (#{fromUserSeq}, #{toUserSeq})
   </insert>
 
   <select id="countZzim" parameterType="java.lang.Long" resultType="java.lang.Long">

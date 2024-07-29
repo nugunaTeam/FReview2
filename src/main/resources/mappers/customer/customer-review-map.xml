@@ -50,7 +50,27 @@
                      ON u.business_number = nsbi.business_number
            LEFT JOIN experience e ON r.experience_seq = e.seq
     WHERE r.customer_seq = #{userSeq}
-    ORDER BY r.created_at ASC
+    ORDER BY r.created_at
+    LIMIT #{offset}, #{pageSize}
+  </select>
+
+  <select id="getOtherReviewsInfo"
+    resultMap="reviewLogInfoMap">
+    SELECT r.seq,
+           r.store_seq,
+           nsbi.store_name,
+           r.status,
+           r.url,
+           e.visit_date,
+           r.created_at
+    FROM review r
+           LEFT JOIN user u ON r.store_seq = u.seq
+           LEFT JOIN national_store_business_information nsbi
+                     ON u.business_number = nsbi.business_number
+           LEFT JOIN experience e ON r.experience_seq = e.seq
+    WHERE r.customer_seq = #{userSeq}
+      AND r.status IN ('WRITTEN', 'UNWRITTEN')
+    ORDER BY r.created_at
     LIMIT #{offset}, #{pageSize}
   </select>
 
@@ -58,6 +78,13 @@
     select count(*)
     from review
     where customer_seq = #{userSeq}
+  </select>
+
+  <select id="getOtherReviewCount" resultType="java.lang.Integer">
+    select count(*)
+    from review r
+    where customer_seq = #{userSeq}
+      and r.status in ('WRITTEN', 'UNWRITTEN')
   </select>
 
 </mapper>
