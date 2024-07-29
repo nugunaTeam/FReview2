@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.admin.mapper.LikeAccumulationMapper">
+
+  <!-- resultMap -->
+  <!-- LikeAccumulationVO resultMap -->
+  <resultMap id="likeAccumulationMap" type="com.nuguna.freview.admin.vo.LikeAccumulationVO">
+    <id property="postSeq" column="post_seq"/>
+    <result property="totalLike" column="total_like"/>
+  </resultMap>
+
+  <!-- SQL 쿼리문 -->
+  <select id="getByPostSeq" parameterType="long" resultMap="likeAccumulationMap">
+    SELECT post_seq, total_like FROM like_accumulation
+    WHERE post_seq = #{postSeq}
+  </select>
+
+  <insert id="insert">
+    INSERT INTO like_accumulation (post_seq, total_like)
+    VALUES (#{postSeq}, #{totalLike})
+  </insert>
+
+  <update id="update">
+    UPDATE like_accumulation
+    SET total_like = #{totalLike}
+    WHERE post_seq = #{postSeq}
+  </update>
+
+</mapper>

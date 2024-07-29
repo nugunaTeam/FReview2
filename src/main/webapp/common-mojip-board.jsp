@@ -185,7 +185,8 @@
         url: "/api/common/mojip/list",
         contentType: "application/json",
         data: JSON.stringify({
-          searchWord: searchWord
+          searchWord: searchWord,
+          requesterSeq: ${userSeq}
         }),
         dataType: "json",
         success: function (response) {
@@ -211,7 +212,8 @@
         contentType: "application/json",
         data: JSON.stringify({
           previousPostSeq: previousPostSeq,
-          searchWord: searchWord
+          searchWord: searchWord,
+          requesterSeq: ${userSeq}
         }),
         dataType: "json",
         success: function (response) {

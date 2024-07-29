@@ -143,6 +143,11 @@
                         <i class="bi bi-circle"></i><span>스토어</span>
                     </a>
                 </li>
+                <li>
+                    <a href="/admin/manage/experience">
+                        <i class="bi bi-circle"></i><span>체험</span>
+                    </a>
+                </li>
             </ul>
         </li>
         <ul class="sidebar-nav">
