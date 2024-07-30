@@ -1,7 +1,7 @@
 package com.nuguna.freview.customer.dto.response.page;
 
+import com.nuguna.freview.customer.dto.response.PaginationInfoResponseDTO;
 import com.nuguna.freview.customer.dto.response.ReviewLogInfoDTO;
-import com.nuguna.freview.customer.dto.response.ReviewPaginationInfoResponseDTO;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,5 +14,5 @@ public class CustomerMyBrandPageInfoResponseDTO {
 
   private CustomerBrandInfoResponseDTO brandInfo;
   private List<ReviewLogInfoDTO> reviewInfos;
-  private ReviewPaginationInfoResponseDTO reviewPaginationInfo;
+  private PaginationInfoResponseDTO reviewPaginationInfo;
 }

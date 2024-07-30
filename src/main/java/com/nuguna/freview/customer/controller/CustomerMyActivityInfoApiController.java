@@ -8,8 +8,8 @@ import com.nuguna.freview.customer.dto.response.CustomerMyZzimedCustomersRespons
 import com.nuguna.freview.customer.dto.response.CustomerMyZzimedStoresRetrieveResponseDTO;
 import com.nuguna.freview.customer.service.CustomerMyActivityService;
 import javax.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,11 +22,15 @@ import org.springframework.web.bind.annotation.RestController;
 // ( 좋아요한 글, 내가 찜한 스토어, 나를 찜한 스토어 )
 @Slf4j
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/customer/my/activity-info")
 public class CustomerMyActivityInfoApiController {
 
   private final CustomerMyActivityService customerMyActivityService;
+
+  @Autowired
+  public CustomerMyActivityInfoApiController(CustomerMyActivityService customerMyActivityService) {
+    this.customerMyActivityService = customerMyActivityService;
+  }
 
   @RequestMapping("/my-liked-posts")
   public ResponseEntity<CustomerMyLikedPostsRetrieveResponseDTO> getMyLikedPosts(

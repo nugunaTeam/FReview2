@@ -4,4 +4,10 @@
 
 <mapper namespace="com.nuguna.freview.customer.mapper.CustomerMyActivityMapper">
 
+  <select id="getLikeCount" resultType="java.lang.Integer">
+    select count(*)
+    from `like`
+    where user_seq = #{userSeq}
+  </select>
+
 </mapper>

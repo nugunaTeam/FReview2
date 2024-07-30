@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CustomerMyZzimedCustomersResponseDTO {
 
+  private PaginationInfoResponseDTO paginationInfoResponseDTO;
 }
