@@ -2,6 +2,7 @@ package com.nuguna.freview.common.mapper;
 
 import com.nuguna.freview.common.dto.PersonalizedUserDTO;
 import com.nuguna.freview.common.dto.response.RecommendationResponseDTO;
+import com.nuguna.freview.common.dto.TopPerformersDTO;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -19,4 +20,5 @@ public interface RecommendationMapper {
   List<PersonalizedUserDTO> findByDish(@Param("dish") String dish, @Param("pageCode") String pageCode);
   List<PersonalizedUserDTO> findByCategoryExcludingDish(@Param("category") String category, @Param("dish") String dish, @Param("pageCode") String pageCode);
   List<PersonalizedUserDTO> findRandomUsers(@Param("limit") int limit, @Param("pageCode") String pageCode);
+  List<TopPerformersDTO> selectTopPerformers(@Param("pageCode") String pageCode, @Param("displayLimit") int displayLimit);
 }
