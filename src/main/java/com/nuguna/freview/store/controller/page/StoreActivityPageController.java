@@ -1,8 +1,9 @@
 package com.nuguna.freview.store.controller.page;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.nuguna.freview.common.service.UserService;
+import com.nuguna.freview.common.vo.user.UserVO;
 import com.nuguna.freview.store.dto.response.StoreActivitySendLikeResponseDTO;
-import com.nuguna.freview.store.dto.response.StoreActivitySendZzimResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreActivityWrittenPostResponseDTO;
 import com.nuguna.freview.store.service.StoreActivityPageService;
 import java.util.List;
@@ -19,19 +20,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class StoreActivityPageController {
 
   private final StoreActivityPageService storeActivityPageService;
+  private final UserService userService;
 
   @Autowired
-  public StoreActivityPageController(StoreActivityPageService storeActivityPageService) {
+  public StoreActivityPageController(StoreActivityPageService storeActivityPageService,
+      UserService userService) {
     this.storeActivityPageService = storeActivityPageService;
+    this.userService = userService;
   }
 
   @RequestMapping("/store/activity")
   public String storeActivityPage(@RequestParam Long userSeq, Model model) throws JsonProcessingException {
+    UserVO loginUser = userService.getUserInfo(userSeq);
     List<StoreActivitySendLikeResponseDTO> sendLike = storeActivityPageService.storeActivityPageSendLike(userSeq);
-    List<StoreActivitySendZzimResponseDTO> sendZzim = storeActivityPageService.storeActivityPageSendZzim(userSeq);
     List<StoreActivityWrittenPostResponseDTO> writtenPost = storeActivityPageService.storeActivityPageWrittenPost(userSeq);
+    model.addAttribute("loginUser", loginUser);
     model.addAttribute("sendLike", sendLike);
-    model.addAttribute("sendZzim", sendZzim);
     model.addAttribute("writtenPost", writtenPost);
     return "store-activity-page";
   }
