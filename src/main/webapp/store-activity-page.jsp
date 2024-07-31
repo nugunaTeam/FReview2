@@ -3,6 +3,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
+<c:set var="loginUser" value="${loginUser}"/>
+<c:set var="userSeq" value="${loginUser.seq}"/>
+<c:set var="nickname" value="${loginUser.nickname}"/>
+<c:set var="profileUrl" value="${loginUser.profilePhotoUrl}"/>
+<c:set var="code" value="${loginUser.code}"/>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,8 +45,17 @@
       .bi-heart-fill {
         color: red;
       }
+
       .card-body-y {
-        padding: 10px 20px;
+        padding: 20px 20px;
+      }
+
+      .card-title-y > p {
+        cursor: pointer;
+      }
+
+      .pb-4 input[type="radio"] {
+        margin: 0 5px 0 10px;
       }
 
       .card-title-y {
@@ -49,6 +64,10 @@
         font-weight: 500;
         color: #012970;
         font-family: "Poppins", sans-serif;
+      }
+
+      .text-body-y {
+        font-size: 14px;
       }
 
       .p-last {
@@ -63,6 +82,8 @@
         font-size: 14px;
         font-weight: 400;
       }
+
+
     </style>
 
     <!-- add css-->
@@ -81,21 +102,19 @@
             <img src="/assets/img/logo/logo-vertical.png" alt="">
             <span class="d-none d-lg-block">FReview</span>
         </a>
-        <i class="bi bi-list toggle-sidebar-btn"></i>
+<%--        <i class="bi bi-list toggle-sidebar-btn"></i>--%>
     </div><!-- End Logo -->
-
-    <nav class="header-nav ms-auto">
-        <ul class="d-flex align-items-center">
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-                    <img src="/assets/img/basic/basic-profile-img.png" alt="Profile"
-                         class="rounded-circle">
-                    <span id="nickname-holder-head"
-                          class="d-none d-md-block">${nickname}</span>
-                </a><!-- End Profile Iamge Icon -->
-            </li><!-- End Profile Nav -->
-        </ul>
-    </nav><!-- End Icons Navigation -->
+    <div class="header-hr-right ms-auto">
+        <div class="d-flex align-items-center">
+            <div class="pe-3">
+                <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
+                    ${nickname}
+                    <img class="rounded-circle" src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px; >
+                </a>
+                <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
+            </div>
+        </div>
+    </div>
 </header><!-- End Header -->
 
 <!-- ======= Sidebar ======= -->
@@ -150,7 +169,7 @@
 </aside><!-- End Sidebar-->
 
 <main id="main" class="main">
-
+    <div id="userSeqData" data-user-seq="${userSeq}" hidden="hidden"></div>
     <section class="section profile">
         <div class="row">
             <div class="col-xl-12">
@@ -207,52 +226,12 @@
                                  aria-labelledby="zzim-tab">
                                 <form>
                                     <div class="pb-4">
-                                        <input type="radio" name="code" value="customer" checked> 체험단
-                                        <input type="radio" name="code" value="store"> 스토어
+                                        <input type="radio" name="code" value="CUSTOMER" onclick="zzimSendList('CUSTOMER')" checked /> 체험단
+                                        <input type="radio" name="code" value="STORE" onclick="zzimSendList('STORE')" /> 스토어
                                     </div>
-                                    <c:forEach var="zzim" items="${sendZzim}">
-                                    <div class="card" id="sendZzimList">
-                                        <div class="card-body">
-                                            <a href="/my/brand-info?userSeq=${zzim.toUserSeq}">
-                                                <h6 class="card-title">${zzim.nickname}</h6>
-                                            </a>
-                                            <c:choose>
-                                                <c:when test="${zzim.code eq 'customer' and param.code eq 'customer'}">
-                                                    <p>분야:
-                                                        <c:choose>
-                                                            <c:when test="${not empty zzim.foodTypeList}">
-                                                                <c:forEach var="foodType" items="${zzim.foodTypeList}" varStatus="foodTypeStatus">
-                                                                    <c:if test="${foodTypeStatus.index != 0}">, </c:if>
-                                                                    <c:out value="${foodType.code}"/>
-                                                                </c:forEach>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                미등록
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </p>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <p>위치: ${zzim.storeLocation}</p>
-                                                    <p>분야:
-                                                        <c:choose>
-                                                            <c:when test="${not empty zzim.foodTypeList}">
-                                                                <c:forEach var="foodType" items="${zzim.foodTypeList}" varStatus="foodTypeStatus">
-                                                                    <c:if test="${foodTypeStatus.index != 0}">, </c:if>
-                                                                    <c:out value="${foodType.code}"/>
-                                                                </c:forEach>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                미등록
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </p>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </div>
-                                    </div><!-- End Default Card -->
-                                    </c:forEach>
                                 </form>
+                                <div id="sendZzimList">
+                                </div>
                             </div>
 
                             <!-- 내가 작성한 글 -->
@@ -263,26 +242,14 @@
                                     <div class="card" id="writtenPostList">
                                         <div class="card-body-y">
                                             <h6 class="card-title-y">
-                                                ${post.title}
+                                                <a href="${pageContext.request.contextPath}/mojip/${post.postSeq}">
+                                                        ${fn:length(post.title) > 20 ? fn:substring(post.title, 0, 20) + '...' : post.title}
+                                                </a>
                                             </h6>
-                                            <p>${post.content}</p>
+                                            <p>${fn:length(post.content) > 30 ? fn:substring(post.content, 0, 30) + '...' : post.content}</p>
                                             <p class="p-last"><fmt:formatDate value="${post.createdAt}" pattern="yyyy년 MM월 dd일"/> &nbsp<i class="bi bi-heart-fill"></i> &nbsp${post.likeCount}</p>
                                     </div>
                                     </c:forEach>
-<%--                                    <c:forEach var="post" items="${writtenPost}">--%>
-<%--                                    <div class="card" id="writtenPostList">--%>
-<%--                                        <div class="card-body-y">--%>
-<%--                                            <h6 class="card-title-y">--%>
-<%--                                                <a href="${pageContext.request.contextPath}/mojip/${post.seq}">--%>
-<%--                                                        ${fn:length(post.title) > 20 ? fn:substring(post.title, 0, 20) + '...' : post.title}--%>
-<%--                                                </a>--%>
-<%--                                            </h6>--%>
-<%--                                            <p>${fn:length(post.content) > 30 ? fn:substring(post.content, 0, 30) + '...' : post.content}</p>--%>
-<%--                                            <p class="p-last"><fmt:formatDate value="${post.createdAt}" pattern="yyyy년 MM월 dd일"/> &nbsp<i class="bi bi-heart-fill"></i> &nbsp${post.likeCount}</p>--%>
-<%--                                        </div>--%>
-<%--                                    </div>--%>
-<%--                                    </c:forEach>--%>
-<%--                                    <!-- End Default Card -->--%>
                                 </form>
                             </div>
 
@@ -325,6 +292,68 @@
 
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
+<script>
+  $(document).ready(function () {
+    let userSeq = $("#userSeqData").data("user-seq");
+
+    window.zzimSendList = function (value) {
+      let sendData = {
+        code: value,
+        userSeq: userSeq
+      };
+
+      $.ajax({
+        method: "GET",
+        url: "/api/store/activity/send-zzim",
+        data: sendData,
+        dataType: "json",
+        success: function (response) {
+          $("#sendZzimList").empty();
+          if(value === 'CUSTOMER') {
+            let sendZzimCustomer = response;
+            renderZzimCustomer(sendZzimCustomer);
+          } else {
+            let sendZzimStore = response;
+            renderZzimStore(sendZzimStore);
+          }
+        },
+        error: function () {
+          console.error("[ERROR] 찜 리스트 불러오기 실패하였습니다. 다시 시도해주세요.");
+        }
+      });
+
+      function renderZzimStore(response) {
+        let htmlStr = "";
+        $.map(response, function (item) {
+          htmlStr += "<div class='card'>";
+          htmlStr += "<div class='card-body-y mt-2'>";
+          htmlStr += "<p><a href='/brand/" + item.zzimUserSeq + "'>"
+              + item.nickname + "</a>님을 찜 하였습니다.</p>";
+          htmlStr += "<p class='text-body-y'>스토어 위치 : " + item.storeLocation + "</p>";
+          htmlStr += "<p class='p-last'>분야 : " + item.foodTypes + "</p>";
+          htmlStr += "</div>";
+          htmlStr += "</div>";
+        });
+        $("#sendZzimList").append(htmlStr);
+      }
+
+      function renderZzimCustomer(response) {
+        let htmlStr = " ";
+        $.map(response, function (item) {
+          htmlStr += "<div class='card'>";
+          htmlStr += "<div class='card-body-y mt-2'>";
+          htmlStr += "<p><a href='/brand/" + item.zzimUserSeq + "'>"
+              + item.nickname + "</a>님을 찜 하였습니다.</p>";
+          htmlStr += "<p class='p-last'>분야 : " + item.foodTypes + "</p>";
+          htmlStr += "</div>";
+          htmlStr += "</div>";
+        });
+        $("#sendZzimList").append(htmlStr);
+      }
+    }
+    window.zzimSendList('CUSTOMER');
+  });
+</script>
 
 </body>
 
