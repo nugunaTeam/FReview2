@@ -37,18 +37,18 @@ public class OAuthController {
     boolean userCheck = oauthUserService.checkUser(userInfo.getEmail());
     if(!userCheck){
       request.getSession().setAttribute("OAuthUser", userInfo);
-      return "redirect: /oauth-register-page";
+      return "redirect: /google-register-page";
     }else{
     return "/login-page";}
   }
 
-  @RequestMapping(value="/oauth-register-page", method = RequestMethod.GET)
+  @RequestMapping(value="/google-register-page", method = RequestMethod.GET)
   public String goToRegisterPage(Model model, HttpServletRequest httpRequest) {
 
     GoogleUserInfoDTO userInfo = (GoogleUserInfoDTO)httpRequest.getSession().getAttribute("OAuthUser");
     System.out.println(userInfo);
     model.addAttribute("userInfo", userInfo);
-    return "/common-oauth-register";
+    return "/common-google-register";
   }
 
 }
