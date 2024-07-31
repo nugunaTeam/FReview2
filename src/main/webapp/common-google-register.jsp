@@ -75,7 +75,7 @@
 
                             <div class="card-body">
                                 <div class="pt-4 pb-2">
-                                    <h5 class="card-title text-center pb-0 fs-4">OAUTH 회원가입</h5>
+                                    <h5 class="card-title text-center pb-0 fs-4">구글 유저 회원가입</h5>
                                 </div>
                                 <div class="card">
                                     <input type="hidden" id="OauthUser" value="${userInfo.email}"/>
@@ -354,7 +354,7 @@
                                                     <div class="col-12">
                                                         <button class="btn btn-primary w-100"
                                                                 type="button"
-                                                                id="COMM_register_btn_reviewer_regist">
+                                                                id="COMM_register_btn_oauth_reviewer_regist">
                                                             회원가입
                                                         </button>
                                                     </div>
@@ -631,7 +631,7 @@
                                                         </div>
                                                         <div class="col-12">
                                                             <button class="btn btn-primary w-100"
-                                                                    id="COMM_register_btn_Boss_regist"
+                                                                    id="COMM_register_btn_oauth_Boss_regist"
                                                                     type="submit">회원가입
                                                             </button>
                                                         </div>
