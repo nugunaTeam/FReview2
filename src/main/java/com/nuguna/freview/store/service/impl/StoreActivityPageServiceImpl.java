@@ -1,7 +1,8 @@
 package com.nuguna.freview.store.service.impl;
 
 import com.nuguna.freview.store.dto.response.StoreActivitySendLikeResponseDTO;
-import com.nuguna.freview.store.dto.response.StoreActivitySendZzimResponseDTO;
+import com.nuguna.freview.store.dto.response.StoreActivitySendZzimCustomerResponseDTO;
+import com.nuguna.freview.store.dto.response.StoreActivitySendZzimStoreResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreActivityWrittenPostResponseDTO;
 import com.nuguna.freview.store.mapper.StoreActivityPageMapper;
 import com.nuguna.freview.store.service.StoreActivityPageService;
@@ -29,8 +30,13 @@ public class StoreActivityPageServiceImpl implements StoreActivityPageService {
   }
 
   @Override
-  public List<StoreActivitySendZzimResponseDTO> storeActivityPageSendZzim(Long userSeq){
-    return storeActivityPageMapper.storeActivityPageSendZzim(userSeq);
+  public List<StoreActivitySendZzimStoreResponseDTO> storeActivitySendZzimStore(Long userSeq) {
+    return storeActivityPageMapper.storeActivitySendZzimStore(userSeq);
+  }
+
+  @Override
+  public List<StoreActivitySendZzimCustomerResponseDTO> storeActivitySendZzimCustomer(Long userSeq) {
+    return storeActivityPageMapper.storeActivitySendZzimCustomer(userSeq);
   }
 
   @Override
