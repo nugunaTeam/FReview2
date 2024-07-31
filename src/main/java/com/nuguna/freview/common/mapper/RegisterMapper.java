@@ -10,4 +10,6 @@ public interface RegisterMapper {
   void insertCustomerInfo(UserVO uvo);
   boolean getCheckBusinessNumber(String businessNumber);
   void insertStoreInfo(UserVO uvo);
+  void insertOAuthCustomerInfo(UserVO uvo);
+  void insertOAuthStoreInfo(UserVO uvo);
 }
