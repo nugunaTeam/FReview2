@@ -26,7 +26,7 @@
 		<intercept-url pattern="/member/logout" 	access="permitAll" />
 		<intercept-url pattern="/member/map" 		access="hasRole('ROLE_ADMIN')" />
 		<intercept-url pattern="/**" 				access="permitAll" />
-
+		<intercept-url pattern="/oauth/**" access="permitAll"/>
 		<form-login
 			login-processing-url="/login"
 			username-parameter="id"
@@ -36,6 +36,7 @@
 			authentication-success-handler-ref="authSuccessHandler"
 			authentication-failure-handler-ref="authFailureHandler"
 		/>
+
 	</http>
 
 
@@ -47,6 +48,7 @@
 	<beans:bean id="authSuccessHandler" class="com.nuguna.freview.security.login.SuccessHandler">
 		<beans:constructor-arg name="jwtUtil" ref="jwtUtil"/>
 	</beans:bean>
+	<beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 	<beans:bean id="authFailureHandler"	class="com.nuguna.freview.security.login.FailureHandler"/>
 	<beans:bean id="customAuthenticationProvider" class="com.nuguna.freview.security.login.CustomAuthenticationProvider"/>
 	<beans:bean id="customUserDetailsService" class="com.nuguna.freview.security.login.CustomUserDetailsService"/>
