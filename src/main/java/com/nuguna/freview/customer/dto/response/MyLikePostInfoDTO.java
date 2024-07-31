@@ -12,10 +12,10 @@ public class MyLikePostInfoDTO {
 
   private Long seq;
   private Long authorSeq; // store임.
-  private String storeName;
   private String title;
   private String content;
-  private Integer likeCount;
   private Date createdAt;
+  private String storeName;
+  private Integer likeCount;
 
 }
