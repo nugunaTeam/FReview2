@@ -16,17 +16,34 @@
     <result property="createdAt" column="like_created_at"/>
   </resultMap>
 
-  <resultMap id="StoreActivityPageSendZzimResultMap"
-    type="com.nuguna.freview.store.dto.response.StoreActivitySendZzimResponseDTO">
-    <result property="userSeq" column="from_user_seq"/>
-    <result property="toUserSeq" column="to_user_seq"/>
+<!--  <resultMap id="StoreActivityPageSendZzimResultMap"-->
+<!--    type="com.nuguna.freview.store.dto.response.StoreActivitySendZzimResponseDTO">-->
+<!--    <result property="userSeq" column="from_user_seq"/>-->
+<!--    <result property="toUserSeq" column="to_user_seq"/>-->
+<!--    <result property="nickname" column="nickname"/>-->
+<!--    <result property="code" column="code"/>-->
+<!--    <result property="storeLocation" column="store_location" />-->
+<!--    <result property="zzimCount" column="zzimCount"/>-->
+<!--    <result property="foodTypeCodes" column="foodTypeCodes" />-->
+<!--    <result property="dishes" column="dishes" />-->
+<!--    <result property="createdAt" column="created_at"/>-->
+<!--  </resultMap>-->
+
+  <resultMap id="StoreActivityPageSendZzimCustomerResultMap" type="com.nuguna.freview.store.dto.response.StoreActivitySendZzimCustomerResponseDTO">
+    <id property="userSeq" column="from_user_seq"/>
+    <result property="zzimUserSeq" column="to_user_seq"/>
     <result property="nickname" column="nickname"/>
     <result property="code" column="code"/>
-    <result property="storeLocation" column="store_location" />
-    <result property="zzimCount" column="zzimCount"/>
-    <result property="foodTypeCodes" column="foodTypeCodes" />
-    <result property="dishes" column="dishes" />
-    <result property="createdAt" column="created_at"/>
+    <result property="foodTypes" column="food_type_codes"/>
+  </resultMap>
+
+  <resultMap id="StoreActivityPageSendZzimStoreResultMap" type="com.nuguna.freview.store.dto.response.StoreActivitySendZzimStoreResponseDTO">
+    <id property="zzimUserSeq" column="to_user_seq"/>
+    <result property="userSeq" column="from_user_seq"/>
+    <result property="nickname" column="nickname"/>
+    <result property="code" column="code"/>
+    <result property="storeLocation" column="store_location"/>
+    <result property="foodTypes" column="food_type_codes"/>
   </resultMap>
 
   <resultMap id="StoreActivityPageWrittenPostResultMap"
@@ -54,53 +71,47 @@
            JOIN `post` p ON l.post_seq = p.seq
            JOIN `user` u ON p.user_seq = u.seq
            LEFT JOIN `like` lk ON p.seq = lk.post_seq
-    WHERE l.user_seq = #{userSeq}
+    WHERE l.user_seq = #{userSeq} and p.code = '모집'
     GROUP BY l.seq, p.seq
   </select>
 
-  <select id="storeActivityPageSendZzim" resultMap="StoreActivityPageSendZzimResultMap">
+  <select id="storeActivitySendZzimCustomer" resultMap="StoreActivityPageSendZzimCustomerResultMap">
+    SELECT
+      u.nickname,
+      u.code,
+      zz.from_user_seq,
+      zz.to_user_seq,
+      GROUP_CONCAT(DISTINCT ft.code ORDER BY ft.code ASC SEPARATOR ', ') AS food_type_codes
+    FROM
+      `user` u
+        JOIN zzim zz ON u.seq = zz.to_user_seq
+        LEFT JOIN user_food_type uft ON u.seq = uft.user_seq
+        LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
+    WHERE
+      zz.from_user_seq = #{userSeq}
+      AND u.code = 'CUSTOMER'
+    GROUP BY
+      u.seq, zz.from_user_seq, zz.to_user_seq ;
+  </select>
+
+  <select id="storeActivitySendZzimStore" resultMap="StoreActivityPageSendZzimStoreResultMap">
     SELECT
       u.nickname,
       u.code,
       u.store_location,
-      zz.from_user_seq,
-      zz.to_user_seq,
-      zz.created_at,
-      IFNULL(zzc.zzimCount, 0) AS zzimCount,
-      GROUP_CONCAT(ft.code SEPARATOR ', ') AS foodTypeCodes,
-      GROUP_CONCAT(ft.dish SEPARATOR ', ') AS dishes
+      z.from_user_seq,
+      z.to_user_seq,
+      GROUP_CONCAT(DISTINCT ft.code ORDER BY ft.code ASC SEPARATOR ', ') AS food_type_codes
     FROM
       `user` u
-        JOIN (
-        SELECT
-          z.from_user_seq,
-          z.to_user_seq,
-          z.created_at
-        FROM
-          ZZIM z
-        WHERE
-          z.from_user_seq = #{userSeq}
-      ) zz ON u.seq = zz.to_user_seq
-        LEFT JOIN (
-        SELECT
-          to_user_seq,
-          COUNT(*) AS zzimCount
-        FROM
-          ZZIM
-        GROUP BY
-          to_user_seq
-      ) zzc ON u.seq = zzc.to_user_seq
-        LEFT JOIN food_type ft ON u.code = ft.code
+        JOIN zzim z ON u.seq = z.to_user_seq
+        LEFT JOIN user_food_type uft ON u.seq = uft.user_seq
+        LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
     WHERE
-      zz.from_user_seq = #{userSeq}
+      z.from_user_seq = #{userSeq}
+      AND u.code = 'STORE'
     GROUP BY
-      u.nickname,
-      u.code,
-      u.store_location,
-      zz.from_user_seq,
-      zz.to_user_seq,
-      zz.created_at,
-      zzc.zzimCount;
+      u.seq, z.from_user_seq, z.to_user_seq
   </select>
 
   <select id="storeActivityPageWrittenPost" resultMap="StoreActivityPageWrittenPostResultMap">
