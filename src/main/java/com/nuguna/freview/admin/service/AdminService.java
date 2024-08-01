@@ -2,6 +2,7 @@ package com.nuguna.freview.admin.service;
 
 import com.nuguna.freview.admin.dto.response.CustomerInfoDTO;
 import com.nuguna.freview.admin.dto.response.StoreInfoDTO;
+import com.nuguna.freview.admin.dto.response.page.AdminProfileDTO;
 import com.nuguna.freview.admin.vo.AdminVO;
 import java.util.List;
 
@@ -13,4 +14,8 @@ public interface AdminService {
     boolean isPasswordValid(Long adminSeq, String password);
     boolean deleteUser(Long userSeq);
     void deleteUser(Long adminSeq, String adminVerificationPW, Long deleteUserSeq);
+    AdminProfileDTO getAdminProfile(Long userSeq);
 }
+
+
+//void updatePassword(Long userSeq, String newPassword);

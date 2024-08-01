@@ -2,6 +2,7 @@ package com.nuguna.freview.admin.service.impl;
 
 import com.nuguna.freview.admin.dto.response.CustomerInfoDTO;
 import com.nuguna.freview.admin.dto.response.StoreInfoDTO;
+import com.nuguna.freview.admin.dto.response.page.AdminProfileDTO;
 import com.nuguna.freview.admin.mapper.AdminMapper;
 import com.nuguna.freview.admin.service.AdminService;
 import com.nuguna.freview.admin.vo.AdminVO;
@@ -61,5 +62,10 @@ public class AdminServiceImpl implements AdminService {
     if (!deleteUser(deleteUserSeq)) {
       throw new IllegalStateException("[ERROR] 유저 삭제에 실패하였습니다.");
     }
+  }
+
+  @Override
+  public AdminProfileDTO getAdminProfile(Long userSeq) {
+    return adminMapper.selectAdminProfile(userSeq);
   }
 }
