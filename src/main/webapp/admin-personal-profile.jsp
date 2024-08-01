@@ -333,20 +333,22 @@
 
       $.ajax({
         type: 'POST',
-        url: '/password-update',
-        data: {
-          currentPassword: currentPassword,
-          newPassword: newPassword,
-          memberSeq: ${memberSeq}
-        },
-        success: function (response) {
+        url: '/api/admin/profile/password-update',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          "oldPassword": currentPassword,
+          "newPassword": newPassword,
+          "userSeq": userSeq
+        }),
+        dataType: "json",
+        success: function () {
           alert('비밀번호가 성공적으로 수정되었습니다.');
           resetButtons();
-          location.replace("/personal-info-update");
+          location.replace("/admin/profile");
         },
-        error: function (error) {
+        error: function () {
           alert('비밀번호 수정에 실패했습니다. 다시 시도해 주세요.');
-          console.error(error);
+          console.error("[ERROR] 비밀번호 업데이트 도중 에러 발생");
         }
       });
     });
