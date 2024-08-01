@@ -96,19 +96,22 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center header-hr">
     <div class="d-flex align-items-center justify-content-between ">
-        <a href="/main?seq=${userSeq}&pagecode=Requester"
-           class="logo d-flex align-items-center">
+        <a href="/main?seq=${userSeq}&pagecode=Requester" class="logo d-flex align-items-center">
             <img src="/assets/img/logo/logo-vertical.png" alt=""
                  style="  width: 50px; margin-top: 20px;">
             <span class="d-none d-lg-block">FReview</span>
         </a>
     </div>
-    <div class="header-hr-right">
-        <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
-            ${nickname}
-            <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
-        </a>
-        <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
+    <div class="header-hr-right ms-auto">
+        <div class="d-flex align-items-center">
+            <div class="pe-3">
+                <a href="/my/brand-info?userSeq=${userSeq}" style="margin-right: 20px">
+                    ${nickname}
+                    <img class="rounded-circle" src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;" >
+                </a>
+                <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
+            </div>
+        </div>
     </div>
 </header>
 
@@ -119,7 +122,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="/store/my/brand-info?userSeq=${userSeq}">
+               href="/my/brand-info?userSeq=${userSeq}">
                 <i class="bi bi-award"></i>
                 <span>브랜딩</span>
             </a>
@@ -323,7 +326,7 @@
       $.map(response, function (item) {
         htmlStr += "<div class='card'>";
         htmlStr += "<div class='card-body-y'>";
-        htmlStr += "<p><a href='/store/brand-info?userSeq=" + item.zzimUserSeq + "'>"
+        htmlStr += "<p><a href='/brand/" + item.zzimUserSeq + "'>"
             + item.nickname + "</a>님이 나를 찜하였습니다.</p>";
         htmlStr += "<p class='p-last'>분야 : "+ item.foodTypes + "</p>";
         htmlStr += "</div>";
@@ -337,7 +340,7 @@
       $.map(response, function (item) {
         htmlStr += "<div class='card'>";
         htmlStr += "<div class='card-body-y'>";
-        htmlStr += "<p><a href='/store/my/brand-info?userSeq=" + item.zzimUserSeq + "'>"
+        htmlStr += "<p><a href='/brand/" + item.zzimUserSeq + "'>"
             + item.nickname + "</a>님</p>";
         htmlStr += "<p>스토어 위치 : "+ item.storeLocation +"</p>";
         htmlStr += "<p class='p-last'>분야 : "+ item.foodTypes + "</p>";
@@ -373,9 +376,6 @@
           } else {
             let proposeList = response.proposeList;
             renderProposeData(proposeList);
-            proposeList.forEach(function(item) {
-              console.log(item);
-            });
           }
         }
       });
@@ -388,7 +388,7 @@
 
         htmlStr += "<div class='card'>";
         htmlStr += "<div class='card-body-y'>";
-        htmlStr += "<p><a href='/store/my/brand-info?userSeq=" + item.fromUserSeq + "'>"
+        htmlStr += "<p><a href='/brand/" + item.fromUserSeq + "'>"
             + item.nickname + "</a>님이 <a href='/mojip/"+ item.postSeq + "'>" + item.title + "</a>에 지원하였습니다.</p>";
         htmlStr += "<p class='p-last'>"+ formattedCreatedAt +"</p>";
         htmlStr += "</div>";
@@ -406,7 +406,7 @@
         if (status !== '미확인') { // '미확인'인 경우 제외
             htmlStr += "<div class='card'>";
             htmlStr += "<div class='card-body-y'>";
-            htmlStr += "<p><a href='/store/my/brand-info?userSeq=" + item.toUserSeq + "'>"
+            htmlStr += "<p><a href='/brand/" + item.toUserSeq + "'>"
               + item.nickname + "</a>님이 체험 제안을 " + status + " 하였습니다.</p>";
             htmlStr += "<p class='text-header-y' >제안내용 : </p><p class='text-body-y'>"
               + item.proposeDetail + "</p>";
