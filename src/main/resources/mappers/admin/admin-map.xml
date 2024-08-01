@@ -19,6 +19,14 @@
     <result property="updatedAt" column="updated_at"/>
   </resultMap>
 
+  <resultMap id="adminProfileMap" type="com.nuguna.freview.admin.dto.response.page.AdminProfileDTO">
+    <id property="seq" column="seq"/>
+    <result property="email" column="email"/>
+    <result property="password" column="password"/>
+    <result property="nickname" column="nickname"/>
+    <result property="subEmail" column="sub_email"/>
+  </resultMap>
+
   <!-- customerManageMap 설정 -->
   <resultMap id="customerManageMap" type="com.nuguna.freview.admin.dto.response.CustomerInfoDTO">
     <id property="seq" column="seq"/>
@@ -44,6 +52,14 @@
   <select id="selectAdmin" parameterType="Long" resultMap="adminMap">
     select
       seq, code, email, password, nickname, profile_photo_url, sub_email, created_at, updated_at
+    from user
+    where seq = #{userSeq}
+  </select>
+
+  <!-- 관리자 프로필 조회 -->
+  <select id="selectAdminProfile" parameterType="Long" resultMap="adminProfileMap">
+    select
+      seq, email, password, nickname, sub_email
     from user
     where seq = #{userSeq}
   </select>
