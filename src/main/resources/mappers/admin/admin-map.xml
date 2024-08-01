@@ -130,4 +130,11 @@
     SET is_withdrawn = 1
     WHERE seq = #{userSeq}
   </update>
+
+  <!-- 비밀번호 업데이트 -->
+  <update id="updatePassword" parameterType="map">
+    UPDATE user
+    SET password = #{newPassword}
+    WHERE seq = #{userSeq}
+  </update>
 </mapper>
