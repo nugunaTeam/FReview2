@@ -24,8 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/store/notification")
 public class StoreNotificationApiController {
   private final StoreNotificationPageService storeNotificationPageService;
-  @Autowired
-  private HttpSession httpSession;
 
   @Autowired
   public StoreNotificationApiController(StoreNotificationPageService storeNotificationPageService) {
