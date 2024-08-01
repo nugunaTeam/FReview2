@@ -272,7 +272,7 @@
     function loadInitialRankingData() {
       $.ajax({
         method: "POST",
-        url: "/api/common/recommendation/topPerformers",
+        url: "/api/common/recommendation/top-performers",
         contentType: "application/json",
         data: JSON.stringify({
           pageCode: "CUSTOMER"
