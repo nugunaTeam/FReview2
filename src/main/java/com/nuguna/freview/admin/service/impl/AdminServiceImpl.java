@@ -68,4 +68,9 @@ public class AdminServiceImpl implements AdminService {
   public AdminProfileDTO getAdminProfile(Long userSeq) {
     return adminMapper.selectAdminProfile(userSeq);
   }
+
+  @Override
+  public void updatePassword(Long userSeq, String newPassword) {
+    adminMapper.updatePassword(userSeq, newPassword);
+  }
 }

@@ -15,7 +15,5 @@ public interface AdminService {
     boolean deleteUser(Long userSeq);
     void deleteUser(Long adminSeq, String adminVerificationPW, Long deleteUserSeq);
     AdminProfileDTO getAdminProfile(Long userSeq);
+    void updatePassword(Long userSeq, String newPassword);
 }
-
-
-//void updatePassword(Long userSeq, String newPassword);
