@@ -41,7 +41,7 @@ public class CustomerMyActivityInfoApiController {
     return new ResponseEntity<>(myLikedPosts, HttpStatus.OK);
   }
 
-  @RequestMapping("/my-zzimed-customers")
+  @RequestMapping("/my-zzimed-stores")
   public ResponseEntity<CustomerMyZzimedStoresRetrieveResponseDTO> getMyZzimedStores(
       @RequestParam Long userSeq,
       @Valid @RequestBody CustomerMyZzimedStoresRetrieveRequestDTO customerMyZzimedStoresRetrieveRequestDTO) {
@@ -50,7 +50,7 @@ public class CustomerMyActivityInfoApiController {
     return new ResponseEntity<>(myZzimedStores, HttpStatus.OK);
   }
 
-  @RequestMapping("/my-zzimed-stores")
+  @RequestMapping("/my-zzimed-customers")
   public ResponseEntity<CustomerMyZzimedCustomersResponseDTO> getMyZzimedCustomers(
       @RequestParam Long userSeq,
       @Valid @RequestBody CustomerMyZzimedCustomersRetrieveRequestDTO customerMyZzimedCustomersRetrieveRequestDTO) {

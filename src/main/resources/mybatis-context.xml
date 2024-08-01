@@ -8,8 +8,8 @@
   </typeAliases>
 
   <typeHandlers>
-    <typeHandler javaType="java.time.LocalDateTime"
-      handler="org.apache.ibatis.type.LocalDateTimeTypeHandler"/>
+    <typeHandler javaType="java.time.LocalDate"
+      handler="org.apache.ibatis.type.LocalDateTypeHandler"/>
   </typeHandlers>
 
 </configuration>

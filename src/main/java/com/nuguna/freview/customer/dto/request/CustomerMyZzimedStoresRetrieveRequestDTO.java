@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 public class CustomerMyZzimedStoresRetrieveRequestDTO {
 
   @Min(1)
-  private Long targetPage;
+  private Integer targetPage;
 }
