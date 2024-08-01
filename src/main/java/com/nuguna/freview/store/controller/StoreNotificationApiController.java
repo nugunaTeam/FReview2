@@ -10,7 +10,6 @@ import com.nuguna.freview.store.dto.response.StoreNotificationReceivedZzimRespon
 import com.nuguna.freview.store.dto.response.StoreNotificationReceivedZzimStoreResponseDTO;
 import com.nuguna.freview.store.service.StoreNotificationPageService;
 import java.util.List;
-import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
