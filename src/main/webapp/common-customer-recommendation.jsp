@@ -76,6 +76,19 @@
         width: 20%; /* 한 행에 5개의 카드가 들어가도록 설정 */
       }
 
+      .col-md-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding: 10px;
+      }
+
+      #rankingInfoContainer {
+        border: 1px solid #007bff;
+        border-radius: 10px;
+        padding: 20px;
+        background-color: #f8f9fa;
+      }
+
     </style>
 
     <!-- =======================================================
@@ -138,7 +151,14 @@
                         <button type="submit">필터링</button> <button id="resetBtn">모든 필터 제거</button>
                     </div>
                 </form>
-                <br>
+
+                <div class="col-md-6" id="rankingSection">
+                    <div id="rankingInfoContainer">
+                        <div id="rankingInfo"></div>
+                    </div>
+                </div>
+            </div>
+
                 <div id="personalizedInfoSection">
                     ${nickname}님이 요즘 관심있을만한 체험단들을 추천해드려요
                     <div id="personalizedInfoContainer">
@@ -153,7 +173,6 @@
                     </button>
                 </div>
             </div>
-        </div>
     </section>
 </main>
 
@@ -164,6 +183,7 @@
       $('#personalizedInfoSection').hide();
     }
 
+    loadInitialRankingData();
     loadInitialData();
     loadInitialPersonalizationData();
 
@@ -245,6 +265,24 @@
         },
         error: function() {
           console.error("[ERROR] 개인화 추천 데이터 초기화 중 오류 발생");
+        }
+      })
+    }
+
+    function loadInitialRankingData() {
+      $.ajax({
+        method: "POST",
+        url: "/api/common/recommendation/top-performers",
+        contentType: "application/json",
+        data: JSON.stringify({
+          pageCode: "CUSTOMER"
+        }),
+        dataType: "json",
+        success: function (response) {
+          renderRankingData(response.topPerformers, 'rankingInfo');
+        },
+        error: function() {
+          console.error("[ERROR] 랭킹 데이터 초기화 중 오류 발생")
         }
       })
     }
@@ -350,6 +388,33 @@
         htmlStr += "</div>";
         htmlStr += "</div>";
       });
+      $('#' + targetId).append(htmlStr);
+    }
+
+    function renderRankingData(data, targetId) {
+      let htmlStr = "<div>";
+      htmlStr += "<h2>지금 핫한 체험단은?</h2>";
+      htmlStr += "<table>";
+
+      let numRows = Math.ceil(data.length / 2);
+
+      for (let i = 0; i < numRows; i++) {
+        htmlStr += "<tr>";
+
+        if (i < data.length) {
+          htmlStr += "<td>" + (i + 1) + ". <a href='/brand-page?user_seq=" + data[i]["userSeq"] + "'>" + data[i]["nickname"] + "</a></td>";
+        }
+
+        let rightIndex = i + numRows;
+        if (rightIndex < data.length) {
+          htmlStr += "<td>" + (rightIndex + 1) + ". <a href='/brand-page?user_seq=" + data[rightIndex]["userSeq"] + "'>" + data[rightIndex]["nickname"] + "</a></td>";
+        }
+
+        htmlStr += "</tr>";
+      }
+
+      htmlStr += "</table>";
+      htmlStr += "</div>";
       $('#' + targetId).append(htmlStr);
     }
   });

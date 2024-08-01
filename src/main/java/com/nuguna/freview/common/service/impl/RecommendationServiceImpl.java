@@ -3,6 +3,7 @@ package com.nuguna.freview.common.service.impl;
 import com.nuguna.freview.common.dto.InterestAccumulationDTO;
 import com.nuguna.freview.common.dto.PersonalizedUserDTO;
 import com.nuguna.freview.common.dto.response.RecommendationResponseDTO;
+import com.nuguna.freview.common.dto.TopPerformersDTO;
 import com.nuguna.freview.common.mapper.InterestAccumulationMapper;
 import com.nuguna.freview.common.mapper.RecommendationMapper;
 import com.nuguna.freview.common.service.RecommendationService;
@@ -93,5 +94,10 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     return recommendations.stream().limit(5).collect(Collectors.toList());
+  }
+
+  @Override
+  public List<TopPerformersDTO> getTopPerformers(String pageCode, int displayLimit) {
+    return recommendationMapper.selectTopPerformers(pageCode, displayLimit);
   }
 }
