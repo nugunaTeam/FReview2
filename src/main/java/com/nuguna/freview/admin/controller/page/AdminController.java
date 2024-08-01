@@ -22,6 +22,11 @@ public class AdminController {
     this.adminService = adminService;
   }
 
+  @RequestMapping(value = "", method = RequestMethod.GET)
+  public String adminHome(Model model) {
+    return "redirect:/admin/manage/customer";
+  }
+
   @RequestMapping(value = "/manage/customer", method = RequestMethod.GET)
   public String customerManagePage(Model model) {
     //HACK: 로그인 유저의 실제 seq 로 수정 필요
