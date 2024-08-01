@@ -3,10 +3,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<%
-    Gson gson = new Gson();
-%>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -45,11 +41,6 @@
 
       .clickable {
         cursor: pointer;
-        
-      .btn-secondary {
-        background-color: rgb(128, 128, 128);
-        border-color: rgb(128, 128, 128);
-        color: white;
       }
 
     </style>
@@ -153,11 +144,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <%--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossorigin="anonymous">--%>
-
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
@@ -183,13 +169,14 @@
         <ul class="d-flex align-items-center">
             <li class="nav-item dropdown pe-3">
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
+
                     <img src="/user/${userSeq}/profile"
                          alt="Profile"
                          class="rounded-circle profile-img"
-                         style="position: relative;
-                         overflow: hidden; border-radius: 50%;">
+                         style="margin-right: 5px;">
                     <span id="nickname-holder-head"
-                          class="d-none d-md-block">${brandInfo.nickname}</span>
+                          class="d-none d-md-block"
+                          style="font-size : 18px;">${brandInfo.nickname}</span>
                 </a>
             </li>
         </ul>
@@ -295,7 +282,7 @@
 
                             <!-- 소개 -->
                             <div class="row">
-                                <div class="col-lg-3 col-md-4 label">소개</div>
+                                <div class="col-lg-3 col-md-4 label" style="color:blue">소개</div>
                                 <div class="col-lg-8 col-md-6">
                                     <input id="introduce-input" type="text" name="to_nickname"
                                            value="${brandInfo.introduce}"
@@ -318,7 +305,7 @@
 
                             <!-- 닉네임 보여주기/등록하기 -->
                             <div class="row">
-                                <div class="col-lg-3 col-md-4 label">닉네임</div>
+                                <div class="col-lg-3 col-md-4 label" style="color:blue">닉네임</div>
                                 <div class="col-lg-8 col-md-6">
                                     <input id="nickname-input" type="text" name="to_nickname"
                                            value="${brandInfo.nickname}"
@@ -434,7 +421,7 @@
 
                             <!-- 연령대 보여주기/등록하기 -->
                             <div class="row">
-                                <div class="col-lg-3 col-md-4 label">연령대</div>
+                                <div class="col-lg-3 col-md-4 label" style="color:blue">연령대</div>
                                 <div class="col-lg-8 col-md-6">
                                     <select id="age-group-input"
                                             class="form-control form-control-readonly" disabled>
@@ -523,7 +510,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-lg-3 col-md-4 label">활동 분야</div>
+                                <div class="col-lg-3 col-md-4 label" style="color:blue">활동 분야</div>
                                 <div class="col-lg-8 col-md-6">
                                     <select id="food-type-select" class="form-select" multiple
                                             size="5" disabled>
@@ -708,7 +695,7 @@
                             </script>
 
                             <div class="row">
-                                <div class="col-lg-3 col-md-4 label">태그</div>
+                                <div class="col-lg-3 col-md-4 label" style="color:blue">태그</div>
                                 <div class="col-lg-8 col-md-6">
                                     <select id="tag-select" class="form-select" multiple size="2"
                                             disabled>
@@ -850,89 +837,99 @@
                             </script>
 
                             <div class="row">
-                                <div class="col-lg-3 col-md-4 label">리뷰 로그</div>
+                                <div class="col-lg-3 col-md-4 label" style="color:blue">리뷰 로그</div>
                                 <div class="col-lg-8 col-md-6">
                                     <div class="table-container">
-                                        <table class="table table-striped table-bordered text-center"
-                                               id="review-log-table">
-                                            <thead>
-                                            <tr>
-                                                <th>스토어명</th>
-                                                <th>방문일자</th>
-                                                <th>리뷰</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <c:forEach var="review" items="${reviewInfos}">
-                                                <c:set var="visitDate" value="${review.visitDate}"/>
-                                                <c:if test="${review.status == 'NOSHOW'}">
-                                                    <c:set var="visitDate" value="노쇼"/>
-                                                </c:if>
+                                        <!-- 리뷰가 있는 경우 테이블 표시 -->
+                                        <c:if test="${not empty reviewInfos}">
+                                            <table class="table table-striped table-bordered text-center"
+                                                   id="review-log-table">
+                                                <thead>
                                                 <tr>
-                                                    <td>
-                                                        <a href="/brand/${review.storeSeq}">${review.storeName}</a>
-                                                    </td>
-                                                    <td>${visitDate}</td>
-                                                    <td>
-                                                        <c:choose>
-                                                            <c:when test="${review.status == 'WRITTEN' || review.status == 'STORE_HIDDEN'}">
-                                                                <a href="${review.url}"
-                                                                   class="btn btn-success btn-sm">리뷰
-                                                                    확인</a>
-                                                            </c:when>
-                                                            <c:when test="${review.status == 'UNWRITTEN'}">
-                                                                <button class="btn btn-sm"
-                                                                        style="background-color: indianred; border-color: indianred; color: white;"
-                                                                        data-toggle="modal"
-                                                                        data-target="#reviewModal"
-                                                                        data-review-seq="${review.seq}">
-                                                                    리뷰 등록하기
-                                                                </button>
-                                                            </c:when>
-                                                            <c:when test="${review.status == 'NOSHOW'}">
-                                                                <button class="btn btn-secondary btn-sm"
-                                                                        disabled>노쇼
-                                                                </button>
-                                                            </c:when>
-                                                        </c:choose>
-                                                    </td>
+                                                    <th>스토어명</th>
+                                                    <th>방문일자</th>
+                                                    <th>리뷰</th>
                                                 </tr>
-                                            </c:forEach>
-                                            </tbody>
-                                        </table>
-                                        <div class="d-flex justify-content-end mt-1"
-                                             style="font-size: medium; color: indianred;">
-                                            노쇼 상태인 리뷰는 노출되지 않습니다.
-                                        </div>
-                                        <div class="pagination-container">
-                                            <button id="prev-block-button"
-                                                    class="btn btn-primary edit-btn"
-                                                    style="${reviewPageInfo.hasPrevious ? '' : 'display:none;'}">
-                                                &lt;
-                                            </button>
-                                            <div id="page-buttons"
-                                                 class="d-flex justify-content-center mx-2">
-                                                <c:forEach var="page"
-                                                           begin="${reviewPageInfo.startPage}"
-                                                           end="${reviewPageInfo.endPage}">
-                                                    <c:choose>
-                                                        <c:when test="${page == reviewPageInfo.currentPage}">
-                                                            <button class="btn btn-secondary edit-btn"
-                                                                    disabled>${page}</button>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <button class="btn btn-primary edit-btn"
-                                                                    data-page="${page}">${page}</button>
-                                                        </c:otherwise>
-                                                    </c:choose>
+                                                </thead>
+                                                <tbody>
+                                                <c:forEach var="review" items="${reviewInfos}">
+                                                    <c:set var="visitDate"
+                                                           value="${review.visitDate}"/>
+                                                    <c:if test="${review.status == 'NOSHOW'}">
+                                                        <c:set var="visitDate" value="노쇼"/>
+                                                    </c:if>
+                                                    <tr>
+                                                        <td>
+                                                            <a href="/brand/${review.storeSeq}">${review.storeName}</a>
+                                                        </td>
+                                                        <td>${visitDate}</td>
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${review.status == 'WRITTEN' || review.status == 'STORE_HIDDEN'}">
+                                                                    <a href="${review.url}"
+                                                                       class="btn btn-success btn-sm">리뷰
+                                                                        확인</a>
+                                                                </c:when>
+                                                                <c:when test="${review.status == 'UNWRITTEN'}">
+                                                                    <button class="btn btn-sm"
+                                                                            style="background-color: indianred; border-color: indianred; color: white;"
+                                                                            data-toggle="modal"
+                                                                            data-target="#reviewModal"
+                                                                            data-review-seq="${review.seq}">
+                                                                        리뷰 등록하기
+                                                                    </button>
+                                                                </c:when>
+                                                                <c:when test="${review.status == 'NOSHOW'}">
+                                                                    <button class="btn btn-secondary btn-sm"
+                                                                            disabled>노쇼
+                                                                    </button>
+                                                                </c:when>
+                                                            </c:choose>
+                                                        </td>
+                                                    </tr>
                                                 </c:forEach>
+                                                </tbody>
+                                            </table>
+                                            <div class="d-flex justify-content-end mt-1"
+                                                 style="font-size: medium; color: indianred;">
+                                                노쇼 상태인 리뷰는 노출되지 않습니다.
                                             </div>
-                                            <button id="next-block-button"
-                                                    class="btn btn-primary edit-btn"
-                                                    style="${reviewPageInfo.hasNext ? '' : 'display:none;'}">
-                                                &gt;
-                                            </button>
-                                        </div>
+                                            <div class="pagination-container">
+                                                <button id="prev-block-button"
+                                                        class="btn btn-primary edit-btn"
+                                                        style="${reviewPageInfo.hasPrevious ? '' : 'display:none;'}">
+                                                    &lt;
+                                                </button>
+                                                <div id="page-buttons"
+                                                     class="d-flex justify-content-center mx-2">
+                                                    <c:forEach var="page"
+                                                               begin="${reviewPageInfo.startPage}"
+                                                               end="${reviewPageInfo.endPage}">
+                                                        <c:choose>
+                                                            <c:when test="${page == reviewPageInfo.currentPage}">
+                                                                <button class="btn btn-secondary edit-btn"
+                                                                        disabled>${page}</button>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <button class="btn btn-primary edit-btn"
+                                                                        data-page="${page}">${page}</button>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </c:forEach>
+                                                </div>
+                                                <button id="next-block-button"
+                                                        class="btn btn-primary edit-btn"
+                                                        style="${reviewPageInfo.hasNext ? '' : 'display:none;'}">
+                                                    &gt;
+                                                </button>
+                                            </div>
+                                        </c:if>
+
+                                        <!-- 리뷰가 없는 경우 메시지 표시 -->
+                                        <c:if test="${empty reviewInfos}">
+                                            <p style="font-size: 18px; color : hotpink">아직 리뷰 기록이
+                                                없어요.</p>
+                                        </c:if>
                                     </div>
                                 </div>
                             </div>
@@ -1122,7 +1119,12 @@
                               };
                               initializePagination(reviewPageInfo);
                             </script>
-
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
 
 <footer id="footer" class="footer">
@@ -1138,16 +1140,14 @@
     </div>
 </footer><!-- End Footer -->
 
-<a href="#"
-   class="back-to-top d-flex align-items-center justify-content-center"><i
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>
 <!-- jquery  -->
 
 <!-- icon bootstrap -->
-<%--<script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>--%>
+        crossorigin="anonymous"></script>
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
@@ -1161,6 +1161,7 @@
 
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
+
 
 </body>
 
