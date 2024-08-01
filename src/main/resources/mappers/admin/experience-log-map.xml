@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.nuguna.freview.admin.mapper.ExperienceMapper">
+<mapper namespace="com.nuguna.freview.admin.mapper.ExperienceLogMapper">
 
   <!-- resultMap -->
   <!-- noshow resultMap -->
@@ -19,19 +19,25 @@
     <result property="visitDate" column="visit_date" javaType="java.time.LocalDate" jdbcType="TIMESTAMP"/>
   </resultMap>
 
-  <!-- 'NOSHOW'인 experience 데이터 조회 -->
+  <!-- SQL 쿼리문 -->
+  <insert id="insertExperienceLog" parameterType="map">
+    insert into experience_log (from_user_seq, to_user_seq, from_post_seq, visit_date, status)
+    values (#{fromUserSeq}, #{toUserSeq}, #{fromPostSeq}, #{visitDate}, #{status})
+  </insert>
+
+  <!-- 'NOSHOW' experience 데이터 조회 -->
   <select id="selectNoShowExperiences" parameterType="map" resultMap="noShowExperienceResultMap">
     SELECT seq, from_user_seq, to_user_seq, from_post_seq, status
-    FROM experience
+    FROM experience_log
     WHERE status = #{status} AND seq > #{lastProcessedSeq}
     ORDER BY seq ASC
     LIMIT 100
   </select>
 
-  <!-- 'DONE'인 experience 데이터 조회 -->
+  <!-- 'DONE' experience 데이터 조회 -->
   <select id="selectDoneExperiences" parameterType="map" resultMap="DoneExperienceResultMap">
     SELECT seq, visit_date
-    FROM experience
+    FROM experience_log
     WHERE status = #{status} AND seq > #{lastProcessedSeq}
     ORDER BY seq ASC
     LIMIT 100

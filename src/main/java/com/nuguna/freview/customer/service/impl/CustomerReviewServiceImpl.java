@@ -5,8 +5,10 @@ import static com.nuguna.freview.customer.constant.CustomerConstant.CUSTOMER_REV
 
 import com.nuguna.freview.customer.dto.request.CustomerMyReviewRegisterRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerMyReviewsRetrieveRequestDTO;
+import com.nuguna.freview.customer.dto.request.CustomerOtherReviewsRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyReviewRegisterResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyReviewsRetrieveResponseDTO;
+import com.nuguna.freview.customer.dto.response.CustomerOtherReviewsRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.ReviewLogInfoDTO;
 import com.nuguna.freview.customer.dto.response.ReviewPaginationInfoResponseDTO;
 import com.nuguna.freview.customer.exception.AlreadyExistReviewException;
@@ -32,10 +34,10 @@ public class CustomerReviewServiceImpl implements CustomerReviewService {
 
   @Override
   public CustomerMyReviewRegisterResponseDTO registerCustomerReview(
-      CustomerMyReviewRegisterRequestDTO customerReviewRegisterRequestDTO) {
-    Long userSeq = customerReviewRegisterRequestDTO.getUserSeq(); // Customer의 Seq
-    Long reviewSeq = customerReviewRegisterRequestDTO.getReviewSeq();
-    String reviewUrl = customerReviewRegisterRequestDTO.getReviewUrl();
+      CustomerMyReviewRegisterRequestDTO customerMyReviewRegisterRequestDTO) {
+    Long userSeq = customerMyReviewRegisterRequestDTO.getUserSeq(); // Customer의 Seq
+    Long reviewSeq = customerMyReviewRegisterRequestDTO.getReviewSeq();
+    String reviewUrl = customerMyReviewRegisterRequestDTO.getReviewUrl();
 
     if (!customerReviewMapper.checkIsValidReview(userSeq, reviewSeq)) {
       throw new IllegalReviewException("존재하지 않는 리뷰입니다.");
@@ -82,5 +84,40 @@ public class CustomerReviewServiceImpl implements CustomerReviewService {
     ReviewPaginationInfoResponseDTO reviewPaginationInfoResponseDTO = new ReviewPaginationInfoResponseDTO(
         currentPage, startPage, endPage, hasNext, hasPrevious);
     return new CustomerMyReviewsRetrieveResponseDTO(reviewsInfo, reviewPaginationInfoResponseDTO);
+  }
+
+  @Override
+  public CustomerOtherReviewsRetrieveResponseDTO getOtherCustomerReviews(
+      CustomerOtherReviewsRetrieveRequestDTO customerOtherReviewsRetrieveRequestDTO) {
+    Long userSeq = customerOtherReviewsRetrieveRequestDTO.getUserSeq();
+    Integer currentPage = customerOtherReviewsRetrieveRequestDTO.getPage();
+
+    int offset = (currentPage - 1) * CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE;
+    int reviewCount = customerReviewMapper.getOtherReviewCount(userSeq);
+    if (offset > reviewCount) {
+      throw new IllegalReviewPageAccessException("해당하는 페이지에 대한 리뷰가 존재하지 않습니다.");
+    }
+    List<ReviewLogInfoDTO> reviewsInfo = customerReviewMapper.getOtherReviewsInfo(userSeq, offset,
+        CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE);
+
+    int startPage =
+        ((currentPage - 1) / CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE)
+            * CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE
+            + 1;
+    int endPage;
+    int pageBlockThreshold = startPage + CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE - 1;
+    if (reviewCount >= pageBlockThreshold * CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE) {
+      endPage = pageBlockThreshold;
+    } else {
+      endPage = (int) Math.ceil((double) reviewCount / CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE);
+    }
+    boolean hasNext = ((currentPage < endPage) || (reviewCount
+        > pageBlockThreshold * CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE));
+    boolean hasPrevious = (currentPage > 1);
+
+    ReviewPaginationInfoResponseDTO reviewPaginationInfoResponseDTO = new ReviewPaginationInfoResponseDTO(
+        currentPage, startPage, endPage, hasNext, hasPrevious);
+    return new CustomerOtherReviewsRetrieveResponseDTO(reviewsInfo,
+        reviewPaginationInfoResponseDTO);
   }
 }

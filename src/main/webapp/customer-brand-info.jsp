@@ -3,27 +3,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<%
-    Gson gson = new Gson();
-%>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <style>
-      .selected-option {
-        background-color: lightgreen; /* 연초록색으로 선택된 옵션 표시 */
-      }
-
-      #food-type-select-message {
-        margin-bottom: 5px;
-      }
-
-      #review-log-table {
-        border-collapse: collapse;
-      }
-
       #review-log-table th,
       #review-log-table td {
         border: 2px solid #dee2e6; /* 선 두께를 2px로 설정 */
@@ -42,6 +26,15 @@
       .d-flex.justify-content-center {
         gap: 0.5rem;
       }
+
+      #review-log-table th {
+        font-weight: bold;
+      }
+
+      #page-buttons .btn {
+        margin: 0 2px;
+      }
+
     </style>
 
     <style>
@@ -60,12 +53,26 @@
         transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
       }
 
-      .form-control-readonly {
-        background-color: #e9ecef;
-        opacity: 1;
+      .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .table-container {
+        position: relative;
+      }
+
+      .profile-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* 이미지의 중앙을 맞추고, 자르기 */
+        object-position: center; /* 중앙 위치 */
       }
 
     </style>
+
 
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -113,6 +120,7 @@
 
 <body>
 
+
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
@@ -128,54 +136,21 @@
         <ul class="d-flex align-items-center">
             <li class="nav-item dropdown pe-3">
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-                    <img src="/assets/img/basic/basic-profile-img.png" alt="Profile"
-                         class="rounded-circle">
+                    <img src="/user/${fromUserSeq}/profile" alt="Profile"
+                         class="rounded-circle" style="margin-right: 5px;">
                     <span id="nickname-holder-head"
-                          class="d-none d-md-block">${brandInfo.nickname}</span>
+                          class="d-none d-md-block"
+                          style="font-size : 18px;">${userNickname}</span>
                 </a>
             </li>
         </ul>
     </nav>
 </header>
 
-<!-- ======= Sidebar ======= -->
-<aside id="sidebar" class="sidebar">
-    <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item">
-            <a class="nav-link" data-bs-target="#components-nav"
-               href="#">
-                <i class="bi bi-person-lines-fill"></i><span>브랜딩</span>
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="${pageContext.request.contextPath}/my/activity">
-                <i class="bi bi-layout-text-window-reverse"></i>
-                <span>활동</span>
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="${pageContext.request.contextPath}/my/notification">
-                <i class="bi bi-envelope"></i>
-                <span>알림</span>
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/my/personal-info">
-                <i class="ri-edit-box-line"></i>
-                <span>개인정보수정</span>
-            </a>
-        </li>
-    </ul>
-</aside><!-- End Sidebar-->
-
 <main id="main" class="main">
 
     <div class="pagetitle">
-        <h1>나의 브랜딩</h1>
+        <h1>${otherBrandInfo.nickname}님의 브랜딩 페이지</h1>
     </div><!-- End Page Title -->
 
     <section class="section profile">
@@ -183,28 +158,196 @@
             <div class="card">
                 <!-- profile  -->
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                    <img src="/assets/img/basic/basic-profile-img.png" alt="Profile"
-                         class="rounded-circle">
-                    <h2 id="nickname-holder-section">${brandInfo.nickname}
+                    <img src="/user/${userSeq}/profile" alt="Profile" class="rounded-circle">
+                    <h2 id="nickname-holder-section" style="font-size: 1.5rem; margin: 0.5rem 0;">
+                        ${otherBrandInfo.nickname}
                     </h2>
-                    <div class="social-links mt-2 ri-heart-3-fill">
-                        ${brandInfo.zzimCount}
+                    <div class="social-links mt-2"
+                         style="display: flex; align-items: center; justify-content: center;">
+                        <!-- 찜 버튼 -->
+                        <button id="zzimButton"
+                                style="background-color: #ffe6e6; border: none; font-size: 1.5rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 5px; display: flex; align-items: center; outline: none; height: 40px;">
+                            <i id="heartIcon" class="ri-heart-3-fill"
+                               style="margin-right: 0.7rem; color: pink;"></i>
+                            <span id="zzimCount" style="font-size: 1rem; color: #333;">
+                                ${otherBrandInfo.zzimCount}
+                            </span>
+                        </button>
+
+                        <!-- 제안하기 버튼 -->
+                        <div id="proposalButtonContainer"></div>
                     </div>
                 </div>
 
+                <!-- 모달 HTML -->
+                <div class="modal fade" id="proposalModal" tabindex="-1" role="dialog"
+                     aria-labelledby="proposalModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="proposalModalLabel">제안하기</h5>
+                                <button type="button" class="close" data-dismiss="modal"
+                                        aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="proposalForm">
+                                    <div class="form-group">
+                                        <label for="proposalDetail">제안 내용</label>
+                                        <textarea class="form-control" id="proposalDetail"
+                                                  name="proposalDetail" rows="3"
+                                                  required></textarea>
+                                        <small style="color: mediumvioletred;">한번 전송한 제안 내용은 수정
+                                            불가합니다. ( 100글자까지 입력 가능 )</small>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary"
+                                            style="border:none; background-color: mediumvioletred">
+                                        제안하기
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                  $(document).ready(function () {
+                    var proposed = ${proposed};  // false 또는 true
+                    var isFromUserStore = ${isFromUserStore};  // true 또는 false
+                    var fromUserSeq = ${fromUserSeq};
+                    var userSeq = ${userSeq};
+
+                    // 버튼을 삽입할 컨테이너
+                    var $buttonContainer = $('#proposalButtonContainer');
+
+                    // 버튼 스타일
+                    var buttonStyles = {
+                      border: 'none',
+                      borderRadius: '5px',
+                      padding: '0.5rem 1rem',
+                      fontSize: '1rem',
+                      marginLeft: '1rem',
+                      outline: 'none'
+                    };
+
+                    var disabledButtonStyles = $.extend({}, buttonStyles, {
+                      backgroundColor: 'gray',
+                      color: 'white',
+                      pointerEvents: 'none'
+                    });
+
+                    var enabledButtonStyles = $.extend({}, buttonStyles, {
+                      backgroundColor: 'mediumvioletred',
+                      color: 'white',
+                      cursor: 'pointer'
+                    });
+
+                    // 버튼 생성 함수
+                    function createButton(text, styles, id, disabled) {
+                      var $button = $('<button></button>').text(text).css(styles);
+                      if (id) $button.attr('id', id);
+                      if (disabled) $button.prop('disabled', true);
+                      $buttonContainer.empty().append($button);
+                    }
+
+                    if (isFromUserStore) {
+                      if (proposed) {
+                        createButton('제안 진행 중', disabledButtonStyles, null, true);
+                      } else {
+                        createButton('제안하기', enabledButtonStyles, 'openProposalModal');
+                      }
+                    }
+
+                    $(document).on('click', '#openProposalModal', function () {
+                      $('#proposalModal').modal('show');
+                    });
+
+                    $('#proposalForm').on('submit', function (event) {
+                      event.preventDefault();
+
+                      var proposalDetail = $('#proposalDetail').val();
+
+                      var dataObject = {
+                        storeSeq: fromUserSeq,
+                        customerSeq: userSeq,
+                        proposalDetail: proposalDetail
+                      };
+
+                      $.ajax({
+                        url: '/api/other/customer/proposal',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(dataObject),
+                        success: function () {
+                          alert('해당 체험단에게 제안을 보냈습니다.');
+                          createButton('제안 진행 중', disabledButtonStyles, null, true);
+                          $('#proposalModal').modal('hide');
+                        },
+                        error: function (xhr) {
+                          var errorMessage = xhr.responseJSON && xhr.responseJSON.message
+                              ? xhr.responseJSON.message : '제안 전송에 실패했습니다.';
+                          alert(errorMessage);
+                          console.error('Error:', errorMessage); // 디버깅을 위한 로그
+                        }
+                      });
+                    });
+                  });
+                </script>
+
+
+                <script>
+                  $(document).ready(function () {
+                    var zzimed = ${zzimed};
+                    if (zzimed) {
+                      $('#heartIcon').css('color', 'red');
+                    } else {
+                      $('#heartIcon').css('color', 'white');
+                    }
+
+                    $('#zzimButton').on('click', function () {
+                      const fromUserSeq = ${fromUserSeq};
+                      const userSeq = ${userSeq};
+
+                      const data = {
+                        fromUserSeq: fromUserSeq,
+                        toUserSeq: userSeq
+                      };
+
+                      $.ajax({
+                        url: '/api/other/zzim',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(data),
+                        success: function (response) {
+                          if (response.zzimed) {
+                            alert("해당 체험단을 찜했습니다.");
+                            $('#heartIcon').css('color', 'red'); // 찜 활성화
+                          } else {
+                            alert("해당 체험단을 찜 취소했습니다.");
+                            $('#heartIcon').css('color', 'white'); // 찜 비활성화
+                          }
+                          $('#zzimCount').text(response.zzimCount);
+                        },
+                        error: function (error) {
+                          console.error('Error:', error);
+                        }
+                      });
+                    });
+                  });
+                </script>
+
                 <div class="card-body pt-3">
-                    <!-- Bordered Tabs -->
                     <div class="tab-content pt-2">
 
                         <div class="tab-pane fade show active profile-overview"
                              id="profile-overview">
 
-                            <!-- 소개 -->
                             <div class="row">
-                                <div class="col-lg-3 col-md-4 label">소개</div>
+                                <div class="col-lg-3 col-md-4 label" style="color : blue">소개</div>
                                 <div class="col-lg-8 col-md-6">
                                     <input id="introduce-input" type="text" name="to_nickname"
-                                           value="${brandInfo.introduce}"
+                                           value="${otherBrandInfo.introduce}"
                                            class="form-control" readonly>
                                 </div>
                                 <div class="col-lg-1 col-md-2">
@@ -222,12 +365,11 @@
                                 </div>
                             </div>
 
-                            <!-- 닉네임 보여주기/등록하기 -->
                             <div class="row">
-                                <div class="col-lg-3 col-md-4 label">닉네임</div>
+                                <div class="col-lg-3 col-md-4 label" style="color : blue">닉네임</div>
                                 <div class="col-lg-8 col-md-6">
                                     <input id="nickname-input" type="text" name="to_nickname"
-                                           value="${brandInfo.nickname}"
+                                           value="${otherBrandInfo.nickname}"
                                            class="form-control" readonly>
                                 </div>
                                 <div class="col-lg-1 col-md-2">
@@ -242,800 +384,332 @@
                                     </button>
                                 </div>
                             </div>
-
-                            <script>
-                              $(document).ready(function () {
-                                function initializeIntroduceForm() {
-                                  $('#introduce-input').val('${brandInfo.introduce}').prop(
-                                      'readonly',
-                                      true);
-                                  $('#introduce-update-btn').show();
-                                  $('#introduce-submit-btn').hide();
-                                  $('#introduce-cancel-btn').hide();
-                                }
-
-                                function initializeNicknameForm() {
-                                  $('#nickname-input').val('${brandInfo.nickname}').prop(
-                                      'readonly', true);
-                                  $('#nickname-update-btn').show();
-                                  $('#nickname-submit-btn').hide();
-                                  $('#nickname-cancel-btn').hide();
-                                }
-
-                                $("#introduce-cancel-btn").click(function () {
-                                  initializeIntroduceForm();
-                                });
-
-                                $("#introduce-update-btn").click(function () {
-                                  $("#introduce-update-btn").hide();
-                                  $("#introduce-cancel-btn").show();
-                                  $("#introduce-submit-btn").show();
-                                  $('#introduce-input').prop('readonly', false);
-                                });
-
-                                $("#introduce-submit-btn").click(function () {
-                                  var newIntroduce = $('#introduce-input').val();
-                                  $.ajax({
-                                    url: '<%=request.getContextPath()%>/api/customer/my/brand-info/introduce',
-                                    method: 'PUT',
-                                    data: JSON.stringify({
-                                      'userSeq': ${userSeq},
-                                      'toIntroduce': newIntroduce
-                                    }),
-                                    contentType: 'application/json',
-                                    success: function (response) {
-                                      $('#introduce-input').val(response.introduce).prop('readonly',
-                                          true);
-                                      $("#introduce-submit-btn").hide();
-                                      $("#introduce-cancel-btn").hide();
-                                      $("#introduce-update-btn").show();
-                                      alert('소개글 변경에 성공했습니다.');
-                                    },
-                                    error: function (error) {
-                                      console.log(error);
-                                      alert('소개글 변경에 실패하였습니다.');
-                                    }
-                                  });
-                                });
-
-                                $("#nickname-cancel-btn").click(function () {
-                                  initializeNicknameForm();
-                                });
-
-                                $("#nickname-update-btn").click(function () {
-                                  $("#nickname-update-btn").hide();
-                                  $("#nickname-cancel-btn").show();
-                                  $("#nickname-submit-btn").show();
-                                  $('#nickname-input').prop('readonly', false);
-                                });
-
-                                $("#nickname-submit-btn").click(function () {
-                                  var newNickname = $('#nickname-input').val();
-                                  $.ajax({
-                                    url: '<%=request.getContextPath()%>/api/customer/my/brand-info/nickname',
-                                    method: 'PUT',
-                                    data: JSON.stringify({
-                                      'userSeq': ${userSeq},
-                                      'toNickname': newNickname
-                                    }),
-                                    contentType: 'application/json',
-                                    success: function (response) {
-                                      $('#nickname-input').val(response.nickname).prop('readonly',
-                                          true);
-                                      $("#nickname-holder-head").text(response.nickname);
-                                      $("#nickname-holder-section").text(response.nickname);
-                                      $("#nickname-submit-btn").hide();
-                                      $("#nickname-cancel-btn").hide();
-                                      $("#nickname-update-btn").show();
-                                      alert('닉네임 변경에 성공하였습니다.');
-                                    },
-                                    error: function (error) {
-                                      console.log(error);
-                                      alert('닉네임 변경에 실패하였습니다.');
-                                    }
-                                  });
-                                });
-                              });
-                            </script>
-
-                            <!-- 연령대 보여주기/등록하기 -->
                             <div class="row">
-                                <div class="col-lg-3 col-md-4 label">연령대</div>
+                                <div class="col-lg-3 col-md-4 label" style="color : blue">연령대</div>
                                 <div class="col-lg-8 col-md-6">
-                                    <select id="age-group-input"
-                                            class="form-control form-control-readonly" disabled>
-                                    </select>
-                                </div>
-
-                                <script>
-                                  $(document).ready(function () {
-                                    var ageGroups = ["10대", "20대", "30대", "40대", "50대", "60대",
-                                      "70대", "80대", "90대"];
-                                    var selectedAgeGroup = '${brandInfo.ageGroup}'; // JSP 변수를 JavaScript로 가져오기
-
-                                    $.each(ageGroups, function (index, ageGroup) {
-                                      var option = $('<option>', {
-                                        value: ageGroup,
-                                        text: ageGroup
-                                      });
-                                      if (ageGroup === selectedAgeGroup) {
-                                        option.prop('selected', true);
-                                      }
-                                      $('#age-group-input').append(option);
-                                    });
-                                  });
-                                </script>
-
-                                <script>
-                                  $(document).ready(function () {
-                                    $("#age-group-cancel-btn").click(function () {
-                                      $("#age-group-cancel-btn").hide();
-                                      $("#age-group-submit-btn").hide();
-                                      $("#age-group-update-btn").show();
-                                      $('#age-group-input').prop('disabled', true);
-                                    });
-
-                                    $("#age-group-update-btn").click(function () {
-                                      $("#age-group-update-btn").hide();
-                                      $("#age-group-cancel-btn").show();
-                                      $("#age-group-submit-btn").show();
-                                      $('#age-group-input').prop('disabled', false);
-                                    });
-
-                                    $("#age-group-submit-btn").click(function () {
-                                      var newAgeGroup = $('#age-group-input').val();
-                                      // Ajax 요청
-                                      $.ajax({
-                                        url: '<%=request.getContextPath()%>/api/customer/my/brand-info/age-group',
-                                        method: 'PUT',
-                                        contentType: 'application/json',
-                                        data: JSON.stringify({
-                                          'userSeq': ${userSeq},
-                                          'toAgeGroup': newAgeGroup
-                                        }),
-                                        success: function (response) {
-                                          // 성공적으로 응답을 받았을 때 처리
-                                          $('#age-group-input').val(response.ageGroup).prop(
-                                              'disabled',
-                                              true);
-                                          $("#age-group-submit-btn").hide();
-                                          $("#age-group-cancel-btn").hide();
-                                          $("#age-group-update-btn").show();
-                                          alert('연령대 변경 변경에 성공하였습니다.');
-                                        },
-                                        error: function (error) {
-                                          // 실패 시 처리
-                                          console.log(error);
-                                          alert('연령대 변경에 실패하였습니다.');
-                                        }
-                                      });
-                                    });
-                                  });
-                                </script>
-
-                                <div class="col-lg-1 col-md-2">
-                                    <button id="age-group-update-btn" type="button"
-                                            class="btn btn-primary edit-btn">수정
-                                    </button>
-                                    <button id="age-group-submit-btn"
-                                            type="button" class="btn btn-success send-btn"
-                                            style="display: none;">전송
-                                    </button>
-                                    <button id="age-group-cancel-btn"
-                                            type="button" class="btn btn-secondary cancel-btn"
-                                            style="display: none;">취소
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-lg-3 col-md-4 label">활동 분야</div>
-                                <div class="col-lg-8 col-md-6">
-                                    <select id="food-type-select" class="form-select" multiple
-                                            size="5" disabled>
-                                        <option value="국밥" data-custom-color="orange">국밥</option>
-                                        <option value="돈까스" data-custom-color="orange">돈까스</option>
-                                        <option value="족발" data-custom-color="orange">족발</option>
-                                        <option value="막창" data-custom-color="orange">막창</option>
-                                        <option value="피자" data-custom-color="mediumvioletred">피자
-                                        </option>
-                                        <option value="파스타" data-custom-color="mediumvioletred">
-                                            파스타
-                                        </option>
-                                        <option value="햄버거" data-custom-color="mediumvioletred">
-                                            햄버거
-                                        </option>
-                                        <option value="스테이크" data-custom-color="mediumvioletred">
-                                            스테이크
-                                        </option>
-                                        <option value="마라탕" data-custom-color="saddlebrown">마라탕
-                                        </option>
-                                        <option value="짜장면" data-custom-color="saddlebrown">짜장면
-                                        </option>
-                                        <option value="짬뽕" data-custom-color="saddlebrown">짬뽕
-                                        </option>
-                                        <option value="탕수육" data-custom-color="saddlebrown">탕수육
-                                        </option>
-                                        <option value="텐동" data-custom-color="olivedrab">텐동</option>
-                                        <option value="초밥" data-custom-color="olivedrab">초밥</option>
-                                        <option value="규동" data-custom-color="olivedrab">규동</option>
-                                        <option value="라멘" data-custom-color="olivedrab">라멘</option>
-                                        <option value="빵" data-custom-color="sienna">빵</option>
-                                        <option value="케이크" data-custom-color="sienna">케이크</option>
-                                        <option value="쿠키" data-custom-color="sienna">쿠키</option>
-                                        <option value="샌드위치" data-custom-color="sienna">샌드위치
-                                        </option>
-                                        <option value="커피" data-custom-color="sienna">커피</option>
-                                        <option value="커리" data-custom-color="green">커리</option>
-                                        <option value="쌀국수" data-custom-color="green">쌀국수</option>
-                                        <option value="기타" data-custom-color="green">기타</option>
-                                    </select>
-                                    <p id="food-type-select-message" class="text-primary"
-                                       style="font-size: 14px;"></p>
-                                </div>
-                                <div class="col-lg-1 col-md-2">
-                                    <button id="food-type-update-btn" type="button"
-                                            class="btn btn-primary edit-btn">수정
-                                    </button>
-                                    <button id="food-type-submit-btn" type="button"
-                                            class="btn btn-success send-btn" style="display: none;">
-                                        전송
-                                    </button>
-                                    <button id="food-type-cancel-btn" type="button"
-                                            class="btn btn-secondary cancel-btn"
-                                            style="display: none;">취소
-                                    </button>
+                                    <input id="agegroup-input" type="text" name="to_nickname"
+                                           value="${otherBrandInfo.ageGroup}"
+                                           class="form-control" readonly>
                                 </div>
                             </div>
 
 
-                            <script>
-                              $(document).ready(function () {
-                                // Initialize the selectedFoodTypes array using EL
-                                var selectedFoodTypes = [
-                                  <c:forEach var="foodType" items="${brandInfo.foodTypes}">
-                                  "${foodType}"
-                                  <c:if test="${!foodType.equals(foodTypes[foodTypes.size() - 1])}">,
-                                  </c:if>
-                                  </c:forEach>
-                                ];
+                        </div>
 
-                                // Store the initial selected food types
-                                var initialSelectedFoodTypes = selectedFoodTypes.slice();
-
-                                // Initialize select2 with custom colors
-                                $('#food-type-select').select2({
-                                  width: '100%',
-                                  templateSelection: function (option) {
-                                    var color = $(option.element).data('custom-color');
-                                    return $('<span style="color: ' + color + '">' + option.text
-                                        + '</span>');
-                                  }
-                                });
-
-                                // Function to initialize the select2 with selected values
-                                function initializeFoodTypeSelect() {
-                                  var foodTypeSelect = $('#food-type-select');
-                                  // Set the selected values
-                                  foodTypeSelect.val(selectedFoodTypes).trigger('change');
-                                  updateFoodTypeMessage();
-                                }
-
-                                // Function to update the message based on selected options
-                                function updateFoodTypeMessage() {
-                                  var selectedOptions = $('#food-type-select').val();
-                                  var messageElement = $('#food-type-select-message');
-
-                                  if (selectedOptions === null || selectedOptions.length === 0) {
-                                    messageElement.text('아직 선택한 활동 분야가 없어요.');
-                                  } else {
-                                    messageElement.text('');
-                                  }
-                                }
-
-                                // Initialize the select2 with selected values on page load
-                                initializeFoodTypeSelect();
-
-                                // Handle select2 option selection
-                                $('#food-type-select').on('select2:select', function (e) {
-                                  var selectedOptions = $(this).val();
-                                  if (selectedOptions.length > 5) {
-                                    var $element = $(e.params.data.element);
-                                    $element.prop('selected', false);
-                                    $(this).trigger('change');
-                                    alert('활동 분야는 최대 5개까지만 선택할 수 있습니다.');
-                                  } else {
-                                    selectedFoodTypes = selectedOptions;
-                                    updateFoodTypeMessage();
-                                  }
-                                });
-
-                                // Handle the update button click
-                                $("#food-type-update-btn").click(function () {
-                                  $("#food-type-update-btn").hide();
-                                  $("#food-type-cancel-btn").show();
-                                  $("#food-type-submit-btn").show();
-                                  $('#food-type-select').prop('disabled', false);
-                                });
-
-                                // Handle the cancel button click
-                                $('#food-type-cancel-btn').click(function () {
-                                  $('#food-type-cancel-btn').hide();
-                                  $('#food-type-submit-btn').hide();
-                                  $('#food-type-update-btn').show();
-                                  $('#food-type-select').prop('disabled', true);
-                                  // Restore initial selected values
-                                  selectedFoodTypes = initialSelectedFoodTypes.slice();
-                                  initializeFoodTypeSelect();
-                                });
-
-                                // Handle select2 option changes
-                                $('#food-type-select').on('change', function () {
-                                  $(this).find('option:selected').addClass('selected-option');
-                                  $(this).find('option:not(:selected)').removeClass(
-                                      'selected-option');
-                                  updateFoodTypeMessage();
-                                });
-
-                                // Handle the submit button click
-                                $("#food-type-submit-btn").click(function () {
-                                  var selectedFoodTypes = $('#food-type-select').val();
-
-                                  $.ajax({
-                                    url: '<%=request.getContextPath()%>/api/customer/my/brand-info/food-types',
-                                    method: 'PUT',
-                                    contentType: 'application/json',
-                                    data: JSON.stringify({
-                                      'userSeq': ${userSeq},
-                                      'toFoodTypes': selectedFoodTypes
-                                    }),
-                                    success: function (response) {
-                                      alert('활동 분야 변경에 성공하였습니다.');
-                                      // Update initial selected food types
-                                      initialSelectedFoodTypes = selectedFoodTypes.slice();
-                                      $('#food-type-select').prop('disabled', true).select2({
-                                        width: '100%',
-                                        templateSelection: function (option) {
-                                          var color = $(option.element).data('custom-color');
-                                          return $(
-                                              '<span style="color: ' + color + '">' + option.text
-                                              + '</span>');
-                                        }
-                                      });
-                                      $('#food-type-submit-btn, #food-type-cancel-btn').hide();
-                                      $('#food-type-update-btn').show();
-                                    },
-                                    error: function (err) {
-                                      alert('활동 분야 변경에 실패하였습니다.');
-                                    }
-                                  });
-                                });
-                              });
-                            </script>
-
-                            <div class="row">
-                                <div class="col-lg-3 col-md-4 label">태그</div>
-                                <div class="col-lg-8 col-md-6">
-                                    <select id="tag-select" class="form-select" multiple size="2"
-                                            disabled>
-                                        <option value="초식" data-custom-color="green">초식</option>
-                                        <option value="육식" data-custom-color="indianred">육식</option>
-                                        <option value="맛집블로거" data-custom-color="blue">맛집블로거
-                                        </option>
-                                        <option value="정성리뷰어" data-custom-color="orange">정성리뷰어
-                                        </option>
-                                    </select>
-                                    <p id="tag-select-message" class="text-primary"
-                                       style="font-size: 14px;"></p>
+                        <div class="row">
+                            <div class="col-lg-3 col-md-4 label" style="color : blue">활동 분야</div>
+                            <div class="col-lg-8 col-md-6">
+                                <div id="food-type-buttons">
                                 </div>
-                                <div class="col-lg-1 col-md-2">
-                                    <button id="tag-update-btn" type="button"
-                                            class="btn btn-primary edit-btn">수정
-                                    </button>
-                                    <button id="tag-submit-btn" type="button"
-                                            class="btn btn-success send-btn" style="display: none;">
-                                        전송
-                                    </button>
-                                    <button id="tag-cancel-btn" type="button"
-                                            class="btn btn-secondary cancel-btn"
-                                            style="display: none;">취소
-                                    </button>
+                                <p id="food-type-buttons-message" class="text-primary"
+                                   style="font-size: 18px;"></p>
+                            </div>
+                        </div>
+
+                        <script>
+                          $(document).ready(function () {
+                            const foodTypes = [
+                              {value: "국밥", color: "orange"},
+                              {value: "돈까스", color: "orange"},
+                              {value: "족발", color: "orange"},
+                              {value: "막창", color: "orange"},
+                              {value: "피자", color: "mediumvioletred"},
+                              {value: "파스타", color: "mediumvioletred"},
+                              {value: "햄버거", color: "mediumvioletred"},
+                              {value: "스테이크", color: "mediumvioletred"},
+                              {value: "마라탕", color: "saddlebrown"},
+                              {value: "짜장면", color: "saddlebrown"},
+                              {value: "짬뽕", color: "saddlebrown"},
+                              {value: "탕수육", color: "saddlebrown"},
+                              {value: "텐동", color: "olivedrab"},
+                              {value: "초밥", color: "olivedrab"},
+                              {value: "규동", color: "olivedrab"},
+                              {value: "라멘", color: "olivedrab"},
+                              {value: "빵", color: "sienna"},
+                              {value: "케이크", color: "sienna"},
+                              {value: "쿠키", color: "sienna"},
+                              {value: "샌드위치", color: "sienna"},
+                              {value: "커피", color: "sienna"},
+                              {value: "커리", color: "green"},
+                              {value: "쌀국수", color: "green"},
+                              {value: "기타", color: "green"}
+                            ];
+
+                            const foodTypeButtons = $("#food-type-buttons");
+
+                            const selectedFoodTypes = [
+                              <c:forEach var="foodType" items="${otherBrandInfo.foodTypes}">
+                              '${foodType}'
+                              <c:if test="${!foodType.equals(otherBrandInfo.foodTypes[otherBrandInfo.foodTypes.size()-1])}">,
+                              </c:if>
+                              </c:forEach>
+                            ];
+
+                            if (selectedFoodTypes.length === 0) {
+                              $("#food-type-buttons-message").text("아직 선택한 활동 분야가 없어요.");
+                            } else {
+                              foodTypes.forEach(function (foodType) {
+                                if (selectedFoodTypes.includes(foodType.value)) {
+                                  const button = $("<button></button>")
+                                  .text(foodType.value)
+                                  .css({
+                                    backgroundColor: foodType.color,
+                                    border: 'none',
+                                    color: 'white',
+                                    padding: '10px',
+                                    margin: '5px',
+                                    borderRadius: '5px'
+                                  })
+                                  .prop('disabled', true);
+
+                                  $("#food-type-buttons").append(button);
+                                }
+                              });
+                            }
+                          });
+                        </script>
+
+
+                        <div class="row">
+                            <div class="col-lg-3 col-md-4 label" style="color : blue">태그</div>
+                            <div class="col-lg-8 col-md-6">
+                                <div id="tag-buttons"></div>
+                                <p id="tag-select-message" class="text-primary"
+                                   style="font-size: 18px;"></p>
+                            </div>
+                        </div>
+
+                        <script>
+                          $(document).ready(function () {
+                            const tags = [
+                              {value: "초식", color: "green"},
+                              {value: "육식", color: "indianred"},
+                              {value: "맛집블로거", color: "blue"},
+                              {value: "정성리뷰어", color: "orange"}
+                            ];
+
+                            const selectedTags = [
+                              <c:forEach var="tag" items="${otherBrandInfo.tagInfos}">
+                              '${tag}'
+                              <c:if test="${!tag.equals(otherBrandInfo.tagInfos[otherBrandInfo.tagInfos.size()-1])}">,
+                              </c:if>
+                              </c:forEach>
+                            ];
+
+                            if (selectedTags.length === 0) {
+                              $("#tag-select-message").text("아직 선택한 태그가 없어요.");
+                            } else {
+                              tags.forEach(function (tag) {
+                                if (selectedTags.includes(tag.value)) {
+                                  const button = $("<button></button>")
+                                  .text(tag.value)
+                                  .css({
+                                    backgroundColor: tag.color,
+                                    border: 'none',
+                                    color: 'white',
+                                    padding: '10px',
+                                    margin: '5px',
+                                    borderRadius: '5px'
+                                  })
+                                  .prop('disabled', true);
+
+                                  $("#tag-buttons").append(button);
+                                }
+                              });
+                            }
+                          });
+                        </script>
+                        <div class="row">
+                            <div class="col-lg-3 col-md-4 label" style="color:blue">리뷰 로그</div>
+                            <div class="col-lg-8 col-md-6">
+                                <div class="table-container">
+                                    <!-- 리뷰가 있는 경우 테이블 표시 -->
+                                    <c:if test="${not empty reviewInfos}">
+                                        <table class="table table-striped table-bordered text-center"
+                                               id="review-log-table">
+                                            <thead>
+                                            <tr>
+                                                <th>스토어명</th>
+                                                <th>방문일자</th>
+                                                <th>리뷰</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <c:forEach var="review" items="${reviewInfos}">
+                                                <c:set var="visitDate" value="${review.visitDate}"/>
+                                                <tr>
+                                                    <td>
+                                                        <a href="/brand/${review.storeSeq}">${review.storeName}</a>
+                                                    </td>
+                                                    <td>${visitDate}</td>
+                                                    <td>
+                                                        <c:choose>
+                                                            <c:when test="${review.status == 'WRITTEN'}">
+                                                                <a href="${review.url}"
+                                                                   class="btn btn-success btn-sm">리뷰
+                                                                    보러가기</a>
+                                                            </c:when>
+                                                            <c:when test="${review.status == 'UNWRITTEN'}">
+                                                                <button class="btn btn-sm"
+                                                                        style="background-color: indianred; border-color: indianred; color: white;">
+                                                                    미등록
+                                                                </button>
+                                                            </c:when>
+                                                        </c:choose>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                            </tbody>
+                                        </table>
+                                        <div class="pagination-container">
+                                            <button id="prev-block-button"
+                                                    class="btn btn-primary edit-btn"
+                                                    style="${reviewPageInfo.hasPrevious ? '' : 'display:none;'}">
+                                                &lt;
+                                            </button>
+                                            <div id="page-buttons"
+                                                 class="d-flex justify-content-center mx-2">
+                                                <c:forEach var="page"
+                                                           begin="${reviewPageInfo.startPage}"
+                                                           end="${reviewPageInfo.endPage}">
+                                                    <c:choose>
+                                                        <c:when test="${page == reviewPageInfo.currentPage}">
+                                                            <button class="btn btn-secondary edit-btn"
+                                                                    disabled>${page}</button>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <button class="btn btn-primary edit-btn"
+                                                                    data-page="${page}">${page}</button>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:forEach>
+                                            </div>
+                                            <button id="next-block-button"
+                                                    class="btn btn-primary edit-btn"
+                                                    style="${reviewPageInfo.hasNext ? '' : 'display:none;'}">
+                                                &gt;
+                                            </button>
+                                        </div>
+                                    </c:if>
+
+                                    <!-- 리뷰가 없는 경우 메시지 표시 -->
+                                    <c:if test="${empty reviewInfos}">
+                                        <p style="font-size: 18px; color : hotpink">아직 리뷰 기록이
+                                            없어요.</p>
+                                    </c:if>
                                 </div>
                             </div>
+                        </div>
 
-                            <%--<script>
-                              $(document).ready(function () {
-                                $('#tag-select').select2({
-                                  width: '100%',
-                                  templateSelection: function (option) {
-                                    var color = $(option.element).data('custom-color');
-                                    return $('<span style="color: ' + color + '">' + option.text
-                                        + '</span>');
-                                  }
-                                });
+                        <script>
+                          function initializePagination(reviewPageInfo) {
 
-                                var selectedTags = ${brandInfo.tagInfos};
+                            $('#prev-block-button').off('click').on('click', function () {
+                              if (reviewPageInfo.hasPrevious) {
+                                loadPage(reviewPageInfo.currentPage - 1);
+                              }
+                            });
 
-                                function initializeTagSelect() {
-                                  var tagSelect = $('#tag-select');
-                                  tagSelect.val(selectedTags).trigger('change');
-                                  updateTagMessage();
-                                }
+                            $('#next-block-button').off('click').on('click', function () {
+                              if (reviewPageInfo.hasNext) {
+                                loadPage(reviewPageInfo.currentPage + 1);
+                              }
+                            });
 
-                                function updateTagMessage() {
-                                  var selectedOptions = $('#tag-select').val();
-                                  var messageElement = $('#tag-select-message');
-
-                                  if (selectedOptions === null || selectedOptions.length === 0) {
-                                    messageElement.text('아직 선택한 태그가 없어요.');
-                                  } else {
-                                    messageElement.text('');
-                                  }
-                                }
-
-                                initializeTagSelect();
-
-                                $('#tag-select').on('select2:select',
-                                    function (e) {
-                                      var selectedOptions = $(this).val();
-                                      if (selectedOptions.length > 2) {
-                                        var $element = $(e.params.data.element);
-                                        $element.prop("selected", false);
-                                        $(this).trigger('change');
-                                        alert('태그는 2개까지만 선택할 수 있습니다');
-                                      } else {
-                                        updateTagMessage();
-                                      }
-                                    });
-
-                                $('#tag-select').on('change', function () {
-                                  $(this).find('option:selected').addClass('selected-option');
-                                  $(this).find('option:not(:selected)').removeClass(
-                                      'selected-option');
-                                  updateTagMessage();
-                                });
-
-                                $("#tag-update-btn").click(function () {
-                                  $(this).hide();
-                                  $("#tag-cancel-btn, #tag-submit-btn").show();
-                                  $('#tag-select').prop('disabled', false).select2({
-                                    width: '100%',
-                                    templateSelection: function (option) {
-                                      var color = $(option.element).data('custom-color');
-                                      return $('<span style="color: ' + color + '">' + option.text
-                                          + '</span>');
-                                    }
-                                  });
-                                });
-
-                                $('#tag-cancel-btn').click(function () {
-                                  $(this).hide();
-                                  $("#tag-submit-btn").hide();
-                                  $("#tag-update-btn").show();
-                                  $('#tag-select').prop('disabled', true).select2({
-                                    width: '100%',
-                                    templateSelection: function (option) {
-                                      var color = $(option.element).data('custom-color');
-                                      return $('<span style="color: ' + color + '">' + option.text
-                                          + '</span>');
-                                    }
-                                  });
-                                  initializeTagSelect();
-                                });
-
-                                $('#tag-submit-btn').click(function () {
-                                  var selectedTags = $('#tag-select').val();
-
-                                  $.ajax({
-                                    url: '<%=request.getContextPath()%>/api/my-brand/tag',
-                                    method: 'POST',
-                                    contentType: 'application/json',
-                                    data: JSON.stringify({
-                                      'userSeq': ${userSeq},
-                                      'toTags': selectedTags
-                                    }),
-                                    success: function (response) {
-                                      alert('태그 변경에 성공하였습니다.');
-                                      $('#tag-select').prop('disabled', true).select2({
-                                        width: '100%',
-                                        templateSelection: function (option) {
-                                          var color = $(option.element).data('custom-color');
-                                          return $(
-                                              '<span style="color: ' + color + '">' + option.text
-                                              + '</span>');
-                                        }
-                                      });
-                                      $('#tag-submit-btn, #tag-cancel-btn').hide();
-                                      $('#tag-update-btn').show();
-                                      updateTagMessage();
-                                    },
-                                    error: function (err) {
-                                      alert('태그 변경에 실패하였습니다.');
-                                    }
-                                  });
-                                });
-
-                                initializeTagSelect();
+                            $('#page-buttons').empty();
+                            for (var i = reviewPageInfo.startPage; i <= reviewPageInfo.endPage;
+                                i++) {
+                              var pageButton = $(
+                                  '<button class="btn btn-primary edit-btn" data-page="' + i
+                                  + '">' + i + '</button>');
+                              if (i === reviewPageInfo.currentPage) {
+                                pageButton.addClass('btn-secondary').prop('disabled', true);
+                              }
+                              pageButton.on('click', function () {
+                                var pageNumber = $(this).data('page');
+                                loadPage(pageNumber);
                               });
-                            </script>--%>
-                            <script>
-                              $(document).ready(function () {
-                                // Initialize the selectedTags array using EL
-                                var selectedTags = [
-                                  <c:forEach var="tag" items="${brandInfo.tagInfos}">
-                                  "${tag}"
-                                  <c:if test="${!tag.equals(tagInfos[tagInfos.size() - 1])}">,
-                                  </c:if>
-                                  </c:forEach>
-                                ];
+                              $('#page-buttons').append(pageButton);
+                            }
 
-                                // Store the initial selected tags
-                                var initialSelectedTags = selectedTags.slice();
+                            if (reviewPageInfo.hasPrevious) {
+                              $('#prev-block-button').show();
+                            } else {
+                              $('#prev-block-button').hide();
+                            }
 
-                                // Initialize select2 with custom colors for tags
-                                $('#tag-select').select2({
-                                  width: '100%',
-                                  templateSelection: function (option) {
-                                    var color = $(option.element).data('custom-color');
-                                    return $('<span style="color: ' + color + '">' + option.text
-                                        + '</span>');
-                                  }
+                            if (reviewPageInfo.hasNext) {
+                              $('#next-block-button').show();
+                            } else {
+                              $('#next-block-button').hide();
+                            }
+                          }
+
+                          function loadPage(page) {
+                            var userSeq = $('#userSeq').val();
+
+                            $.ajax({
+                              url: '/api/customer/other/reviews',
+                              method: 'POST',
+                              contentType: 'application/json',
+                              data: JSON.stringify({'userSeq': userSeq, 'page': page}),
+                              success: function (response) {
+                                // 리뷰 목록 업데이트
+                                var reviewInfos = response.reviewInfos;
+                                var reviewLogTableBody = $('#review-log-table tbody');
+                                reviewLogTableBody.empty();
+                                $.each(reviewInfos, function (index, review) {
+                                  var visitDate = review.visitDate;
+                                  var reviewRow = '<tr>' +
+                                      '<td><a href="/brand/' + review.storeSeq + '">'
+                                      + review.storeName + '</a></td>' +
+                                      '<td>' + visitDate + '</td>' +
+                                      '<td>' + renderReviewButton(review) + '</td>' +
+                                      '</tr>';
+                                  reviewLogTableBody.append(reviewRow);
                                 });
+                                initializePagination(response.reviewPageInfo);
+                              },
+                              error: function (err) {
+                                alert('페이지를 로드하는데 실패했습니다. 다시 시도해주세요.');
+                              }
+                            })
+                            ;
+                          }
 
-                                // Function to initialize the select2 with selected values
-                                function initializeTagSelect() {
-                                  var tagSelect = $('#tag-select');
-                                  tagSelect.val(selectedTags).trigger('change');
-                                  updateTagMessage();
-                                }
+                          function renderReviewButton(review) {
+                            if (review.status === 'WRITTEN') {
+                              return '<a href="' + review.url
+                                  + '" class="btn btn-success btn-sm">리뷰 보러가기</a>';
+                            } else if (review.status === 'UNWRITTEN') {
+                              return '<button class="btn btn-sm" style="background-color: indianred; border-color: indianred; color: white;">미등록</button>';
+                            }
+                            return '';
+                          }
 
-                                // Function to update the message based on selected options
-                                function updateTagMessage() {
-                                  var selectedOptions = $('#tag-select').val();
-                                  var messageElement = $('#tag-select-message');
-
-                                  if (selectedOptions === null || selectedOptions.length === 0) {
-                                    messageElement.text('아직 선택한 태그가 없어요.');
-                                  } else {
-                                    messageElement.text('');
-                                  }
-                                }
-
-                                initializeTagSelect();
-
-                                // Handle select2 option selection for tags
-                                $('#tag-select').on('select2:select', function (e) {
-                                  var selectedOptions = $(this).val();
-                                  if (selectedOptions.length > 2) {
-                                    var $element = $(e.params.data.element);
-                                    $element.prop('selected', false);
-                                    $(this).trigger('change');
-                                    alert('태그는 2개까지만 선택할 수 있습니다.');
-                                  } else {
-                                    selectedTags = selectedOptions;
-                                    updateTagMessage();
-                                  }
-                                });
-
-                                // Handle the update button click for tags
-                                $("#tag-update-btn").click(function () {
-                                  $(this).hide();
-                                  $("#tag-cancel-btn, #tag-submit-btn").show();
-                                  $('#tag-select').prop('disabled', false);
-                                });
-
-                                // Handle the cancel button click for tags
-                                $('#tag-cancel-btn').click(function () {
-                                  $(this).hide();
-                                  $("#tag-submit-btn").hide();
-                                  $("#tag-update-btn").show();
-                                  $('#tag-select').prop('disabled', true);
-                                  selectedTags = initialSelectedTags.slice();
-                                  initializeTagSelect();
-                                });
-
-                                // Handle select2 option changes for tags
-                                $('#tag-select').on('change', function () {
-                                  $(this).find('option:selected').addClass('selected-option');
-                                  $(this).find('option:not(:selected)').removeClass(
-                                      'selected-option');
-                                  updateTagMessage();
-                                });
-
-                                // Handle the submit button click for tags
-                                $('#tag-submit-btn').click(function () {
-                                  var selectedTags = $('#tag-select').val();
-
-                                  $.ajax({
-                                    url: '<%=request.getContextPath()%>/api/customer/my/brand-info/tags',
-                                    method: 'PUT',
-                                    contentType: 'application/json',
-                                    data: JSON.stringify({
-                                      'userSeq': ${userSeq},
-                                      'toTags': selectedTags
-                                    }),
-                                    success: function (response) {
-                                      alert('태그 변경에 성공하였습니다.');
-                                      initialSelectedTags = selectedTags.slice();
-                                      $('#tag-select').prop('disabled', true);
-                                      $('#tag-submit-btn, #tag-cancel-btn').hide();
-                                      $('#tag-update-btn').show();
-                                      updateTagMessage();
-                                    },
-                                    error: function (err) {
-                                      alert('태그 변경에 실패하였습니다.');
-                                    }
-                                  });
-                                });
-                              });
-                            </script>
-                            <%--
-                                                        <div class="row">
-                                                            <div class="col-lg-3 col-md-4 label">리뷰 로그</div>
-                                                            <div class="col-lg-8 col-md-6">
-                                                                <table class="table table-striped table-bordered text-center"
-                                                                       id="review-log-table">
-                                                                    <thead>
-                                                                    <tr>
-                                                                        <th>스토어명</th>
-                                                                        <th>방문일자</th>
-                                                                        <th>리뷰 작성여부</th>
-                                                                    </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                    <tr>
-                                                                        <th scope="row">1</th>
-                                                                        <td>Brandon Jacob</td>
-                                                                        <td>Designer</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="row">2</th>
-                                                                        <td>Bridie Kessler</td>
-                                                                        <td>Developer</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="row">3</th>
-                                                                        <td>Ashleigh Langosh</td>
-                                                                        <td>Finance</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="row">4</th>
-                                                                        <td>Angus Grady</td>
-                                                                        <td>HR</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="row">5</th>
-                                                                        <td>Raheem Lehner</td>
-                                                                        <td>Dynamic Division Officer</td>
-                                                                    </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                                <div class="d-flex justify-content-between mt-3">
-                                                                    <button id="prev-block-button"
-                                                                            class="btn btn-primary edit-btn" disabled>&lt;
-                                                                    </button>
-                                                                    <div id="page-buttons"
-                                                                         class="d-flex justify-content-center mx-2">
-                                                                        <!-- 페이지 번호 버튼들이 여기에 추가됩니다 -->
-                                                                    </div>
-                                                                    <button id="next-block-button"
-                                                                            class="btn btn-primary edit-btn" disabled>&gt;
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-
-                                                            <script>
-                                                              $(document).ready(function () {
-                                                                var currentPage = 1;
-                                                                var totalPages = 50; // 예시: 총 페이지 수는 50이라고 가정
-                                                                var pagesPerBlock = 5;
-
-                                                                function fetchReviewLogs(page) {
-                                                                  $.ajax({
-                                                                    url: '/api/review-logs',
-                                                                    method: 'GET',
-                                                                    data: {page: page},
-                                                                    success: function (response) {
-                                                                      var reviewLogs = response.logs;
-                                                                      var hasPrevious = response.hasPrevious;
-                                                                      var hasNext = response.hasNext;
-                                                                      totalPages = response.totalPages;
-
-                                                                      renderReviewLogs(reviewLogs);
-                                                                      renderPageButtons();
-                                                                      updatePaginationButtons(hasPrevious, hasNext);
-                                                                    },
-                                                                    error: function (err) {
-                                                                      alert('리뷰 로그 데이터를 가져오는데 실패하였습니다.');
-                                                                      renderPageButtons();
-                                                                    }
-                                                                  });
-                                                                }
-
-                                                                function renderReviewLogs(reviewLogs) {
-                                                                  var tbody = $('#review-log-table tbody');
-                                                                  tbody.empty(); // 기존 데이터를 제거합니다.
-
-                                                                  reviewLogs.forEach(function (log) {
-                                                                    var row = $('<tr>');
-                                                                    row.append($('<td>').text(log.storeName));
-                                                                    row.append($('<td>').text(log.visitDate));
-                                                                    row.append($('<td>').text(log.reviewWritten));
-                                                                    tbody.append(row);
-                                                                  });
-                                                                }
-
-                                                                function renderPageButtons() {
-                                                                  var pageButtonsDiv = $('#page-buttons');
-                                                                  pageButtonsDiv.empty(); // 기존 페이지 버튼을 제거합니다.
-
-                                                                  var currentBlock = Math.floor(
-                                                                      (currentPage - 1) / pagesPerBlock);
-                                                                  var startPage = currentBlock * pagesPerBlock + 1;
-                                                                  var endPage = Math.min(startPage + pagesPerBlock - 1,
-                                                                      totalPages);
-
-                                                                  for (var i = startPage; i <= endPage; i++) {
-                                                                    var pageButton = $('<button>')
-                                                                    .text(i)
-                                                                    .addClass(
-                                                                        'btn btn-outline-primary mx-1 datatable-pagination-list-item-link')
-                                                                    .attr('data-page', i)
-                                                                    .attr('aria-label', 'Page ' + i);
-                                                                    if (i === currentPage) {
-                                                                      pageButton.addClass('active');
-                                                                    }
-                                                                    pageButton.on('click', function () {
-                                                                      var page = parseInt($(this).attr('data-page'));
-                                                                      currentPage = page;
-                                                                      fetchReviewLogs(currentPage);
-                                                                    });
-                                                                    pageButtonsDiv.append(pageButton);
-                                                                  }
-                                                                }
-
-                                                                function updatePaginationButtons(hasPrevious, hasNext) {
-                                                                  var currentBlock = Math.floor(
-                                                                      (currentPage - 1) / pagesPerBlock);
-                                                                  var totalBlocks = Math.ceil(totalPages / pagesPerBlock);
-
-                                                                  $('#prev-block-button').prop('disabled', currentBlock === 0);
-                                                                  $('#next-block-button').prop('disabled',
-                                                                      currentBlock >= totalBlocks - 1);
-                                                                }
-
-                                                                $('#prev-block-button').click(function () {
-                                                                  var currentBlock = Math.floor(
-                                                                      (currentPage - 1) / pagesPerBlock);
-                                                                  if (currentBlock > 0) {
-                                                                    currentPage = (currentBlock - 1) * pagesPerBlock + 1;
-                                                                    fetchReviewLogs(currentPage);
-                                                                  }
-                                                                });
-
-                                                                $('#next-block-button').click(function () {
-                                                                  var currentBlock = Math.floor(
-                                                                      (currentPage - 1) / pagesPerBlock);
-                                                                  var totalBlocks = Math.ceil(totalPages / pagesPerBlock);
-                                                                  if (currentBlock < totalBlocks - 1) {
-                                                                    currentPage = (currentBlock + 1) * pagesPerBlock + 1;
-                                                                    fetchReviewLogs(currentPage);
-                                                                  }
-                                                                });
-
-                                                                // 초기 데이터 로드
-                                                                fetchReviewLogs(currentPage);
-                                                              });
-
-                                                            </script>--%>
-
-
+                          var reviewPageInfo = {
+                            currentPage: ${reviewPageInfo.currentPage},
+                            startPage: ${reviewPageInfo.startPage},
+                            endPage: ${reviewPageInfo.endPage},
+                            hasPrevious: ${reviewPageInfo.hasPrevious},
+                            hasNext: ${reviewPageInfo.hasNext}
+                          };
+                          initializePagination(reviewPageInfo);
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </main><!-- End #main -->
 
-<!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
-        &copy; Copyright <strong><span>nugunaTeam</span></strong>. All Rights Reserved
+        &copy; Copyright <strong><span><a
+            href="https://github.com/nugunaTeam/FReview2"> nugunaTeam </a></span></strong>.
+        All
+        Rights
+        Reserved
     </div>
     <div class="credits">
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
@@ -1066,4 +740,5 @@
 
 </body>
 
+</html>
 </html>

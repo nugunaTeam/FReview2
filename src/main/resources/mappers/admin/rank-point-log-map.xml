@@ -12,7 +12,7 @@
   </resultMap>
 
   <!-- SQL 쿼리문 -->
-  <insert id="insertLog" parameterType="map">
+  <insert id="insertPointLog" parameterType="map">
     insert into point_log (user_seq, code)
     values (#{userSeq}, #{code})
   </insert>
