@@ -219,6 +219,7 @@
   $(document).ready(function () {
     let emailVerificationCode;
     let userSeq = ${userSeq};
+    let emailVerify = false;
 
     loadInitialData();
 
@@ -389,12 +390,19 @@
       let inputCode = $("#verificationCode").val();
       if (inputCode === emailVerificationCode) {
         alert("인증번호가 일치합니다.");
+        emailVerify = true;
       } else {
         alert("인증번호가 일치하지 않습니다.");
+        emailVerify = false;
       }
     });
 
     $(document).on('click', '[data-update="email"]', function () {
+      if (!emailVerify) {
+        alert("먼저 이메일 인증을 완료해주세요.");
+        return;
+      }
+
       let newEmail = $("#newEmail").val();
 
       $.ajax({
