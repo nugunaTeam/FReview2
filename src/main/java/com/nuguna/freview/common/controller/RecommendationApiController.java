@@ -95,7 +95,8 @@ public class RecommendationApiController {
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
-  @RequestMapping(value = "/topPerformers", method = RequestMethod.POST)
+
+  @RequestMapping(value = "/top-performers", method = RequestMethod.POST)
   public ResponseEntity<TopPerformersResponseDTO> topPerformersRecommendation(@RequestBody TopPerformersRequestDTO requestDTO) {
     String pageCode = requestDTO.getPageCode();
     int displayLimit = 10;

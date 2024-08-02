@@ -23,14 +23,14 @@ public class CommonBrandServiceImpl implements CommonBrandService {
   @Override
   @Transactional
   public ZzimResponseDTO toggleZzim(ZzimRequestDTO zzimRequestDTO) {
-    Long userSeq = zzimRequestDTO.getUserSeq();
+    Long fromUserSeq = zzimRequestDTO.getFromUserSeq();
     Long toUserSeq = zzimRequestDTO.getToUserSeq();
 
-    boolean isZzimed = commonBrandMapper.isZzimed(userSeq, toUserSeq);
+    boolean isZzimed = commonBrandMapper.isZzimed(fromUserSeq, toUserSeq);
     if (isZzimed) {
-      commonBrandMapper.deleteZzim(userSeq, toUserSeq);
+      commonBrandMapper.deleteZzim(fromUserSeq, toUserSeq);
     } else {
-      commonBrandMapper.insertZzim(userSeq, toUserSeq);
+      commonBrandMapper.insertZzim(fromUserSeq, toUserSeq);
     }
     Long zzimCount = commonBrandMapper.countZzim(toUserSeq);
     return new ZzimResponseDTO(!isZzimed, zzimCount);
