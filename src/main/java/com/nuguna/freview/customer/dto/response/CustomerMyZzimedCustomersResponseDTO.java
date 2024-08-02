@@ -8,9 +8,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerMyReviewsRetrieveResponseDTO {
+public class CustomerMyZzimedCustomersResponseDTO {
 
-  private List<ReviewLogInfoDTO> reviewInfos;
-  private PaginationInfoResponseDTO reviewPageInfo;
-
+  private List<MyZzimedCustomerInfoDTO> zzimedCustomerInfos;
+  private PaginationInfoResponseDTO paginationInfoResponseDTO;
 }
