@@ -50,16 +50,10 @@ public class ProfileApiController {
     Long userSeq = requestDTO.getUserSeq();
     String newEmail = requestDTO.getNewEmail();
 
-    try {
       if (adminService.updateSubEmail(userSeq, newEmail)) {
         return HttpStatus.OK;
       } else {
         return HttpStatus.INTERNAL_SERVER_ERROR;
       }
-    } catch(Exception e) {
-      e.printStackTrace();
-      log.error("에러네");
-    }
-    return null;
   }
 }
