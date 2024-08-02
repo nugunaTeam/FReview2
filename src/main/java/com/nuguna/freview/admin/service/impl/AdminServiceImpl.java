@@ -73,4 +73,9 @@ public class AdminServiceImpl implements AdminService {
   public void updatePassword(Long userSeq, String newPassword) {
     adminMapper.updatePassword(userSeq, newPassword);
   }
+
+  @Override
+  public boolean updateSubEmail(Long userSeq, String newEmail) {
+    return (adminMapper.updateSubEmail(userSeq, newEmail) > 0);
+  }
 }
