@@ -421,14 +421,11 @@
       if (confirm("정말로 탈퇴하시겠습니까?")) {
         $.ajax({
           type: 'POST',
-          url: '/api/member-withdrawal',
-          data: {
-            memberSeq: ${userSeq}
-          },
+          url: '/api/common/withdrawal/' + userSeq,
           success: function (response, textStatus, jqXHR) {
             if (jqXHR.status === 200) {
               alert('계정이 성공적으로 삭제되었습니다.');
-              window.location.href = '/';  // 탈퇴 후 리디렉션
+              window.location.href = '/';
             } else {
               alert('계정 삭제에 실패했습니다. 다시 시도해 주세요.');
             }
