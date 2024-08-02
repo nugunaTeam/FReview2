@@ -29,12 +29,6 @@ public class StoreActivityApiController {
     this.storeActivityPageService = storeActivityPageService;
   }
 
-//  @RequestMapping(value = "/send-like", method = RequestMethod.GET)
-//  public List<StoreActivitySendLikeResponseDTO> storeActivitySendLike(@RequestParam("userSeq") Long userSeq, @RequestParam("offset") Integer offset,@RequestParam("pageSize") Integer pageSize) {
-//    List<StoreActivitySendLikeResponseDTO> sendLike = storeActivityPageService.storeActivityPageSendLike(userSeq, offset, pageSize);
-//    return sendLike;
-//  }
-
   // 보낸 좋아요
   @RequestMapping(value = "/send-like", method = RequestMethod.GET)
   public List<StoreActivitySendLikeResponseDTO> storeActivitySendLike(
@@ -42,32 +36,6 @@ public class StoreActivityApiController {
     StoreListPaginationResponseDTO paginationInfo = new StoreListPaginationResponseDTO(targetPage);
     return storeActivityPageService.storeActivityPageSendLike(userSeq, paginationInfo);
   }
-
-
-//  @RequestMapping(value = "/send-zzim", method = RequestMethod.GET)
-//  public ResponseEntity<?> storeActivitySendZzim(@RequestParam("userSeq") Long userSeq, @RequestParam("code") String code, @RequestParam("offset") Integer offset,@RequestParam("pageSize") Integer pageSize) {
-//    if("CUSTOMER".equals(code)) {
-//      List<StoreActivitySendZzimCustomerResponseDTO> sendZzimCustomer = storeActivityPageService.storeActivitySendZzimCustomer(userSeq, offset, pageSize);
-//      return new ResponseEntity<>(sendZzimCustomer, HttpStatus.OK);
-//    } else {
-//      List<StoreActivitySendZzimStoreResponseDTO> sendZzimStore = storeActivityPageService.storeActivitySendZzimStore(userSeq, offset, pageSize);
-//      return new ResponseEntity<>(sendZzimStore, HttpStatus.OK);
-//    }
-//  }
-
-//  @RequestMapping(value = "/send-zzim", method = RequestMethod.GET)
-//  public ResponseEntity<?> storeActivitySendZzim(@RequestParam("userSeq") Long userSeq,
-//      @RequestParam("targetPage") Integer targetPage,
-//      @RequestParam("code") String code ) throws IllegalPageAccessException {
-//    if ("CUSTOMER".equals(code)) {
-//      List<StoreActivitySendZzimCustomerResponseDTO> sendZzimCustomer = storeActivityPageService.storeActivitySendZzimCustomer(userSeq, targetPage);
-//      return new ResponseEntity<>(sendZzimCustomer, HttpStatus.OK);
-//    } else {
-//      List<StoreActivitySendZzimStoreResponseDTO> sendZzimStore = storeActivityPageService.storeActivitySendZzimStore(userSeq,storeActivitySendZzimStoreResponseDTO);
-//      return new ResponseEntity<>(sendZzimStore, HttpStatus.OK);
-//    }
-//
-//  }
 
   // 보낸 찜 ( 스토어 / 체험단 )
   @RequestMapping(value = "/send-zzim", method = RequestMethod.GET)
@@ -80,13 +48,6 @@ public class StoreActivityApiController {
       return storeActivityPageService.storeActivitySendZzimStore(userSeq, paginationInfo);
     }
   }
-
-
-//  @RequestMapping(value = "/written-post", method = RequestMethod.GET)
-//  public List<StoreActivityWrittenPostResponseDTO> storeActivityWrittenPost(@RequestParam("userSeq") Long userSeq, @RequestParam("offset") Integer offset,@RequestParam("pageSize") Integer pageSize) {
-//    List<StoreActivityWrittenPostResponseDTO> writtenPost = storeActivityPageService.storeActivityPageWrittenPost(userSeq, offset, pageSize);
-//    return writtenPost;
-//  }
 
   // 작성한 글
   @RequestMapping(value = "/written-post", method = RequestMethod.GET)
