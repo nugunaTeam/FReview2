@@ -20,6 +20,7 @@ public interface AdminMapper {
   int deleteUser(Long userSeq);
   AdminProfileDTO selectAdminProfile(Long userSeq);
   void updatePassword(@Param("userSeq") Long userSeq, @Param("newPassword") String newPassword);
+  int updateSubEmail(@Param("userSeq") Long userSeq, @Param("newEmail") String newEmail);
 }
 
 
