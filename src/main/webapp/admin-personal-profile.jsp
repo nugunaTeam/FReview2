@@ -399,11 +399,12 @@
 
       $.ajax({
         method: "post",
-        url: "/update-email",
-        data: {
-          "email": newEmail,
-          "memberSeq": ${userSeq}
-        },
+        url: "/api/admin/profile/sub-email-update",
+        contentType: "application/json",
+        data: JSON.stringify({
+          "newEmail": newEmail,
+          "userSeq": userSeq
+        }),
         error: function (myval) {
           console.log("에러" + myval);
         },
@@ -411,7 +412,7 @@
           console.log("성공" + myval);
           alert("이메일이 성공적으로 업데이트되었습니다.");
           resetButtons();
-          location.replace("/personal-info-update");
+          location.replace("/admin/profile");
         }
       });
     });
