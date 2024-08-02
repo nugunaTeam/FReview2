@@ -366,17 +366,18 @@
 
         $.ajax({
           method: "post",
-          url: "/send-certification",
-          data: {
+          url : "/api/auth/send-randomNumber-toEmail",
+          contentType: "application/json",
+          data: JSON.stringify({
             "email": inputEmail,
             "randomNumber": randomFourDigitNumber
-          },
+          }),
           error: function (myval) {
             console.log("에러" + myval);
           },
           success: function (myval) {
             console.log("성공" + myval);
-            emailVerificationCode = myval;
+            emailVerificationCode = myval.randomNumber;
           }
         });
       } else {
