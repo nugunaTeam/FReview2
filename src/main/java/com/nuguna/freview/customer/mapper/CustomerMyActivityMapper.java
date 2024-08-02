@@ -1,6 +1,7 @@
 package com.nuguna.freview.customer.mapper;
 
 import com.nuguna.freview.customer.dto.response.MyLikePostInfoDTO;
+import com.nuguna.freview.customer.dto.response.MyZzimedCustomerInfoDTO;
 import com.nuguna.freview.customer.dto.response.MyZzimedStoreInfoDTO;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
@@ -17,6 +18,12 @@ public interface CustomerMyActivityMapper {
   Integer getZzimedStoresCount(@Param("userSeq") Long userSeq);
 
   List<MyZzimedStoreInfoDTO> getMyZzimedStores(@Param("userSeq") Long userSeq,
+      @Param("offset") int offset,
+      @Param("pageSize") int pageSize);
+
+  Integer getZzimedCustomersCount(@Param("userSeq") Long userSeq);
+
+  List<MyZzimedCustomerInfoDTO> getMyZzimedCustomers(@Param("userSeq") Long userSeq,
       @Param("offset") int offset,
       @Param("pageSize") int pageSize);
 }

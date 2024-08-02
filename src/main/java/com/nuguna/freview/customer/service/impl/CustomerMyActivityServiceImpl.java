@@ -2,6 +2,8 @@ package com.nuguna.freview.customer.service.impl;
 
 import static com.nuguna.freview.customer.constant.CustomerMyPagePaginationConstant.CUSTOMER_LIKE_POST_PAGE_BLOCK_SIZE;
 import static com.nuguna.freview.customer.constant.CustomerMyPagePaginationConstant.CUSTOMER_LIKE_POST_PAGE_SIZE;
+import static com.nuguna.freview.customer.constant.CustomerMyPagePaginationConstant.CUSTOMER_ZZIMED_CUSTOMERS_PAGE_BLOCK_SIZE;
+import static com.nuguna.freview.customer.constant.CustomerMyPagePaginationConstant.CUSTOMER_ZZIMED_CUSTOMERS_PAGE_SIZE;
 import static com.nuguna.freview.customer.constant.CustomerMyPagePaginationConstant.CUSTOMER_ZZIMED_STORES_PAGE_BLOCK_SIZE;
 import static com.nuguna.freview.customer.constant.CustomerMyPagePaginationConstant.CUSTOMER_ZZIMED_STORES_PAGE_SIZE;
 
@@ -12,6 +14,7 @@ import com.nuguna.freview.customer.dto.response.CustomerMyLikedPostsRetrieveResp
 import com.nuguna.freview.customer.dto.response.CustomerMyZzimedCustomersResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyZzimedStoresRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.MyLikePostInfoDTO;
+import com.nuguna.freview.customer.dto.response.MyZzimedCustomerInfoDTO;
 import com.nuguna.freview.customer.dto.response.MyZzimedStoreInfoDTO;
 import com.nuguna.freview.customer.dto.response.PaginationInfoResponseDTO;
 import com.nuguna.freview.customer.mapper.CustomerMyActivityMapper;
@@ -71,9 +74,22 @@ public class CustomerMyActivityServiceImpl implements CustomerMyActivityService 
   }
 
   @Override
+  @Transactional(readOnly = true)
   public CustomerMyZzimedCustomersResponseDTO getMyZzimedCustomers(Long userSeq,
       CustomerMyZzimedCustomersRetrieveRequestDTO customerMyZzimedCustomersRetrieveRequestDTO) {
-    return null;
+    Integer targetPage = customerMyZzimedCustomersRetrieveRequestDTO.getTargetPage();
+    int zzimedCustomersCount = customerMyActivityMapper.getZzimedCustomersCount(userSeq);
+
+    PaginationInfoResponseDTO paginationInfoResponseDTO = PaginationUtil.makePaginationViewInfo(
+        targetPage, zzimedCustomersCount, CUSTOMER_ZZIMED_CUSTOMERS_PAGE_SIZE,
+        CUSTOMER_ZZIMED_CUSTOMERS_PAGE_BLOCK_SIZE);
+
+    List<MyZzimedCustomerInfoDTO> myZzimedCustomerInfos = customerMyActivityMapper.getMyZzimedCustomers(
+        userSeq, (targetPage - 1) * CUSTOMER_ZZIMED_CUSTOMERS_PAGE_SIZE,
+        CUSTOMER_ZZIMED_CUSTOMERS_PAGE_SIZE);
+
+    return new CustomerMyZzimedCustomersResponseDTO(myZzimedCustomerInfos,
+        paginationInfoResponseDTO);
   }
 
 
