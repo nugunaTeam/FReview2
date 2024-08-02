@@ -1,5 +1,6 @@
 package com.nuguna.freview.admin.controller;
 
+import com.nuguna.freview.admin.dto.request.EmailModifyRequestDTO;
 import com.nuguna.freview.admin.dto.request.PasswordModifyRequestDTO;
 import com.nuguna.freview.admin.dto.response.page.AdminProfileDTO;
 import com.nuguna.freview.admin.service.AdminService;
@@ -42,5 +43,23 @@ public class ProfileApiController {
     } else {
       return HttpStatus.UNAUTHORIZED;
     }
+  }
+
+  @RequestMapping(value = "/sub-email-update", method = RequestMethod.POST)
+  public HttpStatus updateSubEmail(@RequestBody EmailModifyRequestDTO requestDTO) {
+    Long userSeq = requestDTO.getUserSeq();
+    String newEmail = requestDTO.getNewEmail();
+
+    try {
+      if (adminService.updateSubEmail(userSeq, newEmail)) {
+        return HttpStatus.OK;
+      } else {
+        return HttpStatus.INTERNAL_SERVER_ERROR;
+      }
+    } catch(Exception e) {
+      e.printStackTrace();
+      log.error("에러네");
+    }
+    return null;
   }
 }
