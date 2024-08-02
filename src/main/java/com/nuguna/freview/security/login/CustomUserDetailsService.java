@@ -1,5 +1,6 @@
 package com.nuguna.freview.security.login;
 
+import com.nuguna.freview.common.vo.user.UserCode;
 import com.nuguna.freview.common.vo.user.UserVO;
 import com.nuguna.freview.security.login.service.LoginService;
 import java.util.ArrayList;
@@ -32,13 +33,23 @@ public class CustomUserDetailsService implements UserDetailsService {
       throw new UsernameNotFoundException("email");
     }
     List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-    if(userVO.getCode().equals("ADMIN")){
+//    if(userVO.getCode().equals("ADMIN")){
+//      authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+//    }else if(userVO.getCode().equals("CUSTOMER")){
+//      authorities.add(new SimpleGrantedAuthority("ROLE_CUSTOMER"));
+//    }else if(userVO.getCode().equals("STORE")){
+//      authorities.add(new SimpleGrantedAuthority("ROLE_STORE"));
+//    }
+
+    UserCode userCode = UserCode.from(userVO.getCode());
+    if(userCode.isAdmin()){
       authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-    }else if(userVO.getCode().equals("CUSTOMER")){
+    } else if(userCode.isCustomer()){
       authorities.add(new SimpleGrantedAuthority("ROLE_CUSTOMER"));
-    }else if(userVO.getCode().equals("STORE")){
+    } else if(userCode.isStore()){
       authorities.add(new SimpleGrantedAuthority("ROLE_STORE"));
     }
+
     return new CustomUserDetail(email, userVO.getPassword(), authorities,userVO);
   }
 
