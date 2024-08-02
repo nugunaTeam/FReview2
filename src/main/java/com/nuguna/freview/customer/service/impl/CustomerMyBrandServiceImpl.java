@@ -18,7 +18,7 @@ import com.nuguna.freview.customer.dto.response.CustomerMyProfilePhotoUpdateResp
 import com.nuguna.freview.customer.dto.response.CustomerMyTagsUpdateResponseDTO;
 import com.nuguna.freview.customer.exception.AlreadyExistNicknameException;
 import com.nuguna.freview.customer.mapper.CustomerBrandMapper;
-import com.nuguna.freview.customer.service.CustomerBrandService;
+import com.nuguna.freview.customer.service.CustomerMyBrandService;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -31,12 +31,12 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @Service
 @Transactional
-public class CustomerBrandServiceImpl implements CustomerBrandService {
+public class CustomerMyBrandServiceImpl implements CustomerMyBrandService {
 
   private final CustomerBrandMapper customerBrandMapper;
 
   @Autowired
-  public CustomerBrandServiceImpl(CustomerBrandMapper customerBrandMapper) {
+  public CustomerMyBrandServiceImpl(CustomerBrandMapper customerBrandMapper) {
     this.customerBrandMapper = customerBrandMapper;
   }
 

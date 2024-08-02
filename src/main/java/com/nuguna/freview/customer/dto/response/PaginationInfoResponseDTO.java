@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReviewPaginationInfoResponseDTO {
+public class PaginationInfoResponseDTO {
 
   private Integer currentPage;
   private Integer startPage;

@@ -1,7 +1,7 @@
 package com.nuguna.freview.customer.service.impl;
 
-import static com.nuguna.freview.customer.constant.CustomerConstant.CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE;
-import static com.nuguna.freview.customer.constant.CustomerConstant.CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE;
+import static com.nuguna.freview.customer.constant.CustomerReviewLogConstant.CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE;
+import static com.nuguna.freview.customer.constant.CustomerReviewLogConstant.CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE;
 
 import com.nuguna.freview.customer.dto.request.CustomerMyReviewRegisterRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerMyReviewsRetrieveRequestDTO;
@@ -9,8 +9,8 @@ import com.nuguna.freview.customer.dto.request.CustomerOtherReviewsRetrieveReque
 import com.nuguna.freview.customer.dto.response.CustomerMyReviewRegisterResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyReviewsRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerOtherReviewsRetrieveResponseDTO;
+import com.nuguna.freview.customer.dto.response.PaginationInfoResponseDTO;
 import com.nuguna.freview.customer.dto.response.ReviewLogInfoDTO;
-import com.nuguna.freview.customer.dto.response.ReviewPaginationInfoResponseDTO;
 import com.nuguna.freview.customer.exception.AlreadyExistReviewException;
 import com.nuguna.freview.customer.exception.IllegalReviewException;
 import com.nuguna.freview.customer.exception.IllegalReviewPageAccessException;
@@ -81,9 +81,9 @@ public class CustomerReviewServiceImpl implements CustomerReviewService {
         > pageBlockThreshold * CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE));
     boolean hasPrevious = (currentPage > 1);
 
-    ReviewPaginationInfoResponseDTO reviewPaginationInfoResponseDTO = new ReviewPaginationInfoResponseDTO(
+    PaginationInfoResponseDTO paginationInfoResponseDTO = new PaginationInfoResponseDTO(
         currentPage, startPage, endPage, hasNext, hasPrevious);
-    return new CustomerMyReviewsRetrieveResponseDTO(reviewsInfo, reviewPaginationInfoResponseDTO);
+    return new CustomerMyReviewsRetrieveResponseDTO(reviewsInfo, paginationInfoResponseDTO);
   }
 
   @Override
@@ -115,9 +115,9 @@ public class CustomerReviewServiceImpl implements CustomerReviewService {
         > pageBlockThreshold * CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE));
     boolean hasPrevious = (currentPage > 1);
 
-    ReviewPaginationInfoResponseDTO reviewPaginationInfoResponseDTO = new ReviewPaginationInfoResponseDTO(
+    PaginationInfoResponseDTO paginationInfoResponseDTO = new PaginationInfoResponseDTO(
         currentPage, startPage, endPage, hasNext, hasPrevious);
     return new CustomerOtherReviewsRetrieveResponseDTO(reviewsInfo,
-        reviewPaginationInfoResponseDTO);
+        paginationInfoResponseDTO);
   }
 }

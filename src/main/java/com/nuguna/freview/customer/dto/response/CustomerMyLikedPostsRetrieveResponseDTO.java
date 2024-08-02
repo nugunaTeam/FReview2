@@ -8,9 +8,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerMyReviewsRetrieveResponseDTO {
+public class CustomerMyLikedPostsRetrieveResponseDTO {
 
-  private List<ReviewLogInfoDTO> reviewInfos;
+  private List<MyLikePostInfoDTO> myLikeInfos;
+
   private PaginationInfoResponseDTO reviewPageInfo;
 
 }
