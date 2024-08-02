@@ -17,5 +17,5 @@ public class StoreActivitySendLikeResponseDTO {
   private String content;
   private Long likeCount;
   private Timestamp createdAt;
-
+  private Long totalCount;
 }

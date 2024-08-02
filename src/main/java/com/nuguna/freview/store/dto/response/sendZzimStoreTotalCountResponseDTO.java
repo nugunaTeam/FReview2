@@ -7,11 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StoreActivitySendZzimCustomerResponseDTO {
+public class sendZzimStoreTotalCountResponseDTO {
   private Long userSeq;
-  private Long zzimUserSeq;
-  private String nickname;
-  private String code;
-  private String foodTypes;
-  private Long totalCount;
+  private Integer totalCount;
 }

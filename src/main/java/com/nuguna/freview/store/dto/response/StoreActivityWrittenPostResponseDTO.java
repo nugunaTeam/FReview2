@@ -17,5 +17,5 @@ public class StoreActivityWrittenPostResponseDTO {
   private Timestamp experienceDate;
   private Timestamp createdAt;
   private Long likeCount;
-
+  private Long totalCount;
 }

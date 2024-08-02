@@ -14,4 +14,5 @@ public class StoreActivitySendZzimStoreResponseDTO {
   private String code;
   private String storeLocation;
   private String foodTypes;
+  private Long totalCount;
 }
