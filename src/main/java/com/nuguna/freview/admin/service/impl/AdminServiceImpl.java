@@ -9,6 +9,7 @@ import com.nuguna.freview.admin.vo.AdminVO;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -50,11 +51,13 @@ public class AdminServiceImpl implements AdminService {
   }
 
   @Override
+  @Transactional
   public boolean deleteUser(Long userSeq) {
     return adminMapper.deleteUser(userSeq) > 0;
   }
 
   @Override
+  @Transactional
   public void deleteUser(Long adminSeq, String adminVerificationPW, Long deleteUserSeq) {
     if (!isPasswordValid(adminSeq, adminVerificationPW)) {
       throw new IllegalArgumentException("[ERROR] 입력한 비밀번호는 올바르지 않습니다.");
@@ -65,16 +68,19 @@ public class AdminServiceImpl implements AdminService {
   }
 
   @Override
+  @Transactional
   public AdminProfileDTO getAdminProfile(Long userSeq) {
     return adminMapper.selectAdminProfile(userSeq);
   }
 
   @Override
+  @Transactional
   public void updatePassword(Long userSeq, String newPassword) {
     adminMapper.updatePassword(userSeq, newPassword);
   }
 
   @Override
+  @Transactional
   public boolean updateSubEmail(Long userSeq, String newEmail) {
     return (adminMapper.updateSubEmail(userSeq, newEmail) > 0);
   }
