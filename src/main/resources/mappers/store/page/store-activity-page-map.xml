@@ -6,28 +6,15 @@
 
   <resultMap id="StoreActivityPageSendLikeResultMap"
     type="com.nuguna.freview.store.dto.response.StoreActivitySendLikeResponseDTO">
-    <result property="userSeq" column="user_seq"/>
+    <id property="userSeq" column="user_seq"/>
     <result property="writtenSeq" column="post_author_seq"/>
     <result property="postSeq" column="post_seq"/>
-    <result property="postCode" column="post_code"/>
     <result property="title" column="post_title"/>
+    <result property="postCode" column="post_code"/>
     <result property="content" column="post_content"/>
-    <result property="likeCount" column="like_count"/>
     <result property="createdAt" column="like_created_at"/>
+    <result property="likeCount" column="like_count"/>
   </resultMap>
-
-<!--  <resultMap id="StoreActivityPageSendZzimResultMap"-->
-<!--    type="com.nuguna.freview.store.dto.response.StoreActivitySendZzimResponseDTO">-->
-<!--    <result property="userSeq" column="from_user_seq"/>-->
-<!--    <result property="toUserSeq" column="to_user_seq"/>-->
-<!--    <result property="nickname" column="nickname"/>-->
-<!--    <result property="code" column="code"/>-->
-<!--    <result property="storeLocation" column="store_location" />-->
-<!--    <result property="zzimCount" column="zzimCount"/>-->
-<!--    <result property="foodTypeCodes" column="foodTypeCodes" />-->
-<!--    <result property="dishes" column="dishes" />-->
-<!--    <result property="createdAt" column="created_at"/>-->
-<!--  </resultMap>-->
 
   <resultMap id="StoreActivityPageSendZzimCustomerResultMap" type="com.nuguna.freview.store.dto.response.StoreActivitySendZzimCustomerResponseDTO">
     <id property="userSeq" column="from_user_seq"/>
@@ -38,8 +25,8 @@
   </resultMap>
 
   <resultMap id="StoreActivityPageSendZzimStoreResultMap" type="com.nuguna.freview.store.dto.response.StoreActivitySendZzimStoreResponseDTO">
-    <id property="zzimUserSeq" column="to_user_seq"/>
-    <result property="userSeq" column="from_user_seq"/>
+    <id property="userSeq" column="to_user_seq"/>
+    <result property="zzimUserSeq" column="from_user_seq"/>
     <result property="nickname" column="nickname"/>
     <result property="code" column="code"/>
     <result property="storeLocation" column="store_location"/>
@@ -59,74 +46,130 @@
   </resultMap>
 
   <select id="storeActivityPageSendLike" resultMap="StoreActivityPageSendLikeResultMap ">
-    SELECT l.user_seq    AS user_seq,
-           p.seq         AS post_seq,
-           p.title       AS post_title,
-           p.code        AS post_code,
-           p.content     AS post_content,
-           u.seq         AS post_author_seq,
-           l.created_at  AS like_created_at,
-           COUNT(lk.seq) AS like_count
+    WITH like_counts AS (
+    SELECT post_seq, COUNT(seq) AS like_count
+    FROM `like`
+    GROUP BY post_seq
+    )
+    , like_post AS (
+    SELECT l.user_seq,
+    p.seq AS post_seq,
+    p.title AS post_title,
+    p.code AS post_code,
+    p.content AS post_content,
+    u.seq AS post_author_seq,
+    l.created_at AS like_created_at,
+    ROW_NUMBER() OVER (ORDER BY l.created_at DESC) AS row_num,
+    lc.like_count
     FROM `like` l
-           JOIN `post` p ON l.post_seq = p.seq
-           JOIN `user` u ON p.user_seq = u.seq
-           LEFT JOIN `like` lk ON p.seq = lk.post_seq
-    WHERE l.user_seq = #{userSeq} and p.code = '모집'
-    GROUP BY l.seq, p.seq
+    JOIN `post` p ON l.post_seq = p.seq
+    JOIN `user` u ON p.user_seq = u.seq
+    LEFT JOIN like_counts lc ON p.seq = lc.post_seq
+    WHERE l.user_seq = #{userSeq}
+    AND p.code = '모집'
+    )
+    SELECT user_seq, post_seq, post_title, post_code, post_content, post_author_seq, like_created_at, like_count
+    FROM like_post
+    WHERE row_num &gt; #{offset}
+    AND row_num &lt;= #{offset} + #{pageSize}
+
   </select>
 
   <select id="storeActivitySendZzimCustomer" resultMap="StoreActivityPageSendZzimCustomerResultMap">
+    WITH NumberedResults AS (
     SELECT
-      u.nickname,
-      u.code,
-      zz.from_user_seq,
-      zz.to_user_seq,
-      GROUP_CONCAT(DISTINCT ft.code ORDER BY ft.code ASC SEPARATOR ', ') AS food_type_codes
+    u.nickname,
+    u.code,
+    zz.from_user_seq,
+    zz.to_user_seq,
+    GROUP_CONCAT(DISTINCT ft.code ORDER BY ft.code ASC SEPARATOR ', ') AS food_type_codes,
+    ROW_NUMBER() OVER (ORDER BY u.seq) AS row_num
     FROM
-      `user` u
-        JOIN zzim zz ON u.seq = zz.to_user_seq
-        LEFT JOIN user_food_type uft ON u.seq = uft.user_seq
-        LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
+    `user` u
+    JOIN zzim zz ON u.seq = zz.to_user_seq
+    LEFT JOIN user_food_type uft ON u.seq = uft.user_seq
+    LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
     WHERE
-      zz.from_user_seq = #{userSeq}
-      AND u.code = 'CUSTOMER'
+    zz.from_user_seq = #{userSeq}
+    AND u.code = 'CUSTOMER'
     GROUP BY
-      u.seq, zz.from_user_seq, zz.to_user_seq ;
+    u.seq, zz.from_user_seq, zz.to_user_seq
+    )
+    SELECT
+    nickname,
+    code,
+    from_user_seq,
+    to_user_seq,
+    food_type_codes
+    FROM NumberedResults
+    WHERE
+    row_num &gt; #{offset}
+    AND row_num &lt;= #{offset} + #{pageSize}
   </select>
 
   <select id="storeActivitySendZzimStore" resultMap="StoreActivityPageSendZzimStoreResultMap">
+    WITH paginated_results AS (
     SELECT
-      u.nickname,
-      u.code,
-      u.store_location,
-      z.from_user_seq,
-      z.to_user_seq,
-      GROUP_CONCAT(DISTINCT ft.code ORDER BY ft.code ASC SEPARATOR ', ') AS food_type_codes
+    u.nickname,
+    u.code,
+    u.store_location,
+    z.from_user_seq,
+    z.to_user_seq,
+    GROUP_CONCAT(DISTINCT ft.code ORDER BY ft.code ASC SEPARATOR ', ') AS food_type_codes,
+    ROW_NUMBER() OVER (ORDER BY u.seq) AS row_num
     FROM
-      `user` u
-        JOIN zzim z ON u.seq = z.to_user_seq
-        LEFT JOIN user_food_type uft ON u.seq = uft.user_seq
-        LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
+    `user` u
+    JOIN zzim z ON u.seq = z.to_user_seq
+    LEFT JOIN user_food_type uft ON u.seq = uft.user_seq
+    LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
     WHERE
-      z.from_user_seq = #{userSeq}
-      AND u.code = 'STORE'
+    z.from_user_seq = #{userSeq}
+    AND u.code = 'STORE'
     GROUP BY
-      u.seq, z.from_user_seq, z.to_user_seq
+    u.seq, z.from_user_seq, z.to_user_seq
+    )
+    SELECT
+    nickname,
+    code,
+    store_location,
+    from_user_seq,
+    to_user_seq,
+    food_type_codes
+    FROM paginated_results
+    WHERE
+    row_num &gt; #{offset}
+    AND row_num &lt;= #{offset} + #{pageSize}
   </select>
 
   <select id="storeActivityPageWrittenPost" resultMap="StoreActivityPageWrittenPostResultMap">
-    SELECT p.seq,
-           p.user_seq,
-           p.title,
-           p.code,
-           p.content,
-           p.experience_date,
-           p.created_at,
-           COUNT(l.post_seq) AS likeCount
+    WITH paginated_posts AS (
+    SELECT
+    p.seq,
+    p.user_seq,
+    p.title,
+    p.code,
+    p.content,
+    p.experience_date,
+    p.created_at,
+    COUNT(l.post_seq) AS likeCount,
+    ROW_NUMBER() OVER (ORDER BY p.created_at DESC) AS row_num
     FROM post p
-           LEFT JOIN `like` l ON l.post_seq = p.seq
+    LEFT JOIN `like` l ON l.post_seq = p.seq
     WHERE p.user_seq = #{userSeq}
-    GROUP BY p.seq, p.title, p.content, p.experience_date, p.created_at
+    GROUP BY p.seq, p.user_seq, p.title, p.code, p.content, p.experience_date, p.created_at
+    )
+    SELECT
+    seq,
+    user_seq,
+    title,
+    code,
+    content,
+    experience_date,
+    created_at,
+    likeCount
+    FROM paginated_posts
+    WHERE row_num &gt; #{offset}
+    AND row_num &lt;= #{offset} + #{pageSize}
   </select>
 
 </mapper>

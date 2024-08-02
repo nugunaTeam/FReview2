@@ -10,9 +10,19 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface StoreActivityPageMapper {
+
   Long storeActivityPage(@Param("userSeq") Long userSeq);
-  List<StoreActivitySendLikeResponseDTO> storeActivityPageSendLike(Long userSeq);
-  List<StoreActivitySendZzimStoreResponseDTO> storeActivitySendZzimStore(Long userSeq);
-  List<StoreActivitySendZzimCustomerResponseDTO> storeActivitySendZzimCustomer(Long userSeq);
-  List<StoreActivityWrittenPostResponseDTO> storeActivityPageWrittenPost(Long userSeq);
+  Integer storeActivityPageSendLikeCount(@Param("userSeq") Long userSeq);
+  Integer storeActivitySendZzimCustomerCount(@Param("userSeq") Long userSeq);
+  Integer storeActivitySendZzimStoreCount(@Param("userSeq") Long userSeq);
+  Integer storeActivityPageWrittenPostCount(@Param("userSeq") Long userSeq);
+
+  List<StoreActivitySendLikeResponseDTO> storeActivityPageSendLike(@Param("userSeq") Long userSeq,
+                                                      @Param("offset") Integer offset, @Param("pageSize") Integer pageSize);
+  List<StoreActivitySendZzimStoreResponseDTO> storeActivitySendZzimStore(@Param("userSeq") Long userSeq,
+                                                      @Param("offset") Integer offset, @Param("pageSize") Integer pageSize);
+  List<StoreActivitySendZzimCustomerResponseDTO> storeActivitySendZzimCustomer(@Param("userSeq") Long userSeq,
+                                                      @Param("offset") Integer offset, @Param("pageSize") Integer pageSize);
+  List<StoreActivityWrittenPostResponseDTO> storeActivityPageWrittenPost(@Param("userSeq") Long userSeq,
+                                                      @Param("offset") Integer offset, @Param("pageSize") Integer pageSize);
 }
