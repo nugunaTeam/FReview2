@@ -215,7 +215,12 @@
             responsive: true,
             scales: {
               y: {
-                beginAtZero: true
+                beginAtZero: true,
+                ticks: {
+                  callback: function(value) {
+                    return Number.isInteger(value) ? value : null;
+                  }
+                }
               }
             }
           }
