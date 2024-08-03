@@ -5,13 +5,22 @@
 <mapper namespace="com.nuguna.freview.customer.mapper.CustomerMyNotificationMapper">
 
   <select id="getZzimedMeCustomersCount" resultType="java.lang.Integer">
-    select count(*)
+    select
+    count(*)
+    from
+    (select n.from_user_seq
     from notification n
     where n.to_user_seq = #{userSeq}
     and n.code in ('ZZIMED')
-    <if test="isRead != null">
-      and is_read = #{isRead}
+    <if test="isRead != null">and is_read = #{isRead}
     </if>
+    ) zzimed_me_customer
+    inner join
+    user u
+    on
+    zzimed_me_customer.from_user_seq = u.seq
+    where
+    u.code = 'CUSTOMER'
   </select>
 
   <resultMap id="ZzimedMeCustomerInfoResultMap"
@@ -23,9 +32,9 @@
 
   <select id="getZzimedMeCustomers" resultMap="ZzimedMeCustomerInfoResultMap">
     select
-    zzimed_me_user.from_user_seq,
+    zzimed_me_customer.from_user_seq,
     u.nickname,
-    zzimed_me_user.created_at
+    zzimed_me_customer.created_at
     from
     (select
     n.from_user_seq,
@@ -40,9 +49,11 @@
     </if>
     order by
     n.created_at desc
-    limit #{pageSize} offset #{offset}) zzimed_me_user
+    limit #{pageSize} offset #{offset}) zzimed_me_customer
     inner join user u
-    on zzimed_me_user.from_user_seq = u.seq
+    on zzimed_me_customer.from_user_seq = u.seq
+    where
+    u.code = 'CUSTOMER'
   </select>
 
 </mapper>

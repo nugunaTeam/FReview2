@@ -1,6 +1,6 @@
 package com.nuguna.freview.customer.dto.response;
 
-import java.time.LocalDate;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CustomerZzimedMeStoresRetriveResponseDTO {
 
-  // EX MESSAGE : "${nickname}" 님이 나를 찜하였습니다.
-  private Long storeSeq;
-  private String storeName;
-  private LocalDate createdAt;
+  // EX MESSAGE : "${storeName}" 님이 나를 찜하였습니다.
+  private List<ZzimedMeStoreInfoDTO> zzimedMeStoreInfos;
+  private PaginationInfoResponseDTO paginationInfoResponseDTO;
 }
