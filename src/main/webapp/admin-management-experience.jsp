@@ -122,7 +122,13 @@
 <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
-
+        <ul class="sidebar-nav">
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="/admin/manage/analysis">
+                    <i class="bi bi-person"></i><span>분석</span>
+                </a>
+            </li>
+        </ul>
         <li class="nav-item">
             <a class="nav-link " data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-layout-text-window-reverse"></i><span>관리</span><i

@@ -58,26 +58,6 @@
   ======================================================== -->
 </head>
 
-<style>
-  .delete-btn {
-    color: red;
-    font-weight: bold;
-    border: none;
-    background: none;
-    cursor: pointer;
-  }
-
-  .high-noshow {
-    color: red !important;
-  }
-
-  .chart-container {
-    width: 600px; /* 원하는 너비로 조정 */
-    height: 600px; /* 원하는 높이로 조정 */
-    margin: auto;
-  }
-</style>
-
 <body>
 
 <!-- 탈퇴 모달 창 -->
@@ -128,13 +108,20 @@
 
   <ul class="sidebar-nav" id="sidebar-nav">
 
+    <ul class="sidebar-nav">
+      <li class="nav-item">
+        <a class="nav-link active" href="/admin/manage/analysis">
+          <i class="bi bi-person"></i><span>분석</span>
+        </a>
+      </li>
+    </ul>
     <li class="nav-item">
-      <a class="nav-link " data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+      <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-layout-text-window-reverse"></i><span>관리</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
-      <ul id="tables-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
+      <ul id="tables-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
         <li>
-          <a href="/admin/manage/customer" class="active">
+          <a href="/admin/manage/customer">
             <i class="bi bi-circle"></i><span>체험단</span>
           </a>
         </li>
@@ -152,7 +139,7 @@
     </li>
     <ul class="sidebar-nav">
       <li class="nav-item">
-        <a class="nav-link collapsed" href="/account/info">
+        <a class="nav-link collapsed" href="/admin/profile">
           <i class="bi bi-person"></i><span>개인정보수정</span>
         </a>
       </li>
@@ -172,7 +159,7 @@
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">체험 관련 누적 그래프</h5>
-          <canvas id="myChart"></canvas>
+          <canvas id="myChart" style="height: 400px; width: 100%;"></canvas>
         </div>
       </div>
 
@@ -225,6 +212,7 @@
             }]
           },
           options: {
+            responsive: true,
             scales: {
               y: {
                 beginAtZero: true
