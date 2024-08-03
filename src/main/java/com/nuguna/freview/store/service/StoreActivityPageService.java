@@ -6,14 +6,16 @@ import com.nuguna.freview.store.dto.response.StoreActivitySendZzimCustomerRespon
 import com.nuguna.freview.store.dto.response.StoreActivitySendZzimStoreResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreActivityWrittenPostResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreListPaginationResponseDTO;
-import java.util.List;
 
 public interface StoreActivityPageService {
 
-//    StorePaginationIfoResponseDTO storePaginationInfo(Long userSeq, StoreListPaginationResponseDTO storeListPaginationResponseDTO);
-    List<StoreActivitySendLikeResponseDTO> storeActivityPageSendLike(Long userSeq, StoreListPaginationResponseDTO storeListPaginationResponseDTO);
-    List<StoreActivitySendZzimStoreResponseDTO> storeActivitySendZzimStore(Long userSeq, StoreListPaginationResponseDTO storeListPaginationResponseDTO);
+    StoreListPaginationResponseDTO storePaginationInfo(Long userSeq, int targetPage);
+    StoreActivitySendLikeResponseDTO storeActivityPageSendLike(Long userSeq, int targetPage)
+        throws IllegalPageAccessException;
+    StoreActivitySendZzimStoreResponseDTO storeActivitySendZzimStore(Long userSeq, int targetPAge)
+        throws IllegalPageAccessException;
     StoreActivitySendZzimCustomerResponseDTO storeActivitySendZzimCustomer(Long userSeq, int targetPage)
         throws IllegalPageAccessException;
-    List<StoreActivityWrittenPostResponseDTO> storeActivityPageWrittenPost(Long userSeq, StoreListPaginationResponseDTO storeListPaginationResponseDTO);
+    StoreActivityWrittenPostResponseDTO storeActivityPageWrittenPost(Long userSeq, int targetPage)
+        throws IllegalPageAccessException;
 }
