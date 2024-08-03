@@ -50,7 +50,6 @@ public class StoreActivityApiController {
   public StoreActivitySendZzimStoreResponseDTO storeActivitySendZzimStore(
       @RequestParam("userSeq") Long userSeq,
       @RequestParam Integer targetPage) throws IllegalPageAccessException {
-    log.info("store userSeq: " + userSeq + ", targetPage: " + targetPage);
     return storeActivityPageService.storeActivitySendZzimStore(userSeq, targetPage);
   }
 
