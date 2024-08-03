@@ -148,7 +148,7 @@
         </li>
         <ul class="sidebar-nav">
             <li class="nav-item">
-                <a class="nav-link collapsed" href="/account/info">
+                <a class="nav-link collapsed" href="/admin/profile">
                     <i class="bi bi-person"></i><span>개인정보수정</span>
                 </a>
             </li>

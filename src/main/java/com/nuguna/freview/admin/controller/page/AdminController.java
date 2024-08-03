@@ -22,6 +22,11 @@ public class AdminController {
     this.adminService = adminService;
   }
 
+  @RequestMapping(value = "", method = RequestMethod.GET)
+  public String adminHome() {
+    return "redirect:/admin/manage/customer";
+  }
+
   @RequestMapping(value = "/manage/customer", method = RequestMethod.GET)
   public String customerManagePage(Model model) {
     //HACK: 로그인 유저의 실제 seq 로 수정 필요
@@ -80,5 +85,20 @@ public class AdminController {
     model.addAttribute("loginUser", loginUser);
 
     return "admin-management-analysis";
+  }
+
+  @RequestMapping(value = "/profile", method = RequestMethod.GET)
+  public String profileManagePage(Model model) {
+    //HACK: 로그인 유저의 실제 seq 로 수정 필요
+    Long userSeq = 301L;
+    AdminVO loginUser = adminService.getAdminById(userSeq);
+    UserCode currentCode = UserCode.from(loginUser.getCode());
+
+    if (!currentCode.isAdmin()) {
+      return "common-error-404";
+    }
+    model.addAttribute("loginUser", loginUser);
+
+    return "admin-personal-profile";
   }
 }
