@@ -2,12 +2,14 @@ package com.nuguna.freview.customer.service.impl;
 
 import static com.nuguna.freview.customer.constant.CustomerMyNotificationPageConstant.CUSTOMER_ZZIMED_ME_CUSTOMERS_PAGE_BLOCK_SIZE;
 import static com.nuguna.freview.customer.constant.CustomerMyNotificationPageConstant.CUSTOMER_ZZIMED_ME_CUSTOMERS_PAGE_SIZE;
+import static com.nuguna.freview.customer.constant.CustomerMyNotificationPageConstant.CUSTOMER_ZZIMED_ME_STORES_PAGE_BLOCK_SIZE;
+import static com.nuguna.freview.customer.constant.CustomerMyNotificationPageConstant.CUSTOMER_ZZIMED_ME_STORES_PAGE_SIZE;
 
-import com.nuguna.freview.customer.dto.request.CustomerZzimedMeStoresRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerZzimedMeCustomersRetrieveResponseDTO;
-import com.nuguna.freview.customer.dto.response.CustomerZzimedMeStoresRetriveResponseDTO;
+import com.nuguna.freview.customer.dto.response.CustomerZzimedMeStoresRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.PaginationInfoResponseDTO;
 import com.nuguna.freview.customer.dto.response.ZzimedMeCustomerInfoDTO;
+import com.nuguna.freview.customer.dto.response.ZzimedMeStoreInfoDTO;
 import com.nuguna.freview.customer.mapper.CustomerMyNotificationMapper;
 import com.nuguna.freview.customer.service.CustomerMyNotificationService;
 import com.nuguna.freview.global.util.PaginationUtil;
@@ -52,10 +54,21 @@ public class CustomerMyNotificationServiceImpl implements CustomerMyNotification
 
   @Override
   @Transactional(readOnly = true)
-  public CustomerZzimedMeStoresRetriveResponseDTO getZzimedMeStores(Long userSeq,
-      CustomerZzimedMeStoresRetrieveRequestDTO customerZzimedMeStoresRetrieveRequestDTO) {
+  public CustomerZzimedMeStoresRetrieveResponseDTO getZzimedMeStores(Long userSeq,
+      Boolean isRead, Integer targetPage) {
     // TODO : isRead 를 통해 읽음, 안읽음 처리 구분 & targetPage에 해당하는 "나를 찜한 스토어" 정보 가져오기
-    return null;
+    int zzimedMeStoresCount = customerMyNotificationMapper.getZzimedMeStoresCount(userSeq, isRead);
+
+    PaginationInfoResponseDTO paginationInfoResponseDTO = PaginationUtil.makePaginationViewInfo(
+        targetPage, zzimedMeStoresCount, CUSTOMER_ZZIMED_ME_STORES_PAGE_SIZE,
+        CUSTOMER_ZZIMED_ME_STORES_PAGE_BLOCK_SIZE);
+
+    List<ZzimedMeStoreInfoDTO> zzimedMeStores = customerMyNotificationMapper.getZzimedMeStores(
+        userSeq, isRead,
+        (targetPage - 1) * CUSTOMER_ZZIMED_ME_CUSTOMERS_PAGE_SIZE,
+        CUSTOMER_ZZIMED_ME_CUSTOMERS_PAGE_SIZE);
+
+    return new CustomerZzimedMeStoresRetrieveResponseDTO(zzimedMeStores, paginationInfoResponseDTO);
   }
 
   @Override

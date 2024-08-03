@@ -1,15 +1,12 @@
 package com.nuguna.freview.customer.controller;
 
-import com.nuguna.freview.customer.dto.request.CustomerZzimedMeStoresRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerZzimedMeCustomersRetrieveResponseDTO;
-import com.nuguna.freview.customer.dto.response.CustomerZzimedMeStoresRetriveResponseDTO;
+import com.nuguna.freview.customer.dto.response.CustomerZzimedMeStoresRetrieveResponseDTO;
 import com.nuguna.freview.customer.service.CustomerMyNotificationService;
-import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,12 +39,13 @@ public class CustomerMyNotificationApiController {
   }
 
   @RequestMapping(value = "/zzimed-me-stores", method = RequestMethod.GET)
-  public ResponseEntity<CustomerZzimedMeStoresRetriveResponseDTO> getZzimedMeStores(
+  public ResponseEntity<CustomerZzimedMeStoresRetrieveResponseDTO> getZzimedMeStores(
       @RequestParam Long userSeq,
-      @Valid @ModelAttribute CustomerZzimedMeStoresRetrieveRequestDTO customerZzimedMeStoresRetrieveRequestDTO) {
-    CustomerZzimedMeStoresRetriveResponseDTO customerZzimedMeStoresRetriveResponseDTO = customerMyNotificationService.getZzimedMeStores(
-        userSeq, customerZzimedMeStoresRetrieveRequestDTO);
-    return new ResponseEntity<>(customerZzimedMeStoresRetriveResponseDTO, HttpStatus.OK);
+      @RequestParam Boolean isRead,
+      @RequestParam Integer targetPage) {
+    CustomerZzimedMeStoresRetrieveResponseDTO customerZzimedMeStoresRetrieveResponseDTO = customerMyNotificationService.getZzimedMeStores(
+        userSeq, isRead, targetPage);
+    return new ResponseEntity<>(customerZzimedMeStoresRetrieveResponseDTO, HttpStatus.OK);
   }
 
   // TODO : 읽음 버튼 클릭 시, AJAX 요청 => success 시, 뷰 읽음 처리 ( 페이지 리로딩 X )
