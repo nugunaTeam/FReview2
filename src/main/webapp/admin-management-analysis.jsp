@@ -71,6 +71,11 @@
     color: red !important;
   }
 
+  .chart-container {
+    width: 600px; /* 원하는 너비로 조정 */
+    height: 600px; /* 원하는 높이로 조정 */
+    margin: auto;
+  }
 </style>
 
 <body>
@@ -171,12 +176,26 @@
         </div>
       </div>
 
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">관심사 분포도</h5>
+        <canvas id="pieChart" style="max-height: 400px;"></canvas>
+      </div>
+    </div>
   </section>
 
 </main>
 
 <script>
   $(document).ready(function() {
+    function getRandomColor() {
+      let letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
 
     function formatDate(dateObj) {
       const year = dateObj.year;
@@ -186,15 +205,15 @@
     }
 
     $.ajax({
-      url: '/api/admin/analysis',
+      url: '/api/admin/analysis/done-experience',
       method: 'POST',
       contentType: "application/json",
       success: function (data) {
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var labels = data.map(d => formatDate(d.date));
-        var values = data.map(d => d.totalDone);
+        let ctx = document.getElementById('myChart').getContext('2d');
+        let labels = data.map(d => formatDate(d.date));
+        let values = data.map(d => d.totalDone);
 
-        var myChart = new Chart(ctx, {
+        let  myChart = new Chart(ctx, {
           type: 'line',
           data: {
             labels: labels,
@@ -216,6 +235,39 @@
       },
       error: function () {
         console.error('[ERROR] 체험완료 데이터를 불러오던 도중 에러가 발생했습니다');
+      }
+    });
+
+    $.ajax({
+      url: '/api/admin/analysis/interest-distribution',
+      method: 'POST',
+      success: function(responseData) {
+        let labels = responseData.map(function(item) {
+          return item.code;
+        });
+        let data = responseData.map(function(item) {
+          return item.totalScore;
+        });
+
+        let backgroundColors = labels.map(function() {
+          return getRandomColor();
+        });
+
+        new Chart(document.getElementById('pieChart'), {
+          type: 'pie',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: '누적',
+              data: data,
+              backgroundColor: backgroundColors,
+              hoverOffset: 4
+            }]
+          }
+        });
+      },
+      error: function() {
+        console.error('[ERROR] 관심사 분포 데이터를 불러오던 도중 에러가 발생했습니다');
       }
     });
   });
