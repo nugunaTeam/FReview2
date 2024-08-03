@@ -45,4 +45,45 @@
     limit #{pageSize} offset #{offset}
   </select>
 
+  <select id="getProposalToMeInfosCount" resultType="java.lang.Integer">
+    select count(*)
+    from experience e
+    where to_user_seq = #{userSeq}
+      and status in ('REJECTED', 'SENT')
+  </select>
+
+  <resultMap id="ProposalToMeInfoResultMap"
+    type="com.nuguna.freview.customer.dto.response.ProposalToMeInfoDTO">
+    <result property="storeSeq" column="from_user_seq"/>
+    <result property="storeName" column="store_name"/>
+    <result property="proposalDetails" column="proposal_detail"/>
+    <result property="status" column="status"/>
+    <result property="proposalDate" column="created_at" javaType="java.time.LocalDate"/>
+  </resultMap>
+
+  <select id="getProposalToMeInfos" resultMap="ProposalToMeInfoResultMap">
+    select proposal_to_me_experiences.from_user_seq,
+           nsbi.store_name,
+           proposal_to_me_experiences.proposal_detail,
+           proposal_to_me_experiences.created_at,
+           proposal_to_me_experiences.status
+    from (select e.from_user_seq,
+                 e.proposal_detail,
+                 e.status,
+                 e.created_at
+          from experience e
+          where to_user_seq = #{userSeq}
+            and e.status in ('REJECTED', 'SENT')) proposal_to_me_experiences
+           inner join
+         user u
+         on
+           proposal_to_me_experiences.from_user_seq = u.seq
+           inner join
+         national_store_business_information nsbi
+         on
+           u.business_number = nsbi.business_number
+    order by proposal_to_me_experiences.created_at desc
+    limit #{pageSize} offset #{offset}
+  </select>
+
 </mapper>
