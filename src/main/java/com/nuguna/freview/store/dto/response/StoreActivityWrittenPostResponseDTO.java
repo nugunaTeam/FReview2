@@ -1,6 +1,7 @@
 package com.nuguna.freview.store.dto.response;
 
-import java.sql.Timestamp;
+import com.nuguna.freview.customer.dto.response.PaginationInfoResponseDTO;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,13 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StoreActivityWrittenPostResponseDTO {
-  private Long postSeq;
-  private Long userSeq;
-  private String title;
-  private String code;
-  private String content;
-  private Timestamp experienceDate;
-  private Timestamp createdAt;
-  private Long likeCount;
-  private Long totalCount;
+  private List<WrittenPostInfoDTO> writtenPostInfos;
+  private PaginationInfoResponseDTO paginationInfo;
+
 }
