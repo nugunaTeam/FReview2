@@ -1,12 +1,13 @@
 package com.nuguna.freview.common.controller;
 
+import static com.nuguna.freview.common.constant.BoardPageConstant.NOTICE_BOARD_PAGE_SIZE;
+
 import com.nuguna.freview.admin.dto.request.NoticeInsertRequestDTO;
 import com.nuguna.freview.common.dto.request.NoticeUpdateRequestDTO;
 import com.nuguna.freview.common.dto.response.NoticePostDTO;
 import com.nuguna.freview.common.dto.response.page.NoticeResponseDTO;
 import com.nuguna.freview.common.service.BoardService;
 import com.nuguna.freview.common.service.NoticeService;
-import com.nuguna.freview.common.service.PostService;
 import com.nuguna.freview.common.vo.post.PostCode;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -28,23 +29,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class NoticeApiController {
 
   private final BoardService boardService;
-  private final PostService postService;
   private final NoticeService noticeService;
-  private final int PAGE_SIZE = 10;
 
   @Autowired
-  public NoticeApiController(BoardService boardService, PostService postService,
-      NoticeService noticeService) {
+  public NoticeApiController(BoardService boardService, NoticeService noticeService) {
     this.boardService = boardService;
-    this.postService = postService;
     this.noticeService = noticeService;
   }
 
   @RequestMapping(value = "/list/{currentPage}", method = RequestMethod.POST)
   public NoticeResponseDTO getNoticeList(@PathVariable int currentPage, @RequestParam(value = "searchWord") String searchWord) {
-    List<NoticePostDTO> noticeList = boardService.getNoticeList(currentPage, PAGE_SIZE, searchWord);
+    List<NoticePostDTO> noticeList = boardService.getNoticeList(currentPage, NOTICE_BOARD_PAGE_SIZE, searchWord);
     int noticeTotal = boardService.getTotalCount(PostCode.NOTICE.getCode(), searchWord);
-    int totalPage = (int)Math.ceil((double)noticeTotal / (double)PAGE_SIZE);
+    int totalPage = (int)Math.ceil((double)noticeTotal / (double)NOTICE_BOARD_PAGE_SIZE);
 
     NoticeResponseDTO responseDTO = new NoticeResponseDTO();
     responseDTO.setNoticeList(noticeList);

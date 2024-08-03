@@ -1,5 +1,7 @@
 package com.nuguna.freview.common.controller;
 
+import static com.nuguna.freview.common.constant.BoardPageConstant.MOJIP_BOARD_PAGE_SIZE;
+
 import com.nuguna.freview.common.dto.request.MojipApplyRequestDTO;
 import com.nuguna.freview.common.dto.request.MojipInsertRequestDTO;
 import com.nuguna.freview.common.dto.request.MojipListRequestDTO;
@@ -25,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class MojipApiController {
 
   private final MojipService mojipService;
-  private final int PAGE_SIZE = 12;
 
   @Autowired
   public MojipApiController(MojipService mojipService) {
@@ -41,8 +42,8 @@ public class MojipApiController {
     if (previousPostSeq == null) {
       previousPostSeq = Long.MAX_VALUE;
     }
-      List<MojipPostDetailDTO> mojipList = mojipService.getMojipList(requesterSeq, previousPostSeq, searchWord, PAGE_SIZE);
-      boolean hasMore = mojipList.size() == PAGE_SIZE;
+      List<MojipPostDetailDTO> mojipList = mojipService.getMojipList(requesterSeq, previousPostSeq, searchWord, MOJIP_BOARD_PAGE_SIZE);
+      boolean hasMore = mojipList.size() == MOJIP_BOARD_PAGE_SIZE;
       MojipResponseDTO responseDTO = new MojipResponseDTO();
       responseDTO.setMojipList(mojipList);
       responseDTO.setHasMore(hasMore);
