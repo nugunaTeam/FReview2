@@ -123,5 +123,19 @@
     limit #{pageSize} offset #{offset}
   </select>
 
+  <select id="checkExistUnReadNotification" resultType="java.lang.Boolean">
+    select count(1)
+    from notification n
+    where n.seq = #{notificationSeq}
+      and n.is_read = false
+      and n.to_user_seq = #{userSeq}
+  </select>
+
+  <update id="makeNotificationRead">
+    update notification n
+    set n.is_read = true
+    where n.seq = #{notificationSeq}
+  </update>
+
 
 </mapper>

@@ -75,5 +75,9 @@ public class CustomerMyNotificationServiceImpl implements CustomerMyNotification
   @Transactional
   public void makeNotificationRead(Long userSeq, Long notificationSeq) {
     // TODO : notificationSeq 에 해당하는 알림을 읽음 처리할 것
+    if (!customerMyNotificationMapper.checkExistUnReadNotification(userSeq, notificationSeq)) {
+      throw new IllegalArgumentException("해당하는 읽지 않은 알림이 존재하지 않습니다.");
+    }
+    customerMyNotificationMapper.makeNotificationRead(notificationSeq);
   }
 }

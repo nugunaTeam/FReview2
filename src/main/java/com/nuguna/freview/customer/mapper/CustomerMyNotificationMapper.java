@@ -22,4 +22,9 @@ public interface CustomerMyNotificationMapper {
   List<ZzimedMeStoreInfoDTO> getZzimedMeStores(@Param("userSeq") Long userSeq,
       @Param("isRead") Boolean isRead,
       @Param("offset") int offset, @Param("pageSize") int pageSize);
+
+  Boolean checkExistUnReadNotification(@Param("userSeq") Long userSeq,
+      @Param("notificationSeq") Long notificationSeq);
+
+  void makeNotificationRead(@Param("notificationSeq") Long notificationSeq);
 }
