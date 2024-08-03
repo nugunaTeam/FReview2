@@ -1,6 +1,5 @@
 package com.nuguna.freview.customer.controller;
 
-import com.nuguna.freview.customer.dto.request.CustomerZzimedMeCustomersRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerZzimedMeStoresRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerZzimedMeCustomersRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerZzimedMeStoresRetriveResponseDTO;
@@ -35,9 +34,10 @@ public class CustomerMyNotificationApiController {
   @RequestMapping(value = "/zzimed-me-customers", method = RequestMethod.GET)
   public ResponseEntity<CustomerZzimedMeCustomersRetrieveResponseDTO> getZzimedMeCustomers(
       @RequestParam Long userSeq,
-      @Valid @ModelAttribute CustomerZzimedMeCustomersRetrieveRequestDTO customerZzimedMeCustomersRetrieveRequestDTO) {
+      @RequestParam Boolean isRead,
+      @RequestParam Integer targetPage) {
     CustomerZzimedMeCustomersRetrieveResponseDTO customerZzimedMeCustomersRetrieveResponseDTO = customerMyNotificationService.getZzimedMeCustomers(
-        userSeq, customerZzimedMeCustomersRetrieveRequestDTO);
+        userSeq, isRead, targetPage);
     return new ResponseEntity<>(customerZzimedMeCustomersRetrieveResponseDTO, HttpStatus.OK);
   }
 

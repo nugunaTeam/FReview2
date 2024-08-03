@@ -4,4 +4,45 @@
 
 <mapper namespace="com.nuguna.freview.customer.mapper.CustomerMyNotificationMapper">
 
+  <select id="getZzimedMeCustomersCount" resultType="java.lang.Integer">
+    select count(*)
+    from notification n
+    where n.to_user_seq = #{userSeq}
+    and n.code in ('ZZIMED')
+    <if test="isRead != null">
+      and is_read = #{isRead}
+    </if>
+  </select>
+
+  <resultMap id="ZzimedMeCustomerInfoResultMap"
+    type="com.nuguna.freview.customer.dto.response.ZzimedMeCustomerInfoDTO">
+    <id property="customerSeq" column="from_user_seq"/>
+    <result property="nickname" column="nickname"/>
+    <result property="createdAt" column="created_at"/>
+  </resultMap>
+
+  <select id="getZzimedMeCustomers" resultMap="ZzimedMeCustomerInfoResultMap">
+    select
+    zzimed_me_user.from_user_seq,
+    u.nickname,
+    zzimed_me_user.created_at
+    from
+    (select
+    n.from_user_seq,
+    n.created_at
+    from
+    notification n
+    where
+    n.to_user_seq = #{userSeq}
+    and n.code in ('ZZIMED')
+    <if test="isRead != null">
+      and n.is_read = #{isRead}
+    </if>
+    order by
+    n.created_at desc
+    limit #{pageSize} offset #{offset}) zzimed_me_user
+    inner join user u
+    on zzimed_me_user.from_user_seq = u.seq
+  </select>
+
 </mapper>

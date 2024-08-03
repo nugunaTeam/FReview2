@@ -1,11 +1,11 @@
 package com.nuguna.freview.customer.service.impl;
 
-import static com.nuguna.freview.customer.constant.CustomerMyPagePaginationConstant.CUSTOMER_LIKE_POST_PAGE_BLOCK_SIZE;
-import static com.nuguna.freview.customer.constant.CustomerMyPagePaginationConstant.CUSTOMER_LIKE_POST_PAGE_SIZE;
-import static com.nuguna.freview.customer.constant.CustomerMyPagePaginationConstant.CUSTOMER_ZZIMED_CUSTOMERS_PAGE_BLOCK_SIZE;
-import static com.nuguna.freview.customer.constant.CustomerMyPagePaginationConstant.CUSTOMER_ZZIMED_CUSTOMERS_PAGE_SIZE;
-import static com.nuguna.freview.customer.constant.CustomerMyPagePaginationConstant.CUSTOMER_ZZIMED_STORES_PAGE_BLOCK_SIZE;
-import static com.nuguna.freview.customer.constant.CustomerMyPagePaginationConstant.CUSTOMER_ZZIMED_STORES_PAGE_SIZE;
+import static com.nuguna.freview.customer.constant.CustomerMyActivityPageConstant.CUSTOMER_LIKE_POST_PAGE_BLOCK_SIZE;
+import static com.nuguna.freview.customer.constant.CustomerMyActivityPageConstant.CUSTOMER_LIKE_POST_PAGE_SIZE;
+import static com.nuguna.freview.customer.constant.CustomerMyActivityPageConstant.CUSTOMER_ZZIMED_CUSTOMERS_PAGE_BLOCK_SIZE;
+import static com.nuguna.freview.customer.constant.CustomerMyActivityPageConstant.CUSTOMER_ZZIMED_CUSTOMERS_PAGE_SIZE;
+import static com.nuguna.freview.customer.constant.CustomerMyActivityPageConstant.CUSTOMER_ZZIMED_STORES_PAGE_BLOCK_SIZE;
+import static com.nuguna.freview.customer.constant.CustomerMyActivityPageConstant.CUSTOMER_ZZIMED_STORES_PAGE_SIZE;
 
 import com.nuguna.freview.customer.dto.request.CustomerMyLikedPostsRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerMyZzimedCustomersRetrieveRequestDTO;
