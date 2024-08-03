@@ -1,8 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<c:set var="loginUser" value="${requestScope.loginUser}"/>
-<c:set var="memberSeq" value="${loginUser.memberSeq}"/>
-<c:set var="nickname" value="${loginUser.nickname}"/>
+
+<c:set var ="loginUser" value="${loginUser}"/>
+<c:set var ="userSeq" value="${loginUser.seq}"/>
+<c:set var ="nickname" value="${loginUser.nickname}"/>
+<c:set var ="profileUrl" value="${loginUser.profilePhotoUrl}" />
+<c:set var ="code" value="${loginUser.code}"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -117,15 +121,15 @@
     margin-bottom: 10px;
   }
 
-  .email-input-group {
+  .subEmail-input-group {
     display: flex;
   }
 
-  .email-input-group input {
+  .subEmail-input-group input {
     margin-right: 10px;
   }
 
-  .email-input-group .btn {
+  .subEmail-input-group .btn {
     margin-right: 10px;
     height: 38px;
     width: auto;
@@ -146,49 +150,53 @@
 
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center header-hr">
-    <div class="d-flex align-items-center justify-content-between">
-        <a href="/main?seq=${memberSeq}&pagecode=Requester" class="logo d-flex align-items-center">
-            <img src="assets/img/logo/logo-vertical.png" alt=""
-                 style="width: 50px; margin-top: 20px;">
+    <div class="d-flex align-items-center justify-content-between ">
+        <a href="/main?seq=${userSeq}&pagecode=Requester"
+           class="logo d-flex align-items-center">
+            <img src="/assets/img/logo/logo-vertical.png" alt=""
+                 style="  width: 50px; margin-top: 20px;">
             <span class="d-none d-lg-block">FReview</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div>
     <div class="header-hr-right">
-        <a href="/my-info?member_seq=${memberSeq}" style="margin-right: 20px">
+        <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
             ${nickname}
-            <img src="assets/img/basic/basic-profile-img.png" alt=" "
-                 style="width: 30px; margin-top: 15px;">
+            <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
         </a>
         <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
     </div>
 </header>
 
-<!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
+
     <ul class="sidebar-nav" id="sidebar-nav">
+
         <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse"
-               href="#">
-                <i class="bi bi-layout-text-window-reverse"></i><span>관리</span><i
-                    class="bi bi-chevron-down ms-auto"></i>
+            <a class="nav-link " data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-layout-text-window-reverse"></i><span>관리</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
-            <ul id="tables-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+            <ul id="tables-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="/admin-member-management">
-                        <i class="bi bi-circle"></i><span>멤버</span>
+                    <a href="/admin/manage/customer">
+                        <i class="bi bi-circle"></i><span>체험단</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/admin-store-management">
+                    <a href="/admin/manage/store">
                         <i class="bi bi-circle"></i><span>스토어</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/manage/experience">
+                        <i class="bi bi-circle"></i><span>체험</span>
                     </a>
                 </li>
             </ul>
         </li>
         <ul class="sidebar-nav">
             <li class="nav-item">
-                <a class="nav-link active" href="/personal-info-update">
+                <a class="nav-link active" href="/admin/profile">
                     <i class="bi bi-person"></i><span>개인정보수정</span>
                 </a>
             </li>
@@ -210,20 +218,18 @@
 <script>
   $(document).ready(function () {
     let emailVerificationCode;
+    let userSeq = ${userSeq};
+    let emailVerify = false;
 
     loadInitialData();
 
     function loadInitialData() {
       $.ajax({
         method: "POST",
-        url: "/personal-info-update",
-        data: {
-          memberSeq: ${memberSeq}
-        },
-        dataType: "json",
+        url: "/api/admin/profile/" + userSeq,
         success: function (response) {
           $('#memberInfo').empty();
-          renderData(response.data);
+          renderData(response);
         },
         error: function () {
           console.error("[ERROR] 데이터 초기화 중 오류 발생");
@@ -242,7 +248,7 @@
 
       htmlStr += '<div class="mb-3">';
       htmlStr += '  <label for="id" class="form-label">아이디</label>';
-      htmlStr += '  <input type="text" id="id" class="form-control" value="' + data["id"]
+      htmlStr += '  <input type="text" id="id" class="form-control" value="' + data["email"]
           + '" readonly>';
       htmlStr += '</div>';
 
@@ -264,7 +270,7 @@
       htmlStr += '<div class="mb-3">';
       htmlStr += '  <label for="email" class="form-label">이메일</label>';
       htmlStr += '  <div class="input-group">';
-      htmlStr += "    <input type='text' id='email' class='form-control' value='" + data["email"]
+      htmlStr += "    <input type='text' id='email' class='form-control' value='" + data["subEmail"]
           + "' readonly>";
       htmlStr += '    <button class="btn btn-custom" type="button" data-toggle="edit" data-target="email-edit">수정</button>';
       htmlStr += '  </div>';
@@ -328,20 +334,22 @@
 
       $.ajax({
         type: 'POST',
-        url: '/password-update',
-        data: {
-          currentPassword: currentPassword,
-          newPassword: newPassword,
-          memberSeq: ${memberSeq}
-        },
-        success: function (response) {
+        url: '/api/admin/profile/password-update',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          "oldPassword": currentPassword,
+          "newPassword": newPassword,
+          "userSeq": userSeq
+        }),
+        dataType: "json",
+        success: function () {
           alert('비밀번호가 성공적으로 수정되었습니다.');
           resetButtons();
-          location.replace("/personal-info-update");
+          location.replace("/admin/profile");
         },
-        error: function (error) {
+        error: function () {
           alert('비밀번호 수정에 실패했습니다. 다시 시도해 주세요.');
-          console.error(error);
+          console.error("[ERROR] 비밀번호 업데이트 도중 에러 발생");
         }
       });
     });
@@ -359,17 +367,18 @@
 
         $.ajax({
           method: "post",
-          url: "/send-certification",
-          data: {
+          url : "/api/auth/send-randomNumber-toEmail",
+          contentType: "application/json",
+          data: JSON.stringify({
             "email": inputEmail,
             "randomNumber": randomFourDigitNumber
-          },
+          }),
           error: function (myval) {
             console.log("에러" + myval);
           },
           success: function (myval) {
             console.log("성공" + myval);
-            emailVerificationCode = myval;
+            emailVerificationCode = myval.randomNumber;
           }
         });
       } else {
@@ -381,21 +390,29 @@
       let inputCode = $("#verificationCode").val();
       if (inputCode === emailVerificationCode) {
         alert("인증번호가 일치합니다.");
+        emailVerify = true;
       } else {
         alert("인증번호가 일치하지 않습니다.");
+        emailVerify = false;
       }
     });
 
     $(document).on('click', '[data-update="email"]', function () {
+      if (!emailVerify) {
+        alert("먼저 이메일 인증을 완료해주세요.");
+        return;
+      }
+
       let newEmail = $("#newEmail").val();
 
       $.ajax({
         method: "post",
-        url: "/update-email",
-        data: {
-          "email": newEmail,
-          "memberSeq": ${memberSeq}
-        },
+        url: "/api/admin/profile/sub-email-update",
+        contentType: "application/json",
+        data: JSON.stringify({
+          "newEmail": newEmail,
+          "userSeq": userSeq
+        }),
         error: function (myval) {
           console.log("에러" + myval);
         },
@@ -403,7 +420,7 @@
           console.log("성공" + myval);
           alert("이메일이 성공적으로 업데이트되었습니다.");
           resetButtons();
-          location.replace("/personal-info-update");
+          location.replace("/admin/profile");
         }
       });
     });
@@ -412,14 +429,11 @@
       if (confirm("정말로 탈퇴하시겠습니까?")) {
         $.ajax({
           type: 'POST',
-          url: '/api/member-withdrawal',
-          data: {
-            memberSeq: ${memberSeq}
-          },
+          url: '/api/common/withdrawal/' + userSeq,
           success: function (response, textStatus, jqXHR) {
             if (jqXHR.status === 200) {
               alert('계정이 성공적으로 삭제되었습니다.');
-              window.location.href = '/';  // 탈퇴 후 리디렉션
+              window.location.href = '/';
             } else {
               alert('계정 삭제에 실패했습니다. 다시 시도해 주세요.');
             }
