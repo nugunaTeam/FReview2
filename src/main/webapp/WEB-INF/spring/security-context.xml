@@ -17,7 +17,14 @@
 	</context:component-scan>
 
 	<http pattern="/assets/**"  security="none"/>
-
+	<http pattern="/customer/**" entry-point-ref="jwtAuthenticationEntryPoint">
+		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
+		<access-denied-handler ref="accessDeniedHandler"/>
+	</http>
+	<http pattern="/store/**" entry-point-ref="jwtAuthenticationEntryPoint">
+		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
+		<access-denied-handler ref="accessDeniedHandler"/>
+	</http>
 	<http>
 		<csrf disabled="true"/>
 		<intercept-url pattern="/resources/**" 		access="permitAll" />
@@ -53,4 +60,12 @@
 	<beans:bean id="customAuthenticationProvider" class="com.nuguna.freview.security.login.CustomAuthenticationProvider"/>
 	<beans:bean id="customUserDetailsService" class="com.nuguna.freview.security.login.CustomUserDetailsService"/>
 	<beans:bean id="jwtUtil" class="com.nuguna.freview.security.JwtUtil"/>
+	<beans:bean id="accessDeniedHandler" class="com.nuguna.freview.security.jwtfilter.CustomAccessDeniedHandler"/>
+	<beans:bean id="jwtUserSerive" class="com.nuguna.freview.security.jwtfilter.service.Impl.JwtUserServiceImpl"/>
+	<beans:bean id="jwtAuthenticationEntryPoint" class="com.nuguna.freview.security.jwtfilter.JwtAuthenticationEntryPoint"/>
+	<beans:bean id="jwtFilter" class="com.nuguna.freview.security.jwtfilter.JWTfilter">
+		<beans:constructor-arg name="jwtutl" ref="jwtUtil"/>
+		<beans:constructor-arg name="jwtUserService" ref="jwtUserSerive"/>
+	</beans:bean>
+
 </beans:beans>
