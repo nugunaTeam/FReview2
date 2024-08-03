@@ -25,8 +25,12 @@ public class PaginationUtil {
     int endPage = Math.min(pageBlockThreshold,
         (int) Math.ceil((double) totalItemCount / pageSize));
 
+    if (endPage == 0) {
+      endPage = 1;
+    }
+
     boolean hasNext = ((targetPage < endPage) || (totalItemCount
-        > pageBlockThreshold * totalItemCount));
+        > pageBlockThreshold * pageSize));
     boolean hasPrevious = (targetPage > 1);
 
     return new PaginationInfoResponseDTO(targetPage, startPage, endPage, hasNext, hasPrevious);
