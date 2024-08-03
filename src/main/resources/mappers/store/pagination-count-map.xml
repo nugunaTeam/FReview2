@@ -5,7 +5,7 @@
 <mapper namespace="com.nuguna.freview.store.mapper.StoreActivityPageMapper">
 
   <select id="storeActivityPageSendLikeCount" resultType="java.lang.Integer">
-    SELECT count(l.seq) AS total_count
+    SELECT count(l.post_seq) AS total_count
     FROM `like` l
            JOIN `post` p ON l.post_seq = p.seq
            JOIN `user` u ON p.user_seq = u.seq

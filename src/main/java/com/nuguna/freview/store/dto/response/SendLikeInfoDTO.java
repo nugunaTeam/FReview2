@@ -9,10 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SendLikeInfoDTO {
-  private Long userSeq;
   private Long writtenSeq;
   private Long postSeq;
-  private String postCode;
   private String title;
   private String content;
   private Long likeCount;

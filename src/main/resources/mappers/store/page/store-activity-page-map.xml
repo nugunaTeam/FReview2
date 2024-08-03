@@ -6,11 +6,9 @@
 
   <resultMap id="StoreActivityPageSendLikeResultMap"
     type="com.nuguna.freview.store.dto.response.SendLikeInfoDTO">
-    <id property="userSeq" column="user_seq"/>
     <result property="writtenSeq" column="post_author_seq"/>
     <result property="postSeq" column="post_seq"/>
     <result property="title" column="post_title"/>
-    <result property="postCode" column="post_code"/>
     <result property="content" column="post_content"/>
     <result property="createdAt" column="like_created_at"/>
     <result property="likeCount" column="like_count"/>
@@ -43,32 +41,27 @@
 
   <select id="storeActivityPageSendLike" resultMap="StoreActivityPageSendLikeResultMap">
     WITH like_counts AS (
-    SELECT post_seq, COUNT(seq) AS like_count
-    FROM `like`
-    GROUP BY post_seq
+      SELECT post_seq, COUNT(seq) AS like_count
+      FROM `like`
+      GROUP BY post_seq
     )
-    , like_post AS (
-    SELECT l.user_seq,
-    p.seq AS post_seq,
-    p.title AS post_title,
-    p.code AS post_code,
-    p.content AS post_content,
-    u.seq AS post_author_seq,
-    l.created_at AS like_created_at,
-    ROW_NUMBER() OVER (ORDER BY l.created_at DESC) AS row_num,
-    lc.like_count
-    FROM `like` l
-    JOIN `post` p ON l.post_seq = p.seq
-    JOIN `user` u ON p.user_seq = u.seq
-    LEFT JOIN like_counts lc ON p.seq = lc.post_seq
-    WHERE l.user_seq = #{userSeq}
-    AND p.code = '모집'
+       , like_post AS (
+      SELECT p.seq AS post_seq,
+             p.title AS post_title,
+             p.content AS post_content,
+             u.seq AS post_author_seq,
+             l.created_at AS like_created_at,
+             ROW_NUMBER() OVER (ORDER BY l.created_at DESC) AS row_num,
+             lc.like_count
+      FROM `like` l
+             JOIN `post` p ON l.post_seq = p.seq
+             JOIN `user` u ON p.user_seq = u.seq
+             LEFT JOIN like_counts lc ON p.seq = lc.post_seq
+      WHERE l.user_seq = 41
+        AND p.code = '모집'
     )
-    SELECT user_seq, post_seq, post_title, post_code, post_content, post_author_seq, like_created_at, like_count
+    SELECT post_seq, post_title, post_content, post_author_seq, like_created_at, like_count
     FROM like_post
-    WHERE row_num &gt; #{offset}
-    AND row_num &lt;= #{offset} + #{pageSize}
-
   </select>
 
   <select id="storeActivitySendZzimCustomer" resultMap="StoreActivityPageSendZzimCustomerResultMap">
