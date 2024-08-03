@@ -1,2 +1,91 @@
-package com.nuguna.freview.customer.controller;public class CustomerMyExperienceInfoApiController {
+package com.nuguna.freview.customer.controller;
+
+import com.nuguna.freview.customer.dto.request.CustomerMyAcceptedApplyInfosRetrieveRequestDTO;
+import com.nuguna.freview.customer.dto.request.CustomerMyAcceptedProposalInfosRetrieveRequestDTO;
+import com.nuguna.freview.customer.dto.request.CustomerMyApplyInfosRetrieveRequestDTO;
+import com.nuguna.freview.customer.dto.request.CustomerProposalToMeInfosRetrieveRequestDTO;
+import com.nuguna.freview.customer.dto.response.CustomerMyAcceptedApplyInfosRetrieveResponseDTO;
+import com.nuguna.freview.customer.dto.response.CustomerMyAcceptedProposalInfosRetrieveResponseDTO;
+import com.nuguna.freview.customer.dto.response.CustomerMyApplyInfosRetrieveResponseDTO;
+import com.nuguna.freview.customer.dto.response.CustomerProposalToMeInfosRetrieveResponseDTO;
+import com.nuguna.freview.customer.service.CustomerMyExperienceService;
+import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@Slf4j
+@RestController
+@RequestMapping("/api/customer/my/experience")
+public class CustomerMyExperienceInfoApiController {
+
+  private final CustomerMyExperienceService customerMyExperienceService;
+
+  @Autowired
+  public CustomerMyExperienceInfoApiController(
+      CustomerMyExperienceService customerMyExperienceService) {
+    this.customerMyExperienceService = customerMyExperienceService;
+  }
+
+  @RequestMapping(value = "/apply-list", method = RequestMethod.GET)
+  public ResponseEntity<CustomerMyApplyInfosRetrieveResponseDTO> getMyApplyInfos(
+      @RequestParam Long userSeq,
+      @Valid @ModelAttribute CustomerMyApplyInfosRetrieveRequestDTO customerMyApplyInfosRetrieveRequestDTO) {
+    CustomerMyApplyInfosRetrieveResponseDTO myApplyInfos = customerMyExperienceService.getMyApplyInfos(
+        userSeq, customerMyApplyInfosRetrieveRequestDTO);
+    return new ResponseEntity<>(myApplyInfos, HttpStatus.OK);
+  }
+
+  @RequestMapping(value = "/proposal-list", method = RequestMethod.GET)
+  public ResponseEntity<CustomerProposalToMeInfosRetrieveResponseDTO> getProposalToMeInfos(
+      @RequestParam Long userSeq,
+      @Valid @ModelAttribute CustomerProposalToMeInfosRetrieveRequestDTO customerProposalToMeInfosRetrieveRequestDTO) {
+    CustomerProposalToMeInfosRetrieveResponseDTO proposalToMeInfos = customerMyExperienceService.getProposalToMeInfos(
+        userSeq, customerProposalToMeInfosRetrieveRequestDTO);
+    return new ResponseEntity<>(proposalToMeInfos, HttpStatus.OK);
+  }
+
+  @RequestMapping(value = "/{experienceSeq}/accept", method = RequestMethod.POST)
+  public ResponseEntity<Void> acceptProposalToMe(
+      @RequestParam Long userSeq,
+      @PathVariable("experienceSeq") Long experienceSeq) {
+    customerMyExperienceService.acceptProposalToMe(userSeq, experienceSeq);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @RequestMapping(value = "/{experienceSeq}/refuse", method = RequestMethod.POST)
+  public ResponseEntity<Void> refuseProposalToMe(
+      @RequestParam Long userSeq,
+      @PathVariable("experienceSeq") Long experienceSeq) {
+    customerMyExperienceService.refuseProposalToMe(userSeq, experienceSeq);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @RequestMapping(value = "/accepted-apply-list", method = RequestMethod.GET)
+  public ResponseEntity<CustomerMyAcceptedApplyInfosRetrieveResponseDTO> getMyAcceptedApplyInfos(
+      @RequestParam Long userSeq,
+      @Valid @ModelAttribute CustomerMyAcceptedApplyInfosRetrieveRequestDTO customerMyAcceptedApplyInfosRetrieveRequestDTO) {
+    CustomerMyAcceptedApplyInfosRetrieveResponseDTO myAcceptedApplyInfos = customerMyExperienceService.getMyAcceptedApplyInfos(
+        userSeq,
+        customerMyAcceptedApplyInfosRetrieveRequestDTO);
+    return new ResponseEntity<>(myAcceptedApplyInfos, HttpStatus.OK);
+  }
+
+  @RequestMapping(value = "/accepted-proposal-list", method = RequestMethod.GET)
+  public ResponseEntity<CustomerMyAcceptedProposalInfosRetrieveResponseDTO> getMyAcceptedProposalInfos(
+      @RequestParam Long userSeq,
+      @Valid @ModelAttribute CustomerMyAcceptedProposalInfosRetrieveRequestDTO customerMyAcceptedProposalInfosRetrieveRequestDTO) {
+    CustomerMyAcceptedProposalInfosRetrieveResponseDTO myAcceptedProposalInfos = customerMyExperienceService.getMyAcceptedProposalInfos(
+        userSeq, customerMyAcceptedProposalInfosRetrieveRequestDTO);
+    return new ResponseEntity<>(myAcceptedProposalInfos, HttpStatus.OK);
+  }
+
+
 }
