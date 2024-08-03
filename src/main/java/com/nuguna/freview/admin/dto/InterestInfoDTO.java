@@ -1,20 +1,18 @@
-package com.nuguna.freview.common.dto;
+package com.nuguna.freview.admin.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
-@AllArgsConstructor
 @NoArgsConstructor
-public class InterestAccumulationDTO {
+@AllArgsConstructor
+public class InterestInfoDTO {
 
   private Long userSeq;
-  private String dish;
   private String category;
-  private int totalScore;
+  private String dish;
+  private int total_score;
 }
