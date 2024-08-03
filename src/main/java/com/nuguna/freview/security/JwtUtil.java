@@ -5,7 +5,9 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Base64;
 import java.util.Date;
+import org.springframework.stereotype.Component;
 
+@Component
 public class JwtUtil {
 
   private String secretKey = "secret";
@@ -28,4 +30,26 @@ public class JwtUtil {
         .compact();
   }
 
-}
+  public String getSubject(String token) {
+    return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().toString();
+  }
+
+  public Long getUserSeq(String token) {
+    return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("userSeq", Long.class);
+  }
+
+  public String getUserEmail(String token) {
+    return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("userEmail", String.class);
+  }
+
+  public String getRole(String token) {
+    return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("roles", String.class);
+  }
+
+  public Boolean isExpired(String token) {
+    return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getExpiration().before(new Date());
+  }
+
+  }
+
+
