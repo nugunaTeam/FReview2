@@ -86,4 +86,47 @@
     limit #{pageSize} offset #{offset}
   </select>
 
+
+  <select id="getMyAcceptedApplyInfosCount" resultType="java.lang.Integer">
+    select count(*)
+    from experience e
+    where from_user_seq = #{userSeq}
+      and status in ('ACCEPTED', 'NOSHOW', 'DONE')
+  </select>
+
+  <resultMap id="MyAcceptedApplyInfoResultMap"
+    type="com.nuguna.freview.customer.dto.response.MyAcceptedApplyInfoDTO">
+    <result property="storeSeq" column="to_user_seq"/>
+    <result property="storeName" column="store_name"/>
+    <result property="postSeq" column="from_post_seq"/>
+    <result property="status" column="status"/>
+    <result property="experienceDate" column="visit_date" javaType="java.time.LocalDate"/>
+  </resultMap>
+
+  <select id="getMyAcceptedApplyInfos" resultMap="MyAcceptedApplyInfoResultMap">
+    select my_accepted_applied_experiences.to_user_seq,
+           nsbi.store_name,
+           my_accepted_applied_experiences.from_post_seq,
+           my_accepted_applied_experiences.status,
+           my_accepted_applied_experiences.visit_date
+    from (select e.to_user_seq,
+                 e.from_post_seq,
+                 e.visit_date,
+                 e.created_at,
+                 e.status
+          from experience e
+          where from_user_seq = #{userSeq}
+            and e.status in ('ACCEPTED', 'NOSHOW', 'DONE')) my_accepted_applied_experiences
+           inner join
+         user u
+         on
+           my_accepted_applied_experiences.to_user_seq = u.seq
+           inner join
+         national_store_business_information nsbi
+         on
+           u.business_number = nsbi.business_number
+    order by my_accepted_applied_experiences.created_at desc
+    limit #{pageSize} offset #{offset}
+  </select>
+
 </mapper>
