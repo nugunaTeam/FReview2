@@ -24,7 +24,7 @@ public class AdminController {
 
   @RequestMapping(value = "", method = RequestMethod.GET)
   public String adminHome() {
-    return "redirect:/admin/manage/analysis";
+    return "redirect:/admin/analysis";
   }
 
   @RequestMapping(value = "/manage/customer", method = RequestMethod.GET)
@@ -72,7 +72,7 @@ public class AdminController {
     return "admin-management-experience";
   }
 
-  @RequestMapping(value = "/manage/analysis", method = RequestMethod.GET)
+  @RequestMapping(value = "/analysis", method = RequestMethod.GET)
   public String analysisManagePage(Model model) {
     //HACK: 로그인 유저의 실제 seq 로 수정 필요
     Long userSeq = 301L;
@@ -84,7 +84,7 @@ public class AdminController {
     }
     model.addAttribute("loginUser", loginUser);
 
-    return "admin-management-analysis";
+    return "admin-analysis";
   }
 
   @RequestMapping(value = "/profile", method = RequestMethod.GET)

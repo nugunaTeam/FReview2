@@ -110,7 +110,7 @@
 
     <ul class="sidebar-nav">
       <li class="nav-item">
-        <a class="nav-link active" href="/admin/manage/analysis">
+        <a class="nav-link active" href="/admin/analysis">
           <i class="bi bi-person"></i><span>분석</span>
         </a>
       </li>

@@ -124,7 +124,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
         <ul class="sidebar-nav">
             <li class="nav-item">
-                <a class="nav-link collapsed" href="/admin/manage/analysis">
+                <a class="nav-link collapsed" href="/admin/analysis">
                     <i class="bi bi-person"></i><span>분석</span>
                 </a>
             </li>
