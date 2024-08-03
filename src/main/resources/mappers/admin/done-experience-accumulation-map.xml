@@ -5,8 +5,8 @@
 <mapper namespace="com.nuguna.freview.admin.mapper.DoneExperienceAccumulationMapper">
 
   <resultMap id="doneExperienceResultMap" type="com.nuguna.freview.admin.dto.DoneExperienceDTO">
-    <result property="date" column="created_at" javaType="java.time.LocalDate"/>
-    <result property="totalCount" column="total_count"/>
+    <result property="date" column="date" javaType="java.time.LocalDate"/>
+    <result property="totalDone" column="total_count"/>
   </resultMap>
 
   <select id="findByDate" resultMap="doneExperienceResultMap">
@@ -25,5 +25,10 @@
     SET total_count = #{totalDone}
     WHERE date = #{date}
   </update>
+
+  <select id="findAll" resultMap="doneExperienceResultMap">
+    SELECT date, total_count
+    from done_experience_accumulation;
+  </select>
 
 </mapper>
