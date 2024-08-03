@@ -5,7 +5,7 @@
 <mapper namespace="com.nuguna.freview.store.mapper.StoreActivityPageMapper">
 
   <resultMap id="StoreActivityPageSendLikeResultMap"
-    type="com.nuguna.freview.store.dto.response.StoreActivitySendLikeResponseDTO">
+    type="com.nuguna.freview.store.dto.response.SendLikeInfoDTO">
     <id property="userSeq" column="user_seq"/>
     <result property="writtenSeq" column="post_author_seq"/>
     <result property="postSeq" column="post_seq"/>
@@ -22,17 +22,15 @@
     <result property="foodTypes" column="food_type_codes"/>
   </resultMap>
 
-  <resultMap id="StoreActivityPageSendZzimStoreResultMap" type="com.nuguna.freview.store.dto.response.StoreActivitySendZzimStoreResponseDTO">
-    <id property="userSeq" column="to_user_seq"/>
-    <result property="zzimUserSeq" column="from_user_seq"/>
+  <resultMap id="StoreActivityPageSendZzimStoreResultMap" type="com.nuguna.freview.store.dto.response.SendZzimStoreInfoDTO">
+    <result property="zzimUserSeq" column="to_user_seq"/>
     <result property="nickname" column="nickname"/>
-    <result property="code" column="code"/>
     <result property="storeLocation" column="store_location"/>
     <result property="foodTypes" column="food_type_codes"/>
   </resultMap>
 
   <resultMap id="StoreActivityPageWrittenPostResultMap"
-    type="com.nuguna.freview.store.dto.response.StoreActivityWrittenPostResponseDTO">
+    type="com.nuguna.freview.store.dto.response.WrittenPostInfoDTO">
     <result property="postSeq" column="seq"/>
     <result property="userSeq" column="user_seq"/>
     <result property="title" column="title"/>
@@ -105,9 +103,7 @@
     WITH paginated_results AS (
     SELECT
     u.nickname,
-    u.code,
     u.store_location,
-    z.from_user_seq,
     z.to_user_seq,
     GROUP_CONCAT(DISTINCT ft.code ORDER BY ft.code ASC SEPARATOR ', ') AS food_type_codes,
     ROW_NUMBER() OVER (ORDER BY u.seq) AS row_num
@@ -124,9 +120,7 @@
     )
     SELECT
     nickname,
-    code,
     store_location,
-    from_user_seq,
     to_user_seq,
     food_type_codes
     FROM paginated_results

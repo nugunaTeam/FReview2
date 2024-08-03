@@ -23,8 +23,10 @@
 
   <select id="storeActivitySendZzimStoreCount" resultType="java.lang.Integer">
     SELECT COUNT(from_user_seq) AS total_count
-    FROM zzim
+    FROM zzim z
+    INNER JOIN user u ON z.from_user_seq = u.seq
     WHERE to_user_seq = #{userSeq}
+    AND u.code = 'STORE'
   </select>
 
   <select id="storeActivityPageWrittenPostCount"  resultType="java.lang.Integer">
