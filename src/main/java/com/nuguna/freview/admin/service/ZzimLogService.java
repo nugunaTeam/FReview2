@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,9 @@ public class ZzimLogService {
   private final ZzimAccumulationMapper zzimAccumulationMapper;
   private final ZzimPostprocessingLogMapper zzimPostprocessingLogMapper;
 
+  @Value("${zzim.log.cycle.fixedRate}")
+  private long fixedRate;
+
   @Autowired
   public ZzimLogService(ZzimLogMapper zzimLogMapper, ZzimAccumulationMapper zzimAccumulationMapper,
       ZzimPostprocessingLogMapper zzimPostprocessingLogMapper) {
@@ -30,7 +34,7 @@ public class ZzimLogService {
     this.zzimPostprocessingLogMapper = zzimPostprocessingLogMapper;
   }
 
-  @Scheduled(fixedRate = 1000)
+  @Scheduled(fixedRateString = "${zzim.log.cycle.fixedRate}")
   @Transactional
   public void zzimLogsProcess() {
     Long lastProcessedSeq = zzimPostprocessingLogMapper.getLastProcessedSeq();
