@@ -13,5 +13,5 @@ public class CustomerMyAcceptedProposalInfosRetrieveRequestDTO {
 
   @Min(1)
   @NotNull
-  private Long targetPage;
+  private Integer targetPage;
 }

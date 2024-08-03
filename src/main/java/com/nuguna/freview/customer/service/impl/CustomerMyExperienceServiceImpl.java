@@ -31,6 +31,9 @@ public class CustomerMyExperienceServiceImpl implements CustomerMyExperienceServ
   @Transactional(readOnly = true)
   public CustomerMyApplyInfosRetrieveResponseDTO getMyApplyInfos(Long userSeq,
       CustomerMyApplyInfosRetrieveRequestDTO customerMyApplyInfosRetrieveRequestDTO) {
+
+    Integer targetPage = customerMyApplyInfosRetrieveRequestDTO.getTargetPage();
+
     return null;
   }
 
