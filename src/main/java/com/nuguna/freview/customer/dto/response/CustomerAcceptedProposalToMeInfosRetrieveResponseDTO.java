@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerMyAcceptedProposalInfosRetrieveResponseDTO {
+public class CustomerAcceptedProposalToMeInfosRetrieveResponseDTO {
 
   private List<AcceptedProposalToMeInfoDTO> acceptedProposalInfos;
   private PaginationInfoResponseDTO paginationInfo;

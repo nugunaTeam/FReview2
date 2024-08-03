@@ -1,5 +1,7 @@
 package com.nuguna.freview.customer.service.impl;
 
+import static com.nuguna.freview.customer.constant.CustomerMyExperiencePageConstant.CUSTOMER_ACCEPTED_PROPOSAL_TO_ME_PAGE_BLOCK_SIZE;
+import static com.nuguna.freview.customer.constant.CustomerMyExperiencePageConstant.CUSTOMER_ACCEPTED_PROPOSAL_TO_ME_PAGE_SIZE;
 import static com.nuguna.freview.customer.constant.CustomerMyExperiencePageConstant.CUSTOMER_MY_ACCEPTED_APPLY_INFO_PAGE_BLOCK_SIZE;
 import static com.nuguna.freview.customer.constant.CustomerMyExperiencePageConstant.CUSTOMER_MY_ACCEPTED_APPLY_INFO_PAGE_SIZE;
 import static com.nuguna.freview.customer.constant.CustomerMyExperiencePageConstant.CUSTOMER_MY_APPLY_INFO_PAGE_BLOCK_SIZE;
@@ -7,8 +9,9 @@ import static com.nuguna.freview.customer.constant.CustomerMyExperiencePageConst
 import static com.nuguna.freview.customer.constant.CustomerMyExperiencePageConstant.CUSTOMER_PROPOSAL_TO_ME_PAGE_BLOCK_SIZE;
 import static com.nuguna.freview.customer.constant.CustomerMyExperiencePageConstant.CUSTOMER_PROPOSAL_TO_ME_PAGE_SIZE;
 
+import com.nuguna.freview.customer.dto.response.AcceptedProposalToMeInfoDTO;
+import com.nuguna.freview.customer.dto.response.CustomerAcceptedProposalToMeInfosRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyAcceptedApplyInfosRetrieveResponseDTO;
-import com.nuguna.freview.customer.dto.response.CustomerMyAcceptedProposalInfosRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyApplyInfosRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerProposalToMeInfosRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.MyAcceptedApplyInfoDTO;
@@ -86,7 +89,7 @@ public class CustomerMyExperienceServiceImpl implements CustomerMyExperienceServ
   @Transactional(readOnly = true)
   public CustomerMyAcceptedApplyInfosRetrieveResponseDTO getMyAcceptedApplyInfos(Long userSeq,
       int targetPage) {
-    
+
     int myAcceptedApplyInfosCount = customerMyExperienceMapper.getMyAcceptedApplyInfosCount(
         userSeq);
 
@@ -95,8 +98,7 @@ public class CustomerMyExperienceServiceImpl implements CustomerMyExperienceServ
         CUSTOMER_MY_ACCEPTED_APPLY_INFO_PAGE_SIZE, CUSTOMER_MY_ACCEPTED_APPLY_INFO_PAGE_BLOCK_SIZE);
 
     List<MyAcceptedApplyInfoDTO> myAcceptedApplyInfos = customerMyExperienceMapper.getMyAcceptedApplyInfos(
-        userSeq,
-        (targetPage - 1) * CUSTOMER_MY_ACCEPTED_APPLY_INFO_PAGE_SIZE,
+        userSeq, (targetPage - 1) * CUSTOMER_MY_ACCEPTED_APPLY_INFO_PAGE_SIZE,
         CUSTOMER_MY_ACCEPTED_APPLY_INFO_PAGE_SIZE);
 
     return new CustomerMyAcceptedApplyInfosRetrieveResponseDTO(myAcceptedApplyInfos,
@@ -105,8 +107,21 @@ public class CustomerMyExperienceServiceImpl implements CustomerMyExperienceServ
 
   @Override
   @Transactional(readOnly = true)
-  public CustomerMyAcceptedProposalInfosRetrieveResponseDTO getMyAcceptedProposalInfos(
+  public CustomerAcceptedProposalToMeInfosRetrieveResponseDTO getMyAcceptedProposalInfos(
       Long userSeq, int targetPage) {
-    return null;
+
+    int acceptedProposalToMeInfosCount = customerMyExperienceMapper.getAcceptedProposalToMeInfosCount(
+        userSeq);
+
+    PaginationInfoResponseDTO paginationInfoResponseDTO = PaginationUtil.makePaginationViewInfo(
+        targetPage, acceptedProposalToMeInfosCount, CUSTOMER_ACCEPTED_PROPOSAL_TO_ME_PAGE_SIZE,
+        CUSTOMER_ACCEPTED_PROPOSAL_TO_ME_PAGE_BLOCK_SIZE);
+
+    List<AcceptedProposalToMeInfoDTO> acceptedProposalToMeInfos = customerMyExperienceMapper.getAcceptedProposalToMeInfos(
+        userSeq, (targetPage - 1) * CUSTOMER_ACCEPTED_PROPOSAL_TO_ME_PAGE_SIZE,
+        CUSTOMER_ACCEPTED_PROPOSAL_TO_ME_PAGE_SIZE);
+
+    return new CustomerAcceptedProposalToMeInfosRetrieveResponseDTO(acceptedProposalToMeInfos,
+        paginationInfoResponseDTO);
   }
 }

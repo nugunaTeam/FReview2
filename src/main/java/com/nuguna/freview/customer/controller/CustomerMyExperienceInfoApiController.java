@@ -1,7 +1,7 @@
 package com.nuguna.freview.customer.controller;
 
+import com.nuguna.freview.customer.dto.response.CustomerAcceptedProposalToMeInfosRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyAcceptedApplyInfosRetrieveResponseDTO;
-import com.nuguna.freview.customer.dto.response.CustomerMyAcceptedProposalInfosRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyApplyInfosRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerProposalToMeInfosRetrieveResponseDTO;
 import com.nuguna.freview.customer.service.CustomerMyExperienceService;
@@ -72,10 +72,10 @@ public class CustomerMyExperienceInfoApiController {
   }
 
   @RequestMapping(value = "/accepted-proposal-list", method = RequestMethod.GET)
-  public ResponseEntity<CustomerMyAcceptedProposalInfosRetrieveResponseDTO> getMyAcceptedProposalInfos(
+  public ResponseEntity<CustomerAcceptedProposalToMeInfosRetrieveResponseDTO> getMyAcceptedProposalInfos(
       @RequestParam Long userSeq,
       @RequestParam Integer targetPage) {
-    CustomerMyAcceptedProposalInfosRetrieveResponseDTO myAcceptedProposalInfos = customerMyExperienceService.getMyAcceptedProposalInfos(
+    CustomerAcceptedProposalToMeInfosRetrieveResponseDTO myAcceptedProposalInfos = customerMyExperienceService.getMyAcceptedProposalInfos(
         userSeq, targetPage);
     return new ResponseEntity<>(myAcceptedProposalInfos, HttpStatus.OK);
   }
