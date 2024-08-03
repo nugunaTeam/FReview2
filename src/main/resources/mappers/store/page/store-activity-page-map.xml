@@ -16,11 +16,9 @@
     <result property="likeCount" column="like_count"/>
   </resultMap>
 
-  <resultMap id="StoreActivityPageSendZzimCustomerResultMap" type="com.nuguna.freview.store.dto.response.StoreActivitySendZzimCustomerResponseDTO">
-    <id property="userSeq" column="from_user_seq"/>
+  <resultMap id="StoreActivityPageSendZzimCustomerResultMap" type="com.nuguna.freview.store.dto.response.SendZzimCustomerInfoDTO">
     <result property="zzimUserSeq" column="to_user_seq"/>
     <result property="nickname" column="nickname"/>
-    <result property="code" column="code"/>
     <result property="foodTypes" column="food_type_codes"/>
   </resultMap>
 
@@ -45,7 +43,7 @@
     <result property="likeCount" column="likeCount"/>
   </resultMap>
 
-  <select id="storeActivityPageSendLike" resultMap="StoreActivityPageSendLikeResultMap ">
+  <select id="storeActivityPageSendLike" resultMap="StoreActivityPageSendLikeResultMap">
     WITH like_counts AS (
     SELECT post_seq, COUNT(seq) AS like_count
     FROM `like`
@@ -79,11 +77,9 @@
     WITH NumberedResults AS (
     SELECT
     u.nickname,
-    u.code,
-    zz.from_user_seq,
     zz.to_user_seq,
     GROUP_CONCAT(DISTINCT ft.code ORDER BY ft.code ASC SEPARATOR ', ') AS food_type_codes,
-    ROW_NUMBER() OVER (ORDER BY u.seq) AS row_num
+    ROW_NUMBER() OVER (ORDER BY zz.created_at DESC) AS row_num
     FROM
     `user` u
     JOIN zzim zz ON u.seq = zz.to_user_seq
@@ -97,8 +93,6 @@
     )
     SELECT
     nickname,
-    code,
-    from_user_seq,
     to_user_seq,
     food_type_codes
     FROM NumberedResults

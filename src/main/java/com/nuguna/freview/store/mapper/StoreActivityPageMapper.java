@@ -1,7 +1,7 @@
 package com.nuguna.freview.store.mapper;
 
+import com.nuguna.freview.store.dto.response.SendZzimCustomerInfoDTO;
 import com.nuguna.freview.store.dto.response.StoreActivitySendLikeResponseDTO;
-import com.nuguna.freview.store.dto.response.StoreActivitySendZzimCustomerResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreActivitySendZzimStoreResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreActivityWrittenPostResponseDTO;
 import java.util.List;
@@ -21,7 +21,7 @@ public interface StoreActivityPageMapper {
                                                       @Param("offset") Integer offset, @Param("pageSize") Integer pageSize);
   List<StoreActivitySendZzimStoreResponseDTO> storeActivitySendZzimStore(@Param("userSeq") Long userSeq,
                                                       @Param("offset") Integer offset, @Param("pageSize") Integer pageSize);
-  List<StoreActivitySendZzimCustomerResponseDTO> storeActivitySendZzimCustomer(@Param("userSeq") Long userSeq,
+  List<SendZzimCustomerInfoDTO> storeActivitySendZzimCustomer(@Param("userSeq") Long userSeq,
                                                       @Param("offset") Integer offset, @Param("pageSize") Integer pageSize);
   List<StoreActivityWrittenPostResponseDTO> storeActivityPageWrittenPost(@Param("userSeq") Long userSeq,
                                                       @Param("offset") Integer offset, @Param("pageSize") Integer pageSize);
