@@ -2,7 +2,6 @@ package com.nuguna.freview.customer.service;
 
 import com.nuguna.freview.customer.dto.request.CustomerMyAcceptedApplyInfosRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerMyAcceptedProposalInfosRetrieveRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerMyApplyInfosRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerProposalToMeInfosRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyAcceptedApplyInfosRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyAcceptedProposalInfosRetrieveResponseDTO;
@@ -12,7 +11,7 @@ import com.nuguna.freview.customer.dto.response.CustomerProposalToMeInfosRetriev
 public interface CustomerMyExperienceService {
 
   CustomerMyApplyInfosRetrieveResponseDTO getMyApplyInfos(Long userSeq,
-      CustomerMyApplyInfosRetrieveRequestDTO customerMyApplyInfosRetrieveRequestDTO);
+      int targetPage);
 
   CustomerProposalToMeInfosRetrieveResponseDTO getProposalToMeInfos(Long userSeq,
       CustomerProposalToMeInfosRetrieveRequestDTO customerProposalToMeInfosRetrieveRequestDTO);

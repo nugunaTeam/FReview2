@@ -2,7 +2,6 @@ package com.nuguna.freview.customer.controller;
 
 import com.nuguna.freview.customer.dto.request.CustomerMyAcceptedApplyInfosRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerMyAcceptedProposalInfosRetrieveRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerMyApplyInfosRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerProposalToMeInfosRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyAcceptedApplyInfosRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyAcceptedProposalInfosRetrieveResponseDTO;
@@ -37,9 +36,9 @@ public class CustomerMyExperienceInfoApiController {
   @RequestMapping(value = "/apply-list", method = RequestMethod.GET)
   public ResponseEntity<CustomerMyApplyInfosRetrieveResponseDTO> getMyApplyInfos(
       @RequestParam Long userSeq,
-      @Valid @ModelAttribute CustomerMyApplyInfosRetrieveRequestDTO customerMyApplyInfosRetrieveRequestDTO) {
+      @RequestParam Integer targetPage) {
     CustomerMyApplyInfosRetrieveResponseDTO myApplyInfos = customerMyExperienceService.getMyApplyInfos(
-        userSeq, customerMyApplyInfosRetrieveRequestDTO);
+        userSeq, targetPage);
     return new ResponseEntity<>(myApplyInfos, HttpStatus.OK);
   }
 

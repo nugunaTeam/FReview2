@@ -4,4 +4,45 @@
 
 <mapper namespace="com.nuguna.freview.customer.mapper.CustomerMyExperienceMapper">
 
+  <select id="getMyApplyInfosCount" resultType="java.lang.Integer">
+    select count(*)
+    from experience e
+    where from_user_seq = #{userSeq}
+      and status in ('REJECTED', 'SENT')
+  </select>
+
+  <resultMap id="MyApplyInfoResultMap"
+    type="com.nuguna.freview.customer.dto.response.MyApplyInfoDTO">
+    <result property="storeSeq" column="to_user_seq"/>
+    <result property="storeName" column="store_name"/>
+    <result property="postSeq" column="from_post_seq"/>
+    <result property="applyDate" column="created_at" javaType="java.time.LocalDate"/>
+    <result property="status" column="status"/>
+  </resultMap>
+
+  <select id="getMyApplyInfos" resultMap="MyApplyInfoResultMap">
+    select my_applied_experiences.to_user_seq,
+           nsbi.store_name,
+           my_applied_experiences.from_post_seq,
+           my_applied_experiences.created_at,
+           my_applied_experiences.status
+    from (select e.to_user_seq,
+                 e.from_post_seq,
+                 e.created_at,
+                 e.status
+          from experience e
+          where from_user_seq = #{userSeq}
+            and e.status in ('REJECTED', 'SENT')) my_applied_experiences
+           inner join
+         user u
+         on
+           my_applied_experiences.to_user_seq = u.seq
+           inner join
+         national_store_business_information nsbi
+         on
+           u.business_number = nsbi.business_number
+    order by my_applied_experiences.created_at desc
+    limit #{pageSize} offset #{offset}
+  </select>
+
 </mapper>
