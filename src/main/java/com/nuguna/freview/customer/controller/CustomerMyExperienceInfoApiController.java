@@ -1,19 +1,14 @@
 package com.nuguna.freview.customer.controller;
 
-import com.nuguna.freview.customer.dto.request.CustomerMyAcceptedApplyInfosRetrieveRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerMyAcceptedProposalInfosRetrieveRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerProposalToMeInfosRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyAcceptedApplyInfosRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyAcceptedProposalInfosRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyApplyInfosRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerProposalToMeInfosRetrieveResponseDTO;
 import com.nuguna.freview.customer.service.CustomerMyExperienceService;
-import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,9 +40,9 @@ public class CustomerMyExperienceInfoApiController {
   @RequestMapping(value = "/proposal-list", method = RequestMethod.GET)
   public ResponseEntity<CustomerProposalToMeInfosRetrieveResponseDTO> getProposalToMeInfos(
       @RequestParam Long userSeq,
-      @Valid @ModelAttribute CustomerProposalToMeInfosRetrieveRequestDTO customerProposalToMeInfosRetrieveRequestDTO) {
+      @RequestParam Integer targetPage) {
     CustomerProposalToMeInfosRetrieveResponseDTO proposalToMeInfos = customerMyExperienceService.getProposalToMeInfos(
-        userSeq, customerProposalToMeInfosRetrieveRequestDTO);
+        userSeq, targetPage);
     return new ResponseEntity<>(proposalToMeInfos, HttpStatus.OK);
   }
 
@@ -70,19 +65,18 @@ public class CustomerMyExperienceInfoApiController {
   @RequestMapping(value = "/accepted-apply-list", method = RequestMethod.GET)
   public ResponseEntity<CustomerMyAcceptedApplyInfosRetrieveResponseDTO> getMyAcceptedApplyInfos(
       @RequestParam Long userSeq,
-      @Valid @ModelAttribute CustomerMyAcceptedApplyInfosRetrieveRequestDTO customerMyAcceptedApplyInfosRetrieveRequestDTO) {
+      @RequestParam Integer targetPage) {
     CustomerMyAcceptedApplyInfosRetrieveResponseDTO myAcceptedApplyInfos = customerMyExperienceService.getMyAcceptedApplyInfos(
-        userSeq,
-        customerMyAcceptedApplyInfosRetrieveRequestDTO);
+        userSeq, targetPage);
     return new ResponseEntity<>(myAcceptedApplyInfos, HttpStatus.OK);
   }
 
   @RequestMapping(value = "/accepted-proposal-list", method = RequestMethod.GET)
   public ResponseEntity<CustomerMyAcceptedProposalInfosRetrieveResponseDTO> getMyAcceptedProposalInfos(
       @RequestParam Long userSeq,
-      @Valid @ModelAttribute CustomerMyAcceptedProposalInfosRetrieveRequestDTO customerMyAcceptedProposalInfosRetrieveRequestDTO) {
+      @RequestParam Integer targetPage) {
     CustomerMyAcceptedProposalInfosRetrieveResponseDTO myAcceptedProposalInfos = customerMyExperienceService.getMyAcceptedProposalInfos(
-        userSeq, customerMyAcceptedProposalInfosRetrieveRequestDTO);
+        userSeq, targetPage);
     return new ResponseEntity<>(myAcceptedProposalInfos, HttpStatus.OK);
   }
 

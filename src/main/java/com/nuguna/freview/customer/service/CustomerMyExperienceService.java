@@ -1,8 +1,5 @@
 package com.nuguna.freview.customer.service;
 
-import com.nuguna.freview.customer.dto.request.CustomerMyAcceptedApplyInfosRetrieveRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerMyAcceptedProposalInfosRetrieveRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerProposalToMeInfosRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyAcceptedApplyInfosRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyAcceptedProposalInfosRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyApplyInfosRetrieveResponseDTO;
@@ -14,16 +11,16 @@ public interface CustomerMyExperienceService {
       int targetPage);
 
   CustomerProposalToMeInfosRetrieveResponseDTO getProposalToMeInfos(Long userSeq,
-      CustomerProposalToMeInfosRetrieveRequestDTO customerProposalToMeInfosRetrieveRequestDTO);
+      int targetPage);
 
   void acceptProposalToMe(Long userSeq, Long experienceSeq);
 
   void refuseProposalToMe(Long userSeq, Long experienceSeq);
 
   CustomerMyAcceptedApplyInfosRetrieveResponseDTO getMyAcceptedApplyInfos(Long userSeq,
-      CustomerMyAcceptedApplyInfosRetrieveRequestDTO customerMyAcceptedApplyInfosRetrieveRequestDTO);
+      int targetPage);
 
   CustomerMyAcceptedProposalInfosRetrieveResponseDTO getMyAcceptedProposalInfos(Long userSeq,
-      CustomerMyAcceptedProposalInfosRetrieveRequestDTO customerMyAcceptedProposalInfosRetrieveRequestDTO);
+      int targetPage);
 
 }
