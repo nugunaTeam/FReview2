@@ -1,9 +1,9 @@
 package com.nuguna.freview.store.mapper;
 
+import com.nuguna.freview.store.dto.response.SendLikeInfoDTO;
 import com.nuguna.freview.store.dto.response.SendZzimCustomerInfoDTO;
-import com.nuguna.freview.store.dto.response.StoreActivitySendLikeResponseDTO;
-import com.nuguna.freview.store.dto.response.StoreActivitySendZzimStoreResponseDTO;
-import com.nuguna.freview.store.dto.response.StoreActivityWrittenPostResponseDTO;
+import com.nuguna.freview.store.dto.response.SendZzimStoreInfoDTO;
+import com.nuguna.freview.store.dto.response.WrittenPostInfoDTO;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -17,12 +17,12 @@ public interface StoreActivityPageMapper {
   Integer storeActivitySendZzimStoreCount(@Param("userSeq") Long userSeq);
   Integer storeActivityPageWrittenPostCount(@Param("userSeq") Long userSeq);
 
-  List<StoreActivitySendLikeResponseDTO> storeActivityPageSendLike(@Param("userSeq") Long userSeq,
+  List<SendLikeInfoDTO> storeActivityPageSendLike(@Param("userSeq") Long userSeq,
                                                       @Param("offset") Integer offset, @Param("pageSize") Integer pageSize);
-  List<StoreActivitySendZzimStoreResponseDTO> storeActivitySendZzimStore(@Param("userSeq") Long userSeq,
+  List<SendZzimStoreInfoDTO> storeActivitySendZzimStore(@Param("userSeq") Long userSeq,
                                                       @Param("offset") Integer offset, @Param("pageSize") Integer pageSize);
   List<SendZzimCustomerInfoDTO> storeActivitySendZzimCustomer(@Param("userSeq") Long userSeq,
                                                       @Param("offset") Integer offset, @Param("pageSize") Integer pageSize);
-  List<StoreActivityWrittenPostResponseDTO> storeActivityPageWrittenPost(@Param("userSeq") Long userSeq,
+  List<WrittenPostInfoDTO> storeActivityPageWrittenPost(@Param("userSeq") Long userSeq,
                                                       @Param("offset") Integer offset, @Param("pageSize") Integer pageSize);
 }
