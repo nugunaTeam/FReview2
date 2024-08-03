@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 public class CustomerMyAcceptedApplyInfosRetrieveResponseDTO {
 
   private List<MyAcceptedApplyInfoDTO> myAcceptedApplyInfos;
-  private PaginationInfoResponseDTO paginationInfoResponseDTO;
+  private PaginationInfoResponseDTO paginationInfo;
 }
