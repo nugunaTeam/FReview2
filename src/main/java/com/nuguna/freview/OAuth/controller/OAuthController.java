@@ -1,5 +1,6 @@
 package com.nuguna.freview.OAuth.controller;
 
+import com.nuguna.freview.OAuth.OAuthUserVO;
 import com.nuguna.freview.OAuth.dto.response.GoogleUserInfoDTO;
 import com.nuguna.freview.OAuth.service.OAuthService;
 import com.nuguna.freview.OAuth.service.OAuthUserService;
@@ -33,14 +34,12 @@ public class OAuthController {
 
   private final OAuthService oauthService;
   private final OAuthUserService oauthUserService;
-  final UserDetailsService userDetailsService;
   final JwtUtil jwtUtil;
 
   @Autowired
-  public OAuthController(OAuthService oauthService, OAuthUserService oauthUserService, UserDetailsService userDetailsService, JwtUtil jwtUtil) {
+  public OAuthController(OAuthService oauthService, OAuthUserService oauthUserService, JwtUtil jwtUtil) {
     this.oauthService = oauthService;
     this.oauthUserService = oauthUserService;
-    this.userDetailsService = userDetailsService;
     this.jwtUtil = jwtUtil;
   }
 
@@ -71,14 +70,10 @@ public class OAuthController {
   public String googleLogin(Model model, HttpServletRequest httpRequest, HttpServletResponse httpServletResponse) {
     GoogleUserInfoDTO userInfo = (GoogleUserInfoDTO) httpRequest.getSession().getAttribute("OAuthUser");
     String username = userInfo.getEmail();
-   CustomUserDetail customUserDetails = (CustomUserDetail)userDetailsService.loadUserByUsername(username);
-
-    Long userSeq = customUserDetails.getUserVO().getSeq();
-    String userEmail = customUserDetails.getUsername();
-    Collection<GrantedAuthority> authorities = customUserDetails.getAuthorities();
-    Iterator<GrantedAuthority> iterator = authorities.iterator();
-    GrantedAuthority grantedAuthority = iterator.next();
-    String role = grantedAuthority.getAuthority();
+    OAuthUserVO oauthUser = oauthUserService.loadUserByUsername(username);
+    Long userSeq = oauthUser.getUservo().getSeq();
+    String userEmail = oauthUser.getUservo().getEmail();
+    String role = oauthUser.getRole();
 
     //jwt 생성
     String accessToken = jwtUtil.createToken(userSeq, userEmail, role,1000L * 60 * 60);
@@ -90,7 +85,13 @@ public class OAuthController {
     refreshCookie.setMaxAge(60*180);
     refreshCookie.setSecure(true);
 
-    httpServletResponse.setHeader("Authorization", "Bearer " + accessToken);
+    //액세스 토큰 쿠키에 저장
+    Cookie accessCookie = new Cookie("access", accessToken);
+    refreshCookie.setPath("/");
+    refreshCookie.setMaxAge(60*180);
+    refreshCookie.setSecure(true);
+
+    httpServletResponse.addCookie(accessCookie);
     httpServletResponse.addCookie(refreshCookie);
     if(role.equals("ROLE_ADMIN")) {
       return "redirect: /admin/manage/store";
