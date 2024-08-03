@@ -1,6 +1,8 @@
 package com.nuguna.freview.store.controller;
 
+import com.nuguna.freview.global.exception.IllegalPageAccessException;
 import com.nuguna.freview.store.dto.response.StoreActivitySendLikeResponseDTO;
+import com.nuguna.freview.store.dto.response.StoreActivitySendZzimCustomerResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreActivityWrittenPostResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreListPaginationResponseDTO;
 import com.nuguna.freview.store.mapper.StoreActivityPageMapper;
@@ -32,27 +34,23 @@ public class StoreActivityApiController {
   // 보낸 좋아요
   @RequestMapping(value = "/send-like", method = RequestMethod.GET)
   public List<StoreActivitySendLikeResponseDTO> storeActivitySendLike(
-      @RequestParam("userSeq") Long userSeq, @RequestParam(defaultValue = "1") Integer targetPage) {
+      @RequestParam("userSeq") Long userSeq, @RequestParam Integer targetPage) {
     StoreListPaginationResponseDTO paginationInfo = new StoreListPaginationResponseDTO(targetPage);
     return storeActivityPageService.storeActivityPageSendLike(userSeq, paginationInfo);
   }
 
-  // 보낸 찜 ( 스토어 / 체험단 )
-  @RequestMapping(value = "/send-zzim", method = RequestMethod.GET)
-  public Object storeActivitySendZzim(@RequestParam("userSeq") Long userSeq,
-      @RequestParam(defaultValue = "1") Integer targetPage, @RequestParam("code") String code) {
-    StoreListPaginationResponseDTO paginationInfo = new StoreListPaginationResponseDTO(targetPage);
-    if ("CUSTOMER".equals(code)) {
-      return storeActivityPageService.storeActivitySendZzimCustomer(userSeq, paginationInfo);
-    } else {
-      return storeActivityPageService.storeActivitySendZzimStore(userSeq, paginationInfo);
-    }
+  // 보낸 찜 ( 체험단 )
+  @RequestMapping(value = "/send-zzim-to-customer", method = RequestMethod.GET)
+  public StoreActivitySendZzimCustomerResponseDTO storeActivitySendZzimToCustomer(
+      @RequestParam("userSeq") Long userSeq,
+      @RequestParam Integer targetPage) throws IllegalPageAccessException {
+    return storeActivityPageService.storeActivitySendZzimCustomer(userSeq, targetPage);
   }
 
   // 작성한 글
   @RequestMapping(value = "/written-post", method = RequestMethod.GET)
   public List<StoreActivityWrittenPostResponseDTO> storeActivityWrittenPost(@RequestParam("userSeq") Long userSeq,
-      @RequestParam(defaultValue = "1") Integer targetPage) {
+      @RequestParam Integer targetPage) {
     StoreListPaginationResponseDTO paginationInfo = new StoreListPaginationResponseDTO(targetPage);
     return storeActivityPageService.storeActivityPageWrittenPost(userSeq, paginationInfo);
   }
