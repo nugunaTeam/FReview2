@@ -3,11 +3,10 @@ package com.nuguna.freview.store.controller;
 import com.nuguna.freview.global.exception.IllegalPageAccessException;
 import com.nuguna.freview.store.dto.response.StoreActivitySendLikeResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreActivitySendZzimCustomerResponseDTO;
+import com.nuguna.freview.store.dto.response.StoreActivitySendZzimStoreResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreActivityWrittenPostResponseDTO;
-import com.nuguna.freview.store.dto.response.StoreListPaginationResponseDTO;
 import com.nuguna.freview.store.mapper.StoreActivityPageMapper;
 import com.nuguna.freview.store.service.StoreActivityPageService;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,10 +32,9 @@ public class StoreActivityApiController {
 
   // 보낸 좋아요
   @RequestMapping(value = "/send-like", method = RequestMethod.GET)
-  public List<StoreActivitySendLikeResponseDTO> storeActivitySendLike(
-      @RequestParam("userSeq") Long userSeq, @RequestParam Integer targetPage) {
-    StoreListPaginationResponseDTO paginationInfo = new StoreListPaginationResponseDTO(targetPage);
-    return storeActivityPageService.storeActivityPageSendLike(userSeq, paginationInfo);
+  public StoreActivitySendLikeResponseDTO storeActivitySendLike(
+      @RequestParam("userSeq") Long userSeq, @RequestParam Integer targetPage) throws IllegalPageAccessException {
+      return storeActivityPageService.storeActivityPageSendLike(userSeq, targetPage);
   }
 
   // 보낸 찜 ( 체험단 )
@@ -47,12 +45,20 @@ public class StoreActivityApiController {
     return storeActivityPageService.storeActivitySendZzimCustomer(userSeq, targetPage);
   }
 
+  // 보낸 찜 ( 스토어 )
+  @RequestMapping(value = "/send-zzim-to-store", method = RequestMethod.GET)
+  public StoreActivitySendZzimStoreResponseDTO storeActivitySendZzimStore(
+      @RequestParam("userSeq") Long userSeq,
+      @RequestParam Integer targetPage) throws IllegalPageAccessException {
+    log.info("store userSeq: " + userSeq + ", targetPage: " + targetPage);
+    return storeActivityPageService.storeActivitySendZzimStore(userSeq, targetPage);
+  }
+
   // 작성한 글
   @RequestMapping(value = "/written-post", method = RequestMethod.GET)
-  public List<StoreActivityWrittenPostResponseDTO> storeActivityWrittenPost(@RequestParam("userSeq") Long userSeq,
-      @RequestParam Integer targetPage) {
-    StoreListPaginationResponseDTO paginationInfo = new StoreListPaginationResponseDTO(targetPage);
-    return storeActivityPageService.storeActivityPageWrittenPost(userSeq, paginationInfo);
+  public StoreActivityWrittenPostResponseDTO storeActivityWrittenPost(@RequestParam("userSeq") Long userSeq,
+      @RequestParam Integer targetPage) throws IllegalPageAccessException {
+    return storeActivityPageService.storeActivityPageWrittenPost(userSeq, targetPage);
   }
 
 
