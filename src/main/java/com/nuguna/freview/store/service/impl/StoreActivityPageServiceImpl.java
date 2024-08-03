@@ -45,15 +45,12 @@ public class StoreActivityPageServiceImpl implements StoreActivityPageService {
       Long userSeq, int targetPage) throws IllegalPageAccessException {
 
     int likeListCount = storeActivityPageMapper.storeActivityPageSendLikeCount(userSeq);
-    log.info("likeListCount :: ", likeListCount);
     PaginationInfoResponseDTO paginationInfos = PaginationUtil.makePaginationViewInfo(
       targetPage, likeListCount, STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_BLOCK_SIZE
     );
-    log.info(" like -- paginationInfos :: ", paginationInfos);
     List<SendLikeInfoDTO> sendLikeInfos = storeActivityPageMapper.storeActivityPageSendLike(
         userSeq, (targetPage - 1)*STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_BLOCK_SIZE
     );
-    log.info("sendLikeInfos :: ", sendLikeInfos);
     return  new StoreActivitySendLikeResponseDTO(sendLikeInfos, paginationInfos);
   }
 
@@ -61,17 +58,13 @@ public class StoreActivityPageServiceImpl implements StoreActivityPageService {
   @Override
   public StoreActivitySendZzimCustomerResponseDTO storeActivitySendZzimCustomer(
                     Long userSeq, int targetPage) throws IllegalPageAccessException {
-
     int zzimCustomerCount = storeActivityPageMapper.storeActivitySendZzimCustomerCount(userSeq);
-    log.info("likeListCount = {}", zzimCustomerCount);
     PaginationInfoResponseDTO paginationInfo = PaginationUtil.makePaginationViewInfo(
-          targetPage, zzimCustomerCount, STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_BLOCK_SIZE);
-
-    log.info("paginationInfoResponseDTO = {}", paginationInfo);
-
+          targetPage, zzimCustomerCount, STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_BLOCK_SIZE
+    );
     List<SendZzimCustomerInfoDTO> sendZzimCustomerInfos = storeActivityPageMapper.storeActivitySendZzimCustomer(
-        userSeq, (targetPage - 1) * STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_SIZE);
-
+        userSeq, (targetPage - 1) * STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_SIZE
+    );
     return new StoreActivitySendZzimCustomerResponseDTO(sendZzimCustomerInfos, paginationInfo);
   }
 
@@ -84,11 +77,9 @@ public class StoreActivityPageServiceImpl implements StoreActivityPageService {
     PaginationInfoResponseDTO paginationInfo = PaginationUtil.makePaginationViewInfo(
         targetPage, zzimStoreCount, STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_BLOCK_SIZE
     );
-    log.info("paginationInfos : ", paginationInfo);
     List<SendZzimStoreInfoDTO> sendZzimStoreInfos = storeActivityPageMapper.storeActivitySendZzimStore(
         userSeq, (targetPage-1)*STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_SIZE
     );
-    log.info("sendZzimStoreInfos", sendZzimStoreInfos);
     return new StoreActivitySendZzimStoreResponseDTO(sendZzimStoreInfos, paginationInfo);
   }
 
@@ -98,15 +89,12 @@ public class StoreActivityPageServiceImpl implements StoreActivityPageService {
                                                 int targetPage) throws IllegalPageAccessException {
 
     int postListCount = storeActivityPageMapper.storeActivityPageWrittenPostCount(userSeq);
-    log.info("postListCount = {}", postListCount);
     PaginationInfoResponseDTO paginationInfo = PaginationUtil.makePaginationViewInfo(
         targetPage, postListCount, STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_BLOCK_SIZE
     );
-    log.info("paginationInfoResponseDTO ::: ", paginationInfo);
     List<WrittenPostInfoDTO> writtenPostInfos = storeActivityPageMapper.storeActivityPageWrittenPost(
         userSeq, (targetPage - 1) * STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_SIZE
     );
-    log.info("writtenPostInfos ::: ", writtenPostInfos);
     return new StoreActivityWrittenPostResponseDTO(writtenPostInfos, paginationInfo);
   }
 
