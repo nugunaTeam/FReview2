@@ -24,7 +24,7 @@ public class AdminController {
 
   @RequestMapping(value = "", method = RequestMethod.GET)
   public String adminHome() {
-    return "redirect:/admin/manage/customer";
+    return "redirect:/admin/manage/analysis";
   }
 
   @RequestMapping(value = "/manage/customer", method = RequestMethod.GET)
