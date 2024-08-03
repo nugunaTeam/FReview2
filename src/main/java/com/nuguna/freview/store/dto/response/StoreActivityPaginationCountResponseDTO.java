@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StoreActivitySendLikeCountResponseDTO {
-  private List<StorePaginationIfoResponseDTO> paginationInfo;
+public class StoreActivityPaginationCountResponseDTO {
+  private List<StorePaginationInfoResponseDTO> paginationInfo;
   private StoreListPaginationResponseDTO storeListPaginationResponseDTO;
 }

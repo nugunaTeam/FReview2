@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StorePaginationIfoResponseDTO {
+public class StorePaginationInfoResponseDTO {
 
   private Integer targetPage;
   private Integer startPage;
