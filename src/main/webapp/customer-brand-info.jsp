@@ -35,7 +35,6 @@
         margin: 0 2px;
       }
 
-
     </style>
 
     <style>
@@ -71,6 +70,7 @@
         object-fit: cover; /* 이미지의 중앙을 맞추고, 자르기 */
         object-position: center; /* 중앙 위치 */
       }
+
     </style>
 
 
@@ -350,6 +350,19 @@
                                            value="${otherBrandInfo.introduce}"
                                            class="form-control" readonly>
                                 </div>
+                                <div class="col-lg-1 col-md-2">
+                                    <button id="introduce-update-btn" type="button"
+                                            class="btn btn-primary edit-btn">수정
+                                    </button>
+                                    <button id="introduce-submit-btn" type="button"
+                                            class="btn btn-success send-btn"
+                                            style="display: none;">전송
+                                    </button>
+                                    <button id="introduce-cancel-btn" type="button"
+                                            class="btn btn-secondary cancel-btn"
+                                            style="display: none;">취소
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="row">
@@ -359,8 +372,18 @@
                                            value="${otherBrandInfo.nickname}"
                                            class="form-control" readonly>
                                 </div>
+                                <div class="col-lg-1 col-md-2">
+                                    <button type="button" class="btn btn-primary edit-btn"
+                                            id="nickname-update-btn">수정
+                                    </button>
+                                    <button type="button" class="btn btn-success send-btn"
+                                            style="display: none;" id="nickname-submit-btn">전송
+                                    </button>
+                                    <button type="button" class="btn btn-secondary cancel-btn"
+                                            style="display: none;" id="nickname-cancel-btn">취소
+                                    </button>
+                                </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 label" style="color : blue">연령대</div>
                                 <div class="col-lg-8 col-md-6">
@@ -377,7 +400,6 @@
                             <div class="col-lg-3 col-md-4 label" style="color : blue">활동 분야</div>
                             <div class="col-lg-8 col-md-6">
                                 <div id="food-type-buttons">
-
                                 </div>
                                 <p id="food-type-buttons-message" class="text-primary"
                                    style="font-size: 18px;"></p>
@@ -715,7 +737,6 @@
 
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
-
 
 </body>
 
