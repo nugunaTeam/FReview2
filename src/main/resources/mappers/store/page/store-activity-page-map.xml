@@ -57,11 +57,13 @@
              JOIN `post` p ON l.post_seq = p.seq
              JOIN `user` u ON p.user_seq = u.seq
              LEFT JOIN like_counts lc ON p.seq = lc.post_seq
-      WHERE l.user_seq = 41
+      WHERE l.user_seq = #{userSeq}
         AND p.code = '모집'
     )
     SELECT post_seq, post_title, post_content, post_author_seq, like_created_at, like_count
     FROM like_post
+    WHERE row_num &gt; #{offset}
+    AND row_num &lt;= #{offset} + #{pageSize}
   </select>
 
   <select id="storeActivitySendZzimCustomer" resultMap="StoreActivityPageSendZzimCustomerResultMap">
