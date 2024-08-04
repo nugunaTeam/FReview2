@@ -8,7 +8,6 @@
 <c:set var="nickname" value="${loginUser.nickname}"/>
 <c:set var="profileUrl" value="${loginUser.profilePhotoUrl}"/>
 <c:set var="code" value="${loginUser.code}"/>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -42,6 +41,40 @@
     <!-- Template Main CSS File -->
     <link href="/assets/css/style.css" rel="stylesheet">
     <style>
+
+      .form-control {
+        width: 100%;
+        height: 38px;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+      }
+
+      .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .table-container {
+        position: relative;
+      }
+
+      .profile-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* 이미지의 중앙을 맞추고, 자르기 */
+        object-position: center; /* 중앙 위치 */
+      }
+
       .bi-heart-fill {
         color: red;
       }
@@ -66,10 +99,6 @@
         font-family: "Poppins", sans-serif;
       }
 
-      .text-body-y {
-        font-size: 14px;
-      }
-
       .p-last {
         margin-top : 0;
         margin-bottom: 0.5rem;
@@ -88,8 +117,12 @@
 
     <!-- add css-->
     <link rel="stylesheet" href="/assets/css/style-h.css"/>
+
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+    <!-- Day.js -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
 </head>
 
 <body>
@@ -102,14 +135,14 @@
             <img src="/assets/img/logo/logo-vertical.png" alt="">
             <span class="d-none d-lg-block">FReview</span>
         </a>
-<%--        <i class="bi bi-list toggle-sidebar-btn"></i>--%>
+        <%--        <i class="bi bi-list toggle-sidebar-btn"></i>--%>
     </div><!-- End Logo -->
     <div class="header-hr-right ms-auto">
         <div class="d-flex align-items-center">
             <div class="pe-3">
-                <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
+                <a href="/my/brand-info?userSeq=${userSeq}" style="margin-right: 20px">
                     ${nickname}
-                    <img class="rounded-circle" src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px; >
+                    <img class="rounded-circle" src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px; ">
                 </a>
                 <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
             </div>
@@ -124,7 +157,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="/store/my/brand-info?userSeq=${userSeq}">
+               href="/my/brand-info?userSeq=${userSeq}">
                 <i class="bi bi-grid"></i>
                 <span>브랜딩</span>
             </a>
@@ -169,7 +202,7 @@
 </aside><!-- End Sidebar-->
 
 <main id="main" class="main">
-    <div id="userSeqData" data-user-seq="${userSeq}" hidden="hidden"></div>
+<%--    <div id="userSeqData" data-user-seq="${userSeq}" hidden="hidden"></div>--%>
     <section class="section profile">
         <div class="row">
             <div class="col-xl-12">
@@ -203,22 +236,14 @@
                             <!-- 내가 좋아요 한 글 -->
                             <div class="tab-pane fade show active" id="send-like" role="tabpanel"
                                  aria-labelledby="like-tab">
-                                <form>
-                                    <c:forEach var="like" items="${sendLike}">
-                                    <div class="card" id="sendLikeList">
-                                        <div class="card-body-y">
-                                            <h6 class="card-title-y">
-                                                <a href="${pageContext.request.contextPath}/mojip/${like.postSeq}">
-                                                    ${fn:length(like.title) > 20 ? fn:substring(like.title, 0, 20) + '...' : like.title}
-                                                </a>
-                                            </h6>
-                                            <p>${fn:length(like.content) > 30 ? fn:substring(like.content, 0, 30) + '...' : like.content}</p>
-                                            <p class="p-last"><fmt:formatDate value="${like.createdAt}" pattern="yyyy년 MM월 dd일"/> &nbsp<i class="bi bi-heart-fill"></i> &nbsp${like.likeCount}</p>
-                                        </div>
+                                    <div id="sendLikeList" class="row">
+                                        <!-- 좋아요 리스트가 여기에 렌더링됩니다. -->
                                     </div>
-                                    </c:forEach>
-                                    <!-- End Default Card -->
-                                </form>
+<%--                                    <div id="like-pagination" class="text-center mt-4"> </div>--%>
+                                    <div id="sendLikeList"></div>
+
+                                    <!-- 페이지네이션 버튼 -->
+                                    <div class="pagination-container" id="like-pagination"></div>
                             </div>
 
                             <!-- 내가 찜한 유저 -->
@@ -226,30 +251,22 @@
                                  aria-labelledby="zzim-tab">
                                 <form>
                                     <div class="pb-4">
-                                        <input type="radio" name="code" value="CUSTOMER" onclick="zzimSendList('CUSTOMER')" checked /> 체험단
-                                        <input type="radio" name="code" value="STORE" onclick="zzimSendList('STORE')" /> 스토어
+                                        <input type="radio" id="customerZzim" name="code" value="CUSTOMER" onclick="zzimSendList('CUSTOMER')" checked /> 체험단
+                                        <input type="radio" id="storeZzim" name="code" value="STORE" onclick="zzimSendList('STORE')" /> 스토어
                                     </div>
                                 </form>
-                                <div id="sendZzimList">
-                                </div>
+                                <div id="sendZzimList"> </div>
+                                <!-- 페이지네이션 버튼 -->
+                                <div class="pagination-container" id="zzim-pagination"></div>
                             </div>
 
                             <!-- 내가 작성한 글 -->
                             <div class="tab-pane fade" id="written-post" role="tabpanel"
                                  aria-labelledby="post-tab">
                                 <form>
-                                    <c:forEach var="post" items="${writtenPost}">
-                                    <div class="card" id="writtenPostList">
-                                        <div class="card-body-y">
-                                            <h6 class="card-title-y">
-                                                <a href="${pageContext.request.contextPath}/mojip/${post.postSeq}">
-                                                        ${fn:length(post.title) > 20 ? fn:substring(post.title, 0, 20) + '...' : post.title}
-                                                </a>
-                                            </h6>
-                                            <p>${fn:length(post.content) > 30 ? fn:substring(post.content, 0, 30) + '...' : post.content}</p>
-                                            <p class="p-last"><fmt:formatDate value="${post.createdAt}" pattern="yyyy년 MM월 dd일"/> &nbsp<i class="bi bi-heart-fill"></i> &nbsp${post.likeCount}</p>
-                                    </div>
-                                    </c:forEach>
+                                    <div id="writtenPostList"></div>
+                                    <!-- 페이지네이션 버튼 -->
+                                    <div class="pagination-container" id="post-pagination"></div>
                                 </form>
                             </div>
 
@@ -262,6 +279,7 @@
     </section>
 
 </main><!-- End #main -->
+
 
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
@@ -289,71 +307,115 @@
 <script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
 <script src="/assets/vendor/tinymce/tinymce.min.js"></script>
 <script src="/assets/vendor/php-email-form/validate.js"></script>
-
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
 <script>
-  $(document).ready(function () {
-    let userSeq = $("#userSeqData").data("user-seq");
+  $(document).ready(function() {
+    let userSeq = '${userSeq}';
 
-    window.zzimSendList = function (value) {
+    // 좋아요 리스트 전송 함수
+    function sendLikeList(page) {
       let sendData = {
-        code: value,
-        userSeq: userSeq
+        'userSeq': userSeq,
+        'currentPage': page
       };
-
       $.ajax({
-        method: "GET",
-        url: "/api/store/activity/send-zzim",
-        data: sendData,
+        type: "GET",
+        url: "/api/store/activity/send-like",
+        data: $.param(sendData),
+        contentType: "application/x-www-form-urlencoded",
         dataType: "json",
-        success: function (response) {
-          $("#sendZzimList").empty();
-          if(value === 'CUSTOMER') {
-            let sendZzimCustomer = response;
-            renderZzimCustomer(sendZzimCustomer);
-          } else {
-            let sendZzimStore = response;
-            renderZzimStore(sendZzimStore);
-          }
+        error: function(response) {
+          console.error("[ERROR] 좋아요 리스트 불러오기 실패하였습니다. 다시 시도해주세요.");
         },
-        error: function () {
-          console.error("[ERROR] 찜 리스트 불러오기 실패하였습니다. 다시 시도해주세요.");
+        success: function(response) {
+          // 서버로부터 받은 응답
+          let sendLikePagination = response.paginationInfo;
+          let sendLikeInfos = response.sendLikeInfos;
+
+          // 리스트와 페이지네이션 렌더링 함수 호출
+          renderLikeList(sendLikeInfos);
+          initializePagination(sendLikePagination);
+        }
+      });
+    }
+
+    function renderLikeList(sendLikeInfos) {
+      let htmlStr = "";
+      $.map(sendLikeInfos, function(item) {
+        let formattedDate = dayjs(item.createdAt).format('YYYY년 MM월 DD일');
+        htmlStr += "<div class='card'>";
+        htmlStr += "<div class='card-body-y'>";
+        htmlStr += "<h6 class='card-title-y'>";
+        htmlStr += "<a href='/mojip/" + item.postSeq + "'>";
+        htmlStr += (item.title.length > 20 ? item.title.substring(0, 20) + '...' : item.title);
+        htmlStr += "</a>";
+        htmlStr += "</h6>";
+        htmlStr += "<p>" + (item.content.length > 30 ? item.content.substring(0, 30) + '...' : item.content) + "</p>";
+        htmlStr += "<p class='p-last'>" + formattedDate + " &nbsp<i class='bi bi-heart-fill'></i> &nbsp" + item.likeCount + "</p>";
+        htmlStr += "</div>";
+        htmlStr += "</div>";
+      });
+      $("#sendLikeList").html(htmlStr);
+    }
+
+    // 페이지 네이션 부분
+    function initializePagination(paginationInfo) {
+      let currentPage = paginationInfo.currentPage;
+      let startPage = paginationInfo.startPage;
+      let endPage = paginationInfo.endPage;
+      let hasNext = paginationInfo.hasNext;
+      let hasPrevious = paginationInfo.hasPrevious;
+
+      console.log(paginationInfo);
+      let paginationHTML = '';
+
+      // 이전 버튼
+      if (hasPrevious) {
+        paginationHTML += '<button id="prev-block-button" class="btn btn-primary edit-btn" data-page="' + (parseInt(currentPage) - 1) + '">&lt;</button>';
+      }
+
+      // 페이지 버튼들
+      for (let i = startPage; i <= endPage; i++) {
+        paginationHTML += '<button class="btn ' + (i == currentPage ? 'btn-secondary' : 'btn-primary') + ' edit-btn" data-page="' + i + '">' + i + '</button>';
+      }
+
+      // 다음 버튼
+      if (hasNext) {
+        paginationHTML += '<button id="next-block-button" class="btn btn-primary edit-btn" data-page="' + (currentPage + 1) + '">&gt;</button>';
+      }
+
+      $("#like-pagination").html(paginationHTML);
+
+      $('#prev-block-button').off('click').on('click', function() {
+        if (hasPrevious) {
+          sendLikeList(currentPage - 1);
         }
       });
 
-      function renderZzimStore(response) {
-        let htmlStr = "";
-        $.map(response, function (item) {
-          htmlStr += "<div class='card'>";
-          htmlStr += "<div class='card-body-y mt-2'>";
-          htmlStr += "<p><a href='/brand/" + item.zzimUserSeq + "'>"
-              + item.nickname + "</a>님을 찜 하였습니다.</p>";
-          htmlStr += "<p class='text-body-y'>스토어 위치 : " + item.storeLocation + "</p>";
-          htmlStr += "<p class='p-last'>분야 : " + item.foodTypes + "</p>";
-          htmlStr += "</div>";
-          htmlStr += "</div>";
-        });
-        $("#sendZzimList").append(htmlStr);
-      }
-
-      function renderZzimCustomer(response) {
-        let htmlStr = " ";
-        $.map(response, function (item) {
-          htmlStr += "<div class='card'>";
-          htmlStr += "<div class='card-body-y mt-2'>";
-          htmlStr += "<p><a href='/brand/" + item.zzimUserSeq + "'>"
-              + item.nickname + "</a>님을 찜 하였습니다.</p>";
-          htmlStr += "<p class='p-last'>분야 : " + item.foodTypes + "</p>";
-          htmlStr += "</div>";
-          htmlStr += "</div>";
-        });
-        $("#sendZzimList").append(htmlStr);
-      }
+      $('#next-block-button').off('click').on('click', function() {
+        if (hasNext) {
+          sendLikeList(currentPage + 1);
+        }
+      });
     }
-    window.zzimSendList('CUSTOMER');
+
+    // 초기 로드 시 좋아요 리스트 전송
+    sendLikeList(1);
+
+
+    // 페이지 버튼 클릭 이벤트
+    $(document).on("click", ".btn.edit-btn", function(e) {
+      let pageNumber = parseInt($(this).data("page"));
+      if (pageNumber > 0) {
+        sendLikeList(pageNumber);
+      }
+    });
+
+
   });
 </script>
+
 
 </body>
 
