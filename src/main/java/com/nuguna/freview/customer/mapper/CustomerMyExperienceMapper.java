@@ -36,4 +36,5 @@ public interface CustomerMyExperienceMapper {
 
   void acceptProposalToMe(@Param("experienceSeq") Long experienceSeq);
 
+  void rejectProposalToMe(@Param("experienceSeq") Long experienceSeq);
 }

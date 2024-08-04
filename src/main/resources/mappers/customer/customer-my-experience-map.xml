@@ -187,4 +187,11 @@
       and e.status in ('SENT')
   </update>
 
+  <update id="rejectProposalToMe">
+    update experience e
+    set status = 'REJECTED'
+    where e.seq = #{experienceSeq}
+      and e.status in ('SENT')
+  </update>
+
 </mapper>

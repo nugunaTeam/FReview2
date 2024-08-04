@@ -15,7 +15,7 @@ public interface CustomerMyExperienceService {
 
   void acceptProposalToMe(Long userSeq, Long experienceSeq);
 
-  void refuseProposalToMe(Long userSeq, Long experienceSeq);
+  void rejectProposalToMe(Long userSeq, Long experienceSeq);
 
   CustomerMyAcceptedApplyInfosRetrieveResponseDTO getMyAcceptedApplyInfos(Long userSeq,
       int targetPage);

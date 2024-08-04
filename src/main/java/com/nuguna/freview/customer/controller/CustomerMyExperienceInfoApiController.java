@@ -54,11 +54,11 @@ public class CustomerMyExperienceInfoApiController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @RequestMapping(value = "/{experienceSeq}/refuse", method = RequestMethod.POST)
-  public ResponseEntity<Void> refuseProposalToMe(
+  @RequestMapping(value = "/{experienceSeq}/reject", method = RequestMethod.POST)
+  public ResponseEntity<Void> rejectProposalToMe(
       @RequestParam Long userSeq,
       @PathVariable("experienceSeq") Long experienceSeq) {
-    customerMyExperienceService.refuseProposalToMe(userSeq, experienceSeq);
+    customerMyExperienceService.rejectProposalToMe(userSeq, experienceSeq);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
