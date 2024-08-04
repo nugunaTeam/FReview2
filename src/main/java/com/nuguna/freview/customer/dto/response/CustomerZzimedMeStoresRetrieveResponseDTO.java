@@ -12,5 +12,5 @@ public class CustomerZzimedMeStoresRetrieveResponseDTO {
 
   // EX MESSAGE : "${storeName}" 님이 나를 찜하였습니다.
   private List<ZzimedMeStoreInfoDTO> zzimedMeStoreInfos;
-  private PaginationInfoResponseDTO paginationInfoResponseDTO;
+  private PaginationInfoResponseDTO paginationInfo;
 }
