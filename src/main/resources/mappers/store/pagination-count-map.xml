@@ -10,6 +10,7 @@
            JOIN `post` p ON l.post_seq = p.seq
            JOIN `user` u ON p.user_seq = u.seq
     WHERE l.user_seq = #{userSeq}
+    AND p.code = '모집'
   </select>
 
   <select id="storeActivitySendZzimCustomerCount" resultType="java.lang.Integer">
@@ -33,6 +34,7 @@
     SELECT COUNT(seq) AS total_count
     FROM post
     WHERE user_seq = #{userSeq}
+    and code = '모집'
   </select>
 
 </mapper>
