@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProposalToMeInfoDTO {
 
+  private Long experienceSeq;
   private Long storeSeq;
   private String storeName;
   private String proposalDetails; //  모집글 seq TODO:  ( 뷰 구현시 참고 :  모집글 보러가기 버튼 누르면 해당 모집글로 이동 )
