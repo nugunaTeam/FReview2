@@ -53,6 +53,9 @@ public class StoreMyBrandServiceImpl implements StoreMyBrandService {
   @Override
   public StoreMyStoreLocationUpdateResponseDTO updateStoreLocation(
       StoreMyStoreLocationUpdateRequestDTO storeMyStoreLocationUpdateRequestDTO) {
-    return null;
+    Long storeSeq = storeMyStoreLocationUpdateRequestDTO.getUserSeq();
+    String toStoreLocation = storeMyStoreLocationUpdateRequestDTO.getToStoreLocation();
+    storeMyBrandMapper.updateStoreLocation(storeSeq, toStoreLocation);
+    return new StoreMyStoreLocationUpdateResponseDTO(toStoreLocation);
   }
 }
