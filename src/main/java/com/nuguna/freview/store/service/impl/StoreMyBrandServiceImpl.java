@@ -36,7 +36,11 @@ public class StoreMyBrandServiceImpl implements StoreMyBrandService {
   @Override
   public StoreMyIntroduceUpdateResponseDTO updateStoreIntroduce(
       StoreMyIntroduceUpdateRequestDTO storeMyIntroduceUpdateRequestDTO) {
-    return null;
+    Long storeSeq = storeMyIntroduceUpdateRequestDTO.getUserSeq();
+    String toIntroduce = storeMyIntroduceUpdateRequestDTO.getToIntroduce();
+
+    storeMyBrandMapper.updateStoreIntroduce(storeSeq, toIntroduce);
+    return new StoreMyIntroduceUpdateResponseDTO(toIntroduce);
   }
 
   @Override

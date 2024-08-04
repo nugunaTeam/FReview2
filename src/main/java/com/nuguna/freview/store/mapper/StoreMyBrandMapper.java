@@ -7,6 +7,9 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface StoreMyBrandMapper {
 
+  void updateStoreIntroduce(@Param("storeSeq") Long storeSeq,
+      @Param("toIntroduce") String toIntroduce);
+
   void deleteFoodTypesByUserSeq(@Param("storeSeq") Long storeSeq);
 
   void insertFoodTypes(@Param("storeSeq") Long storeSeq,
@@ -18,5 +21,4 @@ public interface StoreMyBrandMapper {
 
   void updateStoreLocation(@Param("storeSeq") Long storeSeq,
       @Param("toStoreLocation") String toStoreLocation);
-
 }

@@ -4,6 +4,12 @@
 
 <mapper namespace="com.nuguna.freview.store.mapper.StoreMyBrandMapper">
 
+  <update id="updateStoreIntroduce">
+    update user
+    set introduce = #{toIntroduce}
+    where seq = #{storeSeq}
+  </update>
+
   <delete id="deleteFoodTypesByUserSeq">
     delete
     from user_food_type
