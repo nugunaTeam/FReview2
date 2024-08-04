@@ -1,16 +1,7 @@
-<%@ page import="com.nuguna.freview.dto.cust.brand.CustMyBrandInfoDto" %>
-<%@ page import="com.google.gson.Gson" %>
-<%@ page import="com.nuguna.freview.dto.boss.brand.BossMyBrandInfoDto" %>
-<%@ page import="com.nuguna.freview.entity.member.Member" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="com.google.gson.Gson" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
-<%
-    BossMyBrandInfoDto brandInfo = (BossMyBrandInfoDto) request.getAttribute("brandInfo");
-    Gson gson = new Gson();
-%>
-
 
 <!DOCTYPE html>
 <html lang="en">
