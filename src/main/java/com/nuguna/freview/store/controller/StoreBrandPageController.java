@@ -22,13 +22,8 @@ public class StoreBrandPageController {
     this.storeBrandPageService = storeBrandPageService;
   }
 
-  // TODO : (스토어명은 수정 불가)
-  // TODO : 수정 API 만들기 ( 소개글, 활동 분야, 태그, 위치 수정 API )
   // TODO : 찜 하기/ 찜 취소 API 연동
-  // TODO : AJAX로 리뷰리스트 들고오기 (1)
-  // TODO : AJAX로 STORE_HIDDEN 처리할 수 있도록 하기 ( API )
-  // TODO : AJAX로 모집 중인 글 리스트 들고오기 (2)
-  // TODO : 사진첩은 X
+
   @RequestMapping(value = "/my/brand", method = RequestMethod.GET)
   public String storeMyBrandPage(@RequestParam Long storeSeq, Model model) {
     StoreBrandInfoResponseDTO storeBrandPageInfo = storeBrandPageService.getMyBrandPageInfo(
