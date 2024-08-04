@@ -159,18 +159,19 @@
                 </div>
             </div>
 
-                <div id="personalizedInfoSection">
+            <br>
+                <div id="personalizedInfoSection" style="display: none;">
                     ${nickname}님이 요즘 관심있을만한 체험단들을 추천해드려요
                     <div id="personalizedInfoContainer">
                         <div class="row" id="personalizedInfo"></div>
                     </div>
                 </div>
-                전체 보기
-                <div class="row" id="customerInfo"></div>
-                <div class="d-flex justify-content-center">
-                    <button class="btn btn-primary" id="loadMoreBtn" data-previous-user-seq="0">
-                        더보기
-                    </button>
+                    전체 보기
+                    <div class="row" id="customerInfo"></div>
+                    <div class="d-flex justify-content-center">
+                        <button class="btn btn-primary" id="loadMoreBtn" data-previous-user-seq="0">
+                            더보기
+                        </button>
                 </div>
             </div>
     </section>
@@ -179,13 +180,13 @@
 <script>
   $(document).ready(function () {
     let code = "${code}";
-    if (code === "ADMIN") {
-      $('#personalizedInfoSection').hide();
+    if (code !== "ADMIN") {
+      $('#personalizedInfoSection').show();
+      loadInitialPersonalizationData();
     }
 
     loadInitialRankingData();
     loadInitialData();
-    loadInitialPersonalizationData();
 
     $('#filterForm').submit(function (event) {
       event.preventDefault();
