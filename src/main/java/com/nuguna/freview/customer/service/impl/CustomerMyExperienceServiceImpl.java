@@ -77,7 +77,10 @@ public class CustomerMyExperienceServiceImpl implements CustomerMyExperienceServ
 
   @Override
   public void acceptProposalToMe(Long userSeq, Long experienceSeq) {
-
+    if (!customerMyExperienceMapper.checkExistProposalToMe(userSeq, experienceSeq)) {
+      throw new IllegalArgumentException("유효하지 않은 요청입니다.");
+    }
+    customerMyExperienceMapper.acceptProposalToMe(experienceSeq);
   }
 
   @Override

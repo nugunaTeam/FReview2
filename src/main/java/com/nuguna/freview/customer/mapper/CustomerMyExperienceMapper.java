@@ -30,4 +30,10 @@ public interface CustomerMyExperienceMapper {
 
   List<AcceptedProposalToMeInfoDTO> getAcceptedProposalToMeInfos(@Param("userSeq") Long userSeq,
       @Param("offset") int offset, @Param("pageSize") int pageSize);
+
+  Boolean checkExistProposalToMe(@Param("userSeq") Long userSeq,
+      @Param("experienceSeq") Long experienceSeq);
+
+  void acceptProposalToMe(@Param("experienceSeq") Long experienceSeq);
+
 }

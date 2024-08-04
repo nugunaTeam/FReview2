@@ -172,4 +172,19 @@
     limit #{pageSize} offset #{offset}
   </select>
 
+  <select id="checkExistProposalToMe" resultType="java.lang.Boolean">
+    select count(1)
+    from experience
+    where seq = #{experienceSeq}
+      and to_user_seq = #{userSeq}
+      and status in ('SENT')
+  </select>
+
+  <update id="acceptProposalToMe">
+    update experience e
+    set status = 'ACCEPTED'
+    where e.seq = #{experienceSeq}
+      and e.status in ('SENT')
+  </update>
+
 </mapper>
