@@ -10,6 +10,7 @@ import com.nuguna.freview.store.dto.response.StoreMyStoreLocationUpdateResponseD
 import com.nuguna.freview.store.dto.response.StoreMyTagsUpdateResponseDTO;
 import com.nuguna.freview.store.mapper.StoreMyBrandMapper;
 import com.nuguna.freview.store.service.StoreMyBrandService;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,14 @@ public class StoreMyBrandServiceImpl implements StoreMyBrandService {
   @Override
   public StoreMyTagsUpdateResponseDTO updateStoreTags(
       StoreMyTagsUpdateRequestDTO storeMyTagsUpdateRequestDTO) {
-    return null;
+    Long storeSeq = storeMyTagsUpdateRequestDTO.getUserSeq();
+    List<String> toTags = storeMyTagsUpdateRequestDTO.getToTags();
+
+    storeMyBrandMapper.deleteTagsByUserSeq(storeSeq);
+    if (toTags != null && !toTags.isEmpty()) {
+      storeMyBrandMapper.insertTags(storeSeq, toTags);
+    }
+    return new StoreMyTagsUpdateResponseDTO(toTags);
   }
 
   @Override

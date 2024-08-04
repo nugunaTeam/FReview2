@@ -9,4 +9,25 @@
     where u.seq = #{storeSeq}
       and u.code = 'STORE'
   </update>
+
+  <delete id="deleteTagsByUserSeq">
+    delete
+    from user_tag
+    where user_seq = #{storeSeq}
+  </delete>
+
+  <insert id="insertTags">
+    insert into user_tag (user_seq, tag_seq)
+    select
+    #{storeSeq}, seq
+    from
+    tag
+    where
+    name in
+    <foreach item="item" index="index" collection="toTags" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </insert>
+
+  
 </mapper>
