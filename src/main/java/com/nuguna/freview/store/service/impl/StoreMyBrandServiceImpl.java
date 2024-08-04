@@ -42,7 +42,14 @@ public class StoreMyBrandServiceImpl implements StoreMyBrandService {
   @Override
   public StoreMyFoodTypesUpdateResponseDTO updateStoreFoodTypes(
       StoreMyFoodTypesUpdateRequestDTO storeMyFoodTypesUpdateRequestDTO) {
-    return null;
+    Long storeSeq = storeMyFoodTypesUpdateRequestDTO.getUserSeq();
+    List<String> toFoodTypes = storeMyFoodTypesUpdateRequestDTO.getToFoodTypes();
+
+    storeMyBrandMapper.deleteFoodTypesByUserSeq(storeSeq);
+    if (toFoodTypes != null && !toFoodTypes.isEmpty()) {
+      storeMyBrandMapper.insertFoodTypes(storeSeq, toFoodTypes);
+    }
+    return new StoreMyFoodTypesUpdateResponseDTO(toFoodTypes);
   }
 
   @Override

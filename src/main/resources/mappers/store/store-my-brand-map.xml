@@ -3,12 +3,25 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.nuguna.freview.store.mapper.StoreMyBrandMapper">
-  <update id="updateStoreLocation">
-    update user u
-    set u.store_location = #{toStoreLocation}
-    where u.seq = #{storeSeq}
-      and u.code = 'STORE'
-  </update>
+
+  <delete id="deleteFoodTypesByUserSeq">
+    delete
+    from user_food_type
+    where user_seq = #{storeSeq}
+  </delete>
+
+  <insert id="insertFoodTypes">
+    insert into user_food_type (user_seq, food_type_seq)
+    select
+    #{storeSeq}, seq
+    from
+    food_type
+    where
+    dish in
+    <foreach item="item" index="index" collection="toFoodTypes" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </insert>
 
   <delete id="deleteTagsByUserSeq">
     delete
@@ -29,5 +42,12 @@
     </foreach>
   </insert>
 
-  
+  <update id="updateStoreLocation">
+    update user u
+    set u.store_location = #{toStoreLocation}
+    where u.seq = #{storeSeq}
+      and u.code = 'STORE'
+  </update>
+
+
 </mapper>
