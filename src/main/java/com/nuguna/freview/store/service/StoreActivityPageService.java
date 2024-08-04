@@ -9,13 +9,13 @@ import com.nuguna.freview.store.dto.response.StoreListPaginationResponseDTO;
 
 public interface StoreActivityPageService {
 
-    StoreListPaginationResponseDTO storePaginationInfo(Long userSeq, int targetPage);
-    StoreActivitySendLikeResponseDTO storeActivityPageSendLike(Long userSeq, int targetPage)
+    StoreListPaginationResponseDTO storePaginationInfo(Long userSeq, int currentPage);
+    StoreActivitySendLikeResponseDTO storeActivityPageSendLike(Long userSeq, int currentPage)
         throws IllegalPageAccessException;
-    StoreActivitySendZzimStoreResponseDTO storeActivitySendZzimStore(Long userSeq, int targetPAge)
+    StoreActivitySendZzimStoreResponseDTO storeActivitySendZzimStore(Long userSeq, int currentPage)
         throws IllegalPageAccessException;
-    StoreActivitySendZzimCustomerResponseDTO storeActivitySendZzimCustomer(Long userSeq, int targetPage)
+    StoreActivitySendZzimCustomerResponseDTO storeActivitySendZzimCustomer(Long userSeq, int currentPage)
         throws IllegalPageAccessException;
-    StoreActivityWrittenPostResponseDTO storeActivityPageWrittenPost(Long userSeq, int targetPage)
+    StoreActivityWrittenPostResponseDTO storeActivityPageWrittenPost(Long userSeq, int currentPage)
         throws IllegalPageAccessException;
 }

@@ -13,5 +13,5 @@ public class StoreListPaginationRequestDTO {
 
   @Min(1)
   @NotNull
-  private Integer targetPage;
+  private Integer currentPage;
 }

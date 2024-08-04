@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class StorePaginationInfoResponseDTO {
 
-  private Integer targetPage;
+  private Integer currentPage;
   private Integer startPage;
   private Integer endPage;
   private Boolean hasNext;

@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class StoreListPaginationResponseDTO {
   @Min(1)
   @NotNull
-  private Integer targetPage;
+  private Integer currentPage;
 }

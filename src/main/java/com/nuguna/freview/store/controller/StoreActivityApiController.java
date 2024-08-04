@@ -33,31 +33,31 @@ public class StoreActivityApiController {
   // 보낸 좋아요
   @RequestMapping(value = "/send-like", method = RequestMethod.GET)
   public StoreActivitySendLikeResponseDTO storeActivitySendLike(
-      @RequestParam("userSeq") Long userSeq, @RequestParam Integer targetPage) throws IllegalPageAccessException {
-      return storeActivityPageService.storeActivityPageSendLike(userSeq, targetPage);
+      @RequestParam("userSeq") Long userSeq, @RequestParam Integer currentPage) throws IllegalPageAccessException {
+    return storeActivityPageService.storeActivityPageSendLike(userSeq, currentPage);
   }
 
   // 보낸 찜 ( 체험단 )
   @RequestMapping(value = "/send-zzim-to-customer", method = RequestMethod.GET)
   public StoreActivitySendZzimCustomerResponseDTO storeActivitySendZzimToCustomer(
       @RequestParam("userSeq") Long userSeq,
-      @RequestParam Integer targetPage) throws IllegalPageAccessException {
-    return storeActivityPageService.storeActivitySendZzimCustomer(userSeq, targetPage);
+      @RequestParam Integer currentPage) throws IllegalPageAccessException {
+    return storeActivityPageService.storeActivitySendZzimCustomer(userSeq, currentPage);
   }
 
   // 보낸 찜 ( 스토어 )
   @RequestMapping(value = "/send-zzim-to-store", method = RequestMethod.GET)
   public StoreActivitySendZzimStoreResponseDTO storeActivitySendZzimStore(
       @RequestParam("userSeq") Long userSeq,
-      @RequestParam Integer targetPage) throws IllegalPageAccessException {
-    return storeActivityPageService.storeActivitySendZzimStore(userSeq, targetPage);
+      @RequestParam Integer currentPage) throws IllegalPageAccessException {
+    return storeActivityPageService.storeActivitySendZzimStore(userSeq, currentPage);
   }
 
   // 작성한 글
   @RequestMapping(value = "/written-post", method = RequestMethod.GET)
   public StoreActivityWrittenPostResponseDTO storeActivityWrittenPost(@RequestParam("userSeq") Long userSeq,
-      @RequestParam Integer targetPage) throws IllegalPageAccessException {
-    return storeActivityPageService.storeActivityPageWrittenPost(userSeq, targetPage);
+      @RequestParam Integer currentPage) throws IllegalPageAccessException {
+    return storeActivityPageService.storeActivityPageWrittenPost(userSeq, currentPage);
   }
 
 

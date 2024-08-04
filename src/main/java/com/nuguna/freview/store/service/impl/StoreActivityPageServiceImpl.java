@@ -36,20 +36,19 @@ public class StoreActivityPageServiceImpl implements StoreActivityPageService {
   }
 
   @Override
-  public StoreListPaginationResponseDTO storePaginationInfo(Long userSeq, int targetPage) {
+  public StoreListPaginationResponseDTO storePaginationInfo(Long userSeq, int currentPage) {
     return null;
   }
 
   @Override
   public StoreActivitySendLikeResponseDTO storeActivityPageSendLike(
-      Long userSeq, int targetPage) throws IllegalPageAccessException {
-
+                                              Long userSeq, int currentPage) throws IllegalPageAccessException {
     int likeListCount = storeActivityPageMapper.storeActivityPageSendLikeCount(userSeq);
     PaginationInfoResponseDTO paginationInfos = PaginationUtil.makePaginationViewInfo(
-      targetPage, likeListCount, STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_BLOCK_SIZE
+        currentPage, likeListCount, STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_BLOCK_SIZE
     );
     List<SendLikeInfoDTO> sendLikeInfos = storeActivityPageMapper.storeActivityPageSendLike(
-        userSeq, (targetPage - 1)*STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_BLOCK_SIZE
+        userSeq, (currentPage - 1)*STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_BLOCK_SIZE
     );
     return  new StoreActivitySendLikeResponseDTO(sendLikeInfos, paginationInfos);
   }
@@ -57,13 +56,13 @@ public class StoreActivityPageServiceImpl implements StoreActivityPageService {
   // 찜한 체험단
   @Override
   public StoreActivitySendZzimCustomerResponseDTO storeActivitySendZzimCustomer(
-                    Long userSeq, int targetPage) throws IllegalPageAccessException {
+                    Long userSeq, int currentPage) throws IllegalPageAccessException {
     int zzimCustomerCount = storeActivityPageMapper.storeActivitySendZzimCustomerCount(userSeq);
     PaginationInfoResponseDTO paginationInfo = PaginationUtil.makePaginationViewInfo(
-          targetPage, zzimCustomerCount, STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_BLOCK_SIZE
+        currentPage, zzimCustomerCount, STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_BLOCK_SIZE
     );
     List<SendZzimCustomerInfoDTO> sendZzimCustomerInfos = storeActivityPageMapper.storeActivitySendZzimCustomer(
-        userSeq, (targetPage - 1) * STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_SIZE
+        userSeq, (currentPage - 1) * STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_SIZE
     );
     return new StoreActivitySendZzimCustomerResponseDTO(sendZzimCustomerInfos, paginationInfo);
   }
@@ -71,14 +70,14 @@ public class StoreActivityPageServiceImpl implements StoreActivityPageService {
   // 찜한 스토어
   @Override
   public StoreActivitySendZzimStoreResponseDTO storeActivitySendZzimStore(Long userSeq,
-                                                  int targetPage) throws IllegalPageAccessException {
+                                                  int currentPage) throws IllegalPageAccessException {
     int zzimStoreCount = storeActivityPageMapper.storeActivitySendZzimStoreCount(userSeq);
     log.info("zzimStoreCount : ", zzimStoreCount);
     PaginationInfoResponseDTO paginationInfo = PaginationUtil.makePaginationViewInfo(
-        targetPage, zzimStoreCount, STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_BLOCK_SIZE
+        currentPage, zzimStoreCount, STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_BLOCK_SIZE
     );
     List<SendZzimStoreInfoDTO> sendZzimStoreInfos = storeActivityPageMapper.storeActivitySendZzimStore(
-        userSeq, (targetPage-1)*STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_SIZE
+        userSeq, (currentPage-1)*STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_SIZE
     );
     return new StoreActivitySendZzimStoreResponseDTO(sendZzimStoreInfos, paginationInfo);
   }
@@ -86,14 +85,14 @@ public class StoreActivityPageServiceImpl implements StoreActivityPageService {
   // 작성한 글
   @Override
   public StoreActivityWrittenPostResponseDTO storeActivityPageWrittenPost(Long userSeq,
-                                                int targetPage) throws IllegalPageAccessException {
+                                                int currentPage) throws IllegalPageAccessException {
 
     int postListCount = storeActivityPageMapper.storeActivityPageWrittenPostCount(userSeq);
     PaginationInfoResponseDTO paginationInfo = PaginationUtil.makePaginationViewInfo(
-        targetPage, postListCount, STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_BLOCK_SIZE
+        currentPage, postListCount, STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_BLOCK_SIZE
     );
     List<WrittenPostInfoDTO> writtenPostInfos = storeActivityPageMapper.storeActivityPageWrittenPost(
-        userSeq, (targetPage - 1) * STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_SIZE
+        userSeq, (currentPage - 1) * STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_SIZE
     );
     return new StoreActivityWrittenPostResponseDTO(writtenPostInfos, paginationInfo);
   }
