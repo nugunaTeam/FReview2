@@ -174,12 +174,12 @@
 
         <br>
         <div id="personalizedInfoSection" style="display: none;">
-            ${nickname}님이 요즘 관심있을만한 스토어들을 추천해드려요
+            <h2> ${nickname}님이 요즘 관심있을만한 스토어들을 추천해드려요 </h2>
             <div id="personalizedInfoContainer">
                 <div class="row" id="personalizedInfo"></div>
             </div>
         </div>
-        전체 보기
+        <h2> 전체 보기 </h2>
         <div class="row" id="storeInfo"></div>
         <div class="d-flex justify-content-center">
             <button class="btn btn-primary" id="loadMoreBtn" data-previous-user-seq="0">더보기</button>
@@ -392,7 +392,7 @@
         htmlStr += "<div class='col-xl-2'>";
         htmlStr += "<div class='card'>";
         htmlStr += "<div class='card-body profile-card pt-4 d-flex flex-column align-items-center'>";
-        htmlStr += "<a href='/brand-page?user_seq=" + val["userSeq"] + "'>";
+        htmlStr += "<a href='/brand/" + val["userSeq"] + `?fromUserSeq=${userSeq}'>`;
         htmlStr += "<img src='" + val["profilePhotoUrl"] + "' alt='Profile' class='profile-img'>";
         htmlStr += "<h2>" + val["nickname"] + "</h2>";
 
@@ -423,14 +423,13 @@
         htmlStr += "<tr>";
 
         if (i < data.length) {
-          htmlStr += "<td>" + (i + 1) + ". <a href='/brand-page?user_seq=" + data[i]["userSeq"]
-              + "'>" + data[i]["nickname"] + "</a></td>";
+          htmlStr += "<td style='padding-right: 100px;'>" + (i + 1) + ". <a href='/brand/" + data[i]["userSeq"] + `?fromUserSeq=${userSeq}'>`
+              + data[i]["nickname"] + "</a></td>";
         }
 
         let rightIndex = i + numRows;
         if (rightIndex < data.length) {
-          htmlStr += "<td>" + (rightIndex + 1) + ". <a href='/brand-page?user_seq="
-              + data[rightIndex]["userSeq"] + "'>" + data[rightIndex]["nickname"] + "</a></td>";
+          htmlStr += "<td>" + (rightIndex + 1) + ". <a href='/brand/" + data[rightIndex]["userSeq"] + `?fromUserSeq=${userSeq}'>` + data[rightIndex]["nickname"] + "</a></td>";
         }
 
         htmlStr += "</tr>";
