@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@Transactional
 public class CustomerPageServiceImpl implements CustomerPageService {
 
   private final CustomerPageMapper customerPageMapper;
@@ -30,6 +31,12 @@ public class CustomerPageServiceImpl implements CustomerPageService {
       CustomerReviewMapper customerReviewMapper) {
     this.customerPageMapper = customerPageMapper;
     this.customerReviewMapper = customerReviewMapper;
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public String getCustomerNickname(Long customerSeq) {
+    return customerPageMapper.getNickname(customerSeq);
   }
 
   @Override

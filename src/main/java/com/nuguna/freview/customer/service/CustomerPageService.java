@@ -5,6 +5,8 @@ import com.nuguna.freview.customer.dto.response.page.CustomerOtherBrandPageInfoR
 
 public interface CustomerPageService {
 
+  String getCustomerNickname(Long customerSeq);
+
   CustomerMyBrandPageInfoResponseDTO getBrandPageInfo(Long userSeq);
 
   CustomerOtherBrandPageInfoResponseDTO getOtherBrandPageInfo(Long userSeq);

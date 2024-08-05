@@ -34,22 +34,30 @@ public class CustomerMyPageController {
   }
 
   @RequestMapping(value = "/experience", method = RequestMethod.GET)
-  public String customerMyExperiencePage(@RequestParam(required = false) Long userSeq) {
+  public String customerMyExperiencePage(@RequestParam Long userSeq, Model model) {
+    String nickname = customerPageService.getCustomerNickname(userSeq);
+    model.addAttribute("nickname", nickname);
     return "customer-my-experience-info";
   }
 
   @RequestMapping(value = "/activity", method = RequestMethod.GET)
-  public String customerMyActivityPage(@RequestParam(required = false) Long userSeq) {
+  public String customerMyActivityPage(@RequestParam Long userSeq, Model model) {
+    String nickname = customerPageService.getCustomerNickname(userSeq);
+    model.addAttribute("nickname", nickname);
     return "customer-my-activity-info";
   }
 
   @RequestMapping(value = "/notification", method = RequestMethod.GET)
-  public String customerMyNotificationPage(@RequestParam(required = false) Long userSeq) {
+  public String customerMyNotificationPage(@RequestParam Long userSeq, Model model) {
+    String nickname = customerPageService.getCustomerNickname(userSeq);
+    model.addAttribute("nickname", nickname);
     return "customer-my-notification";
   }
 
   @RequestMapping(value = "/personal-info", method = RequestMethod.GET)
-  public String customerMyPersonalInfoPage(@RequestParam(required = false) Long userSeq) {
+  public String customerMyPersonalInfoPage(@RequestParam Long userSeq, Model model) {
+    String nickname = customerPageService.getCustomerNickname(userSeq);
+    model.addAttribute("nickname", nickname);
     return "customer-my-personal-info";
   }
 

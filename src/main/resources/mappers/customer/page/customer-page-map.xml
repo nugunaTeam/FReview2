@@ -32,7 +32,13 @@
            LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
            LEFT JOIN user_tag ut ON u.seq = ut.user_seq
            LEFT JOIN tag t ON ut.tag_seq = t.seq
-    WHERE u.seq = #{userSeq}
+    WHERE u.seq = #{customerSeq}
+  </select>
+
+  <select id="getNickname" resultType="java.lang.Integer">
+    select nickname
+    from user u
+    where u.seq = #{customerSeq}
   </select>
 
 </mapper>
