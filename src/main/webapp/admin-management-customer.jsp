@@ -147,7 +147,6 @@
   </div>
 </div>
 
-<!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center header">
   <div class="d-flex align-items-center justify-content-between ">
     <a href="/main?seq=${userSeq}&pagecode=Requester"
@@ -212,7 +211,7 @@
     </ul>
   </ul>
 
-</aside><!-- End Sidebar-->
+</aside>
 
 <main id="main" class="main">
 
