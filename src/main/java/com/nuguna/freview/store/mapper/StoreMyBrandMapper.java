@@ -1,11 +1,17 @@
 package com.nuguna.freview.store.mapper;
 
+import com.nuguna.freview.store.dto.response.StoreRecentMojipPostInfoDTO;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface StoreMyBrandMapper {
+
+  Integer getRecentMojipPostsCount(@Param("userSeq") Long userSeq);
+
+  List<StoreRecentMojipPostInfoDTO> getStoreRecentMojipPosts(@Param("userSeq") Long userSeq,
+      @Param("offset") int offset, @Param("pageSize") int pageSize);
 
   void updateProfilePhotoUrl(@Param("storeSeq") Long storeSeq,
       @Param("profilePhotoUrl") String profilePhotoUrl);

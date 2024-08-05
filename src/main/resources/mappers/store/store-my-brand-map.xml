@@ -3,7 +3,34 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.nuguna.freview.store.mapper.StoreMyBrandMapper">
-  
+
+  <select id="getRecentMojipPostsCount" resultType="java.lang.Integer">
+    select count(*)
+    from post p
+    where p.user_seq = #{userSeq}
+      and p.code in ('모집')
+      and p.apply_end_date > now()
+  </select>
+
+  <resultMap id="storeRecentMojipPostInfoMap"
+    type="com.nuguna.freview.store.dto.response.StoreRecentMojipPostInfoDTO">
+    <id property="seq" column="seq"/>
+    <result property="title" column="title"/>
+    <result property="createdAt" column="created_at"/>
+  </resultMap>
+
+  <select id="getStoreRecentMojipPosts" resultMap="storeRecentMojipPostInfoMap">
+    select p.seq,
+           p.title,
+           p.created_at
+    from post p
+    where p.user_seq = #{userSeq}
+      and p.code in ('모집')
+      and p.apply_end_date > now()
+    limit #{pageSize} offset #{offset}
+  </select>
+
+
   <update id="updateProfilePhotoUrl">
     update user
     set profile_photo_url = #{profilePhotoUrl}

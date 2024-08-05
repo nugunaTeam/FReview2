@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class StoreRecentMojipPostInfosRetrieveResponseDTO {
 
-  private List<StoreRecentMojipPostInfoDTO> reviewInfos;
+  private List<StoreRecentMojipPostInfoDTO> mojipPostInfos;
   private PaginationInfoResponseDTO paginationInfo;
 }

@@ -4,7 +4,11 @@ import static com.nuguna.freview.global.FileUtil.getProfileDestinationFilePath;
 import static com.nuguna.freview.global.FileUtil.getResizedProfileFilePath;
 import static com.nuguna.freview.global.FileUtil.getSaveProfileFileName;
 import static com.nuguna.freview.global.FileUtil.resizeAndSave;
+import static com.nuguna.freview.store.constant.StoreMyBrandPageContant.STORE_RECENT_MOJIP_POST_PAGE_BLOCK_SIZE;
+import static com.nuguna.freview.store.constant.StoreMyBrandPageContant.STORE_RECENT_MOJIP_POST_PAGE_SIZE;
 
+import com.nuguna.freview.customer.dto.response.PaginationInfoResponseDTO;
+import com.nuguna.freview.global.util.PaginationUtil;
 import com.nuguna.freview.store.dto.request.StoreMyFoodTypesUpdateRequestDTO;
 import com.nuguna.freview.store.dto.request.StoreMyIntroduceUpdateRequestDTO;
 import com.nuguna.freview.store.dto.request.StoreMyStoreLocationUpdateRequestDTO;
@@ -14,6 +18,7 @@ import com.nuguna.freview.store.dto.response.StoreMyIntroduceUpdateResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreMyProfileUpdateResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreMyStoreLocationUpdateResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreMyTagsUpdateResponseDTO;
+import com.nuguna.freview.store.dto.response.StoreRecentMojipPostInfoDTO;
 import com.nuguna.freview.store.dto.response.StoreRecentMojipPostInfosRetrieveResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreReviewInfosRetrieveResponseDTO;
 import com.nuguna.freview.store.mapper.StoreMyBrandMapper;
@@ -43,7 +48,19 @@ public class StoreMyBrandServiceImpl implements StoreMyBrandService {
   @Transactional(readOnly = true)
   public StoreRecentMojipPostInfosRetrieveResponseDTO getStoreRecentMojipPosts(Long userSeq,
       int targetPage) {
-    return null;
+
+    int recentMojipPostsCount = storeMyBrandMapper.getRecentMojipPostsCount(userSeq);
+
+    PaginationInfoResponseDTO paginationInfo = PaginationUtil.makePaginationViewInfo(
+        targetPage, recentMojipPostsCount,
+        STORE_RECENT_MOJIP_POST_PAGE_SIZE, STORE_RECENT_MOJIP_POST_PAGE_BLOCK_SIZE);
+
+    List<StoreRecentMojipPostInfoDTO> storeRecentMojipPostInfos = storeMyBrandMapper.getStoreRecentMojipPosts(
+        userSeq, (targetPage - 1) * STORE_RECENT_MOJIP_POST_PAGE_SIZE,
+        STORE_RECENT_MOJIP_POST_PAGE_SIZE);
+
+    return new StoreRecentMojipPostInfosRetrieveResponseDTO(storeRecentMojipPostInfos,
+        paginationInfo);
   }
 
   @Override
