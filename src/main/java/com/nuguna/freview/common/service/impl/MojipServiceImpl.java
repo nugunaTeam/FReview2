@@ -1,8 +1,9 @@
 package com.nuguna.freview.common.service.impl;
 
+import com.nuguna.freview.admin.mapper.RankPointLogMapper;
 import com.nuguna.freview.admin.mapper.UserFoodTypeMapper;
 import com.nuguna.freview.admin.mapper.UserInterestLogMapper;
-import com.nuguna.freview.admin.mapper.RankPointLogMapper;
+import com.nuguna.freview.common.dto.response.MojipPostDTO;
 import com.nuguna.freview.common.dto.response.MojipPostDetailDTO;
 import com.nuguna.freview.common.mapper.MojipMapper;
 import com.nuguna.freview.common.mapper.PostMapper;
@@ -39,7 +40,7 @@ public class MojipServiceImpl implements MojipService {
 
   @Override
   @Transactional
-  public List<MojipPostDetailDTO> getMojipList(Long requesterSeq, Long previousPostSeq, String searchWord, int pageSize) {
+  public List<MojipPostDTO> getMojipList(Long requesterSeq, Long previousPostSeq, String searchWord, int pageSize) {
     if (searchWord != null && !searchWord.isEmpty()) {
       insertSearchLog(requesterSeq, searchWord);
       return mojipMapper.searchMojipList(previousPostSeq, pageSize, searchWord);
@@ -50,7 +51,16 @@ public class MojipServiceImpl implements MojipService {
 
   @Override
   public MojipPostDetailDTO getMojipDetail(Long postSeq) {
-    return mojipMapper.selectMojipDetail(postSeq);
+    MojipPostDetailDTO mojipDetail = mojipMapper.selectMojipDetail(postSeq);
+
+    if (mojipDetail != null) {
+      String foodTypeWord = mojipMapper.selectFoodTypeWord(mojipDetail.getUserSeq());
+      String tagWord = mojipMapper.selectTagWord(mojipDetail.getUserSeq());
+      mojipDetail.setFoodTypeWord(foodTypeWord);
+      mojipDetail.setTagWord(tagWord);
+    }
+
+    return mojipDetail;
   }
 
   @Override

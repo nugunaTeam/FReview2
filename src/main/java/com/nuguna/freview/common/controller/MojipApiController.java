@@ -6,7 +6,7 @@ import com.nuguna.freview.common.dto.request.MojipApplyRequestDTO;
 import com.nuguna.freview.common.dto.request.MojipInsertRequestDTO;
 import com.nuguna.freview.common.dto.request.MojipListRequestDTO;
 import com.nuguna.freview.common.dto.request.MojipUpdateRequestDTO;
-import com.nuguna.freview.common.dto.response.MojipPostDetailDTO;
+import com.nuguna.freview.common.dto.response.MojipPostDTO;
 import com.nuguna.freview.common.dto.response.page.MojipResponseDTO;
 import com.nuguna.freview.common.service.MojipService;
 import java.util.Date;
@@ -42,7 +42,7 @@ public class MojipApiController {
     if (previousPostSeq == null) {
       previousPostSeq = Long.MAX_VALUE;
     }
-      List<MojipPostDetailDTO> mojipList = mojipService.getMojipList(requesterSeq, previousPostSeq, searchWord, MOJIP_BOARD_PAGE_SIZE);
+      List<MojipPostDTO> mojipList = mojipService.getMojipList(requesterSeq, previousPostSeq, searchWord, MOJIP_BOARD_PAGE_SIZE);
       boolean hasMore = mojipList.size() == MOJIP_BOARD_PAGE_SIZE;
       MojipResponseDTO responseDTO = new MojipResponseDTO();
       responseDTO.setMojipList(mojipList);

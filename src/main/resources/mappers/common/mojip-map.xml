@@ -6,7 +6,7 @@
 
   <!-- ResultMap 설정 -->
   <!-- mojipListMap 설정 -->
-  <resultMap id="mojipPostMap" type="com.nuguna.freview.common.dto.response.MojipPostDetailDTO">
+  <resultMap id="mojipPostDetailMap" type="com.nuguna.freview.common.dto.response.MojipPostDetailDTO">
     <id property="seq" column="post_seq"/>
     <result property="userSeq" column="user_seq"/>
     <result property="businessNumber" column="business_number"/>
@@ -24,30 +24,34 @@
     <result property="totalView" column="view_count"/>
   </resultMap>
 
+  <resultMap id="mojipPostMap" type="com.nuguna.freview.common.dto.response.MojipPostDTO">
+    <id property="seq" column="post_seq"/>
+    <result property="userSeq" column="user_seq"/>
+    <result property="profilePhotoUrl" column="profile_photo_url"/>
+    <result property="storeLocation" column="store_location"/>
+    <result property="storeName" column="store_name"/>
+    <result property="title" column="title"/>
+    <result property="applyStartDate" column="apply_start_date"/>
+    <result property="applyEndDate" column="apply_end_date"/>
+    <result property="experienceDate" column="experience_date"/>
+    <result property="totalLike" column="total_like"/>
+  </resultMap>
+
   <select id="selectMojipList" parameterType="map" resultMap="mojipPostMap">
     SELECT
       p.seq AS post_seq,
       m.seq AS user_seq,
-      m.business_number,
       m.profile_photo_url,
       m.store_location,
-      GROUP_CONCAT(DISTINCT ft.dish ORDER BY ft.dish ASC SEPARATOR ', ') AS food_type_word,
-      GROUP_CONCAT(DISTINCT t.name ORDER BY t.name ASC SEPARATOR ', ') AS tag_word,
       s.store_name,
       p.title,
       p.apply_start_date,
       p.apply_end_date,
       p.experience_date,
-      p.content,
-      COALESCE(la.total_like, 0) AS total_like,
-      p.view_count
+      COALESCE(la.total_like, 0) AS total_like
     FROM
       post p
         LEFT JOIN user m ON p.user_seq = m.seq
-        LEFT JOIN user_food_type mft ON m.seq = mft.user_seq
-        LEFT JOIN food_type ft ON mft.food_type_seq = ft.seq
-        LEFT JOIN user_tag mt ON m.seq = mt.user_seq
-        LEFT JOIN tag t ON mt.tag_seq = t.seq
         LEFT JOIN national_store_business_information s ON m.business_number = s.business_number
         LEFT JOIN like_accumulation la ON la.post_seq = p.seq
     WHERE
@@ -63,36 +67,27 @@
     SELECT
       p.seq AS post_seq,
       m.seq AS user_seq,
-      m.business_number,
       m.profile_photo_url,
       m.store_location,
-      GROUP_CONCAT(DISTINCT ft.dish ORDER BY ft.dish ASC SEPARATOR ', ') AS food_type_word,
-      GROUP_CONCAT(DISTINCT t.name ORDER BY t.name ASC SEPARATOR ', ') AS tag_word,
       s.store_name,
       p.title,
       p.apply_start_date,
       p.apply_end_date,
       p.experience_date,
-      p.content,
-      COALESCE(la.total_like, 0) AS total_like,
-      p.view_count
+      COALESCE(la.total_like, 0) AS total_like
     FROM
       post p
         LEFT JOIN user m ON p.user_seq = m.seq
-        LEFT JOIN user_food_type mft ON m.seq = mft.user_seq
-        LEFT JOIN food_type ft ON mft.food_type_seq = ft.seq
-        LEFT JOIN user_tag mt ON m.seq = mt.user_seq
-        LEFT JOIN tag t ON mt.tag_seq = t.seq
         LEFT JOIN national_store_business_information s ON m.business_number = s.business_number
         LEFT JOIN like_accumulation la ON la.post_seq = p.seq
     WHERE
       p.code = '모집' AND p.seq &lt; #{previousPostSeq}
       AND (
-      s.store_name LIKE CONCAT('%', #{searchWord}, '%')
-        OR m.store_location LIKE CONCAT('%', #{searchWord}, '%')
-        OR p.title LIKE CONCAT('%', #{searchWord}, '%')
-        OR ft.dish LIKE CONCAT('%', #{searchWord}, '%')
-        OR t.name LIKE CONCAT('%', #{searchWord}, '%')
+      EXISTS (SELECT 1 FROM national_store_business_information s WHERE s.business_number = m.business_number AND s.store_name LIKE CONCAT('%', #{searchWord}, '%'))
+        OR EXISTS (SELECT 1 FROM user m WHERE m.seq = p.user_seq AND m.store_location LIKE CONCAT('%', #{searchWord}, '%'))
+        OR EXISTS (SELECT 1 FROM post p2 WHERE p2.seq = p.seq AND p2.title LIKE CONCAT('%', #{searchWord}, '%'))
+        OR EXISTS (SELECT 1 FROM user_food_type mft JOIN food_type ft ON mft.food_type_seq = ft.seq WHERE mft.user_seq = m.seq AND ft.dish LIKE CONCAT('%', #{searchWord}, '%'))
+        OR EXISTS (SELECT 1 FROM user_tag mt JOIN tag t ON mt.tag_seq = t.seq WHERE mt.user_seq = m.seq AND t.name LIKE CONCAT('%', #{searchWord}, '%'))
       )
     GROUP BY
       p.seq
@@ -101,15 +96,13 @@
     LIMIT #{limit}
   </select>
 
-  <select id="selectMojipDetail" parameterType="map" resultMap="mojipPostMap">
+  <select id="selectMojipDetail" parameterType="map" resultMap="mojipPostDetailMap">
     SELECT
       p.seq AS post_seq,
       m.seq AS user_seq,
       m.business_number,
       m.profile_photo_url,
       m.store_location,
-      GROUP_CONCAT(DISTINCT ft.dish ORDER BY ft.dish ASC SEPARATOR ', ') AS food_type_word,
-      GROUP_CONCAT(DISTINCT t.name ORDER BY t.name ASC SEPARATOR ', ') AS tag_word,
       s.store_name,
       p.title,
       p.apply_start_date,
@@ -121,14 +114,24 @@
     FROM
       post p
         LEFT JOIN user m ON p.user_seq = m.seq
-        LEFT JOIN user_food_type mft ON m.seq = mft.user_seq
-        LEFT JOIN food_type ft ON mft.food_type_seq = ft.seq
-        LEFT JOIN user_tag mt ON m.seq = mt.user_seq
-        LEFT JOIN tag t ON mt.tag_seq = t.seq
         LEFT JOIN national_store_business_information s ON m.business_number = s.business_number
         LEFT JOIN like_accumulation la ON la.post_seq = p.seq
     WHERE
       p.seq = #{postSeq}
+  </select>
+
+  <select id="selectFoodTypeWord" parameterType="Long" resultType="String">
+    SELECT GROUP_CONCAT(DISTINCT ft.dish ORDER BY ft.dish ASC SEPARATOR ', ') AS food_type_word
+    FROM user_food_type mft
+           JOIN food_type ft ON mft.food_type_seq = ft.seq
+    WHERE mft.user_seq = #{userSeq}
+  </select>
+
+  <select id="selectTagWord" parameterType="Long" resultType="String">
+    SELECT GROUP_CONCAT(DISTINCT t.name ORDER BY t.name ASC SEPARATOR ', ') AS tag_word
+    FROM user_tag mt
+           JOIN tag t ON mt.tag_seq = t.seq
+    WHERE mt.user_seq = #{userSeq}
   </select>
 
   <insert id="insertMojip" parameterType="map">
@@ -139,15 +142,14 @@
   <!-- 특정 모집글 수정 -->
   <update id="updateMojip" parameterType="map">
     UPDATE post
-    SET
-        title = #{title},
+    SET title = #{title},
         content = #{content}
     WHERE seq = #{postSeq}
   </update>
 
   <!-- 모집글 지원 -->
   <insert id="applyMojip" parameterType="map">
-    insert into experience (from_user_seq, to_user_seq, from_post_seq, status)
+    INSERT INTO experience (from_user_seq, to_user_seq, from_post_seq, status)
     VALUES (#{fromUserSeq}, #{toUserSeq}, #{fromPostSeq}, 'SENT')
   </insert>
 
