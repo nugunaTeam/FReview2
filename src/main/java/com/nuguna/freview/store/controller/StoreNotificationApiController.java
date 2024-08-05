@@ -34,21 +34,18 @@ public class StoreNotificationApiController {
   @RequestMapping(value = "/received-zzim-customer", method = RequestMethod.GET)
   public StoreNotificationReceivedZzimCustomerResponseDTO storeNotificationReceivedZzimCustomer (
       @RequestParam("userSeq") Long userSeq, @RequestParam Integer currentPage) throws IllegalPageAccessException {
-
     return storeNotificationPageService.storeNotificationReceivedZzimCustomer(userSeq, currentPage);
   }
 
   @RequestMapping(value = "/received-zzim-store", method = RequestMethod.GET)
   public StoreNotificationReceivedZzimStoreResponseDTO storeNotificationReceivedZzimStore (
       @RequestParam("userSeq") Long userSeq, @RequestParam Integer currentPage) throws IllegalPageAccessException {
-
       return storeNotificationPageService.storeNotificationReceivedZzimStore(userSeq, currentPage);
   }
 
   @RequestMapping(value = "/experience-apply", method = RequestMethod.GET)
   public StoreNotificationExperienceApplyResponseDTO storeNotificationExperienceApply(
       @RequestParam("userSeq") Long userSeq, @RequestParam Integer currentPage) {
-
       return storeNotificationPageService.storeNotificationExperienceApply(userSeq, currentPage);
   }
 
