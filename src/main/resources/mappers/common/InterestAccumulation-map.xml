@@ -16,4 +16,9 @@
     FROM interest_accumulation
     WHERE user_seq = #{userSeq}
   </select>
+
+  <select id="findAll" resultMap="InterestAccumulationDTOResultMap">
+    SELECT user_seq, dish, category, total_score
+    FROM interest_accumulation
+  </select>
 </mapper>

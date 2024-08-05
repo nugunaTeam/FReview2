@@ -12,6 +12,6 @@ public class CustomerMyLikedPostsRetrieveResponseDTO {
 
   private List<MyLikePostInfoDTO> myLikeInfos;
 
-  private PaginationInfoResponseDTO reviewPageInfo;
+  private PaginationInfoResponseDTO paginationInfo;
 
 }

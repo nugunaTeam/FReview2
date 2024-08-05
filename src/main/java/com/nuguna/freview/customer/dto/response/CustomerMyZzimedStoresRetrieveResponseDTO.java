@@ -12,5 +12,5 @@ public class CustomerMyZzimedStoresRetrieveResponseDTO {
 
   private List<MyZzimedStoreInfoDTO> zzimedStoreInfos;
 
-  private PaginationInfoResponseDTO paginationInfoResponseDTO;
+  private PaginationInfoResponseDTO paginationInfo;
 }
