@@ -14,6 +14,8 @@ import com.nuguna.freview.store.dto.response.StoreMyIntroduceUpdateResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreMyProfileUpdateResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreMyStoreLocationUpdateResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreMyTagsUpdateResponseDTO;
+import com.nuguna.freview.store.dto.response.StoreRecentMojipPostInfosRetrieveResponseDTO;
+import com.nuguna.freview.store.dto.response.StoreReviewInfosRetrieveResponseDTO;
 import com.nuguna.freview.store.mapper.StoreMyBrandMapper;
 import com.nuguna.freview.store.service.StoreMyBrandService;
 import java.io.File;
@@ -35,6 +37,23 @@ public class StoreMyBrandServiceImpl implements StoreMyBrandService {
   @Autowired
   public StoreMyBrandServiceImpl(StoreMyBrandMapper storeMyBrandMapper) {
     this.storeMyBrandMapper = storeMyBrandMapper;
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public StoreRecentMojipPostInfosRetrieveResponseDTO getStoreRecentMojipPosts(Long userSeq,
+      int targetPage) {
+    return null;
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public StoreReviewInfosRetrieveResponseDTO getStoreReviewInfos(Long userSeq, int targetPage) {
+    return null;
+  }
+
+  @Override
+  public void hideStoreReview(Long userSeq, Long reviewSeq) {
   }
 
   @Override
