@@ -1,6 +1,7 @@
 package com.nuguna.freview.store.dto.response;
 
-import java.sql.Timestamp;
+import com.nuguna.freview.global.util.PaginationUtil;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,13 +12,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StoreNotificationReceivedLikeResponseDTO {
-  private Long userSeq;
-  private Long postSeq;
-  private String postCode;
-  private String title;
-  private String content;
-  private Long writtenSeq;
-  private Timestamp createdAt;
-  private Long likeCount;
-
+  private List<ReceivedLikeInfoDTO> receivedLikeInfo;
+  private PaginationUtil paginationInfo;
 }

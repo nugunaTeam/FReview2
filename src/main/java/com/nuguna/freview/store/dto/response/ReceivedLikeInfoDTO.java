@@ -4,15 +4,21 @@ import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class StoreNotificationExperienceProposeResponseDTO {
+public class ReceivedLikeInfoDTO {
+
   private Long userSeq;
-  private Long toUserSeq;
-  private String nickname;
-  private String status;
-  private String proposeDetail;
+  private Long postSeq;
+  private String postCode;
+  private String title;
+  private String content;
+  private Long writtenSeq;
   private Timestamp createdAt;
+  private Long likeCount;
+
 }
