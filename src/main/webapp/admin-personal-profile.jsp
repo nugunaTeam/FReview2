@@ -328,7 +328,6 @@
           "newPassword": newPassword,
           "userSeq": userSeq
         }),
-        dataType: "json",
         success: function () {
           alert('비밀번호가 성공적으로 수정되었습니다.');
           resetButtons();
