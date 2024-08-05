@@ -7,12 +7,66 @@
 <c:set var="profileUrl" value="${loginUser.profilePhotoUrl}" />
 <c:set var="code" value="${loginUser.code}"/>
 
-<header id="header" class="header fixed-top d-flex align-items-center header">
-    <div class="d-flex align-items-center justify-content-between ">
-        <a href="/main?seq=${userSeq}&pagecode=Requester"
-           class="logo d-flex align-items-center">
-            <img src="/assets/img/logo/logo-vertical.png" alt=""
-                 style="width: 50px; margin-top: 20px;">
+<style>
+
+  img{
+    width: 200px;
+    border-radius: 50px;
+    margin-bottom: 20px;
+  }
+  .header{
+    display: flex;
+    justify-content: space-between;
+  }
+  .header-left,.header-right{
+    display: flex;
+  }
+  .header-left{
+    margin-left: 60px;
+  }
+  .header-right{
+    margin-right: 60px;
+  }
+  .card-header{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .nav-menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+  }
+
+  .nav-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-menu ul li {
+    padding: 0 15px;
+  }
+
+  .nav-menu ul li a {
+    color: #000000;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .nav-menu ul li a:hover {
+    color: #808080;
+  }
+</style>
+
+<header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="/main?seq=${userSeq}&pagecode=Requester" class="logo d-flex align-items-center">
+            <img src="/assets/img/logo/logo-vertical.png" alt="" style="width: 50px; margin-top: 20px;">
             <span class="d-none d-lg-block">FReview</span>
         </a>
     </div>
