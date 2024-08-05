@@ -5,10 +5,12 @@
 <mapper namespace="com.nuguna.freview.store.mapper.StoreNotificationPageMapper">
 
   <select id="storeNotificationPageReceivedLikeCount" resultType="java.lang.Integer">
-    SELECT COUNT(DISTINCT l.user_seq) AS like_count
-    FROM `like` l
-           JOIN `post` p ON l.post_seq = p.seq
-    WHERE p.user_seq = #{userSeq}
+    select count(*)
+    from `like` l
+    where l.post_seq in (  select seq
+                           from post p
+                           where p.user_seq = #{userSeq}
+                         )
   </select>
 
   <select id="storeNotificationPageReceivedZzimCustomerCount" resultType="java.lang.Integer">
@@ -28,14 +30,14 @@
   </select>
 
   <select id="storeNotificationPageActivityApplyCount" resultType="java.lang.Integer">
-    SELECT COUNT(DISTINCT e.from_user_seq) AS applicant_count
+    SELECT COUNT(DISTINCT e.from_user_seq) AS applyCount
     FROM experience e
-    WHERE e.to_user_seq = #{userSeq}
+    WHERE e.to_user_seq = #{userSeq} AND from_post_seq is null
   </select>
 
   <select id="storeNotificationPageActivityProposalCount" resultType="java.lang.Integer">
-    SELECT COUNT(*) AS total_proposals
+    SELECT COUNT(*) AS proposalCount
     FROM experience e
-    WHERE e.from_user_seq = #{userSeq}
+    WHERE e.from_user_seq = #{userSeq} AND e.proposal_detail is null
   </select>
 </mapper>
