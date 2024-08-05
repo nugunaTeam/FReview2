@@ -37,12 +37,6 @@ public class CustomerPageServiceImpl implements CustomerPageService {
 
   @Override
   @Transactional(readOnly = true)
-  public String getCustomerNickname(Long customerSeq) {
-    return customerPageMapper.getNickname(customerSeq);
-  }
-
-  @Override
-  @Transactional(readOnly = true)
   public CustomerMyBrandPageInfoResponseDTO getBrandPageInfo(Long userSeq) {
     CustomerBrandInfoResponseDTO brandInfo = customerPageMapper.getBrandInfo(userSeq);
 

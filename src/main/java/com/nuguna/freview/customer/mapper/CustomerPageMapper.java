@@ -7,8 +7,6 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface CustomerPageMapper {
 
-  String getNickname(@Param("customerSeq") Long customerSeq);
-
   CustomerBrandInfoResponseDTO getBrandInfo(@Param("customerSeq") Long customerSeq);
 
 }

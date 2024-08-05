@@ -35,10 +35,4 @@
     WHERE u.seq = #{customerSeq}
   </select>
 
-  <select id="getNickname" resultType="java.lang.Integer">
-    select nickname
-    from user u
-    where u.seq = #{customerSeq}
-  </select>
-
 </mapper>
