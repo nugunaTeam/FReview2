@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.store.mapper.StoreActivityPageMapper">
+
+  <select id="storeActivityPageSendLikeCount" resultType="java.lang.Integer">
+    SELECT count(l.post_seq) AS total_count
+    FROM `like` l
+           JOIN `post` p ON l.post_seq = p.seq
+           JOIN `user` u ON p.user_seq = u.seq
+    WHERE l.user_seq = #{userSeq}
+    AND p.code = '모집'
+  </select>
+
+  <select id="storeActivitySendZzimCustomerCount" resultType="java.lang.Integer">
+    SELECT COUNT(to_user_seq) AS total_count
+    FROM zzim z
+    INNER JOIN user u
+    ON z.to_user_seq = u.seq
+    WHERE from_user_seq = #{userSeq}
+    AND u.code = 'CUSTOMER'
+  </select>
+
+  <select id="storeActivitySendZzimStoreCount" resultType="java.lang.Integer">
+    SELECT COUNT(from_user_seq) AS total_count
+    FROM zzim z
+    INNER JOIN user u ON z.from_user_seq = u.seq
+    WHERE to_user_seq = #{userSeq}
+    AND u.code = 'STORE'
+  </select>
+
+  <select id="storeActivityPageWrittenPostCount"  resultType="java.lang.Integer">
+    SELECT COUNT(seq) AS total_count
+    FROM post
+    WHERE user_seq = #{userSeq}
+    and code = '모집'
+  </select>
+
+</mapper>

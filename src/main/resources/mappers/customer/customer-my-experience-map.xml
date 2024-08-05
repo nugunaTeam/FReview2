@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.customer.mapper.CustomerMyExperienceMapper">
+
+  <select id="getMyApplyInfosCount" resultType="java.lang.Integer">
+    select count(*)
+    from experience e
+    where from_user_seq = #{userSeq}
+      and status in ('REJECTED', 'SENT')
+  </select>
+
+  <resultMap id="MyApplyInfoResultMap"
+    type="com.nuguna.freview.customer.dto.response.MyApplyInfoDTO">
+    <result property="storeSeq" column="to_user_seq"/>
+    <result property="storeName" column="store_name"/>
+    <result property="postSeq" column="from_post_seq"/>
+    <result property="applyDate" column="created_at" javaType="java.time.LocalDate"/>
+    <result property="status" column="status"/>
+  </resultMap>
+
+  <select id="getMyApplyInfos" resultMap="MyApplyInfoResultMap">
+    select my_applied_experiences.to_user_seq,
+           nsbi.store_name,
+           my_applied_experiences.from_post_seq,
+           my_applied_experiences.created_at,
+           my_applied_experiences.status
+    from (select e.to_user_seq,
+                 e.from_post_seq,
+                 e.created_at,
+                 e.status
+          from experience e
+          where from_user_seq = #{userSeq}
+            and e.status in ('REJECTED', 'SENT')) my_applied_experiences
+           inner join
+         user u
+         on
+           my_applied_experiences.to_user_seq = u.seq
+           inner join
+         national_store_business_information nsbi
+         on
+           u.business_number = nsbi.business_number
+    order by my_applied_experiences.created_at desc
+    limit #{pageSize} offset #{offset}
+  </select>
+
+  <select id="getProposalToMeInfosCount" resultType="java.lang.Integer">
+    select count(*)
+    from experience e
+    where to_user_seq = #{userSeq}
+      and status in ('REJECTED', 'SENT')
+  </select>
+
+  <resultMap id="ProposalToMeInfoResultMap"
+    type="com.nuguna.freview.customer.dto.response.ProposalToMeInfoDTO">
+    <result property="experienceSeq" column="seq"/>
+    <result property="storeSeq" column="from_user_seq"/>
+    <result property="storeName" column="store_name"/>
+    <result property="proposalDetails" column="proposal_detail"/>
+    <result property="status" column="status"/>
+    <result property="proposalDate" column="created_at" javaType="java.time.LocalDate"/>
+  </resultMap>
+
+  <select id="getProposalToMeInfos" resultMap="ProposalToMeInfoResultMap">
+    select proposal_to_me_experiences.seq,
+           proposal_to_me_experiences.from_user_seq,
+           nsbi.store_name,
+           proposal_to_me_experiences.proposal_detail,
+           proposal_to_me_experiences.created_at,
+           proposal_to_me_experiences.status
+    from (select e.seq,
+                 e.from_user_seq,
+                 e.proposal_detail,
+                 e.status,
+                 e.created_at
+          from experience e
+          where to_user_seq = #{userSeq}
+            and e.status in ('REJECTED', 'SENT')) proposal_to_me_experiences
+           inner join
+         user u
+         on
+           proposal_to_me_experiences.from_user_seq = u.seq
+           inner join
+         national_store_business_information nsbi
+         on
+           u.business_number = nsbi.business_number
+    order by proposal_to_me_experiences.created_at desc
+    limit #{pageSize} offset #{offset}
+  </select>
+
+
+  <select id="getMyAcceptedApplyInfosCount" resultType="java.lang.Integer">
+    select count(*)
+    from experience e
+    where from_user_seq = #{userSeq}
+      and status in ('ACCEPTED', 'NOSHOW', 'DONE')
+  </select>
+
+  <resultMap id="MyAcceptedApplyInfoResultMap"
+    type="com.nuguna.freview.customer.dto.response.MyAcceptedApplyInfoDTO">
+    <result property="storeSeq" column="to_user_seq"/>
+    <result property="storeName" column="store_name"/>
+    <result property="postSeq" column="from_post_seq"/>
+    <result property="status" column="status"/>
+    <result property="experienceDate" column="visit_date" javaType="java.time.LocalDate"/>
+  </resultMap>
+
+  <select id="getMyAcceptedApplyInfos" resultMap="MyAcceptedApplyInfoResultMap">
+    select my_accepted_applied_experiences.to_user_seq,
+           nsbi.store_name,
+           my_accepted_applied_experiences.from_post_seq,
+           my_accepted_applied_experiences.status,
+           my_accepted_applied_experiences.visit_date
+    from (select e.to_user_seq,
+                 e.from_post_seq,
+                 e.visit_date,
+                 e.created_at,
+                 e.status
+          from experience e
+          where from_user_seq = #{userSeq}
+            and e.status in ('ACCEPTED', 'NOSHOW', 'DONE')) my_accepted_applied_experiences
+           inner join
+         user u
+         on
+           my_accepted_applied_experiences.to_user_seq = u.seq
+           inner join
+         national_store_business_information nsbi
+         on
+           u.business_number = nsbi.business_number
+    order by my_accepted_applied_experiences.created_at desc
+    limit #{pageSize} offset #{offset}
+  </select>
+
+  <select id="getAcceptedProposalToMeInfosCount" resultType="java.lang.Integer">
+    select count(*)
+    from experience e
+    where to_user_seq = #{userSeq}
+      and status in ('ACCEPTED', 'NOSHOW', 'DONE')
+  </select>
+
+  <resultMap id="AcceptedProposalToMeInfoResultMap"
+    type="com.nuguna.freview.customer.dto.response.AcceptedProposalToMeInfoDTO">
+    <result property="storeSeq" column="from_user_seq"/>
+    <result property="storeName" column="store_name"/>
+    <result property="proposalDetails" column="proposal_detail"/>
+    <result property="status" column="status"/>
+    <result property="experienceDate" column="visit_date" javaType="java.time.LocalDate"/>
+  </resultMap>
+
+
+  <select id="getAcceptedProposalToMeInfos" resultMap="AcceptedProposalToMeInfoResultMap">
+    select accepted_proposal_to_me_experiences.from_user_seq,
+           nsbi.store_name,
+           accepted_proposal_to_me_experiences.proposal_detail,
+           accepted_proposal_to_me_experiences.status,
+           accepted_proposal_to_me_experiences.visit_date
+    from (select e.from_user_seq,
+                 e.proposal_detail,
+                 e.status,
+                 e.visit_date,
+                 e.created_at
+          from experience e
+          where to_user_seq = #{userSeq}
+            and e.status in ('ACCEPTED', 'NOSHOW', 'DONE')) accepted_proposal_to_me_experiences
+           inner join
+         user u
+         on
+           accepted_proposal_to_me_experiences.from_user_seq = u.seq
+           inner join
+         national_store_business_information nsbi
+         on
+           u.business_number = nsbi.business_number
+    order by accepted_proposal_to_me_experiences.created_at desc
+    limit #{pageSize} offset #{offset}
+  </select>
+
+  <select id="checkExistProposalToMe" resultType="java.lang.Boolean">
+    select count(1)
+    from experience
+    where seq = #{experienceSeq}
+      and to_user_seq = #{userSeq}
+      and status in ('SENT')
+  </select>
+
+  <update id="acceptProposalToMe">
+    update experience e
+    set status = 'ACCEPTED'
+    where e.seq = #{experienceSeq}
+      and e.status in ('SENT')
+  </update>
+
+  <update id="rejectProposalToMe">
+    update experience e
+    set status = 'REJECTED'
+    where e.seq = #{experienceSeq}
+      and e.status in ('SENT')
+  </update>
+
+</mapper>

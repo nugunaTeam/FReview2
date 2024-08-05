@@ -10,7 +10,6 @@
     where seq = #{userSeq}
   </select>
 
-
   <select id="checkUserIsStore" resultType="java.lang.Boolean">
     select count(1) > 0
     from user u
