@@ -5,7 +5,7 @@
 <mapper namespace="com.nuguna.freview.store.mapper.StoreNotificationPageMapper">
 
   <resultMap id="storeNotificationReceivedLikeResultMap"
-    type="com.nuguna.freview.store.dto.response.StoreNotificationReceivedLikeResponseDTO">
+    type="com.nuguna.freview.store.dto.response.ReceivedLikeInfoDTO">
     <result property="userSeq" column="user_seq"/>
     <result property="postSeq" column="post_seq"/>
     <result property="postCode" column="post_code"/>
@@ -17,7 +17,7 @@
   </resultMap>
 
   <resultMap id="storeNotificationReceivedZzimCustomerResultMap"
-    type="com.nuguna.freview.store.dto.response.StoreNotificationReceivedZzimCustomerResponseDTO">
+    type="com.nuguna.freview.store.dto.response.ReceivedZzimCustomerInfoDTO">
     <id property="userSeq" column="to_user_seq"/>
     <result property="zzimUserSeq" column="from_user_seq"/>
     <result property="nickname" column="nickname"/>
@@ -25,7 +25,7 @@
     <result property="foodTypes" column="food_type_codes"/>
   </resultMap>
   <resultMap id="storeNotificationReceivedZzimStoreResultMap"
-    type="com.nuguna.freview.store.dto.response.StoreNotificationReceivedZzimStoreResponseDTO">
+    type="com.nuguna.freview.store.dto.response.ReceivedZzimStoreInfoDTO">
     <id property="userSeq" column="to_user_seq"/>
     <result property="zzimUserSeq" column="from_user_seq"/>
     <result property="nickname" column="nickname"/>
@@ -35,8 +35,7 @@
   </resultMap>
 
   <resultMap id="storeNotificationExperienceApplyResultMap"
-    type="com.nuguna.freview.store.dto.response.StoreNotificationExperienceApplyResponseDTO">
-    <id property="userSeq" column="user_seq"/>
+    type="com.nuguna.freview.store.dto.response.ExperienceApplyInfoDTO">
     <result property="fromUserSeq" column="from_user_seq"/>
     <result property="postSeq" column="from_post_seq"/>
     <result property="title" column="title"/>
@@ -44,95 +43,112 @@
     <result property="status" column="status"/>
     <result property="createdAt" column="created_at"/>
   </resultMap>
-  <resultMap id="storeNotificationExperienceProposeResultMap"
-    type="com.nuguna.freview.store.dto.response.StoreNotificationExperienceProposeResponseDTO">
-    <id property="userSeq" column="user_seq"/>
-    <result property="toUserSeq" column="to_user_seq"/>
+  <resultMap id="storeNotificationExperienceProposalResultMap"
+    type="com.nuguna.freview.store.dto.response.ExperienceProposalInfoDTO">
+    <result property="proposalUserSeq" column="to_user_seq"/>
     <result property="nickname" column="toUserNickname"/>
     <result property="status" column="status"/>
-    <result property="proposeDetail" column="proposal_detail"/>
+    <result property="proposalDetail" column="proposal_detail"/>
     <result property="createdAt" column="created_at"/>
   </resultMap>
 
 
-  <select id="storeNotificationReceivedLike" resultMap="storeNotificationReceivedLikeResultMap">
-    SELECT l.user_seq    AS user_seq,
-           p.seq         AS post_seq,
-           p.code        AS post_code,
-           p.title       AS post_title,
-           p.content     AS post_content,
-           u.seq         AS post_author_seq,
-           l.created_at  AS like_created_at,
-           COUNT(lk.seq) AS like_count
-    FROM `like` l
-           JOIN `post` p ON l.post_seq = p.seq  # AND p.code = '모집'
-           JOIN `user` u ON p.user_seq = u.seq
-           LEFT JOIN `like` lk ON p.seq = lk.post_seq AND lk.user_seq = #{userSeq}
-    WHERE l.user_seq = #{userSeq}
-    GROUP BY l.seq, p.seq
+  <select id="storeNotificationReceivedLike"
+    resultMap="storeNotificationReceivedLikeResultMap">
+    WITH ranked_likes AS (SELECT l.user_seq                                     AS user_seq,
+                                 p.seq                                          AS post_seq,
+                                 p.code                                         AS post_code,
+                                 p.title                                        AS post_title,
+                                 p.content                                      AS post_content,
+                                 u.seq                                          AS post_author_seq,
+                                 l.created_at                                   AS like_created_at,
+                                 COUNT(lk.seq)                                  AS like_count,
+                                 ROW_NUMBER() OVER (ORDER BY l.created_at DESC) AS row_num
+                          FROM `like` l
+                                 JOIN `post` p ON l.post_seq = p.seq
+                                 JOIN `user` u ON p.user_seq = u.seq
+                                 LEFT JOIN `like` lk ON p.seq = lk.post_seq AND lk.user_seq = #{userSeq}
+                          WHERE l.user_seq = #{userSeq}
+                          GROUP BY l.seq, p.seq)
+    SELECT *
+    FROM ranked_likes
+    WHERE row_num BETWEEN #{offset} AND #{offset} + #{pageSize}
   </select>
 
   <select id="storeNotificationReceivedZzimCustomer"
     resultMap="storeNotificationReceivedZzimCustomerResultMap">
-    SELECT
-      u.nickname,
-      u.code,
-      zz.from_user_seq,
-      zz.to_user_seq,
-      GROUP_CONCAT(DISTINCT ft.code ORDER BY ft.code ASC SEPARATOR ', ') AS food_type_codes
-    FROM
-      `user` u
-        JOIN zzim zz ON u.seq = zz.from_user_seq
-        LEFT JOIN user_food_type uft ON u.seq = uft.user_seq
-        LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
-    WHERE
-      zz.to_user_seq = #{userSeq}
-      AND u.code = 'CUSTOMER'
-    GROUP BY
-      u.seq, zz.from_user_seq, zz.to_user_seq;
+    WITH ranked_zzim AS (SELECT u.nickname,
+                                u.code,
+                                zz.from_user_seq,
+                                zz.to_user_seq,
+                                GROUP_CONCAT(DISTINCT ft.code ORDER BY ft.code ASC SEPARATOR
+                                             ', ')                               AS food_type_codes,
+                                ROW_NUMBER() OVER (ORDER BY zz.to_user_seq DESC) AS row_num
+                         FROM `user` u
+                                JOIN zzim zz ON u.seq = zz.from_user_seq
+                                LEFT JOIN user_food_type uft ON u.seq = uft.user_seq
+                                LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
+                         WHERE zz.to_user_seq = #{userSeq}
+                           AND u.code = 'CUSTOMER'
+                         GROUP BY u.seq, zz.from_user_seq, zz.to_user_seq)
+    SELECT *
+    FROM ranked_zzim
+    WHERE row_num BETWEEN #{offset} AND #{offset} + #{pageSize}
   </select>
   <select id="storeNotificationReceivedZzimStore"
     resultMap="storeNotificationReceivedZzimStoreResultMap">
-    SELECT
-      u.nickname,
-      u.code,
-      u.store_location,
-      z.from_user_seq,
-      z.to_user_seq,
-      GROUP_CONCAT(DISTINCT ft.code ORDER BY ft.code ASC SEPARATOR ', ') AS food_type_codes
-    FROM
-      `user` u
-        JOIN zzim z ON u.seq = z.from_user_seq
-        LEFT JOIN user_food_type uft ON u.seq = uft.user_seq
-        LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
-    WHERE
-      z.to_user_seq = #{userSeq}
-      AND u.code = 'STORE'
-    GROUP BY
-      u.seq, z.from_user_seq, z.to_user_seq;
+    WITH ranked_zzim AS (SELECT u.nickname,
+                                u.code,
+                                u.store_location,
+                                zz.from_user_seq,
+                                zz.to_user_seq,
+                                GROUP_CONCAT(DISTINCT ft.code ORDER BY ft.code ASC SEPARATOR
+                                             ', ')                               AS food_type_codes,
+                                ROW_NUMBER() OVER (ORDER BY zz.to_user_seq DESC) AS row_num
+                         FROM `user` u
+                                JOIN zzim zz ON u.seq = zz.from_user_seq
+                                LEFT JOIN user_food_type uft ON u.seq = uft.user_seq
+                                LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
+                         WHERE zz.to_user_seq = #{userSeq}
+                           AND u.code = 'STORE'
+                         GROUP BY u.seq, zz.from_user_seq, zz.to_user_seq)
+    SELECT *
+    FROM ranked_zzim
+    WHERE row_num BETWEEN #{offset} + 1 AND #{offset} + #{pageSize}
   </select>
-
 
   <select id="storeNotificationExperienceApply"
     resultMap="storeNotificationExperienceApplyResultMap">
-    SELECT e.from_user_seq, e.from_post_seq, e.`status`, e.created_at, u.nickname, p.title
-    FROM experience e
-           INNER JOIN post p ON p.seq = e.from_post_seq
-           INNER JOIN user u ON u.seq = e.from_user_seq
-    WHERE e.to_user_seq = #{userSeq};
+    WITH ranked_experience AS (SELECT e.from_user_seq,
+                                      e.from_post_seq,
+                                      e.`status`,
+                                      e.created_at,
+                                      u.nickname,
+                                      p.title,
+                                      ROW_NUMBER() OVER (ORDER BY e.created_at DESC) AS row_num
+                               FROM experience e
+                                      INNER JOIN post p ON p.seq = e.from_post_seq
+                                      INNER JOIN user u ON u.seq = e.from_user_seq
+                               WHERE e.to_user_seq = #{userSeq})
+    SELECT *
+    FROM ranked_experience
+    WHERE row_num BETWEEN #{offset} AND #{offset} + #{pageSize}
   </select>
-  <select id="storeNotificationExperiencePropose"
-    resultMap="storeNotificationExperienceProposeResultMap">
-    # user_seq, to_user_seq, nickname, status, proposal_detail, created_at
-    SELECT e.to_user_seq,
-           e.proposal_detail,
-           e.status,
-           e.created_at,
-           ut.nickname as toUserNickname
-    FROM experience e
-           INNER JOIN user u ON u.seq = e.from_user_seq
-           LEFT JOIN user ut ON ut.seq = e.to_user_seq
-    WHERE e.from_user_seq = #{userSeq};
+  <select id="storeNotificationExperienceProposal"
+    resultMap="storeNotificationExperienceProposalResultMap">
+    WITH ranked_proposal AS (SELECT e.to_user_seq,
+                                    e.proposal_detail,
+                                    e.status,
+                                    e.created_at,
+                                    ut.nickname                                    as toUserNickname,
+                                    ROW_NUMBER() OVER (ORDER BY e.created_at DESC) AS row_num
+                             FROM experience e
+                                    INNER JOIN user u ON u.seq = e.from_user_seq
+                                    LEFT JOIN user ut ON ut.seq = e.to_user_seq
+                             WHERE e.from_user_seq = #{userSeq} )
+    SELECT *
+    FROM ranked_proposal
+    WHERE row_num BETWEEN #{offset} AND #{offset} + #{pageSize}
   </select>
 
 
