@@ -7,4 +7,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface InterestAccumulationMapper {
   List<InterestAccumulationDTO> getByUserSeq(Long userSeq);
+  List<InterestAccumulationDTO> findAll();
 }
