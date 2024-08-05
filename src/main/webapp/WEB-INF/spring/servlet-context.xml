@@ -123,8 +123,4 @@
     <constructor-arg name="password" value="${gmail-password}"/>
   </bean>
 
-  <!-- =============================== scheduler 사용 -->
-  <task:scheduler id="jobScheduler" pool-size="10" />
-  <task:annotation-driven scheduler="jobScheduler" />
-
 </beans>
