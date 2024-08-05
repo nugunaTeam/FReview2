@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExperienceProposalInfoDTO {
-  private Long userSeq;
   private Long proposalUserSeq;
   private String nickname;
   private String status;

@@ -11,14 +11,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReceivedLikeInfoDTO {
-
-  private Long userSeq;
   private Long postSeq;
   private String postCode;
-  private String title;
-  private String content;
-  private Long writtenSeq;
+  private String nickname;
   private Timestamp createdAt;
-  private Long likeCount;
-
+  private Long likedUserSeq;
 }

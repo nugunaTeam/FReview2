@@ -6,14 +6,11 @@
 
   <resultMap id="storeNotificationReceivedLikeResultMap"
     type="com.nuguna.freview.store.dto.response.ReceivedLikeInfoDTO">
-    <result property="userSeq" column="user_seq"/>
-    <result property="postSeq" column="post_seq"/>
-    <result property="postCode" column="post_code"/>
-    <result property="title" column="post_title"/>
-    <result property="content" column="post_content"/>
-    <result property="writtenSeq" column="post_author_seq"/>
-    <result property="createdAt" column="like_created_at"/>
-    <result property="likeCount" column="like_count"/>
+    <result property="postSeq" column="seq"/>
+    <result property="postCode" column="code"/>
+    <result property="nickname" column="nickname"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="likedUserSeq" column="liked_user_seq"/>
   </resultMap>
 
   <resultMap id="storeNotificationReceivedZzimCustomerResultMap"
@@ -46,7 +43,7 @@
   <resultMap id="storeNotificationExperienceProposalResultMap"
     type="com.nuguna.freview.store.dto.response.ExperienceProposalInfoDTO">
     <result property="proposalUserSeq" column="to_user_seq"/>
-    <result property="nickname" column="toUserNickname"/>
+    <result property="nickname" column="to_user_nickname"/>
     <result property="status" column="status"/>
     <result property="proposalDetail" column="proposal_detail"/>
     <result property="createdAt" column="created_at"/>
@@ -55,24 +52,38 @@
 
   <select id="storeNotificationReceivedLike"
     resultMap="storeNotificationReceivedLikeResultMap">
-    WITH ranked_likes AS (SELECT l.user_seq                                     AS user_seq,
-                                 p.seq                                          AS post_seq,
-                                 p.code                                         AS post_code,
-                                 p.title                                        AS post_title,
-                                 p.content                                      AS post_content,
-                                 u.seq                                          AS post_author_seq,
-                                 l.created_at                                   AS like_created_at,
-                                 COUNT(lk.seq)                                  AS like_count,
-                                 ROW_NUMBER() OVER (ORDER BY l.created_at DESC) AS row_num
-                          FROM `like` l
-                                 JOIN `post` p ON l.post_seq = p.seq
-                                 JOIN `user` u ON p.user_seq = u.seq
-                                 LEFT JOIN `like` lk ON p.seq = lk.post_seq AND lk.user_seq = #{userSeq}
-                          WHERE l.user_seq = #{userSeq}
-                          GROUP BY l.seq, p.seq)
-    SELECT *
-    FROM ranked_likes
-    WHERE row_num BETWEEN #{offset} AND #{offset} + #{pageSize}
+    select
+        user_post_seqs.seq as seq,
+        user_post_seqs.code as code,
+        u.nickname as nickname,
+        l.created_at,
+        u.seq as liked_user_seq
+    from
+    (select
+        p.seq,
+        p.code
+    from
+        post p
+    where
+        p.user_seq = #{userSeq}) user_post_seqs
+    inner join
+      `like` l
+    on
+      user_post_seqs.seq = l.post_seq
+    inner join
+      `user` u
+    on
+      l.user_seq = u.seq
+    order by
+        l.created_at desc
+    limit
+        #{pageSize}
+    offset
+      #{offset}
+
+
+
+
   </select>
 
   <select id="storeNotificationReceivedZzimCustomer"
@@ -114,7 +125,7 @@
                          GROUP BY u.seq, zz.from_user_seq, zz.to_user_seq)
     SELECT *
     FROM ranked_zzim
-    WHERE row_num BETWEEN #{offset} + 1 AND #{offset} + #{pageSize}
+    WHERE row_num BETWEEN #{offset} AND #{offset} + #{pageSize}
   </select>
 
   <select id="storeNotificationExperienceApply"
@@ -140,7 +151,7 @@
                                     e.proposal_detail,
                                     e.status,
                                     e.created_at,
-                                    ut.nickname                                    as toUserNickname,
+                                    ut.nickname                                    as to_user_nickname,
                                     ROW_NUMBER() OVER (ORDER BY e.created_at DESC) AS row_num
                              FROM experience e
                                     INNER JOIN user u ON u.seq = e.from_user_seq

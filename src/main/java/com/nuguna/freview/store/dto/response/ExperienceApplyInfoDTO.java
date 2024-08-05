@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExperienceApplyInfoDTO {
-  private Long userSeq;
   private Long fromUserSeq;
   private Long postSeq;
   private String title;
