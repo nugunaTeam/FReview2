@@ -26,9 +26,10 @@
     WHERE date = #{date}
   </update>
 
-  <select id="findAll" resultMap="doneExperienceResultMap">
+  <select id="findByDateBetween" resultMap="doneExperienceResultMap">
     SELECT date, total_count
-    from done_experience_accumulation;
+    from done_experience_accumulation
+    where date BETWEEN #{start} AND #{end}
   </select>
 
 </mapper>
