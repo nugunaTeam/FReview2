@@ -56,6 +56,12 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
+  <style>
+    canvas {
+      width: 100% !important;
+      height: 400px !important;
+    }
+  </style>
 </head>
 
 <body>
@@ -156,12 +162,16 @@
 
   <section class="section">
 
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">체험 관련 누적 그래프</h5>
-          <canvas id="myChart" style="height: 400px; width: 100%;"></canvas>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">체험 관련 누적 그래프</h5>
+        <div style="display: flex; align-items: center;">
+          <button id="prevMonthBtn" class="btn btn-secondary" style="margin-right: 10px;">&lt;</button>
+          <canvas id="myChart" style="flex-grow: 1; height: 400px; width: 100%;"></canvas>
+          <button id="nextMonthBtn" class="btn btn-secondary" style="margin-left: 10px;">&gt;</button>
         </div>
       </div>
+    </div>
 
     <div class="card">
       <div class="card-body">
@@ -175,6 +185,11 @@
 
 <script>
   $(document).ready(function() {
+    let currentMonth = '${currentMonth}';
+    let currentDate = new Date(currentMonth + "-01");
+    let doneExperienceChart;
+
+    fetchData(currentMonth);
     function getRandomColor() {
       let letters = '0123456789ABCDEF';
       let color = '#';
@@ -184,6 +199,12 @@
       return color;
     }
 
+    function getMonthYearString(date) {
+      let year = date.getFullYear();
+      let month = (date.getMonth() + 1).toString().padStart(2, '0');
+      return year+"-"+month;
+    }
+
     function formatDate(dateObj) {
       const year = dateObj.year;
       const month = String(dateObj.monthValue).padStart(2, '0');
@@ -191,44 +212,63 @@
       return year+"-"+month+"-"+day;
     }
 
-    $.ajax({
-      url: '/api/admin/analysis/done-experience',
-      method: 'POST',
-      contentType: "application/json",
-      success: function (data) {
-        let ctx = document.getElementById('myChart').getContext('2d');
-        let labels = data.map(d => formatDate(d.date));
-        let values = data.map(d => d.totalDone);
+    function fetchData(date) {
+      $.ajax({
+        url: '/api/admin/analysis/done-experience?date='+date,
+        method: 'POST',
+        contentType: "application/json",
+        success: function (data) {
+          let ctx = document.getElementById('myChart').getContext('2d');
+          let labels = data.map(d => formatDate(d.date));
+          let values = data.map(d => d.totalDone);
 
-        let  myChart = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: labels,
-            datasets: [{
-              label: '체험 성공',
-              data: values,
-              borderColor: 'rgb(75, 192, 192)',
-              tension: 0.1
-            }]
-          },
-          options: {
-            responsive: true,
-            scales: {
-              y: {
-                beginAtZero: true,
-                ticks: {
-                  callback: function(value) {
-                    return Number.isInteger(value) ? value : null;
+          if (doneExperienceChart) {
+            doneExperienceChart.destroy();
+          }
+
+          ctx.canvas.width = ctx.canvas.clientWidth;
+          ctx.canvas.height = 400;
+
+          doneExperienceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [{
+                label: '체험 성공',
+                data: values,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+              }]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    callback: function (value) {
+                      return Number.isInteger(value) ? value : null;
+                    }
                   }
                 }
               }
             }
-          }
-        });
-      },
-      error: function () {
-        console.error('[ERROR] 체험완료 데이터를 불러오던 도중 에러가 발생했습니다');
-      }
+          });
+        },
+        error: function () {
+          console.error('[ERROR] 체험완료 데이터를 불러오던 도중 에러가 발생했습니다');
+        }
+      });
+    }
+
+    $('#prevMonthBtn').click(function() {
+      currentDate.setMonth(currentDate.getMonth() - 1);
+      fetchData(getMonthYearString(currentDate));
+    });
+
+    $('#nextMonthBtn').click(function() {
+      currentDate.setMonth(currentDate.getMonth() + 1);
+      fetchData(getMonthYearString(currentDate));
     });
 
     $.ajax({
