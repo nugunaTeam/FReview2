@@ -6,6 +6,8 @@ import static com.nuguna.freview.global.FileUtil.getSaveProfileFileName;
 import static com.nuguna.freview.global.FileUtil.resizeAndSave;
 import static com.nuguna.freview.store.constant.StoreMyBrandPageContant.STORE_RECENT_MOJIP_POST_PAGE_BLOCK_SIZE;
 import static com.nuguna.freview.store.constant.StoreMyBrandPageContant.STORE_RECENT_MOJIP_POST_PAGE_SIZE;
+import static com.nuguna.freview.store.constant.StoreMyBrandPageContant.STORE_REVIEW_PAGE_BLOCK_SIZE;
+import static com.nuguna.freview.store.constant.StoreMyBrandPageContant.STORE_REVIEW_PAGE_SIZE;
 
 import com.nuguna.freview.customer.dto.response.PaginationInfoResponseDTO;
 import com.nuguna.freview.global.util.PaginationUtil;
@@ -21,6 +23,7 @@ import com.nuguna.freview.store.dto.response.StoreMyTagsUpdateResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreRecentMojipPostInfoDTO;
 import com.nuguna.freview.store.dto.response.StoreRecentMojipPostInfosRetrieveResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreReviewInfosRetrieveResponseDTO;
+import com.nuguna.freview.store.dto.response.StoreReviewLogInfoDTO;
 import com.nuguna.freview.store.mapper.StoreMyBrandMapper;
 import com.nuguna.freview.store.service.StoreMyBrandService;
 import java.io.File;
@@ -66,7 +69,16 @@ public class StoreMyBrandServiceImpl implements StoreMyBrandService {
   @Override
   @Transactional(readOnly = true)
   public StoreReviewInfosRetrieveResponseDTO getStoreReviewInfos(Long userSeq, int targetPage) {
-    return null;
+
+    int storeReviewsCount = storeMyBrandMapper.getStoreReviewsCount(userSeq);
+
+    PaginationInfoResponseDTO paginationInfo = PaginationUtil.makePaginationViewInfo(targetPage,
+        storeReviewsCount, STORE_REVIEW_PAGE_SIZE, STORE_REVIEW_PAGE_BLOCK_SIZE);
+
+    List<StoreReviewLogInfoDTO> storeReviewLogInfos = storeMyBrandMapper.getStoreReviewInfos(
+        userSeq, (targetPage - 1) * STORE_REVIEW_PAGE_SIZE, STORE_REVIEW_PAGE_SIZE);
+
+    return new StoreReviewInfosRetrieveResponseDTO(storeReviewLogInfos, paginationInfo);
   }
 
   @Override

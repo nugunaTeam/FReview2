@@ -1,6 +1,7 @@
 package com.nuguna.freview.store.mapper;
 
 import com.nuguna.freview.store.dto.response.StoreRecentMojipPostInfoDTO;
+import com.nuguna.freview.store.dto.response.StoreReviewLogInfoDTO;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -8,9 +9,14 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface StoreMyBrandMapper {
 
-  Integer getRecentMojipPostsCount(@Param("userSeq") Long userSeq);
+  Integer getRecentMojipPostsCount(@Param("storeSeq") Long storeSeq);
 
-  List<StoreRecentMojipPostInfoDTO> getStoreRecentMojipPosts(@Param("userSeq") Long userSeq,
+  List<StoreRecentMojipPostInfoDTO> getStoreRecentMojipPosts(@Param("storeSeq") Long storeSeq,
+      @Param("offset") int offset, @Param("pageSize") int pageSize);
+
+  Integer getStoreReviewsCount(@Param("storeSeq") Long storeSeq);
+
+  List<StoreReviewLogInfoDTO> getStoreReviewInfos(@Param("storeSeq") Long storeSeq,
       @Param("offset") int offset, @Param("pageSize") int pageSize);
 
   void updateProfilePhotoUrl(@Param("storeSeq") Long storeSeq,
@@ -30,4 +36,5 @@ public interface StoreMyBrandMapper {
 
   void updateStoreLocation(@Param("storeSeq") Long storeSeq,
       @Param("toStoreLocation") String toStoreLocation);
+
 }
