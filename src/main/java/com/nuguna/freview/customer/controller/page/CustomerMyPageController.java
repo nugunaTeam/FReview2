@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Controller
+@RequestMapping("/my")
 public class CustomerMyPageController {
 
   private final CustomerPageService customerPageService;
@@ -21,7 +22,7 @@ public class CustomerMyPageController {
     this.customerPageService = customerPageService;
   }
 
-  @RequestMapping(value = "/my/brand-info", method = RequestMethod.GET)
+  @RequestMapping(value = "/brand-info", method = RequestMethod.GET)
   public String customerMyBrandPage(@RequestParam Long userSeq, Model model) {
     CustomerMyBrandPageInfoResponseDTO brandPageInfo = customerPageService.getBrandPageInfo(
         userSeq);
@@ -32,18 +33,23 @@ public class CustomerMyPageController {
     return "customer-my-brand-info";
   }
 
-  @RequestMapping(value = "/my/activity", method = RequestMethod.GET)
-  public String customerMyActivity(@RequestParam(required = false) Long userSeq) {
+  @RequestMapping(value = "/experience", method = RequestMethod.GET)
+  public String customerMyExperiencePage(@RequestParam(required = false) Long userSeq) {
+    return "customer-my-experience-info";
+  }
+
+  @RequestMapping(value = "/activity", method = RequestMethod.GET)
+  public String customerMyActivityPage(@RequestParam(required = false) Long userSeq) {
     return "customer-my-activity-info";
   }
 
-  @RequestMapping(value = "/my/notification", method = RequestMethod.GET)
-  public String customerMyNotification(@RequestParam(required = false) Long userSeq) {
+  @RequestMapping(value = "/notification", method = RequestMethod.GET)
+  public String customerMyNotificationPage(@RequestParam(required = false) Long userSeq) {
     return "customer-my-notification";
   }
 
-  @RequestMapping(value = "/my/personal-info", method = RequestMethod.GET)
-  public String customerMyPersonalInfo(@RequestParam(required = false) Long userSeq) {
+  @RequestMapping(value = "/personal-info", method = RequestMethod.GET)
+  public String customerMyPersonalInfoPage(@RequestParam(required = false) Long userSeq) {
     return "customer-my-personal-info";
   }
 

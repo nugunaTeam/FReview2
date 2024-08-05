@@ -1,11 +1,11 @@
 package com.nuguna.freview.customer.service.impl;
 
-import static com.nuguna.freview.customer.constant.CustomerConstant.CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE;
-import static com.nuguna.freview.customer.constant.CustomerConstant.CUSTOMER_REVIEW_LOG_FIRST_PAGE_NUMBER;
-import static com.nuguna.freview.customer.constant.CustomerConstant.CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE;
+import static com.nuguna.freview.customer.constant.CustomerReviewLogConstant.CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE;
+import static com.nuguna.freview.customer.constant.CustomerReviewLogConstant.CUSTOMER_REVIEW_LOG_FIRST_PAGE_NUMBER;
+import static com.nuguna.freview.customer.constant.CustomerReviewLogConstant.CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE;
 
+import com.nuguna.freview.customer.dto.response.PaginationInfoResponseDTO;
 import com.nuguna.freview.customer.dto.response.ReviewLogInfoDTO;
-import com.nuguna.freview.customer.dto.response.ReviewPaginationInfoResponseDTO;
 import com.nuguna.freview.customer.dto.response.page.CustomerBrandInfoResponseDTO;
 import com.nuguna.freview.customer.dto.response.page.CustomerMyBrandPageInfoResponseDTO;
 import com.nuguna.freview.customer.dto.response.page.CustomerOtherBrandPageInfoResponseDTO;
@@ -54,8 +54,8 @@ public class CustomerPageServiceImpl implements CustomerPageService {
 
     boolean hasNext = (endPage > 1);
 
-    ReviewPaginationInfoResponseDTO reviewPaginationInfo
-        = new ReviewPaginationInfoResponseDTO(CUSTOMER_REVIEW_LOG_FIRST_PAGE_NUMBER,
+    PaginationInfoResponseDTO reviewPaginationInfo
+        = new PaginationInfoResponseDTO(CUSTOMER_REVIEW_LOG_FIRST_PAGE_NUMBER,
         CUSTOMER_REVIEW_LOG_FIRST_PAGE_NUMBER, endPage, hasNext, false);
     return new CustomerMyBrandPageInfoResponseDTO(brandInfo, reviewsInfo, reviewPaginationInfo);
   }
@@ -83,8 +83,8 @@ public class CustomerPageServiceImpl implements CustomerPageService {
 
     boolean hasNext = (endPage > 1);
 
-    ReviewPaginationInfoResponseDTO reviewPaginationInfo
-        = new ReviewPaginationInfoResponseDTO(CUSTOMER_REVIEW_LOG_FIRST_PAGE_NUMBER,
+    PaginationInfoResponseDTO reviewPaginationInfo
+        = new PaginationInfoResponseDTO(CUSTOMER_REVIEW_LOG_FIRST_PAGE_NUMBER,
         CUSTOMER_REVIEW_LOG_FIRST_PAGE_NUMBER, endPage, hasNext, false);
     return new CustomerOtherBrandPageInfoResponseDTO(otherBrandInfo, otherReviewsInfo,
         reviewPaginationInfo);

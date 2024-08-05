@@ -28,7 +28,7 @@ public class AuthApiController {
   private SendMailUtil sendMailUtil;
 
   @Autowired
-  public AuthApiController(RegisterService registerService, SendMailUtil sendEmail) {this.registerService = registerService; }
+  public AuthApiController(RegisterService registerService, SendMailUtil sendEmail) {this.registerService = registerService; this.sendMailUtil = sendEmail; }
 
   @RequestMapping(value = "/api/auth/check-id", method = RequestMethod.POST)
   public ResponseEntity<RegisterCheckInfoResponseDTO> checkDuplicatedId(@Valid @RequestBody RegisterCheckIdRequestDTO registerCheckIdRequestDTO) {

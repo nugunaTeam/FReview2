@@ -19,6 +19,14 @@
     <result property="updatedAt" column="updated_at"/>
   </resultMap>
 
+  <resultMap id="adminProfileMap" type="com.nuguna.freview.admin.dto.response.page.AdminProfileDTO">
+    <id property="seq" column="seq"/>
+    <result property="email" column="email"/>
+    <result property="password" column="password"/>
+    <result property="nickname" column="nickname"/>
+    <result property="subEmail" column="sub_email"/>
+  </resultMap>
+
   <!-- customerManageMap 설정 -->
   <resultMap id="customerManageMap" type="com.nuguna.freview.admin.dto.response.CustomerInfoDTO">
     <id property="seq" column="seq"/>
@@ -44,6 +52,14 @@
   <select id="selectAdmin" parameterType="Long" resultMap="adminMap">
     select
       seq, code, email, password, nickname, profile_photo_url, sub_email, created_at, updated_at
+    from user
+    where seq = #{userSeq}
+  </select>
+
+  <!-- 관리자 프로필 조회 -->
+  <select id="selectAdminProfile" parameterType="Long" resultMap="adminProfileMap">
+    select
+      seq, email, password, nickname, sub_email
     from user
     where seq = #{userSeq}
   </select>
@@ -113,5 +129,19 @@
     UPDATE user
     SET is_withdrawn = 1
     WHERE seq = #{userSeq}
+  </update>
+
+  <!-- 비밀번호 업데이트 -->
+  <update id="updatePassword" parameterType="map">
+    UPDATE user
+    SET password = #{newPassword}
+    WHERE seq = #{userSeq}
+  </update>
+
+  <!-- 보조 이메일 업데이트 -->
+  <update id="updateSubEmail" parameterType="map">
+    update user
+    set sub_email = #{newEmail}
+    where seq = #{userSeq}
   </update>
 </mapper>

@@ -37,4 +37,10 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(new ErrorResponse(ex.getMessage(), null), HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(IllegalPageAccessException.class)
+  public ResponseEntity<ErrorResponse> handleIllegalPageAccessException(
+      IllegalPageAccessException ex) {
+    return new ResponseEntity<>(new ErrorResponse(ex.getMessage(), null), HttpStatus.BAD_REQUEST);
+  }
+
 }

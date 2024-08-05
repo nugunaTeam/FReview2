@@ -14,7 +14,7 @@ import com.nuguna.freview.customer.dto.response.CustomerMyTagsUpdateResponseDTO;
 import java.io.IOException;
 import org.springframework.web.multipart.MultipartFile;
 
-public interface CustomerBrandService {
+public interface CustomerMyBrandService {
 
   CustomerMyNicknameUpdateResponseDTO updateCustomerNickname(
       CustomerMyNicknameUpdateRequestDTO customerMyNicknameUpdateRequestDTO);

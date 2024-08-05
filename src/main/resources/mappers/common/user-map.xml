@@ -38,5 +38,12 @@
     where seq = #{userSeq}
   </select>
 
+  <!-- 유저 삭제 -->
+  <update id="deleteUser" parameterType="Long">
+    UPDATE user
+    SET is_withdrawn = 1
+    WHERE seq = #{userSeq}
+  </update>
+
 </mapper>
 

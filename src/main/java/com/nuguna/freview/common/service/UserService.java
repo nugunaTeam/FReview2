@@ -7,4 +7,5 @@ public interface UserService {
 
   void signup(CustomerSignupRequestDTO customerSignupRequestDTO);
   UserVO getUserInfo(Long userSeq);
+  boolean withdrawalUser(Long userSeq);
 }

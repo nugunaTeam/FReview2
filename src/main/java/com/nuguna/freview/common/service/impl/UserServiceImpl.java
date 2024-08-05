@@ -41,4 +41,9 @@ public class UserServiceImpl implements UserService {
   public UserVO getUserInfo(Long userSeq) {
     return userMapper.selectUser(userSeq);
   }
+
+  @Override
+  public boolean withdrawalUser(Long userSeq) {
+    return userMapper.deleteUser(userSeq) > 0;
+  }
 }
