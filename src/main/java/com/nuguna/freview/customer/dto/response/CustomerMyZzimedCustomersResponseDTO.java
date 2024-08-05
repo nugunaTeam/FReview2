@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 public class CustomerMyZzimedCustomersResponseDTO {
 
   private List<MyZzimedCustomerInfoDTO> zzimedCustomerInfos;
-  private PaginationInfoResponseDTO paginationInfoResponseDTO;
+  private PaginationInfoResponseDTO paginationInfo;
 }

@@ -8,9 +8,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerMyZzimedStoresRetrieveResponseDTO {
+public class CustomerProposalToMeInfosRetrieveResponseDTO {
 
-  private List<MyZzimedStoreInfoDTO> zzimedStoreInfos;
-
+  private List<ProposalToMeInfoDTO> proposalInfos;
   private PaginationInfoResponseDTO paginationInfo;
 }
