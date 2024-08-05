@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.store.mapper.StoreNotificationPageMapper">
+
+  <select id="storeNotificationPageReceivedLikeCount" resultType="java.lang.Integer">
+    SELECT COUNT(DISTINCT l.user_seq) AS like_count
+    FROM `like` l
+           JOIN `post` p ON l.post_seq = p.seq
+    WHERE p.user_seq = #{userSeq}
+  </select>
+
+  <select id="storeNotificationPageReceivedZzimCustomerCount" resultType="java.lang.Integer">
+    SELECT COUNT(DISTINCT zz.from_user_seq) AS customer_zzim_count
+    FROM zzim zz
+           JOIN `user` u ON u.seq = zz.from_user_seq
+    WHERE zz.to_user_seq = #{userSeq}
+      AND u.code = 'CUSTOMER'
+  </select>
+
+  <select id="storeNotificationPageReceivedZzimStoreCount" resultType="java.lang.Integer">
+    SELECT COUNT(DISTINCT zz.from_user_seq) AS customer_zzim_count
+    FROM zzim zz
+           JOIN `user` u ON u.seq = zz.from_user_seq
+    WHERE zz.to_user_seq = #{userSeq}
+      AND u.code = 'STORE'
+  </select>
+
+  <select id="storeNotificationPageActivityApplyCount" resultType="java.lang.Integer">
+    SELECT COUNT(DISTINCT e.from_user_seq) AS applicant_count
+    FROM experience e
+    WHERE e.to_user_seq = #{userSeq}
+  </select>
+
+  <select id="storeNotificationPageActivityProposalCount" resultType="java.lang.Integer">
+    SELECT COUNT(*) AS total_proposals
+    FROM experience e
+    WHERE e.from_user_seq = #{userSeq}
+  </select>
+</mapper>
