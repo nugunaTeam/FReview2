@@ -60,6 +60,17 @@
       width: 100% !important;
       height: 400px !important;
     }
+    #prevMonthBtn, #nextMonthBtn {
+      background-color: transparent !important;
+      border: none;
+      font-size: 24px;
+      font-weight: bold;
+      color: lightseagreen;
+      cursor: pointer;
+    }
+    #prevMonthBtn:hover, #nextMonthBtn:hover {
+      color: darkcyan;
+    }
   </style>
 </head>
 
@@ -147,9 +158,9 @@
       <div class="card-body">
         <h5 class="card-title">체험 관련 누적 그래프</h5>
         <div style="display: flex; align-items: center;">
-          <button id="prevMonthBtn" class="btn btn-secondary" style="margin-right: 10px;">&lt;</button>
-          <canvas id="myChart" style="flex-grow: 1; height: 400px; width: 100%;"></canvas>
-          <button id="nextMonthBtn" class="btn btn-secondary" style="margin-left: 10px;">&gt;</button>
+          <button id="prevMonthBtn" class="btn btn-secondary" style="margin-right: 10px;">&lt;&lt;</button>
+          <canvas id="doneExperienceChart" style="flex-grow: 1; height: 400px; width: 100%;"></canvas>
+          <button id="nextMonthBtn" class="btn btn-secondary" style="margin-left: 10px;">&gt;&gt;</button>
         </div>
       </div>
     </div>
@@ -157,7 +168,7 @@
     <div class="card">
       <div class="card-body">
         <h5 class="card-title">관심사 분포도</h5>
-        <canvas id="pieChart" style="max-height: 400px;"></canvas>
+        <canvas id="interestDistributionChart" style="max-height: 400px;"></canvas>
       </div>
     </div>
   </section>
@@ -199,7 +210,7 @@
         method: 'POST',
         contentType: "application/json",
         success: function (data) {
-          let ctx = document.getElementById('myChart').getContext('2d');
+          let ctx = document.getElementById('doneExperienceChart').getContext('2d');
           let labels = data.map(d => formatDate(d.date));
           let values = data.map(d => d.totalDone);
 
@@ -267,7 +278,7 @@
           return getRandomColor();
         });
 
-        new Chart(document.getElementById('pieChart'), {
+        new Chart(document.getElementById('interestDistributionChart'), {
           type: 'pie',
           data: {
             labels: labels,
@@ -277,7 +288,7 @@
               backgroundColor: backgroundColors,
               hoverOffset: 4
             }]
-          }
+          },
         });
       },
       error: function() {
