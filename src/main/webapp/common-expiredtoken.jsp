@@ -15,7 +15,7 @@
             crossorigin="anonymous"></script>
     <script>
       $(function(){
-        alert("사용 시간이 지났습니다. 다시 로그인 해주세요!");
+        alert("로그인 후 이용해주세요!");
         location.replace("/logout");
       })
     </script>
