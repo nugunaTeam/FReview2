@@ -55,7 +55,6 @@ public class StoreNotificationPageServiceImpl implements StoreNotificationPageSe
   public StoreNotificationReceivedZzimCustomerResponseDTO storeNotificationReceivedZzimCustomer(
       Long userSeq, int currentPage) {
     int receivedZzimCustomerCount = storeNotificationPageMapper.storeNotificationPageReceivedZzimCustomerCount(userSeq);
-
     PaginationInfoResponseDTO paginationInfos = PaginationUtil.makePaginationViewInfo(
         currentPage, receivedZzimCustomerCount, STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_BLOCK_SIZE
     );
