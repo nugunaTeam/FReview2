@@ -38,7 +38,6 @@
 
   <!-- Template Main CSS File -->
   <link href="/assets/css/style.css" rel="stylesheet">
-  <link href="/assets/css/hr.css" rel="stylesheet">
 
   <!-- JQuery -->
   <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
@@ -72,6 +71,8 @@
 
 <body>
 
+<jsp:include page="/header.jsp" />
+
 <!-- 탈퇴 모달 창 -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -94,26 +95,6 @@
     </div>
   </div>
 </div>
-
-<!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center header-hr">
-  <div class="d-flex align-items-center justify-content-between ">
-    <a href="/main?seq=${userSeq}&pagecode=Requester"
-       class="logo d-flex align-items-center">
-      <img src="/assets/img/logo/logo-vertical.png" alt=""
-           style="  width: 50px; margin-top: 20px;">
-      <span class="d-none d-lg-block">FReview</span>
-    </a>
-    <i class="bi bi-list toggle-sidebar-btn"></i>
-  </div>
-  <div class="header-hr-right">
-    <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
-      ${nickname}
-      <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
-    </a>
-    <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
-  </div>
-</header>
 
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
