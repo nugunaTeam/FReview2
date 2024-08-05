@@ -3,6 +3,7 @@ package com.nuguna.freview.admin.controller.page;
 import com.nuguna.freview.admin.service.AdminService;
 import com.nuguna.freview.admin.vo.AdminVO;
 import com.nuguna.freview.common.vo.user.UserCode;
+import java.time.YearMonth;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -78,11 +79,14 @@ public class AdminController {
     Long userSeq = 301L;
     AdminVO loginUser = adminService.getAdminById(userSeq);
     UserCode currentCode = UserCode.from(loginUser.getCode());
+    YearMonth currentYearMonth = YearMonth.now();
+    String currentMonth = currentYearMonth.toString();
 
     if (!currentCode.isAdmin()) {
       return "common-error-404";
     }
     model.addAttribute("loginUser", loginUser);
+    model.addAttribute("currentMonth", currentMonth);
 
     return "admin-analysis";
   }
