@@ -38,6 +38,7 @@
 
     <!-- Template Main CSS File -->
     <link href="/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/hr.css" rel="stylesheet">
 
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>

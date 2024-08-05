@@ -111,6 +111,7 @@
 <jsp:include page="/header.jsp"/>
 
 <main id="main" style="margin:auto; margin-top:50px">
+
     <div class="pagetitle">
         <h1>모집</h1>
     </div>

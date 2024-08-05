@@ -132,6 +132,7 @@
                 <tbody id="noticeList"></tbody>
             </table>
             <div class="pagination" id="pagination"></div>
+
         </div>
     </div>
 </main>

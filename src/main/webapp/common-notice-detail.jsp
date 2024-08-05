@@ -93,7 +93,6 @@
         color: #fff !important;
         display: inline-block !important;
       }
-
     </style>
     <!-- =======================================================
     * Template Name: NiceAdmin

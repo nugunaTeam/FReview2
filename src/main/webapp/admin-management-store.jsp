@@ -39,7 +39,6 @@
 
     <!-- Template Main CSS File -->
     <link href="/assets/css/style.css" rel="stylesheet">
-
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 
@@ -69,7 +68,6 @@
     justify-content: space-between;
     align-items: center;
   }
-
 </style>
 
 <body>
@@ -101,36 +99,6 @@
         </div>
     </div>
 </div>
-
-<!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center header">
-    <div class="d-flex align-items-center justify-content-between ">
-        <a href="/main?seq=${userSeq}&pagecode=Requester"
-           class="logo d-flex align-items-center">
-            <img src="/assets/img/logo/logo-vertical.png" alt=""
-                 style="  width: 50px; margin-top: 20px;">
-            <span class="d-none d-lg-block">FReview</span>
-        </a>
-    </div>
-
-    <nav class="nav-menu d-none d-lg-block">
-        <ul>
-            <li><a href="/notice">공지게시판</a></li>
-            <li><a href="/mojip">모집게시판</a></li>
-            <li><a href="/recommendation/customer">체험단 추천</a></li>
-            <li><a href="/recommendation/store">사장님 추천</a></li>
-        </ul>
-    </nav>
-
-    <div class="header-right">
-        <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
-            ${nickname}
-            <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
-        </a>
-        <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
-    </div>
-</header>
-
 
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
