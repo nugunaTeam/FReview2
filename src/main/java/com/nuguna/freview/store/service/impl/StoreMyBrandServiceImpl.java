@@ -1,15 +1,23 @@
 package com.nuguna.freview.store.service.impl;
 
+import static com.nuguna.freview.global.FileUtil.getProfileDestinationFilePath;
+import static com.nuguna.freview.global.FileUtil.getResizedProfileFilePath;
+import static com.nuguna.freview.global.FileUtil.getSaveProfileFileName;
+import static com.nuguna.freview.global.FileUtil.resizeAndSave;
+
 import com.nuguna.freview.store.dto.request.StoreMyFoodTypesUpdateRequestDTO;
 import com.nuguna.freview.store.dto.request.StoreMyIntroduceUpdateRequestDTO;
 import com.nuguna.freview.store.dto.request.StoreMyStoreLocationUpdateRequestDTO;
 import com.nuguna.freview.store.dto.request.StoreMyTagsUpdateRequestDTO;
 import com.nuguna.freview.store.dto.response.StoreMyFoodTypesUpdateResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreMyIntroduceUpdateResponseDTO;
+import com.nuguna.freview.store.dto.response.StoreMyProfileUpdateResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreMyStoreLocationUpdateResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreMyTagsUpdateResponseDTO;
 import com.nuguna.freview.store.mapper.StoreMyBrandMapper;
 import com.nuguna.freview.store.service.StoreMyBrandService;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +38,19 @@ public class StoreMyBrandServiceImpl implements StoreMyBrandService {
   }
 
   @Override
-  public void updateStorePhotoUrl(Long userSeq, MultipartFile profileFile) {
+  public StoreMyProfileUpdateResponseDTO updateStorePhotoUrl(Long storeSeq,
+      MultipartFile profileFile) throws IOException {
+    // 저장할 프로필 파일 이름
+    String saveProfileFilename = getSaveProfileFileName(profileFile.getOriginalFilename());
+    // 프로필 파일 원본이 저장될 위치
+    File destinationFilePath = getProfileDestinationFilePath(saveProfileFilename);
+    profileFile.transferTo(destinationFilePath);
+
+    File resizedFilePath = getResizedProfileFilePath(saveProfileFilename);
+    resizeAndSave(destinationFilePath, resizedFilePath);
+
+    storeMyBrandMapper.updateProfilePhotoUrl(storeSeq, saveProfileFilename);
+    return new StoreMyProfileUpdateResponseDTO(saveProfileFilename);
   }
 
   @Override

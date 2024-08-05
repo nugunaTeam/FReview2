@@ -6,6 +6,7 @@ import com.nuguna.freview.store.dto.request.StoreMyStoreLocationUpdateRequestDTO
 import com.nuguna.freview.store.dto.request.StoreMyTagsUpdateRequestDTO;
 import com.nuguna.freview.store.dto.response.StoreMyFoodTypesUpdateResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreMyIntroduceUpdateResponseDTO;
+import com.nuguna.freview.store.dto.response.StoreMyProfileUpdateResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreMyStoreLocationUpdateResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreMyTagsUpdateResponseDTO;
 import com.nuguna.freview.store.service.StoreMyBrandService;
@@ -25,21 +26,21 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @RestController
 @RequestMapping("/api/store/my/brand-info")
-public class StoreMyBrandApiController {
+public class StoreMyBrandInfoApiController {
 
   // TODO : 수정 API 만들기 ( 프로필 사진, 소개글, 활동 분야, 태그, 위치 수정 API ) => OK
   // TODO : AJAX로 리뷰리스트 들고오기 (1)
-  // TODO : AJAX로 STORE_HIDDEN 처리할 수 있도록 하기 ( API )
-  // TODO : AJAX로 모집 중인 글 리스트 들고오기 (2)
+  // TODO : AJAX로 STORE_HIDDEN 처리할 수 있도록 하기 (2)
+  // TODO : AJAX로 모집 중인 글 리스트 들고오기 (3)
   private final StoreMyBrandService storeMyBrandService;
 
   @Autowired
-  public StoreMyBrandApiController(StoreMyBrandService storeMyBrandService) {
+  public StoreMyBrandInfoApiController(StoreMyBrandService storeMyBrandService) {
     this.storeMyBrandService = storeMyBrandService;
   }
 
   @RequestMapping(value = "/profile-photo-url", method = RequestMethod.POST)
-  public ResponseEntity<Void> updateStoreProfilePhoto(
+  public ResponseEntity<StoreMyProfileUpdateResponseDTO> updateStoreProfilePhoto(
       @RequestParam("userSeq") Long userSeq,
       @RequestParam("profileFile") MultipartFile profileFile)
       throws IOException {
@@ -48,8 +49,9 @@ public class StoreMyBrandApiController {
       throw new IllegalArgumentException("프로필 파일은 필수값입니다.");
     }
 
-    storeMyBrandService.updateStorePhotoUrl(userSeq, profileFile);
-    return new ResponseEntity<>(HttpStatus.OK);
+    StoreMyProfileUpdateResponseDTO storeMyProfileUpdateResponseDTO = storeMyBrandService.updateStorePhotoUrl(
+        userSeq, profileFile);
+    return new ResponseEntity<>(storeMyProfileUpdateResponseDTO, HttpStatus.OK);
   }
 
   @RequestMapping(value = "/introduce", method = RequestMethod.PUT)

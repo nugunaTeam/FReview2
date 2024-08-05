@@ -7,6 +7,9 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface StoreMyBrandMapper {
 
+  void updateProfilePhotoUrl(@Param("storeSeq") Long storeSeq,
+      @Param("profilePhotoUrl") String profilePhotoUrl);
+
   void updateStoreIntroduce(@Param("storeSeq") Long storeSeq,
       @Param("toIntroduce") String toIntroduce);
 
