@@ -5,24 +5,13 @@ import com.nuguna.freview.OAuth.dto.response.GoogleUserInfoDTO;
 import com.nuguna.freview.OAuth.service.OAuthService;
 import com.nuguna.freview.OAuth.service.OAuthUserService;
 import com.nuguna.freview.security.JwtUtil;
-import com.nuguna.freview.security.login.CustomUserDetail;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -75,24 +64,35 @@ public class OAuthController {
     String userEmail = oauthUser.getUservo().getEmail();
     String role = oauthUser.getRole();
 
-    //jwt 생성
-    String accessToken = jwtUtil.createToken(userSeq, userEmail, role,1000L * 60 * 60);
-    String refreshToken = jwtUtil.createToken(userSeq, userEmail, role,1000L * 60 * 180);
+    String businessNumber = oauthUser.getUservo().getBusinessNumber();
+    String code = oauthUser.getUservo().getCode();
+    String nickname = oauthUser.getUservo().getNickname();
+    String profilePhotoUrl = oauthUser.getUservo().getProfilePhotoUrl();
+    String introduce = oauthUser.getUservo().getIntroduce();
+    String subEmail = oauthUser.getUservo().getSubEmail();
+    String loginType = oauthUser.getUservo().getLoginType();
+    Boolean isWithDrawn = oauthUser.getUservo().getIsWithDrawn();
+    String ageGroup = oauthUser.getUservo().getAgeGroup();
+    String storeLocation = oauthUser.getUservo().getStoreLocation();
 
-    // 리프레시 토큰 쿠키에 저장
-    Cookie refreshCookie = new Cookie("refresh", refreshToken);
-    refreshCookie.setPath("/");
-    refreshCookie.setMaxAge(60*180);
-    refreshCookie.setSecure(true);
+    //jwt 생성
+    String accessToken = jwtUtil.createToken(userSeq, userEmail, role,1000L * 60 * 60, businessNumber, code, nickname, profilePhotoUrl, introduce, subEmail, loginType, isWithDrawn, ageGroup, storeLocation);
+    String refreshToken = jwtUtil.createToken(userSeq, userEmail, role,1000L * 60 * 60, businessNumber, code, nickname, profilePhotoUrl, introduce, subEmail, loginType, isWithDrawn, ageGroup, storeLocation);
 
     //액세스 토큰 쿠키에 저장
     Cookie accessCookie = new Cookie("access", accessToken);
+    accessCookie.setPath("/");
+    accessCookie.setMaxAge(10);
+    accessCookie.setSecure(true);
+
+    Cookie refreshCookie = new Cookie("refresh", refreshToken);
     refreshCookie.setPath("/");
-    refreshCookie.setMaxAge(60*180);
+    refreshCookie.setMaxAge(60*60);
     refreshCookie.setSecure(true);
 
     httpServletResponse.addCookie(accessCookie);
     httpServletResponse.addCookie(refreshCookie);
+
     if(role.equals("ROLE_ADMIN")) {
       return "redirect: /admin/manage/store";
     }else if(role.equals("ROLE_CUSTOMER")) {
