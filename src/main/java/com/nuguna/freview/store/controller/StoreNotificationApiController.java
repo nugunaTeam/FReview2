@@ -1,18 +1,14 @@
 package com.nuguna.freview.store.controller;
 
-import com.nuguna.freview.store.dto.request.page.StoreNotificationPageRequestDTO;
+import com.nuguna.freview.global.exception.IllegalPageAccessException;
 import com.nuguna.freview.store.dto.response.StoreNotificationExperienceApplyResponseDTO;
-import com.nuguna.freview.store.dto.response.StoreNotificationExperienceListResponseDTO;
-import com.nuguna.freview.store.dto.response.StoreNotificationExperienceProposeResponseDTO;
+import com.nuguna.freview.store.dto.response.StoreNotificationExperienceProposalResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreNotificationReceivedLikeResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreNotificationReceivedZzimCustomerResponseDTO;
-import com.nuguna.freview.store.dto.response.StoreNotificationReceivedZzimResponseDTO;
 import com.nuguna.freview.store.dto.response.StoreNotificationReceivedZzimStoreResponseDTO;
 import com.nuguna.freview.store.service.StoreNotificationPageService;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,30 +26,36 @@ public class StoreNotificationApiController {
   }
 
   @RequestMapping(value = "/received-like", method = RequestMethod.GET)
-  public List<StoreNotificationReceivedLikeResponseDTO> storeNotificationReceivedLike(@RequestParam("userSeq") Long userSeq) {
-    List<StoreNotificationReceivedLikeResponseDTO> receivedLike = storeNotificationPageService.storeNotificationReceivedLike(userSeq);
-    return receivedLike;
+  public StoreNotificationReceivedLikeResponseDTO storeNotificationReceivedLike(
+      @RequestParam("userSeq") Long userSeq, @RequestParam Integer currentPage) throws IllegalPageAccessException {
+    return storeNotificationPageService.storeNotificationReceivedLike(userSeq, currentPage);
   }
 
-  @RequestMapping(value = "/received-zzim", method = RequestMethod.GET)
-  public StoreNotificationReceivedZzimResponseDTO receivedZzimList (@RequestParam("userSeq") Long userSeq) {
-    List<StoreNotificationReceivedZzimCustomerResponseDTO> receivedZzimCustomer = storeNotificationPageService.storeNotificationReceivedZzimCustomer(userSeq);
-    List<StoreNotificationReceivedZzimStoreResponseDTO> receivedZzimStore = storeNotificationPageService.storeNotificationReceivedZzimStore(userSeq);
-    StoreNotificationReceivedZzimResponseDTO receivedZzimList = new StoreNotificationReceivedZzimResponseDTO();
-    receivedZzimList.setZzimCustomers(receivedZzimCustomer);
-    receivedZzimList.setZzimStores(receivedZzimStore);
+  @RequestMapping(value = "/received-zzim-customer", method = RequestMethod.GET)
+  public StoreNotificationReceivedZzimCustomerResponseDTO storeNotificationReceivedZzimCustomer (
+      @RequestParam("userSeq") Long userSeq, @RequestParam Integer currentPage) throws IllegalPageAccessException {
 
-    return receivedZzimList;
+    return storeNotificationPageService.storeNotificationReceivedZzimCustomer(userSeq, currentPage);
   }
 
-  @RequestMapping(value = "/experience-list", method = RequestMethod.POST)
-  public StoreNotificationExperienceListResponseDTO experienceList(@RequestBody StoreNotificationPageRequestDTO storeNotificationPageRequestDTO) {
-      List<StoreNotificationExperienceApplyResponseDTO> expApply = storeNotificationPageService.storeNotificationExperienceApply(storeNotificationPageRequestDTO.getUserSeq());
-      List<StoreNotificationExperienceProposeResponseDTO> expPropose = storeNotificationPageService.storeNotificationExperiencePropose(storeNotificationPageRequestDTO.getUserSeq());
-      StoreNotificationExperienceListResponseDTO experienceList = new StoreNotificationExperienceListResponseDTO();
-      experienceList.setApplyList(expApply);
-      experienceList.setProposeList(expPropose);
-      return experienceList;
+  @RequestMapping(value = "/received-zzim-store", method = RequestMethod.GET)
+  public StoreNotificationReceivedZzimStoreResponseDTO storeNotificationReceivedZzimStore (
+      @RequestParam("userSeq") Long userSeq, @RequestParam Integer currentPage) throws IllegalPageAccessException {
+
+      return storeNotificationPageService.storeNotificationReceivedZzimStore(userSeq, currentPage);
+  }
+
+  @RequestMapping(value = "/experience-apply", method = RequestMethod.GET)
+  public StoreNotificationExperienceApplyResponseDTO storeNotificationExperienceApply(
+      @RequestParam("userSeq") Long userSeq, @RequestParam Integer currentPage) {
+
+      return storeNotificationPageService.storeNotificationExperienceApply(userSeq, currentPage);
+  }
+
+  @RequestMapping(value = "/experience-proposal", method = RequestMethod.GET)
+  public StoreNotificationExperienceProposalResponseDTO storeNotificationExperienceProposal(
+      @RequestParam("userSeq") Long userSeq, @RequestParam Integer currentPage) {
+    return storeNotificationPageService.storeNotificationExperienceProposal(userSeq, currentPage);
   }
 
 }
