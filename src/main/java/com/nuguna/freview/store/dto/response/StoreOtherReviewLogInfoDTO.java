@@ -12,7 +12,7 @@ public class StoreOtherReviewLogInfoDTO {
 
   private Long seq;
   private Long customerSeq;
-  private Long customerNickname;
+  private String customerNickname;
   private String status;
   private String url;
   private LocalDate visitDate;

@@ -8,8 +8,8 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface StoreOtherBrandMapper {
 
-  Integer getStoreReviewsCount(@Param("storeSeq") Long storeSeq);
+  Integer getOtherStoreReviewsCount(@Param("storeSeq") Long storeSeq);
 
-  List<StoreOtherReviewLogInfoDTO> getStoreReviewInfos(@Param("storeSeq") Long storeSeq,
+  List<StoreOtherReviewLogInfoDTO> getOtherStoreReviewInfos(@Param("storeSeq") Long storeSeq,
       @Param("offset") int offset, @Param("pageSize") int pageSize);
 }

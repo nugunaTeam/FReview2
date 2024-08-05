@@ -29,12 +29,13 @@ public class StoreOtherBrandServiceImpl implements StoreOtherBrandService {
   public StoreOtherReviewInfosRetrieveResponseDTO getOtherStoreReviewInfos(Long userSeq,
       int targetPage) {
 
-    int otherStoreReviewsCount = storeOtherBrandMapper.getStoreReviewsCount(userSeq);
+    int otherStoreReviewsCount = storeOtherBrandMapper.getOtherStoreReviewsCount(userSeq);
 
+    // TODO : 브랜치 머지 이후 매직 넘버를 상수로 바꿔줘야 함.
     PaginationInfoResponseDTO paginationInfo = PaginationUtil.makePaginationViewInfo(targetPage,
         otherStoreReviewsCount, 5, 5);
 
-    List<StoreOtherReviewLogInfoDTO> storeOtherReviewLogInfos = storeOtherBrandMapper.getStoreReviewInfos(
+    List<StoreOtherReviewLogInfoDTO> storeOtherReviewLogInfos = storeOtherBrandMapper.getOtherStoreReviewInfos(
         userSeq, (targetPage - 1) * 5, 5);
 
     return new StoreOtherReviewInfosRetrieveResponseDTO(storeOtherReviewLogInfos, paginationInfo);
