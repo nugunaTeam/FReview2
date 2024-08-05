@@ -32,7 +32,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/store/my/brand-info")
 public class StoreMyBrandInfoApiController {
 
-  // TODO : 수정 API 만들기 ( 프로필 사진, 소개글, 활동 분야, 태그, 위치 수정 API ) => 구현 완료
   private final StoreMyBrandService storeMyBrandService;
 
   @Autowired
@@ -40,7 +39,6 @@ public class StoreMyBrandInfoApiController {
     this.storeMyBrandService = storeMyBrandService;
   }
 
-  // TODO : AJAX로 모집 중인 글 리스트 들고오기 (1)
   @RequestMapping(value = "/recent-mojip-posts", method = RequestMethod.GET)
   public ResponseEntity<StoreRecentMojipPostInfosRetrieveResponseDTO> getRecentMojipPostInfos(
       @RequestParam Long userSeq, @RequestParam Integer targetPage) {
@@ -49,7 +47,6 @@ public class StoreMyBrandInfoApiController {
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
-  // TODO : AJAX로 리뷰리스트 들고오기 (2)
   @RequestMapping(value = "/reviews", method = RequestMethod.GET)
   public ResponseEntity<StoreReviewInfosRetrieveResponseDTO> getStoreReviewInfos(
       @RequestParam Long userSeq, @RequestParam Integer targetPage) {
@@ -58,7 +55,6 @@ public class StoreMyBrandInfoApiController {
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
-  // TODO : AJAX로 STORE_HIDDEN 처리할 수 있도록 하기 (3)
   @RequestMapping(value = "/review/hide/{reviewSeq}", method = RequestMethod.POST)
   public ResponseEntity<Void> hideStoreReview(@PathVariable("reviewSeq") Long reviewSeq,
       @RequestBody @Valid StoreHideReviewRequestDTO storeHideReviewRequestDTO) {

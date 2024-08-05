@@ -22,8 +22,6 @@ public class StoreBrandPageController {
     this.storeBrandPageService = storeBrandPageService;
   }
 
-  // TODO : 찜 하기/ 찜 취소 API 연동
-
   @RequestMapping(value = "/my/brand", method = RequestMethod.GET)
   public String storeMyBrandPage(@RequestParam Long storeSeq, Model model) {
     StoreBrandInfoResponseDTO storeBrandPageInfo = storeBrandPageService.getMyBrandPageInfo(

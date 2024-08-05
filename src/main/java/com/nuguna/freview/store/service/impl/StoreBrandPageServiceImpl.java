@@ -22,9 +22,6 @@ public class StoreBrandPageServiceImpl implements StoreBrandPageService {
   @Override
   @Transactional(readOnly = true)
   public StoreBrandInfoResponseDTO getMyBrandPageInfo(Long storeSeq) {
-    // TODO : (스토어명, 찜 개수, 소개글, 활동분야 리스트, 태그 리스트, 위치)
-    // TODO : 나머지 정보 ( 진행중인 모집글 정보 리스트, 받은 리뷰 리스트 => AJAX 처리 )
-    return storeBrandPageMapper.getStoreBrandInfo(
-        storeSeq);
+    return storeBrandPageMapper.getStoreBrandInfo(storeSeq);
   }
 }
