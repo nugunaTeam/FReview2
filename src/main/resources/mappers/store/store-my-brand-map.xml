@@ -77,6 +77,19 @@
     limit #{pageSize} offset #{offset}
   </select>
 
+  <select id="checkExistStoreReview" resultType="java.lang.Boolean">
+    select count(1)
+    from review r
+    where r.seq = #{reviewSeq}
+      and r.store_seq = #{storeSeq}
+      and r.status not in ('STORE_HIDDEN')
+  </select>
+
+  <update id="hideStoreReview">
+    update review r
+    set r.status = 'STORE_HIDDEN'
+    where r.seq = #{reviewSeq}
+  </update>
 
   <update id="updateProfilePhotoUrl">
     update user

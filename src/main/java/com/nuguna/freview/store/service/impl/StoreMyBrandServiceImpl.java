@@ -83,6 +83,10 @@ public class StoreMyBrandServiceImpl implements StoreMyBrandService {
 
   @Override
   public void hideStoreReview(Long userSeq, Long reviewSeq) {
+    if (!storeMyBrandMapper.checkExistStoreReview(userSeq, reviewSeq)) {
+      throw new IllegalArgumentException("유효한 리뷰가 아닙니다.");
+    }
+    storeMyBrandMapper.hideStoreReview(reviewSeq);
   }
 
   @Override

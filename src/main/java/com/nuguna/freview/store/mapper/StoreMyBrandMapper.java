@@ -19,6 +19,11 @@ public interface StoreMyBrandMapper {
   List<StoreReviewLogInfoDTO> getStoreReviewInfos(@Param("storeSeq") Long storeSeq,
       @Param("offset") int offset, @Param("pageSize") int pageSize);
 
+  Boolean checkExistStoreReview(@Param("storeSeq") Long storeSeq,
+      @Param("reviewSeq") Long reviewSeq);
+
+  void hideStoreReview(@Param("reviewSeq") Long reviewSeq);
+
   void updateProfilePhotoUrl(@Param("storeSeq") Long storeSeq,
       @Param("profilePhotoUrl") String profilePhotoUrl);
 

@@ -1,5 +1,6 @@
 package com.nuguna.freview.store.controller;
 
+import com.nuguna.freview.store.dto.request.StoreHideReviewRequestDTO;
 import com.nuguna.freview.store.dto.request.StoreMyFoodTypesUpdateRequestDTO;
 import com.nuguna.freview.store.dto.request.StoreMyIntroduceUpdateRequestDTO;
 import com.nuguna.freview.store.dto.request.StoreMyStoreLocationUpdateRequestDTO;
@@ -60,11 +61,10 @@ public class StoreMyBrandInfoApiController {
   // TODO : AJAX로 STORE_HIDDEN 처리할 수 있도록 하기 (3)
   @RequestMapping(value = "/review/hide/{reviewSeq}", method = RequestMethod.POST)
   public ResponseEntity<Void> hideStoreReview(@PathVariable("reviewSeq") Long reviewSeq,
-      @RequestParam Long userSeq) {
-    storeMyBrandService.hideStoreReview(userSeq, reviewSeq);
+      @RequestBody @Valid StoreHideReviewRequestDTO storeHideReviewRequestDTO) {
+    storeMyBrandService.hideStoreReview(storeHideReviewRequestDTO.getUserSeq(), reviewSeq);
     return new ResponseEntity<>(HttpStatus.OK);
   }
-
 
   @RequestMapping(value = "/profile-photo-url", method = RequestMethod.POST)
   public ResponseEntity<StoreMyProfileUpdateResponseDTO> updateStoreProfilePhoto(
