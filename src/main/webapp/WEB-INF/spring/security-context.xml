@@ -52,13 +52,51 @@
 		<access-denied-handler ref="accessDeniedHandler"/>
 	</http>
 
+	<http pattern="/api/admin/**" entry-point-ref="jwtAuthenticationEntryPoint">
+		<csrf disabled="true"/>
+		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
+		<access-denied-handler ref="accessDeniedHandler"/>
+	</http>
+
+	<http pattern="/admin/**" entry-point-ref="jwtAuthenticationEntryPoint">
+		<csrf disabled="true"/>
+		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
+		<access-denied-handler ref="accessDeniedHandler"/>
+	</http>
+
+	<http pattern="/api/customer/**" entry-point-ref="jwtAuthenticationEntryPoint">
+		<csrf disabled="true"/>
+		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
+		<access-denied-handler ref="accessDeniedHandler"/>
+	</http>
+
+	<http pattern="/api/other/**" entry-point-ref="jwtAuthenticationEntryPoint">
+		<csrf disabled="true"/>
+		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
+		<access-denied-handler ref="accessDeniedHandler"/>
+	</http>
+
+	<http pattern="/brand/**" entry-point-ref="jwtAuthenticationEntryPoint">
+		<csrf disabled="true"/>
+		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
+		<access-denied-handler ref="accessDeniedHandler"/>
+	</http>
+
+	<http pattern="/my/**" entry-point-ref="jwtAuthenticationEntryPoint">
+		<csrf disabled="true"/>
+		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
+		<access-denied-handler ref="accessDeniedHandler"/>
+	</http>
+
+	<http pattern="/api/store/**" entry-point-ref="jwtAuthenticationEntryPoint">
+		<csrf disabled="true"/>
+		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
+		<access-denied-handler ref="accessDeniedHandler"/>
+	</http>
+
 	<http>
 		<csrf disabled="true"/>
 		<intercept-url pattern="/resources/**" 		access="permitAll" />
-		<intercept-url pattern="/member/loginPage" 	access="permitAll" />
-		<intercept-url pattern="/member/denied" 	access="permitAll" />
-		<intercept-url pattern="/member/logout" 	access="permitAll" />
-		<intercept-url pattern="/member/map" 		access="hasRole('ROLE_ADMIN')" />
 		<intercept-url pattern="/**" 				access="permitAll" />
 		<intercept-url pattern="/oauth/**" access="permitAll"/>
 		<form-login
