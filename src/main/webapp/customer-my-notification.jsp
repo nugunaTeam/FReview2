@@ -473,7 +473,7 @@
         contentType: "application/x-www-form-urlencoded",
         dataType: "text",
         success: function (response) {
-          alert("알림 변경 성공");
+          alert("해당 알림을 읽음처리 했습니다.");
           // 현재 활성 탭에 따라 페이지 새로고침
           if ($("#zzimed-me-stores-tab").hasClass("active")) {
             sendZZimedMeStoreList(currentPage);
