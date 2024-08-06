@@ -6,7 +6,7 @@
 <c:set var="loginUser" value="${loginUser}"/>
 <c:set var="userSeq" value="${loginUser.seq}"/>
 <c:set var="nickname" value="${loginUser.nickname}"/>
-<c:set var="profileUrl" value="${loginUser.profilePhotoUrl}" />
+<c:set var="profileUrl" value="${loginUser.profilePhotoUrl}"/>
 <c:set var="code" value="${loginUser.code}"/>
 
 <!DOCTYPE html>
@@ -73,7 +73,7 @@
 
 <body>
 
-<jsp:include page="/header.jsp" />
+<jsp:include page="/header.jsp"/>
 
 <main id="main" style="margin:auto; margin-top:50px">
     <div class="pagetitle">
@@ -102,7 +102,9 @@
             <div class="d-flex mb-4">
                 <img src="${mojipPost.profilePhotoUrl}" alt="Profile" class="profile-img">
                 <div class="ml-4">
-                    <h3><a href='/brand-page?user_seq=${mojipPost.userSeq}'>${mojipPost.storeName}</a></h3>
+                    <h3>
+                        <a href='/brand-page?user_seq=${mojipPost.userSeq}'>${mojipPost.storeName}</a>
+                    </h3>
                     <p>분야: ${mojipPost.foodTypeWord}</p>
                     <p>태그: ${mojipPost.tagWord}</p>
                 </div>
@@ -125,7 +127,8 @@
                     <tr>
                         <th class="fixed-width">모집 시작 일자</th>
                         <td>
-                            <fmt:formatDate value="${mojipPost.applyStartDate}" pattern="yyyy-MM-dd" var="formattedApplyStartDate"/>
+                            <fmt:formatDate value="${mojipPost.applyStartDate}" pattern="yyyy-MM-dd"
+                                            var="formattedApplyStartDate"/>
                             <span id="mojipView">${formattedApplyStartDate}</span>
                         </td>
                     </tr>
@@ -133,14 +136,16 @@
                     <tr>
                         <th class="fixed-width">모집 종료 일자</th>
                         <td>
-                            <fmt:formatDate value="${mojipPost.applyEndDate}" pattern="yyyy-MM-dd" var="formattedApplyEndDate"/>
+                            <fmt:formatDate value="${mojipPost.applyEndDate}" pattern="yyyy-MM-dd"
+                                            var="formattedApplyEndDate"/>
                             ${formattedApplyEndDate}
                         </td>
                     </tr>
                     <tr>
                         <th class="fixed-width">체험 날짜</th>
                         <td>
-                            <fmt:formatDate value="${mojipPost.experienceDate}" pattern="yyyy-MM-dd" var="formattedExperienceDate"/>
+                            <fmt:formatDate value="${mojipPost.experienceDate}" pattern="yyyy-MM-dd"
+                                            var="formattedExperienceDate"/>
                             ${formattedExperienceDate}
                         </td>
                     </tr>
@@ -159,7 +164,7 @@
                     </tr>
                     <tr>
                         <th class="fixed-width">좋아요 수</th>
-                        <td>${mojipPost.totalLike}</td>
+                        <td><span id="likeCount">${mojipPost.totalLike}</span></td>
                     </tr>
                     </tbody>
                 </table>
@@ -362,7 +367,11 @@
     })
     .then(response => {
       if (response.ok) {
-        location.reload();
+        let likeCountElement = document.getElementById('likeCount');
+        let likeCount = parseInt(likeCountElement.textContent);
+        likeCountElement.textContent = likeCount + 1;
+
+        updateLikeButton(postSeq, true);
       } else {
         alert('좋아요를 추가하는 데 실패했습니다. 다시 시도해 주세요.');
       }
@@ -388,7 +397,11 @@
     })
     .then(response => {
       if (response.ok) {
-        location.reload();
+        let likeCountElement = document.getElementById('likeCount');
+        let likeCount = parseInt(likeCountElement.textContent);
+        likeCountElement.textContent = likeCount - 1;
+
+        updateLikeButton(postSeq, false);
       } else {
         alert('좋아요를 취소하는 데 실패했습니다. 다시 시도해 주세요.');
       }
@@ -398,12 +411,27 @@
       alert('좋아요를 취소하는 도중 오류가 발생했습니다.');
     });
   }
-</script>
 
+  function updateLikeButton(postSeq, isLiked) {
+    let likeButton = document.querySelector(`button[onclick="addLike(${postSeq})"]`) ||
+        document.querySelector(`button[onclick="cancelLike(${postSeq})"]`);
+
+    if (likeButton) {
+      if (isLiked) {
+        likeButton.innerHTML = '<i class="bi bi-heart-fill me-1"></i> 좋아요';
+        likeButton.setAttribute('onclick', `cancelLike(${postSeq})`);
+      } else {
+        likeButton.innerHTML = '<i class="bi bi-heart me-1"></i> 좋아요';
+        likeButton.setAttribute('onclick', `addLike(${postSeq})`);
+      }
+    }
+  }
+
+</script>
 
 </main><!-- End #main -->
 
-<jsp:include page="/footer.jsp" />
+<jsp:include page="/footer.jsp"/>
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>

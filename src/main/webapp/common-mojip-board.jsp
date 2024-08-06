@@ -172,7 +172,7 @@
         dataType: "json",
         success: function (response) {
           $('#postList').empty();
-          renderData(response.mojipList); // 데이터 객체 접근 수정
+          renderData(response.mojipList);
           if (response.hasMore) {
             $('#loadMoreBtn').data('previous-post-seq',
                 response.mojipList[response.mojipList.length - 1].seq).show();
