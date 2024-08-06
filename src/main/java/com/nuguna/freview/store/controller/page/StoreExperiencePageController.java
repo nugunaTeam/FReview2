@@ -28,6 +28,6 @@ public class StoreExperiencePageController {
   public String storeActivityPage(@RequestParam Long userSeq, Model model) {
     UserVO loginUser = userService.getUserInfo(userSeq);
     model.addAttribute("loginUser", loginUser);
-    return "store-activity-page";
+    return "store-experience-page";
   }
 }
