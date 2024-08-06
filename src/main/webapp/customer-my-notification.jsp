@@ -1,54 +1,15 @@
-<%@ page import="com.nuguna.freview.dto.cust.brand.CustMyBrandInfoDto" %>
-<%@ page import="com.google.gson.Gson" %>
-<%@ page import="com.nuguna.freview.entity.member.Member" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<%
-    CustMyBrandInfoDto brandInfo = (CustMyBrandInfoDto) request.getAttribute("brandInfo");
-    Gson gson = new Gson();
-    Member member = null;
-    int memberSeq = 0;
-    if (session.getAttribute("Member") != null) {
-        member = (Member) session.getAttribute("Member");
-        memberSeq = member.getMemberSeq();
-    }
-%>
-
+<c:set var="nickname" value="${nickname}"/>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <style>
-      .selected-option {
-        background-color: lightgreen; /* 연초록색으로 선택된 옵션 표시 */
-      }
-    </style>
-
-    <style>
-      .form-control {
-        width: 100%;
-        height: 38px;
-        padding: 6px 12px;
-        font-size: 14px;
-        line-height: 1.42857143;
-        color: #555;
-        background-color: #fff;
-        background-image: none;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-      }
-
-      .form-control-readonly {
-        background-color: #e9ecef;
-        opacity: 1;
-      }
-    </style>
-
+    <link rel="stylesheet" type="text/css" href="/assets/css/style-h.css"/>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
@@ -76,132 +37,245 @@
 
     <!-- Template Main CSS File -->
     <link href="/assets/css/style.css" rel="stylesheet">
-    <link href="/assets/css/style-h.css" rel="stylesheet">
+    <style>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+      .form-control {
+        width: 100%;
+        height: 38px;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+      }
 
-    <!-- icon bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossorigin="anonymous">
+      .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+      }
 
-    <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+      .table-container {
+        position: relative;
+      }
+
+      .profile-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* 이미지의 중앙을 맞추고, 자르기 */
+        object-position: center; /* 중앙 위치 */
+      }
+
+      .bi-heart-fill {
+        color: red;
+      }
+
+      .card-body-y {
+        padding: 20px 20px;
+      }
+
+      .card-title-y > p {
+        cursor: pointer;
+      }
+
+      .pb-4 input[type="radio"] {
+        margin: 0 5px 0 10px;
+      }
+
+      .card-title-y {
+        padding: 10px 0px 5px 0;
+        font-size: 16px;
+        font-weight: 500;
+        color: #012970;
+        font-family: "Poppins", sans-serif;
+      }
+
+      .p-last {
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+        font-size: 12px;
+        color: #696969;
+      }
+
+      .card-title span {
+        color: #899bbd;
+        font-size: 14px;
+        font-weight: 400;
+      }
+
+    </style>
+
+    <!-- add css-->
+    <link rel="stylesheet" href="/assets/css/style-h.css"/>
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+    <!-- Day.js -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 </head>
 
 <body>
 
-<!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="/main?seq=<%=memberSeq%>&pagecode=Requester"
+        <a href="${pageContext.request.contextPath}/main?seq=${userSeq}&pagecode=Requester"
            class="logo d-flex align-items-center">
             <img src="/assets/img/logo/logo-vertical.png" alt="">
             <span class="d-none d-lg-block">FReview</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div><!-- End Logo -->
+    </div>
 
-    <!-- 우측 상단 닉네임&프로필 사진 -->
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
             <li class="nav-item dropdown pe-3">
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-                    <img src="/assets/img/basic/basic-profile-img.png" alt="Profile"
-                         class="rounded-circle">
+
+                    <img src="/user/${userSeq}/profile"
+                         alt="Profile"
+                         class="rounded-circle profile-img"
+                         style="margin-right: 5px;">
                     <span id="nickname-holder-head"
-                          class="d-none d-md-block"><%=member.getNickname()%></span>
-                </a><!-- End Profile Iamge Icon -->
-            </li><!-- End Profile Nav -->
+                          class="d-none d-md-block"
+                          style="font-size : 18px;">${nickname}</span>
+                </a>
+            </li>
         </ul>
-    </nav><!-- End Icons Navigation -->
-</header><!-- End Header -->
+    </nav>
+</header>
+
 
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
-            <a class="nav-link collapsed" href="${pageContext.request.contextPath}/my-info">
-                <i class="bi bi-person-lines-fill"></i><span>브랜딩</span>
+            <a class="nav-link collapsed"
+               href="/my/brand-info?userSeq=${userSeq}">
+                <i class="bi bi-grid"></i>
+                <span>브랜딩</span>
             </a>
-        </li><!-- End Components Nav -->
+        </li><!-- End Dashboard Nav -->
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/my-activity">
-                <i class="bi bi-layout-text-window-reverse"></i>
-                <span>활동</span>
-            </a>
-        </li><!-- End Profile Page Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link" data-bs-target="#components-nav" href="#">
-                <i class="bi bi-envelope"></i>
-                <span>알림</span>
-            </a>
-        </li><!-- End F.A.Q Page Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/my-personal-info">
-                <i class="ri-edit-box-line"></i>
-                <span>개인정보수정</span>
+               href="${pageContext.request.contextPath}/my/experience?userSeq=${userSeq}">
+                <i class="bi bi-card-checklist"></i>
+                <span>체험</span>
             </a>
         </li>
+        <!-- End Profile Page Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed "
+               href="${pageContext.request.contextPath}/my/activity?userSeq=${userSeq}">
+                <i class="bi bi-bell"></i>
+                <span>활동</span>
+            </a>
+        </li>
+        <!-- End Profile Page Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link "
+               href="${pageContext.request.contextPath}/my/notification?userSeq=${userSeq}">
+                <i class="bi bi-card-checklist"></i>
+                <span>알림</span>
+            </a>
+        </li>
+        <!-- End Profile Page Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed"
+               href="${pageContext.request.contextPath}/my/personal-info?userSeq=${userSeq}">
+                <i class="bi bi-person"></i>
+                <span>개인정보수정</span>
+            </a>
+        </li><!-- End Register Page Nav -->
     </ul>
 </aside><!-- End Sidebar-->
 
 <main id="main" class="main">
-
-    <div class="pagetitle">
-        <h1>알림</h1>
-    </div><!-- End Page Title -->
-
     <section class="section profile">
         <div class="row">
             <div class="col-xl-12">
                 <div class="card">
-                    <div class="card-body pt-3">
+                    <div class="card-body">
                         <!-- Bordered Tabs -->
-                        <ul class="nav nav-tabs nav-tabs-bordered">
-                            <li class="nav-item">
-                                <button class="nav-link active" data-bs-toggle="tab"
-                                        data-bs-target="#receivedBtn" id="sendRequest">
-                                    보낸 요청
+                        <ul class="nav nav-tabs nav-tabs-bordered pt-4" id="borderedTab"
+                            role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="zzimed-me-stores-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#zzimed-me-stores" type="button" role="tab"
+                                        aria-controls="like" aria-selected="true">나를 찜한 스토어
                                 </button>
                             </li>
-                            <li class="nav-item">
-                                <button class="nav-link" data-bs-toggle="tab"
-                                        data-bs-target="#requestBtn" id="receivedRequest">
-                                    받은 요청
-                                </button>
-                            </li>
-                            <li class="nav-item">
-                                <button class="nav-link" data-bs-toggle="tab"
-                                        data-bs-target="#requestBtn" id="acceptedRequest">
-                                    수락 요청
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="zzimed-me-customers-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#zzimed-me-customers" type="button"
+                                        role="tab"
+                                        aria-controls="zzim" aria-selected="false">나를 찜한 체험단
                                 </button>
                             </li>
                         </ul>
-                        <div class="tab-content pt-1">
-                            <div class="tab-pane show fade active profile-edit pt-6"
-                                 id="receivedBtn">
 
+                        <div class="tab-content pt-4" id="borderedTabContent">
+                            <!-- 나를 찜한 스토어 -->
+                            <div class="tab-pane fade show active" id="zzimed-me-stores"
+                                 role="tabpanel"
+                                 aria-labelledby="zzim-me-stores-tab">
+                                <div>
+                                    <div class="pb-4">
+                                        <input type="radio" id="zzimed-me-stores-noti-read"
+                                               name="isReadStores"
+                                               value="true" checked/> 읽음
+                                        <input type="radio" id="zzimed-me-stores-noti-not-read"
+                                               name="isReadStores"
+                                               value="false"/> 안읽음
+                                    </div>
+                                </div>
+                                <div id="zzimedMeStoresList" class="row">
+                                    <!-- 나를 찜한 스토어 리스트가 렌더링 -->
+                                </div>
+                                <!-- 페이지네이션 버튼 -->
+                                <div class="pagination-container"
+                                     id="zzimed-me-stores-pagination"></div>
+                            </div>
+
+                            <!-- 나를 찜한 체험단 -->
+                            <div class="tab-pane fade" id="zzimed-me-customers" role="tabpanel"
+                                 aria-labelledby="zzim-me-customers-tab">
+                                <div>
+                                    <div class="pb-4">
+                                        <input type="radio" id="zzimed-me-customers-noti-read"
+                                               name="isReadCustomers"
+                                               value="true" checked/> 읽음
+                                        <input type="radio" id="zzimed-me-customers-noti-not-read"
+                                               name="isReadCustomers"
+                                               value="false"/> 안읽음
+                                    </div>
+                                </div>
+                                <div id="zzimedMeCustomersList" class="row"></div>
+                                <!-- 페이지네이션 버튼 -->
+                                <div class="pagination-container"
+                                     id="zzimed-me-customers-pagination"></div>
                             </div>
                         </div>
-                        <div class="tab-content pt-2">
-                            <div class="tab-pane fade active pt-6" id="requestBtn">
-
-                            </div>
-                        </div>
-                        <!-- End Bordered Tabs -->
                     </div>
                 </div>
             </div>
         </div>
     </section>
-</main><!-- End #main -->
+</main>
+
 
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
@@ -215,12 +289,6 @@
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>
-<!-- jquery  -->
-
-<!-- icon bootstrap -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
@@ -231,9 +299,205 @@
 <script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
 <script src="/assets/vendor/tinymce/tinymce.min.js"></script>
 <script src="/assets/vendor/php-email-form/validate.js"></script>
-
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
+<script>
+  $(document).ready(function () {
+    let userSeq = '${userSeq}';
+    let currentPage = 1;
+
+    // 페이지 최초 로드 시 나를 찜한 스토어 리스트 전송
+    sendZZimedMeStoreList(1);
+
+    // 나를 찜한 스토어 리스트 전송 함수
+    function sendZZimedMeStoreList(page) {
+      let isRead = $("input[name='isReadStores']:checked").val() === 'true';
+      let sendData = {
+        'userSeq': userSeq,
+        'isRead': isRead,
+        'targetPage': page
+      };
+      $.ajax({
+        type: "GET",
+        url: "/api/customer/my/notification/zzimed-me-stores",
+        data: $.param(sendData),
+        contentType: "application/x-www-form-urlencoded",
+        dataType: "json",
+        error: function (response) {
+          console.error("[ERROR] 나를 찜한 스토어 리스트 불러오기 실패하였습니다. 다시 시도해주세요.");
+        },
+        success: function (response) {
+          let {paginationInfo, zzimedMeStoreInfos} = response;
+          renderZzimStoreList(zzimedMeStoreInfos);
+          initializePagination(paginationInfo, 'zzimed-me-stores');
+        }
+      });
+    }
+
+    // 나를 찜한 체험단 리스트 전송 함수
+    function sendZzimCustomerList(page) {
+      let isRead = $("input[name='isReadCustomers']:checked").val() === 'true';
+      let sendData = {
+        'userSeq': userSeq,
+        'isRead': isRead,
+        'targetPage': page
+      };
+      $.ajax({
+        type: "GET",
+        url: "/api/customer/my/notification/zzimed-me-customers",
+        data: $.param(sendData),
+        contentType: "application/x-www-form-urlencoded",
+        dataType: "json",
+        error: function (response) {
+          console.error("[ERROR] 나를 찜한 체험단 리스트 불러오기 실패하였습니다. 다시 시도해주세요.");
+        },
+        success: function (response) {
+          let {paginationInfo, zzimedMeCustomerInfos} = response;
+          renderZzimCustomerList(zzimedMeCustomerInfos);
+          initializePagination(paginationInfo, 'zzimed-me-customers');
+        }
+      });
+    }
+
+    // 나를 찜한 스토어 리스트 렌더링 함수
+    function renderZzimStoreList(zzimedMeStoreInfos) {
+      let htmlStr = "";
+      $.map(zzimedMeStoreInfos, function (item) {
+        htmlStr += "<div class='card'>";
+        htmlStr += "<div class='card-body-y mt-2'>";
+        htmlStr += "<p><a href='/brand/" + item.storeSeq + "?fromUserSeq=${userSeq}" + "'>"
+            + item.storeName + "</a>님이 나를 찜하였습니다.</p>";
+        htmlStr += "<p class='p-last'>" + item.createdAt.year + "년 " + item.createdAt.monthValue
+            + "월 " + item.createdAt.dayOfMonth + "일</p>";
+        if (!($("input[name='isReadStores']:checked").val() === 'true')) {
+          htmlStr += "<button class='btn btn-primary mark-as-read' data-notification-seq='"
+              + item.notificationSeq + "'>읽음확인</button>";
+        }
+        htmlStr += "</div>";
+        htmlStr += "</div>";
+      });
+      $("#zzimedMeStoresList").html(htmlStr);
+    }
+
+    // 나를 찜한 체험단 리스트 렌더링 함수
+    function renderZzimCustomerList(zzimedMeCustomerInfos) {
+      let htmlStr = "";
+      $.map(zzimedMeCustomerInfos, function (item) {
+        htmlStr += "<div class='card'>";
+        htmlStr += "<div class='card-body-y mt-2'>";
+        htmlStr += "<p><a href='/brand/" + item.customerSeq + "?fromUserSeq=${userSeq}" + "'>"
+            + item.nickname + "</a>님이 나를 찜하였습니다.</p>";
+        htmlStr += "<p class='p-last'>" + item.createdAt.year + "년 " + item.createdAt.monthValue
+            + "월 " + item.createdAt.dayOfMonth + "일</p>";
+        if (!($("input[name='isReadCustomers']:checked").val() === 'true')) {
+          htmlStr += "<button class='btn btn-primary mark-as-read' data-notification-seq='"
+              + item.notificationSeq + "'>읽음확인</button>";
+        }
+        htmlStr += "</div>";
+        htmlStr += "</div>";
+      });
+      $("#zzimedMeCustomersList").html(htmlStr);
+    }
+
+    // 페이지 네이션 처리
+    function initializePagination(paginationInfo, page) {
+      let currentPage = paginationInfo.currentPage;
+      let startPage = paginationInfo.startPage;
+      let endPage = paginationInfo.endPage;
+      let hasNext = paginationInfo.hasNext;
+      let hasPrevious = paginationInfo.hasPrevious;
+
+      let paginationContainer = $("#" + page + "-pagination");
+
+      let paginationHTML = '';
+      if (hasPrevious) {
+        paginationHTML += '<button id="prev-block-button" class="btn btn-primary edit-btn" data-page="'
+            + (parseInt(currentPage) - 1) + '">&lt;</button>';
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
+        paginationHTML += '<button class="btn ' + (i === currentPage ? 'btn-secondary'
+            : 'btn-primary') + ' edit-btn" data-page="' + i + '">' + i + '</button>';
+      }
+
+      if (hasNext) {
+        paginationHTML += '<button id="next-block-button" class="btn btn-primary edit-btn" data-page="'
+            + (parseInt(currentPage) + 1) + '">&gt;</button>';
+      }
+
+      paginationContainer.html(paginationHTML);
+    }
+
+    // 탭 클릭 시 해당 리스트 전송
+    $("#zzimed-me-stores-tab").on('click', function () {
+      $("#zzimed-me-stores-noti-read").prop("checked", true);
+      sendZZimedMeStoreList(1);
+    });
+
+    $("#zzimed-me-customers-tab").on('click', function () {
+      $("#zzimed-me-customers-noti-read").prop("checked", true);
+      sendZzimCustomerList(1);
+    });
+
+    // 읽음/안읽음 필터 변경 시 리스트 전송
+    $("input[name='isReadStores']").on('change', function () {
+      sendZZimedMeStoreList(1);
+    });
+
+    $("input[name='isReadCustomers']").on('change', function () {
+      sendZzimCustomerList(1);
+    });
+
+    // 페이지 버튼 클릭 이벤트
+    $(document).on("click", ".btn.edit-btn", function (e) {
+      let pageNumber = parseInt($(this).data("page"));
+      if (pageNumber > 0) {
+        handlePageChange(
+            $(this).closest(".pagination-container").attr("id").replace("-pagination", ""),
+            pageNumber);
+      }
+    });
+
+    // 읽음확인 버튼 클릭 이벤트
+    $(document).on("click", ".mark-as-read", function () {
+      let notificationSeq = $(this).data("notification-seq");
+      markNotificationAsRead(userSeq, notificationSeq);
+    });
+
+    // 알림 읽음 처리 함수
+    function markNotificationAsRead(userSeq, notificationSeq) {
+      $.ajax({
+        type: "POST",
+        url: "/api/customer/my/notification/" + notificationSeq,
+        data: $.param({userSeq: userSeq}),
+        contentType: "application/x-www-form-urlencoded",
+        dataType: "text",
+        success: function (response) {
+          alert("알림 변경 성공");
+          // 현재 활성 탭에 따라 페이지 새로고침
+          if ($("#zzimed-me-stores-tab").hasClass("active")) {
+            sendZZimedMeStoreList(currentPage);
+          } else if ($("#zzimed-me-customers-tab").hasClass("active")) {
+            sendZzimCustomerList(currentPage);
+          }
+        },
+        error: function (response) {
+          console.error("[ERROR] 알림을 읽음으로 표시하는 데 실패했습니다. 다시 시도해주세요.");
+        }
+      });
+    }
+
+    // 페이지 변경 핸들러
+    function handlePageChange(tab, page) {
+      currentPage = page;
+      if (tab === 'zzimed-me-stores') {
+        sendZZimedMeStoreList(page);
+      } else if (tab === 'zzimed-me-customers') {
+        sendZzimCustomerList(page);
+      }
+    }
+  });
+</script>
 
 
 </body>
