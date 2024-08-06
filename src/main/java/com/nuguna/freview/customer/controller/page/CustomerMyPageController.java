@@ -41,6 +41,7 @@ public class CustomerMyPageController {
   public String customerMyExperiencePage(@RequestParam Long userSeq, Model model) {
     String nickname = customerUtilService.getUserNickname(userSeq);
     model.addAttribute("nickname", nickname);
+    model.addAttribute("userSeq", userSeq);
     return "customer-my-experience-info";
   }
 
@@ -48,6 +49,7 @@ public class CustomerMyPageController {
   public String customerMyActivityPage(@RequestParam Long userSeq, Model model) {
     String nickname = customerUtilService.getUserNickname(userSeq);
     model.addAttribute("nickname", nickname);
+    model.addAttribute("userSeq", userSeq);
     return "customer-my-activity-info";
   }
 
@@ -63,6 +65,7 @@ public class CustomerMyPageController {
   public String customerMyPersonalInfoPage(@RequestParam Long userSeq, Model model) {
     String nickname = customerUtilService.getUserNickname(userSeq);
     model.addAttribute("nickname", nickname);
+    model.addAttribute("userSeq", userSeq);
     return "customer-my-personal-info";
   }
 
