@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +33,7 @@ public class CustomerMyActivityInfoApiController {
     this.customerMyActivityService = customerMyActivityService;
   }
 
-  @RequestMapping("/my-liked-posts")
+  @RequestMapping(value = "/my-liked-posts", method = RequestMethod.GET)
   public ResponseEntity<CustomerMyLikedPostsRetrieveResponseDTO> getMyLikedPosts(
       @RequestParam Long userSeq,
       @Valid @RequestBody CustomerMyLikedPostsRetrieveRequestDTO customerMyLikedPostsRetrieveRequestDTO) {
@@ -41,7 +42,7 @@ public class CustomerMyActivityInfoApiController {
     return new ResponseEntity<>(myLikedPosts, HttpStatus.OK);
   }
 
-  @RequestMapping("/my-zzimed-stores")
+  @RequestMapping(value = "/my-zzimed-stores", method = RequestMethod.GET)
   public ResponseEntity<CustomerMyZzimedStoresRetrieveResponseDTO> getMyZzimedStores(
       @RequestParam Long userSeq,
       @Valid @RequestBody CustomerMyZzimedStoresRetrieveRequestDTO customerMyZzimedStoresRetrieveRequestDTO) {
@@ -50,7 +51,7 @@ public class CustomerMyActivityInfoApiController {
     return new ResponseEntity<>(myZzimedStores, HttpStatus.OK);
   }
 
-  @RequestMapping("/my-zzimed-customers")
+  @RequestMapping(value = "/my-zzimed-customers", method = RequestMethod.GET)
   public ResponseEntity<CustomerMyZzimedCustomersResponseDTO> getMyZzimedCustomers(
       @RequestParam Long userSeq,
       @Valid @RequestBody CustomerMyZzimedCustomersRetrieveRequestDTO customerMyZzimedCustomersRetrieveRequestDTO) {
