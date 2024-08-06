@@ -9,6 +9,5 @@ public interface CustomerUtilService {
   boolean checkZzimedOtherUser(Long fromUserSeq, Long toUserSeq);
 
   boolean checkStoreProposedToUser(Long storeSeq, Long customerSeq);
-
-
+  
 }
