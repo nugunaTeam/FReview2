@@ -58,6 +58,10 @@ public class LikeLogService {
           currentAccumulation.updateTotalLike(currentAccumulation.getTotalLike() + count);
           likeAccumulationMapper.update(currentAccumulation);
         }
+
+        if (currentAccumulation.getTotalLike() < 0) {
+          throw new IllegalArgumentException("[ERROR] -" + postSeq +"- 누적 좋아요 개수가 0 미만입니다.");
+        }
       });
 
       Long maxSeq = newLogs.stream().mapToLong(LikeLogVO::getSeq).max().getAsLong();

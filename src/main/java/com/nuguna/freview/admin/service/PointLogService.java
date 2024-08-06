@@ -59,6 +59,9 @@ public class PointLogService {
           currentAccumulation.updateTotalPoint(currentAccumulation.getTotalPoint() + points);
           rankPointAccumulationMapper.update(currentAccumulation);
         }
+        if (currentAccumulation.getTotalPoint() < 0) {
+          throw new IllegalStateException("[ERROR] -" + userSeq +"- 누적 포인트 점수가 0 미만입니다.");
+        }
       });
 
       Long maxSeq = newLogs.stream().mapToLong(PointLogVO::getSeq).max().getAsLong();

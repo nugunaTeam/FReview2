@@ -58,6 +58,9 @@ public class ZzimLogService {
           currentAccumulation.updateTotalZzim(currentAccumulation.getTotalZzim() + count);
           zzimAccumulationMapper.update(currentAccumulation);
         }
+        if (currentAccumulation.getTotalZzim() < 0) {
+          throw new IllegalStateException("[ERROR] -" + currentAccumulation.getUserSeq()+"- 누적 찜 개수가 0 미만입니다.");
+        }
       });
 
       Long maxSeq = newLogs.stream().mapToLong(ZzimLogVO::getSeq).max().getAsLong();
