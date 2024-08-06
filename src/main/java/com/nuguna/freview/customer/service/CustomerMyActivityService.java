@@ -1,6 +1,5 @@
 package com.nuguna.freview.customer.service;
 
-import com.nuguna.freview.customer.dto.request.CustomerMyZzimedCustomersRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyLikedPostsRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyZzimedCustomersResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyZzimedStoresRetrieveResponseDTO;
@@ -14,6 +13,6 @@ public interface CustomerMyActivityService {
       int targetPage);
 
   CustomerMyZzimedCustomersResponseDTO getMyZzimedCustomers(Long userSeq,
-      CustomerMyZzimedCustomersRetrieveRequestDTO customerMyZzimedCustomersRetrieveRequestDTO);
+      int targetPage);
 
 }

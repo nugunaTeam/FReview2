@@ -1,16 +1,13 @@
 package com.nuguna.freview.customer.controller;
 
-import com.nuguna.freview.customer.dto.request.CustomerMyZzimedCustomersRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyLikedPostsRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyZzimedCustomersResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyZzimedStoresRetrieveResponseDTO;
 import com.nuguna.freview.customer.service.CustomerMyActivityService;
-import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,9 +49,9 @@ public class CustomerMyActivityInfoApiController {
   @RequestMapping(value = "/my-zzimed-customers", method = RequestMethod.GET)
   public ResponseEntity<CustomerMyZzimedCustomersResponseDTO> getMyZzimedCustomers(
       @RequestParam Long userSeq,
-      @Valid @RequestBody CustomerMyZzimedCustomersRetrieveRequestDTO customerMyZzimedCustomersRetrieveRequestDTO) {
+      @RequestParam Integer targetPage) {
     CustomerMyZzimedCustomersResponseDTO myZzimedCustomers = customerMyActivityService.getMyZzimedCustomers(
-        userSeq, customerMyZzimedCustomersRetrieveRequestDTO);
+        userSeq, targetPage);
     return new ResponseEntity<>(myZzimedCustomers, HttpStatus.OK);
   }
 

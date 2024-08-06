@@ -80,11 +80,10 @@
                                   WHERE z.from_user_seq = #{userSeq}
                                     AND u.code = 'STORE')
     SELECT u.seq,
-           u.business_number,
            nsbi.store_name,
            u.store_location,
            fzu.created_at,
-           GROUP_CONCAT(ft.dish ORDER BY ft.dish ASC) AS foodTypes
+           GROUP_CONCAT(DISTINCT ft.dish ORDER BY ft.dish ASC) AS foodTypes
     FROM filtered_zzimed_user fzu
            INNER JOIN user u ON u.seq = fzu.to_user_seq
            INNER JOIN national_store_business_information nsbi
@@ -130,7 +129,7 @@
     SELECT u.seq,
            u.nickname,
            fzu.created_at,
-           GROUP_CONCAT(ft.dish ORDER BY ft.dish ASC) AS foodTypes
+           GROUP_CONCAT(DISTINCT ft.dish ORDER BY ft.dish ASC) AS foodTypes
     FROM filtered_zzimed_user fzu
            INNER JOIN user u ON u.seq = fzu.to_user_seq
            LEFT JOIN user_food_type uft ON u.seq = uft.user_seq

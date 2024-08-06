@@ -291,7 +291,6 @@
           console.error("[ERROR] 좋아요한 글 리스트를 불러오는 데 실패하였습니다. 다시 시도해주세요.");
         },
         success: function (response) {
-          console.log(response);
           let {paginationInfo, myLikeInfos} = response;
           renderLikedPostsList(myLikeInfos);
           initializePagination(paginationInfo, 'like-posts');
@@ -358,8 +357,51 @@
             + "</a>님을 <span style='color : mediumvioletred'>찜</span>했습니다.</p>";
         htmlStr += "<p><span style='color: green;'>위치</span>: " + item.storeLocation + "</p>";
         htmlStr += "<p><span style='color: mediumvioletred;'>활동 분야</span>: " + item.foodTypes.join(
-                ", ")
-            + "</p>";
+            ", ") + "</p>";
+        htmlStr += "<p>" + item.createdAt.year + "년 " + item.createdAt.monthValue + "월 "
+            + item.createdAt.dayOfMonth + "일</p>";
+
+        htmlStr += "</div>";
+        htmlStr += "</div>";
+      });
+      $("#zzimedUserList").html(htmlStr);
+    }
+
+    // 찜한 체험단 리스트를 가져오는 함수
+    function sendZzimCustomerList(page) {
+      let sendData = {
+        'userSeq': userSeq,
+        'targetPage': page
+      };
+
+      $.ajax({
+        type: "GET",
+        url: "/api/customer/my/activity-info/my-zzimed-customers",
+        data: $.param(sendData),
+        contentType: "application/x-www-form-urlencoded",
+        dataType: "json",
+        error: function (response) {
+          console.error("[ERROR] 찜한 체험단 리스트를 불러오는 데 실패하였습니다. 다시 시도해주세요.");
+        },
+        success: function (response) {
+          let {paginationInfo, zzimedCustomerInfos} = response;
+          renderZzimCustomerList(zzimedCustomerInfos);
+          initializePagination(paginationInfo, 'zzimed-users');
+        }
+      });
+    }
+
+    // 찜한 체험단 리스트를 렌더링하는 함수
+    function renderZzimCustomerList(zzimedCustomerInfos) {
+      let htmlStr = "";
+      $.map(zzimedCustomerInfos, function (item) {
+        htmlStr += "<div class='card'>";
+        htmlStr += "<div class='card-body mt-2'>";
+
+        htmlStr += "<p><a href='/brand/" + item.customerSeq + "'>" + item.nickname
+            + "</a>님을 <span style='color : mediumvioletred'>찜</span>했습니다.</p>";
+        htmlStr += "<p><span style='color: mediumvioletred;'>활동 분야</span>: " + item.foodTypes.join(
+            ", ") + "</p>";
         htmlStr += "<p>" + item.createdAt.year + "년 " + item.createdAt.monthValue + "월 "
             + item.createdAt.dayOfMonth + "일</p>";
 
@@ -372,6 +414,15 @@
     // 찜 탭 클릭 이벤트
     $("#zzim-tab").on("click", function () {
       sendZzimStoreList(1); // 처음 페이지를 로드
+    });
+
+    // 라디오 버튼 클릭 이벤트
+    $("input[name='zzimed']").on("change", function () {
+      if ($("#zzimed-store-radio").is(":checked")) {
+        sendZzimStoreList(1);
+      } else if ($("#zzimed-customer-radio").is(":checked")) {
+        sendZzimCustomerList(1);
+      }
     });
 
     function initializePagination(paginationInfo, page) {
@@ -394,8 +445,7 @@
       // 페이지 번호 버튼
       for (let i = startPage; i <= endPage; i++) {
         paginationHTML += '<button class="btn ' + (i === currentPage ? 'btn-secondary'
-                : 'btn-primary')
-            + ' edit-btn" data-page="' + i + '">' + i + '</button>';
+            : 'btn-primary') + ' edit-btn" data-page="' + i + '">' + i + '</button>';
       }
 
       // 다음 페이지 버튼
@@ -412,12 +462,13 @@
         if (pageNumber > 0) {
           handlePageChange(
               $(this).closest(".pagination-container").attr("id").replace("-pagination", ""),
-              pageNumber);
+              pageNumber
+          );
         }
       });
     }
 
-// 페이지 변경 핸들러
+    // 페이지 변경 핸들러
     function handlePageChange(tab, page) {
       // 현재 페이지를 전역 변수에 업데이트 (필요에 따라)
       currentPage = page;
