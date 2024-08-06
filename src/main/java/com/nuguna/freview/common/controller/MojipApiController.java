@@ -101,7 +101,6 @@ public class MojipApiController {
     }
   }
 
-  //TODO: 이미 지원한 모집글은 지원불가 옵션 추가
   @RequestMapping(value = "/apply", method = RequestMethod.POST)
   public ResponseEntity<?> applyMojipPost(@RequestBody MojipApplyRequestDTO requestDTO) {
     Long fromUserSeq = requestDTO.getFromUserSeq();

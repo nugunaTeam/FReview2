@@ -22,9 +22,9 @@
     LIMIT 100
   </select>
 
-  <insert id="insertInterestLog" parameterType="map">
-    insert into interest_keyword_log (user_seq, code, category, dish)
-    values (#{userSeq}, #{code}, #{category}, #{dish})
+  <insert id="insertInterestLog" parameterType="map" >
+    INSERT INTO interest_keyword_log (user_seq, code, category, dish)
+    VALUES (#{userSeq}, #{code}, #{category}, #{dish})
   </insert>
 
 </mapper>
