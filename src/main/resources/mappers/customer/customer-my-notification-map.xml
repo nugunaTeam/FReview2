@@ -47,13 +47,14 @@
     <if test="isRead != null">
       and n.is_read = #{isRead}
     </if>
-    order by
-    n.created_at desc
-    limit #{pageSize} offset #{offset}) zzimed_me_customer
+    ) zzimed_me_customer
     inner join user u
     on zzimed_me_customer.from_user_seq = u.seq
     where
     u.code = 'CUSTOMER'
+    order by
+    zzimed_me_customer.created_at desc
+    limit #{pageSize} offset #{offset}
   </select>
 
   <select id="getZzimedMeStoresCount" resultType="java.lang.Integer">
