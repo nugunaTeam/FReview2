@@ -1,29 +1,15 @@
-<%@ page import="com.nuguna.freview.entity.member.Member" %>
-<%@ page import="com.nuguna.freview.dto.cust.activitylog.CustMyLikePostDto" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.text.SimpleDateFormat" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<%
-    Member member = null;
-    int memberSeq = 0;
-    if (session.getAttribute("Member") != null) {
-        member = (Member) session.getAttribute("Member");
-        memberSeq = member.getMemberSeq();
-    }
-//    List<CustMyLikePostDto> likePosts = (List<CustMyLikePostDto>) request.getAttribute("likePosts");
-    // 날짜 포맷 설정
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
-%>
-
+<c:set var="nickname" value="${nickname}"/>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+    <link rel="stylesheet" type="text/css" href="/assets/css/style-h.css"/>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
@@ -51,85 +37,95 @@
 
     <!-- Template Main CSS File -->
     <link href="/assets/css/style.css" rel="stylesheet">
-    <link href="/assets/css/style-h.css" rel="stylesheet">
-
     <style>
-      .item-box {
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 15px;
-        margin-bottom: 20px;
-        background-color: #f9f9f9;
-        transition: background-color 0.3s;
-      }
 
-      .post-likes {
-        display: inline-block;
-        margin-top: 15px;
-        font-size: 1rem;
-        color: #e74c3c; /* 빨간색으로 설정 */
-      }
-
-      .item-meta {
-        margin-right: 6px;
-        display: inline-block;
-        margin-top: 15px;
-        font-size: 1rem;
-        color: #999; /* 회색으로 설정 */
-      }
-
-      .item-meta-non-inline {
-        margin-right: 6px;
-        margin-top: 15px;
-        font-size: 1rem;
-        color: #999; /* 회색으로 설정 */
-      }
-
-      .item-box:hover {
-        background-color: #f1f1f1;
-      }
-
-      .item-title {
-        font-size: 1.25rem;
-        font-weight: bold;
-        color: #333;
-      }
-
-      .item-title a {
-        text-decoration: none;
-        color: inherit;
-      }
-
-      .item-content {
-        margin-top: 10px;
-        font-size: 1rem;
+      .form-control {
+        width: 100%;
+        height: 38px;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
         color: #555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
       }
 
-      #itemsContainer {
-        margin-left: -15px;
-        margin-top: 15px;
+      .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
       }
+
+      .table-container {
+        position: relative;
+      }
+
+      .profile-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* 이미지의 중앙을 맞추고, 자르기 */
+        object-position: center; /* 중앙 위치 */
+      }
+
+      .bi-heart-fill {
+        color: red;
+      }
+
+      .card-body-y {
+        padding: 20px 20px;
+      }
+
+      .card-title-y > p {
+        cursor: pointer;
+      }
+
+      .pb-4 input[type="radio"] {
+        margin: 0 5px 0 10px;
+      }
+
+      .card-title-y {
+        padding: 10px 0px 5px 0;
+        font-size: 16px;
+        font-weight: 500;
+        color: #012970;
+        font-family: "Poppins", sans-serif;
+      }
+
+      .p-last {
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+        font-size: 12px;
+        color: #696969;
+      }
+
+      .card-title span {
+        color: #899bbd;
+        font-size: 14px;
+        font-weight: 400;
+      }
+
     </style>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- add css-->
+    <link rel="stylesheet" href="/assets/css/style-h.css"/>
 
-    <!-- icon bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossorigin="anonymous">
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 
-    <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Day.js -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
 </head>
 
 <body>
 
-<!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="/main?seq=<%=memberSeq%>&pagecode=Requester"
+        <a href="${pageContext.request.contextPath}/main?seq=${userSeq}&pagecode=Requester"
            class="logo d-flex align-items-center">
             <img src="/assets/img/logo/logo-vertical.png" alt="">
             <span class="d-none d-lg-block">FReview</span>
@@ -137,93 +133,139 @@
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div>
 
-    <!-- 우측 상단 닉네임&프로필 사진 -->
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
             <li class="nav-item dropdown pe-3">
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-                    <img src="/assets/img/basic/basic-profile-img.png" alt="Profile"
-                         class="rounded-circle">
+
+                    <img src="/user/${userSeq}/profile"
+                         alt="Profile"
+                         class="rounded-circle profile-img"
+                         style="margin-right: 5px;">
                     <span id="nickname-holder-head"
-                          class="d-none d-md-block"><%=member.getNickname()%></span>
+                          class="d-none d-md-block"
+                          style="font-size : 18px;">${nickname}</span>
                 </a>
             </li>
         </ul>
     </nav>
 </header>
 
+
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
-            <a class="nav-link collapsed" href="${pageContext.request.contextPath}/my-info">
-                <i class="bi bi-person-lines-fill"></i><span>브랜딩</span>
+            <a class="nav-link collapsed"
+               href="/my/brand-info?userSeq=${userSeq}">
+                <i class="bi bi-grid"></i>
+                <span>브랜딩</span>
             </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link" data-bs-target="#components-nav" href="#">
-                <i class="bi bi-layout-text-window-reverse"></i>
-                <span>활동</span>
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="${pageContext.request.contextPath}/my-notification">
-                <i class="bi bi-envelope"></i>
-                <span>알림</span>
-            </a>
-        </li>
+        </li><!-- End Dashboard Nav -->
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/my-personal-info">
-                <i class="ri-edit-box-line"></i>
-                <span>개인정보수정</span>
+               href="${pageContext.request.contextPath}/my/experience?userSeq=${userSeq}">
+                <i class="bi bi-card-checklist"></i>
+                <span>체험</span>
             </a>
         </li>
+        <!-- End Profile Page Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link "
+               href="${pageContext.request.contextPath}/my/activity?userSeq=${userSeq}">
+                <i class="bi bi-bell"></i>
+                <span>활동</span>
+            </a>
+        </li>
+        <!-- End Profile Page Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed"
+               href="${pageContext.request.contextPath}/my/notification?userSeq=${userSeq}">
+                <i class="bi bi-card-checklist"></i>
+                <span>알림</span>
+            </a>
+        </li>
+        <!-- End Profile Page Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed"
+               href="${pageContext.request.contextPath}/my/personal-info?userSeq=${userSeq}">
+                <i class="bi bi-person"></i>
+                <span>개인정보수정</span>
+            </a>
+        </li><!-- End Register Page Nav -->
     </ul>
 </aside><!-- End Sidebar-->
 
 <main id="main" class="main">
-
-    <div class="pagetitle">
-        <h1>활동 로그</h1>
-    </div>
-    <!-- End Page Title -->
-
     <section class="section profile">
         <div class="row">
             <div class="col-xl-12">
                 <div class="card">
-                    <div class="card-body pt-3">
+                    <div class="card-body">
                         <!-- Bordered Tabs -->
-                        <ul class="nav nav-tabs nav-tabs-bordered">
-                            <li class="nav-item">
-                                <button class="nav-link active" data-bs-toggle="tab"
-                                        data-bs-target="#receivedBtn" id="likedPost">
-                                    좋아요한 글
+                        <ul class="nav nav-tabs nav-tabs-bordered pt-4" id="borderedTab"
+                            role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="zzimed-me-stores-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#zzimed-me-stores" type="button" role="tab"
+                                        aria-controls="like" aria-selected="true">나를 찜한 스토어
                                 </button>
                             </li>
-                            <li class="nav-item">
-                                <button class="nav-link" data-bs-toggle="tab"
-                                        data-bs-target="#receivedBtn" id="myZzimStores">
-                                    내가 찜한 스토어
-                                </button>
-                            </li>
-                            <li class="nav-item">
-                                <button class="nav-link" data-bs-toggle="tab"
-                                        data-bs-target="#receivedBtn" id="zzimedMeStores">
-                                    나를 찜한 스토어
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="zzimed-me-customers-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#zzimed-me-customers" type="button"
+                                        role="tab"
+                                        aria-controls="zzim" aria-selected="false">나를 찜한 체험단
                                 </button>
                             </li>
                         </ul>
-                        <div class="tab-content pt-1">
-                            <div class="tab-pane show fade active profile-edit pt-6"
-                                 id="receivedBtn">
-                                <div id="itemsContainer" class="container-fluid">
 
+                        <div class="tab-content pt-4" id="borderedTabContent">
+                            <!-- 나를 찜한 스토어 -->
+                            <div class="tab-pane fade show active" id="zzimed-me-stores"
+                                 role="tabpanel"
+                                 aria-labelledby="zzim-me-stores-tab">
+                                <div>
+                                    <div class="pb-4">
+                                        <input type="radio" id="zzimed-me-stores-noti-read"
+                                               name="isReadStores"
+                                               value="true" checked/> 읽음
+                                        <input type="radio" id="zzimed-me-stores-noti-not-read"
+                                               name="isReadStores"
+                                               value="false"/> 안읽음
+                                    </div>
                                 </div>
+                                <div id="zzimedMeStoresList" class="row">
+                                    <!-- 나를 찜한 스토어 리스트가 렌더링 -->
+                                </div>
+                                <!-- 페이지네이션 버튼 -->
+                                <div class="pagination-container"
+                                     id="zzimed-me-stores-pagination"></div>
+                            </div>
+
+                            <!-- 나를 찜한 체험단 -->
+                            <div class="tab-pane fade" id="zzimed-me-customers" role="tabpanel"
+                                 aria-labelledby="zzim-me-customers-tab">
+                                <div>
+                                    <div class="pb-4">
+                                        <input type="radio" id="zzimed-me-customers-noti-read"
+                                               name="isReadCustomers"
+                                               value="true" checked/> 읽음
+                                        <input type="radio" id="zzimed-me-customers-noti-not-read"
+                                               name="isReadCustomers"
+                                               value="false"/> 안읽음
+                                    </div>
+                                </div>
+                                <div id="zzimedMeCustomersList" class="row"></div>
+                                <!-- 페이지네이션 버튼 -->
+                                <div class="pagination-container"
+                                     id="zzimed-me-customers-pagination"></div>
                             </div>
                         </div>
                     </div>
@@ -231,155 +273,8 @@
             </div>
         </div>
     </section>
+</main>
 
-    <script>
-      $(document).ready(function () {
-        // 좋아요 한 글 데이터를 가져오는 함수
-        function fetchLikedPosts() {
-          $.ajax({
-            url: '/api/customer/my-activity/liked-posts',  // 좋아요 한 글 데이터를 가져올 API 엔드포인트
-            type: 'GET',
-            success: function (likePosts) {
-              $('#itemsContainer').empty(); // 기존 내용 초기화
-
-              if (likePosts.item.length === 0) {
-                $('#itemsContainer').append('<div class="alert alert-info">좋아요한 글이 없어요</div>');
-              } else {
-                // Generate HTML for likePosts
-                likePosts.item.forEach(function (post) {
-                  var postBox = $('<div class="item-box"></div>');
-
-                  var postTitle = $('<div class="item-title"></div>');
-                  var postLink = $('<a></a>').attr('href', '/post/' + post.seq).text(
-                      post.title.length > 20 ? post.title.slice(0, 20) + '...' : post.title);
-                  postTitle.append(postLink);
-
-                  var postContent = $('<div class="item-content"></div>').text(
-                      post.content.length > 30 ? post.content.slice(0, 30) + '...' : post.content);
-
-                  var postMeta = $('<div class="item-meta"></div>').text(post.createdAt);
-                  var postLikes = $('<div class="post-likes"></div>').html(
-                      ' ❤️ ' + post.likesCount);
-
-                  postBox.append(postTitle).append(postContent).append(postMeta).append(postLikes);
-                  $('#itemsContainer').append(postBox);
-                });
-              }
-            },
-            error: function (error) {
-              console.error('Error fetching liked posts:', error);
-            }
-          });
-        }
-
-        // 페이지 로드 시 좋아요 한 글 데이터 초기 로드
-        fetchLikedPosts();
-
-        // 좋아요 한 글 버튼 클릭 이벤트 처리
-        $('#likedPost').on('click', function () {
-          fetchLikedPosts(); // 좋아요 한 글 데이터 다시 불러오기
-        });
-
-        // 나를 찜한 스토어 버튼 클릭 이벤트 처리
-        $('#zzimedMeStores').on('click', function () {
-          $.ajax({
-            url: '/api/customer/my-activity/zzimed-me-stores',
-            type: 'GET',
-            success: function (zzimedMeStores) {
-              console.log(zzimedMeStores);
-              $('#itemsContainer').empty(); // 기존 내용 초기화
-
-              if (zzimedMeStores.item.length === 0) {
-                $('#itemsContainer').append('<div class="alert alert-info">나를 찜한 스토어가 없어요</div>');
-              } else {
-                zzimedMeStores.item.forEach(function (store) {
-                  var zzimedMeStoreBox = $('<div class="item-box"></div>');
-
-                  var zzimedMeStoreName = $('<div class="item-title"></div>');
-                  var storeLink = $('<a></a>').attr('href', '/branding/' + store.bossSeq).text(
-                      store.storeName);
-                  zzimedMeStoreName.append(storeLink);
-
-                  var zzimedMeStoreLocation = $('<div class="item-content"></div>').text(
-                      '위치: ' + store.storeLoc);
-
-                  var zzimedMeStoreFoodTypes = $('<div class="item-meta-non-inline"></div>').text(
-                      '분야: ' + store.foodTypes.join(', '));
-
-                  var zzimedMeStoreTagInfos = $('<div class="item-meta-non-inline"></div>').html(
-                      store.tagInfos.map(tag => '#' + tag).join(' '));
-
-                  zzimedMeStoreBox.append(zzimedMeStoreName).append(zzimedMeStoreLocation).append(
-                      zzimedMeStoreFoodTypes).append(
-                      zzimedMeStoreTagInfos);
-                  $('#itemsContainer').append(zzimedMeStoreBox);
-                });
-              }
-            },
-            error: function (error) {
-              console.error('Error fetching zzimed me stores:', error);
-            }
-          });
-        });
-
-        /*// 내가 찜한 스토어 버튼 클릭 이벤트 처리
-        $('#myZzimStores').on('click', function () {
-          $.ajax({
-            url: '/api/customer/my-activity/zzim-stores',
-            type: 'GET',
-            success: function (data) {
-              console.log(data);
-              // 데이터를 화면에 표시하려면 이곳에 추가할 수 있습니다.
-            },
-            error: function (error) {
-              console.error('Error fetching my zzim stores:', error);
-            }
-          });
-        });*/
-        // 내가 찜한 스토어 버튼 클릭 이벤트 처리
-        $('#myZzimStores').on('click', function () {
-          $.ajax({
-            url: '/api/customer/my-activity/zzim-stores',
-            type: 'GET',
-            success: function (myZzimStores) {
-              console.log(myZzimStores);
-              $('#itemsContainer').empty(); // 기존 내용 초기화
-
-              if (myZzimStores.item.length === 0) {
-                $('#itemsContainer').append('<div class="alert alert-info">내가 찜한 스토어가 없어요</div>');
-              } else {
-                myZzimStores.item.forEach(function (store) {
-                  var myZzimStoreBox = $('<div class="item-box"></div>');
-
-                  var myZzimStoreName = $('<div class="item-title"></div>');
-                  var storeLink = $('<a></a>').attr('href', '/branding/' + store.bossSeq).text(
-                      store.storeName);
-                  myZzimStoreName.append(storeLink);
-
-                  var myZzimStoreLocation = $('<div class="item-content"></div>').text(
-                      '위치: ' + store.storeLoc);
-
-                  var myZzimStoreFoodTypes = $('<div class="item-meta-non-inline"></div>').text(
-                      '분야: ' + store.foodTypes.join(', '));
-
-                  var myZzimStoreTagInfos = $('<div class="item-meta-non-inline"></div>').html(
-                      store.tagInfos.map(tag => '#' + tag).join(' '));
-
-                  myZzimStoreBox.append(myZzimStoreName).append(myZzimStoreLocation).append(
-                      myZzimStoreFoodTypes).append(
-                      myZzimStoreTagInfos);
-                  $('#itemsContainer').append(myZzimStoreBox);
-                });
-              }
-            },
-            error: function (error) {
-              console.error('Error fetching my zzim stores:', error);
-            }
-          });
-        });
-      });
-    </script>
-</main><!-- End #main -->
 
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
@@ -393,25 +288,215 @@
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>
-<!-- jquery  -->
-
-<!-- icon bootstrap -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
 
 <!-- Vendor JS Files -->
 <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
 <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="assets/vendor/chart.js/chart.umd.js"></script>
-<script src="assets/vendor/echarts/echarts.min.js"></script>
-<script src="assets/vendor/quill/quill.js"></script>
-<script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
-<script src="assets/vendor/tinymce/tinymce.min.js"></script>
-<script src="assets/vendor/php-email-form/validate.js"></script>
-
+<script src="/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="/assets/vendor/echarts/echarts.min.js"></script>
+<script src="/assets/vendor/quill/quill.js"></script>
+<script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
 <!-- Template Main JS File -->
-<script src="assets/js/main.js"></script>
+<script src="/assets/js/main.js"></script>
+<script>
+  $(document).ready(function () {
+    let userSeq = '${userSeq}';
+    let currentPage = 1;
+
+    // 페이지 최초 로드 시 나를 찜한 스토어 리스트 전송
+    sendZZimedMeStoreList(1);
+
+    // 나를 찜한 스토어 리스트 전송 함수
+    function sendZZimedMeStoreList(page) {
+      let isRead = $("input[name='isReadStores']:checked").val() === 'true';
+      let sendData = {
+        'userSeq': userSeq,
+        'isRead': isRead,
+        'targetPage': page
+      };
+      $.ajax({
+        type: "GET",
+        url: "/api/customer/my/notification/zzimed-me-stores",
+        data: $.param(sendData),
+        contentType: "application/x-www-form-urlencoded",
+        dataType: "json",
+        error: function (response) {
+          console.error("[ERROR] 나를 찜한 스토어 리스트 불러오기 실패하였습니다. 다시 시도해주세요.");
+        },
+        success: function (response) {
+          let {paginationInfo, zzimedMeStoreInfos} = response;
+          renderZzimStoreList(zzimedMeStoreInfos);
+          initializePagination(paginationInfo, 'zzimed-me-stores');
+        }
+      });
+    }
+
+    // 나를 찜한 체험단 리스트 전송 함수
+    function sendZzimCustomerList(page) {
+      let isRead = $("input[name='isReadCustomers']:checked").val() === 'true';
+      let sendData = {
+        'userSeq': userSeq,
+        'isRead': isRead,
+        'targetPage': page
+      };
+      $.ajax({
+        type: "GET",
+        url: "/api/customer/my/notification/zzimed-me-customers",
+        data: $.param(sendData),
+        contentType: "application/x-www-form-urlencoded",
+        dataType: "json",
+        error: function (response) {
+          console.error("[ERROR] 나를 찜한 체험단 리스트 불러오기 실패하였습니다. 다시 시도해주세요.");
+        },
+        success: function (response) {
+          let {paginationInfo, zzimedMeCustomerInfos} = response;
+          renderZzimCustomerList(zzimedMeCustomerInfos);
+          initializePagination(paginationInfo, 'zzimed-me-customers');
+        }
+      });
+    }
+
+    // 나를 찜한 스토어 리스트 렌더링 함수
+    function renderZzimStoreList(zzimedMeStoreInfos) {
+      let htmlStr = "";
+      $.map(zzimedMeStoreInfos, function (item) {
+        htmlStr += "<div class='card'>";
+        htmlStr += "<div class='card-body-y mt-2'>";
+        htmlStr += "<p><a href='/brand/" + item.storeSeq + "?fromUserSeq=${userSeq}" + "'>"
+            + item.storeName + "</a>님이 나를 찜하였습니다.</p>";
+        htmlStr += "<p class='p-last'>" + item.createdAt.year + "년 " + item.createdAt.monthValue
+            + "월 " + item.createdAt.dayOfMonth + "일</p>";
+        if (!($("input[name='isReadStores']:checked").val() === 'true')) {
+          htmlStr += "<button class='btn btn-primary mark-as-read' data-notification-seq='"
+              + item.notificationSeq + "'>읽음확인</button>";
+        }
+        htmlStr += "</div>";
+        htmlStr += "</div>";
+      });
+      $("#zzimedMeStoresList").html(htmlStr);
+    }
+
+    // 나를 찜한 체험단 리스트 렌더링 함수
+    function renderZzimCustomerList(zzimedMeCustomerInfos) {
+      let htmlStr = "";
+      $.map(zzimedMeCustomerInfos, function (item) {
+        htmlStr += "<div class='card'>";
+        htmlStr += "<div class='card-body-y mt-2'>";
+        htmlStr += "<p><a href='/brand/" + item.customerSeq + "?fromUserSeq=${userSeq}" + "'>"
+            + item.nickname + "</a>님이 나를 찜하였습니다.</p>";
+        htmlStr += "<p class='p-last'>" + item.createdAt.year + "년 " + item.createdAt.monthValue
+            + "월 " + item.createdAt.dayOfMonth + "일</p>";
+        if (!($("input[name='isReadCustomers']:checked").val() === 'true')) {
+          htmlStr += "<button class='btn btn-primary mark-as-read' data-notification-seq='"
+              + item.notificationSeq + "'>읽음확인</button>";
+        }
+        htmlStr += "</div>";
+        htmlStr += "</div>";
+      });
+      $("#zzimedMeCustomersList").html(htmlStr);
+    }
+
+    // 페이지 네이션 처리
+    function initializePagination(paginationInfo, page) {
+      let currentPage = paginationInfo.currentPage;
+      let startPage = paginationInfo.startPage;
+      let endPage = paginationInfo.endPage;
+      let hasNext = paginationInfo.hasNext;
+      let hasPrevious = paginationInfo.hasPrevious;
+
+      let paginationContainer = $("#" + page + "-pagination");
+
+      let paginationHTML = '';
+      if (hasPrevious) {
+        paginationHTML += '<button id="prev-block-button" class="btn btn-primary edit-btn" data-page="'
+            + (parseInt(currentPage) - 1) + '">&lt;</button>';
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
+        paginationHTML += '<button class="btn ' + (i === currentPage ? 'btn-secondary'
+            : 'btn-primary') + ' edit-btn" data-page="' + i + '">' + i + '</button>';
+      }
+
+      if (hasNext) {
+        paginationHTML += '<button id="next-block-button" class="btn btn-primary edit-btn" data-page="'
+            + (parseInt(currentPage) + 1) + '">&gt;</button>';
+      }
+
+      paginationContainer.html(paginationHTML);
+    }
+
+    // 탭 클릭 시 해당 리스트 전송
+    $("#zzimed-me-stores-tab").on('click', function () {
+      $("#zzimed-me-stores-noti-read").prop("checked", true);
+      sendZZimedMeStoreList(1);
+    });
+
+    $("#zzimed-me-customers-tab").on('click', function () {
+      $("#zzimed-me-customers-noti-read").prop("checked", true);
+      sendZzimCustomerList(1);
+    });
+
+    // 읽음/안읽음 필터 변경 시 리스트 전송
+    $("input[name='isReadStores']").on('change', function () {
+      sendZZimedMeStoreList(1);
+    });
+
+    $("input[name='isReadCustomers']").on('change', function () {
+      sendZzimCustomerList(1);
+    });
+
+    // 페이지 버튼 클릭 이벤트
+    $(document).on("click", ".btn.edit-btn", function (e) {
+      let pageNumber = parseInt($(this).data("page"));
+      if (pageNumber > 0) {
+        handlePageChange(
+            $(this).closest(".pagination-container").attr("id").replace("-pagination", ""),
+            pageNumber);
+      }
+    });
+
+    // 읽음확인 버튼 클릭 이벤트
+    $(document).on("click", ".mark-as-read", function () {
+      let notificationSeq = $(this).data("notification-seq");
+      markNotificationAsRead(userSeq, notificationSeq);
+    });
+
+    // 알림 읽음 처리 함수
+    function markNotificationAsRead(userSeq, notificationSeq) {
+      $.ajax({
+        type: "POST",
+        url: "/api/customer/my/notification/" + notificationSeq,
+        data: $.param({userSeq: userSeq}),
+        contentType: "application/x-www-form-urlencoded",
+        dataType: "text",
+        success: function (response) {
+          alert("해당 알림을 읽음처리 했습니다.");
+          // 현재 활성 탭에 따라 페이지 새로고침
+          if ($("#zzimed-me-stores-tab").hasClass("active")) {
+            sendZZimedMeStoreList(currentPage);
+          } else if ($("#zzimed-me-customers-tab").hasClass("active")) {
+            sendZzimCustomerList(currentPage);
+          }
+        },
+        error: function (response) {
+          console.error("[ERROR] 알림을 읽음으로 표시하는 데 실패했습니다. 다시 시도해주세요.");
+        }
+      });
+    }
+
+    // 페이지 변경 핸들러
+    function handlePageChange(tab, page) {
+      currentPage = page;
+      if (tab === 'zzimed-me-stores') {
+        sendZZimedMeStoreList(page);
+      } else if (tab === 'zzimed-me-customers') {
+        sendZzimCustomerList(page);
+      }
+    }
+  });
+</script>
 
 
 </body>

@@ -58,7 +58,7 @@ public class CustomerMyPageController {
     String nickname = customerUtilService.getUserNickname(userSeq);
     model.addAttribute("nickname", nickname);
     model.addAttribute("userSeq", userSeq);
-    return "customer-my-notification";
+    return "customer-my-notification-info";
   }
 
   @RequestMapping(value = "/personal-info", method = RequestMethod.GET)
