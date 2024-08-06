@@ -20,4 +20,5 @@ public interface MojipMapper {
       @Param("experienceDate") Date experienceDate, @Param("content") String content);
   int updateMojip(@Param("postSeq") Long postSeq, @Param("title") String title, @Param("content") String content);
   int applyMojip(@Param("fromUserSeq") Long fromUserSeq, @Param("toUserSeq") Long toUserSeq, @Param("fromPostSeq") Long fromPostSeq);
+  boolean isApplied(@Param("userSeq") Long userSeq, @Param("postSeq") Long postSeq);
 }

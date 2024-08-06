@@ -73,6 +73,11 @@ public class MojipServiceImpl implements MojipService {
   }
 
   @Override
+  public boolean isAppliedMojip(Long userSeq, Long postSeq) {
+    return mojipMapper.isApplied(userSeq, postSeq);
+  }
+
+  @Override
   @Transactional
   public boolean createMojip(Long userSeq, String title, Date applyStartDate,
       Date applyEndDate, Date experienceDate, String content) {

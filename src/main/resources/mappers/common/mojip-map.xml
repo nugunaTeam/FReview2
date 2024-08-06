@@ -153,4 +153,13 @@
     VALUES (#{fromUserSeq}, #{toUserSeq}, #{fromPostSeq}, 'SENT')
   </insert>
 
+  <!-- 모집글 지원 여부 -->
+  <select id="isApplied" parameterType="map" resultType="boolean">
+    SELECT EXISTS (
+      SELECT 1
+      FROM experience
+      WHERE from_user_seq = #{userSeq} AND from_post_seq = #{postSeq}
+    )
+  </select>
+
 </mapper>

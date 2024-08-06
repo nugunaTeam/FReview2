@@ -13,4 +13,5 @@ public interface MojipService {
   boolean updateMojip(Long postSeq, String title, String content);
   boolean applyMojip(Long fromUserSeq, Long toUserSeq, Long fromPostSeq);
   boolean deletePost(Long postSeq);
+  boolean isAppliedMojip(Long userSeq, Long postSeq);
 }

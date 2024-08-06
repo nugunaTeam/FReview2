@@ -191,7 +191,7 @@
                         </c:otherwise>
                     </c:choose>
                 </c:if>
-                <c:if test="${code eq 'CUSTOMER'}">
+                <c:if test="${code eq 'CUSTOMER' and !isApplied}">
                     <button type="button" class="btn btn-primary apply-button"
                             data-bs-toggle="modal" data-bs-target="#applyModal">지원하기
                     </button>

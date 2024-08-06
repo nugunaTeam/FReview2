@@ -50,8 +50,10 @@ public class MojipController {
     postService.addViewCount(postSeq);
     MojipPostDetailDTO mojipPost = mojipService.getMojipDetail(postSeq);
     boolean isLiked = postService.isLikedPost(userSeq, postSeq);
+    boolean isApplied = mojipService.isAppliedMojip(userSeq, postSeq);
 
     model.addAttribute("isLiked", isLiked);
+    model.addAttribute("isApplied", isApplied);
     model.addAttribute("mojipPost", mojipPost);
     model.addAttribute("loginUser", loginUser);
 
