@@ -1,6 +1,5 @@
 package com.nuguna.freview.customer.controller;
 
-import com.nuguna.freview.customer.dto.request.CustomerMyLikedPostsRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerMyZzimedCustomersRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerMyZzimedStoresRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyLikedPostsRetrieveResponseDTO;
@@ -36,9 +35,9 @@ public class CustomerMyActivityInfoApiController {
   @RequestMapping(value = "/my-liked-posts", method = RequestMethod.GET)
   public ResponseEntity<CustomerMyLikedPostsRetrieveResponseDTO> getMyLikedPosts(
       @RequestParam Long userSeq,
-      @Valid @RequestBody CustomerMyLikedPostsRetrieveRequestDTO customerMyLikedPostsRetrieveRequestDTO) {
+      @RequestParam Integer targetPage) {
     CustomerMyLikedPostsRetrieveResponseDTO myLikedPosts = customerMyActivityService.getMyLikedPosts(
-        userSeq, customerMyLikedPostsRetrieveRequestDTO);
+        userSeq, targetPage);
     return new ResponseEntity<>(myLikedPosts, HttpStatus.OK);
   }
 

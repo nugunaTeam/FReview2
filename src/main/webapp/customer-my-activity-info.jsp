@@ -39,30 +39,28 @@
     <link href="/assets/css/style.css" rel="stylesheet">
     <style>
 
-      .form-control {
-        width: 100%;
-        height: 38px;
-        padding: 6px 12px;
-        font-size: 14px;
-        line-height: 1.42857143;
-        color: #555;
-        background-color: #fff;
-        background-image: none;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-      }
-
-      .pagination-container {
+      .card-body {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 20px;
+        flex-direction: column;
+        padding: 15px;
       }
 
-      .table-container {
-        position: relative;
+      .card-body p {
+        margin: 5px 0;
+      }
+
+      .date-like-info {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 10px;
+      }
+
+      .date-like-info p {
+        margin: 0 5px;
+      }
+
+      .date-like-info i {
+        margin-left: 5px;
       }
 
       .profile-container img {
@@ -70,14 +68,6 @@
         height: 100%;
         object-fit: cover; /* 이미지의 중앙을 맞추고, 자르기 */
         object-position: center; /* 중앙 위치 */
-      }
-
-      .bi-heart-fill {
-        color: red;
-      }
-
-      .card-body-y {
-        padding: 20px 20px;
       }
 
       .card-title-y > p {
@@ -88,25 +78,17 @@
         margin: 0 5px 0 10px;
       }
 
-      .card-title-y {
-        padding: 10px 0px 5px 0;
-        font-size: 16px;
-        font-weight: 500;
-        color: #012970;
-        font-family: "Poppins", sans-serif;
-      }
-
-      .p-last {
-        margin-top: 0;
-        margin-bottom: 0.5rem;
-        font-size: 12px;
-        color: #696969;
-      }
-
       .card-title span {
         color: #899bbd;
         font-size: 14px;
         font-weight: 400;
+      }
+
+      .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
       }
 
     </style>
@@ -210,62 +192,48 @@
                         <ul class="nav nav-tabs nav-tabs-bordered pt-4" id="borderedTab"
                             role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="zzimed-me-stores-tab"
+                                <button class="nav-link active" id="like-tab"
                                         data-bs-toggle="tab"
-                                        data-bs-target="#zzimed-me-stores" type="button" role="tab"
-                                        aria-controls="like" aria-selected="true">나를 찜한 스토어
+                                        data-bs-target="#like" type="button" role="tab"
+                                        aria-controls="like" aria-selected="true">좋아요
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="zzimed-me-customers-tab"
+                                <button class="nav-link" id="zzim-tab"
                                         data-bs-toggle="tab"
-                                        data-bs-target="#zzimed-me-customers" type="button"
+                                        data-bs-target="#zzim" type="button"
                                         role="tab"
-                                        aria-controls="zzim" aria-selected="false">나를 찜한 체험단
+                                        aria-controls="zzim" aria-selected="false">찜
                                 </button>
                             </li>
                         </ul>
 
                         <div class="tab-content pt-4" id="borderedTabContent">
-                            <!-- 나를 찜한 스토어 -->
-                            <div class="tab-pane fade show active" id="zzimed-me-stores"
-                                 role="tabpanel"
-                                 aria-labelledby="zzim-me-stores-tab">
-                                <div>
-                                    <div class="pb-4">
-                                        <input type="radio" id="zzimed-me-stores-noti-read"
-                                               name="isReadStores"
-                                               value="true" checked/> 읽음
-                                        <input type="radio" id="zzimed-me-stores-noti-not-read"
-                                               name="isReadStores"
-                                               value="false"/> 안읽음
-                                    </div>
-                                </div>
-                                <div id="zzimedMeStoresList" class="row">
-                                    <!-- 나를 찜한 스토어 리스트가 렌더링 -->
-                                </div>
+                            <div class="tab-pane fade show active" id="like" role="tabpanel"
+                                 aria-labelledby="like-tab">
+                                <div id="likePostsList" class="row"></div>
                                 <!-- 페이지네이션 버튼 -->
-                                <div class="pagination-container"
-                                     id="zzimed-me-stores-pagination"></div>
+                                <div class="pagination-container" id="like-posts-pagination"></div>
                             </div>
 
-                            <!-- 나를 찜한 체험단 -->
+                            <!-- 내가 찜한 스토어 / 체험단-->
                             <div class="tab-pane fade" id="zzimed-me-customers" role="tabpanel"
-                                 aria-labelledby="zzim-me-customers-tab">
+                                 aria-labelledby="zzim-tab">
                                 <div>
                                     <div class="pb-4">
-                                        <input type="radio" id="zzimed-me-customers-noti-read"
-                                               name="isReadCustomers"
-                                               value="true" checked/> 읽음
-                                        <input type="radio" id="zzimed-me-customers-noti-not-read"
-                                               name="isReadCustomers"
-                                               value="false"/> 안읽음
+                                        <input type="radio" id="zzimed-store-radio"
+                                               name="zzimed-store"
+                                               value="true" checked/> 스토어
+                                        <input type="zzim-customer"
+                                               id="zzimed-customer-radio"
+                                               name="zzimed-customer"
+                                               value="false"/> 체험단
                                     </div>
                                 </div>
-                                <div id="zzimedMeCustomersList" class="row"></div>
+                                <div id="zzimedUserList" class="row"></div>
                                 <!-- 페이지네이션 버튼 -->
                                 <div class="pagination-container"
-                                     id="zzimed-me-customers-pagination"></div>
+                                     id="zzimed-users-pagination"></div>
                             </div>
                         </div>
                     </div>
@@ -302,103 +270,60 @@
 <script src="/assets/js/main.js"></script>
 <script>
   $(document).ready(function () {
-    let userSeq = '${userSeq}';
-    let currentPage = 1;
+    let userSeq = '${userSeq}'; // 사용자 시퀀스
+    let currentPage = 1; // 현재 페이지 번호
 
-    // 페이지 최초 로드 시 나를 찜한 스토어 리스트 전송
-    sendZZimedMeStoreList(1);
+    // 페이지 로드 시 좋아요 리스트를 가져옵니다.
+    sendMyLikedPosts(1);
 
-    // 나를 찜한 스토어 리스트 전송 함수
-    function sendZZimedMeStoreList(page) {
-      let isRead = $("input[name='isReadStores']:checked").val() === 'true';
+    // 좋아요한 글 리스트를 가져오는 함수
+    function sendMyLikedPosts(page) {
       let sendData = {
         'userSeq': userSeq,
-        'isRead': isRead,
         'targetPage': page
       };
+
       $.ajax({
         type: "GET",
-        url: "/api/customer/my/notification/zzimed-me-stores",
+        url: "/api/customer/my/activity-info/my-liked-posts",
         data: $.param(sendData),
         contentType: "application/x-www-form-urlencoded",
         dataType: "json",
         error: function (response) {
-          console.error("[ERROR] 나를 찜한 스토어 리스트 불러오기 실패하였습니다. 다시 시도해주세요.");
+          console.error("[ERROR] 좋아요한 글 리스트를 불러오는 데 실패하였습니다. 다시 시도해주세요.");
         },
         success: function (response) {
-          let {paginationInfo, zzimedMeStoreInfos} = response;
-          renderZzimStoreList(zzimedMeStoreInfos);
-          initializePagination(paginationInfo, 'zzimed-me-stores');
+          console.log(response);
+          let {paginationInfo, myLikeInfos} = response;
+          renderLikedPostsList(myLikeInfos);
+          initializePagination(paginationInfo, 'like-posts');
         }
       });
     }
 
-    // 나를 찜한 체험단 리스트 전송 함수
-    function sendZzimCustomerList(page) {
-      let isRead = $("input[name='isReadCustomers']:checked").val() === 'true';
-      let sendData = {
-        'userSeq': userSeq,
-        'isRead': isRead,
-        'targetPage': page
-      };
-      $.ajax({
-        type: "GET",
-        url: "/api/customer/my/notification/zzimed-me-customers",
-        data: $.param(sendData),
-        contentType: "application/x-www-form-urlencoded",
-        dataType: "json",
-        error: function (response) {
-          console.error("[ERROR] 나를 찜한 체험단 리스트 불러오기 실패하였습니다. 다시 시도해주세요.");
-        },
-        success: function (response) {
-          let {paginationInfo, zzimedMeCustomerInfos} = response;
-          renderZzimCustomerList(zzimedMeCustomerInfos);
-          initializePagination(paginationInfo, 'zzimed-me-customers');
-        }
-      });
-    }
-
-    // 나를 찜한 스토어 리스트 렌더링 함수
-    function renderZzimStoreList(zzimedMeStoreInfos) {
+    function renderLikedPostsList(myLikeInfos) {
       let htmlStr = "";
-      $.map(zzimedMeStoreInfos, function (item) {
+      $.map(myLikeInfos, function (item) {
         htmlStr += "<div class='card'>";
-        htmlStr += "<div class='card-body-y mt-2'>";
-        htmlStr += "<p><a href='/brand/" + item.storeSeq + "?fromUserSeq=${userSeq}" + "'>"
-            + item.storeName + "</a>님이 나를 찜하였습니다.</p>";
-        htmlStr += "<p class='p-last'>" + item.createdAt.year + "년 " + item.createdAt.monthValue
-            + "월 " + item.createdAt.dayOfMonth + "일</p>";
-        if (!($("input[name='isReadStores']:checked").val() === 'true')) {
-          htmlStr += "<button class='btn btn-primary mark-as-read' data-notification-seq='"
-              + item.notificationSeq + "'>읽음확인</button>";
-        }
+        htmlStr += "<div class='card-body mt-2'>";
+
+        htmlStr += "<p><a href='/brand/" + item.authorSeq + "'>" + item.storeName + "</a> 님의 ";
+        htmlStr += "<a href='/post/" + item.seq + "'>모집글</a>에 좋아요 했습니다.</p>";
+
+        // 날짜와 좋아요 수를 상단에 표시
+        htmlStr += "<div class='date-like-info'>";
+        htmlStr += "<p>" + item.createdAt.year + "년 " + item.createdAt.monthValue + "월 "
+            + item.createdAt.dayOfMonth + "일</p>";
+        htmlStr += "<i>❤️</i>";
+        htmlStr += "<p>" + item.likeCount + "</p>";
+        htmlStr += "</div>";
+
         htmlStr += "</div>";
         htmlStr += "</div>";
       });
-      $("#zzimedMeStoresList").html(htmlStr);
+      $("#likePostsList").html(htmlStr);
     }
 
-    // 나를 찜한 체험단 리스트 렌더링 함수
-    function renderZzimCustomerList(zzimedMeCustomerInfos) {
-      let htmlStr = "";
-      $.map(zzimedMeCustomerInfos, function (item) {
-        htmlStr += "<div class='card'>";
-        htmlStr += "<div class='card-body-y mt-2'>";
-        htmlStr += "<p><a href='/brand/" + item.customerSeq + "?fromUserSeq=${userSeq}" + "'>"
-            + item.nickname + "</a>님이 나를 찜하였습니다.</p>";
-        htmlStr += "<p class='p-last'>" + item.createdAt.year + "년 " + item.createdAt.monthValue
-            + "월 " + item.createdAt.dayOfMonth + "일</p>";
-        if (!($("input[name='isReadCustomers']:checked").val() === 'true')) {
-          htmlStr += "<button class='btn btn-primary mark-as-read' data-notification-seq='"
-              + item.notificationSeq + "'>읽음확인</button>";
-        }
-        htmlStr += "</div>";
-        htmlStr += "</div>";
-      });
-      $("#zzimedMeCustomersList").html(htmlStr);
-    }
-
-    // 페이지 네이션 처리
     function initializePagination(paginationInfo, page) {
       let currentPage = paginationInfo.currentPage;
       let startPage = paginationInfo.startPage;
@@ -409,90 +334,49 @@
       let paginationContainer = $("#" + page + "-pagination");
 
       let paginationHTML = '';
+
+      // 이전 페이지 버튼
       if (hasPrevious) {
         paginationHTML += '<button id="prev-block-button" class="btn btn-primary edit-btn" data-page="'
             + (parseInt(currentPage) - 1) + '">&lt;</button>';
       }
 
+      // 페이지 번호 버튼
       for (let i = startPage; i <= endPage; i++) {
         paginationHTML += '<button class="btn ' + (i === currentPage ? 'btn-secondary'
-            : 'btn-primary') + ' edit-btn" data-page="' + i + '">' + i + '</button>';
+                : 'btn-primary')
+            + ' edit-btn" data-page="' + i + '">' + i + '</button>';
       }
 
+      // 다음 페이지 버튼
       if (hasNext) {
         paginationHTML += '<button id="next-block-button" class="btn btn-primary edit-btn" data-page="'
             + (parseInt(currentPage) + 1) + '">&gt;</button>';
       }
 
       paginationContainer.html(paginationHTML);
-    }
 
-    // 탭 클릭 시 해당 리스트 전송
-    $("#zzimed-me-stores-tab").on('click', function () {
-      $("#zzimed-me-stores-noti-read").prop("checked", true);
-      sendZZimedMeStoreList(1);
-    });
-
-    $("#zzimed-me-customers-tab").on('click', function () {
-      $("#zzimed-me-customers-noti-read").prop("checked", true);
-      sendZzimCustomerList(1);
-    });
-
-    // 읽음/안읽음 필터 변경 시 리스트 전송
-    $("input[name='isReadStores']").on('change', function () {
-      sendZZimedMeStoreList(1);
-    });
-
-    $("input[name='isReadCustomers']").on('change', function () {
-      sendZzimCustomerList(1);
-    });
-
-    // 페이지 버튼 클릭 이벤트
-    $(document).on("click", ".btn.edit-btn", function (e) {
-      let pageNumber = parseInt($(this).data("page"));
-      if (pageNumber > 0) {
-        handlePageChange(
-            $(this).closest(".pagination-container").attr("id").replace("-pagination", ""),
-            pageNumber);
-      }
-    });
-
-    // 읽음확인 버튼 클릭 이벤트
-    $(document).on("click", ".mark-as-read", function () {
-      let notificationSeq = $(this).data("notification-seq");
-      markNotificationAsRead(userSeq, notificationSeq);
-    });
-
-    // 알림 읽음 처리 함수
-    function markNotificationAsRead(userSeq, notificationSeq) {
-      $.ajax({
-        type: "POST",
-        url: "/api/customer/my/notification/" + notificationSeq,
-        data: $.param({userSeq: userSeq}),
-        contentType: "application/x-www-form-urlencoded",
-        dataType: "text",
-        success: function (response) {
-          alert("해당 알림을 읽음처리 했습니다.");
-          // 현재 활성 탭에 따라 페이지 새로고침
-          if ($("#zzimed-me-stores-tab").hasClass("active")) {
-            sendZZimedMeStoreList(currentPage);
-          } else if ($("#zzimed-me-customers-tab").hasClass("active")) {
-            sendZzimCustomerList(currentPage);
-          }
-        },
-        error: function (response) {
-          console.error("[ERROR] 알림을 읽음으로 표시하는 데 실패했습니다. 다시 시도해주세요.");
+      // 페이지 버튼 클릭 이벤트 처리
+      $(".edit-btn").on("click", function () {
+        let pageNumber = parseInt($(this).data("page"));
+        if (pageNumber > 0) {
+          handlePageChange(page, pageNumber);
         }
       });
     }
 
-    // 페이지 변경 핸들러
+// 페이지 변경 핸들러
     function handlePageChange(tab, page) {
+      // 현재 페이지를 전역 변수에 업데이트 (필요에 따라)
       currentPage = page;
-      if (tab === 'zzimed-me-stores') {
-        sendZZimedMeStoreList(page);
+
+      // 페이지에 따라 적절한 데이터를 로드
+      if (tab === 'like-posts') {
+        sendMyLikedPosts(page);
       } else if (tab === 'zzimed-me-customers') {
         sendZzimCustomerList(page);
+      } else if (tab === 'zzimed-me-stores') {
+        sendZZimedMeStoreList(page);
       }
     }
   });
