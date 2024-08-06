@@ -18,9 +18,9 @@
   <select id="getExistingKeys" resultType="java.lang.String">
     SELECT CONCAT(user_seq, '|', category, '|', dish) as `key`
     FROM interest_accumulation
-    WHERE CONCAT(user_seq, '|', category, '|', dish) IN
-    <foreach item="item" index="index" collection="keys" open="(" separator="," close=")">
-      #{item}
+    WHERE (user_seq, category, dish) IN
+    <foreach item="item" index="index" collection="keys" open="(" separator="),(" close=")">
+      (#{item.userSeq}, #{item.category}, #{item.dish})
     </foreach>
   </select>
 

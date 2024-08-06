@@ -6,8 +6,8 @@
 
   <!-- 마지막으로 처리한 seq 로깅 -->
   <insert id="updateLastProcessedSeq" parameterType="map">
-    insert into experience_postprocessing_log (last_processed_seq, purpose)
-    values (#{seq}, #{purpose})
+    INSERT INTO experience_postprocessing_log (last_processed_seq, purpose)
+    VALUES (#{seq}, #{purpose})
   </insert>
 
   <!-- 최근 처리된 작업 번호 가져오기 -->

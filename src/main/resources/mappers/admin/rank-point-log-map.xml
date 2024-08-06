@@ -21,6 +21,7 @@
     SELECT seq, user_seq, code, created_at
     FROM point_log
     WHERE seq &gt; #{lastProcessedSeq}
+    ORDER BY seq
     limit 100;
   </select>
 
