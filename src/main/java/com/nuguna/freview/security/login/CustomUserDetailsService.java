@@ -33,13 +33,6 @@ public class CustomUserDetailsService implements UserDetailsService {
       throw new UsernameNotFoundException("email");
     }
     List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-//    if(userVO.getCode().equals("ADMIN")){
-//      authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-//    }else if(userVO.getCode().equals("CUSTOMER")){
-//      authorities.add(new SimpleGrantedAuthority("ROLE_CUSTOMER"));
-//    }else if(userVO.getCode().equals("STORE")){
-//      authorities.add(new SimpleGrantedAuthority("ROLE_STORE"));
-//    }
 
     UserCode userCode = UserCode.from(userVO.getCode());
     if(userCode.isAdmin()){

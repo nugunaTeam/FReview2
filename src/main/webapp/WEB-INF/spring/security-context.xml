@@ -16,7 +16,41 @@
 		<context:include-filter expression="org.springframework.stereotype.Repository" type="annotation" />
 	</context:component-scan>
 
+	<beans:bean id="authSuccessHandler" class="com.nuguna.freview.security.login.SuccessHandler">
+		<beans:constructor-arg name="jwtUtil" ref="jwtUtil"/>
+	</beans:bean>
+	<beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+	<beans:bean id="authFailureHandler"	class="com.nuguna.freview.security.login.FailureHandler"/>
+	<beans:bean id="customAuthenticationProvider" class="com.nuguna.freview.security.login.CustomAuthenticationProvider"/>
+	<beans:bean id="customUserDetailsService" class="com.nuguna.freview.security.login.CustomUserDetailsService"/>
+	<beans:bean id="jwtUtil" class="com.nuguna.freview.security.JwtUtil"/>
+	<beans:bean id="accessDeniedHandler" class="com.nuguna.freview.security.jwtfilter.CustomAccessDeniedHandler"/>
+	<beans:bean id="jwtUserSerive" class="com.nuguna.freview.security.jwtfilter.service.Impl.JwtUserServiceImpl"/>
+	<beans:bean id="jwtAuthenticationEntryPoint" class="com.nuguna.freview.security.jwtfilter.JwtAuthenticationEntryPoint"/>
+	<beans:bean id="logoutFilter" class="com.nuguna.freview.security.logout.LogoutFilter"/>
+
+	<beans:bean id="jwtFilter" class="com.nuguna.freview.security.jwtfilter.JWTfilter">
+		<beans:constructor-arg name="jwtutl" ref="jwtUtil"/>
+		<beans:constructor-arg name="jwtUserService" ref="jwtUserSerive"/>
+	</beans:bean>
+
 	<http pattern="/assets/**"  security="none"/>
+
+	<http pattern="/logout" entry-point-ref="jwtAuthenticationEntryPoint">
+		<custom-filter ref="logoutFilter" before="FORM_LOGIN_FILTER"/>
+	</http>
+
+	<http pattern="/customer/**" entry-point-ref="jwtAuthenticationEntryPoint">
+		<csrf disabled="true"/>
+		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
+		<access-denied-handler ref="accessDeniedHandler"/>
+	</http>
+
+	<http pattern="/store/**" entry-point-ref="jwtAuthenticationEntryPoint">
+		<csrf disabled="true"/>
+		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
+		<access-denied-handler ref="accessDeniedHandler"/>
+	</http>
 
 	<http>
 		<csrf disabled="true"/>
@@ -36,7 +70,6 @@
 			authentication-success-handler-ref="authSuccessHandler"
 			authentication-failure-handler-ref="authFailureHandler"
 		/>
-
 	</http>
 
 
@@ -45,12 +78,6 @@
 		<authentication-provider user-service-ref="customUserDetailsService"/>
 	</authentication-manager>
 
-	<beans:bean id="authSuccessHandler" class="com.nuguna.freview.security.login.SuccessHandler">
-		<beans:constructor-arg name="jwtUtil" ref="jwtUtil"/>
-	</beans:bean>
-	<beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
-	<beans:bean id="authFailureHandler"	class="com.nuguna.freview.security.login.FailureHandler"/>
-	<beans:bean id="customAuthenticationProvider" class="com.nuguna.freview.security.login.CustomAuthenticationProvider"/>
-	<beans:bean id="customUserDetailsService" class="com.nuguna.freview.security.login.CustomUserDetailsService"/>
-	<beans:bean id="jwtUtil" class="com.nuguna.freview.security.JwtUtil"/>
+
+
 </beans:beans>
