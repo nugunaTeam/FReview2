@@ -365,7 +365,7 @@
         htmlStr += "<div class='card'>";
         htmlStr += "<div class='card-body-y mt-2'>";
         htmlStr += "<p><a href='/brand/" + item.storeSeq + "?fromUserSeq=${userSeq}" + "'>"
-            + item.storeName + "</a>님이 나를 찜하였습니다.</p>";
+            + item.storeName + "</a>님이 나를 <span style='color: mediumvioletred'>찜</span>하였습니다.</p>";
         htmlStr += "<p class='p-last'>" + item.createdAt.year + "년 " + item.createdAt.monthValue
             + "월 " + item.createdAt.dayOfMonth + "일</p>";
         if (!($("input[name='isReadStores']:checked").val() === 'true')) {
@@ -385,7 +385,7 @@
         htmlStr += "<div class='card'>";
         htmlStr += "<div class='card-body-y mt-2'>";
         htmlStr += "<p><a href='/brand/" + item.customerSeq + "?fromUserSeq=${userSeq}" + "'>"
-            + item.nickname + "</a>님이 나를 찜하였습니다.</p>";
+            + item.nickname + "</a>님이 나를 <span style='color: mediumvioletred'>찜</span>하였습니다.</p>";
         htmlStr += "<p class='p-last'>" + item.createdAt.year + "년 " + item.createdAt.monthValue
             + "월 " + item.createdAt.dayOfMonth + "일</p>";
         if (!($("input[name='isReadCustomers']:checked").val() === 'true')) {

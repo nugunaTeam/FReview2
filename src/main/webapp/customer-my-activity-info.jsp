@@ -216,18 +216,16 @@
                                 <div class="pagination-container" id="like-posts-pagination"></div>
                             </div>
 
+
                             <!-- 내가 찜한 스토어 / 체험단-->
-                            <div class="tab-pane fade" id="zzimed-me-customers" role="tabpanel"
+                            <div class="tab-pane fade" id="zzim" role="tabpanel"
                                  aria-labelledby="zzim-tab">
                                 <div>
                                     <div class="pb-4">
-                                        <input type="radio" id="zzimed-store-radio"
-                                               name="zzimed-store"
-                                               value="true" checked/> 스토어
-                                        <input type="zzim-customer"
-                                               id="zzimed-customer-radio"
-                                               name="zzimed-customer"
-                                               value="false"/> 체험단
+                                        <input type="radio" id="zzimed-store-radio" name="zzimed"
+                                               checked/> 스토어
+                                        <input type="radio" id="zzimed-customer-radio"
+                                               name="zzimed"/> 체험단
                                     </div>
                                 </div>
                                 <div id="zzimedUserList" class="row"></div>
@@ -308,7 +306,8 @@
         htmlStr += "<div class='card-body mt-2'>";
 
         htmlStr += "<p><a href='/brand/" + item.authorSeq + "'>" + item.storeName + "</a> 님의 ";
-        htmlStr += "<a href='/post/" + item.seq + "'>모집글</a>에 좋아요 했습니다.</p>";
+        htmlStr += "<a href='/post/" + item.seq
+            + "'>모집글</a>에 <span style='color : green'>좋아요</span> 했습니다.</p>";
 
         // 날짜와 좋아요 수를 상단에 표시
         htmlStr += "<div class='date-like-info'>";
@@ -323,6 +322,57 @@
       });
       $("#likePostsList").html(htmlStr);
     }
+
+    // 찜한 스토어 리스트를 가져오는 함수
+    function sendZzimStoreList(page) {
+      let sendData = {
+        'userSeq': userSeq,
+        'targetPage': page
+      };
+
+      $.ajax({
+        type: "GET",
+        url: "/api/customer/my/activity-info/my-zzimed-stores",
+        data: $.param(sendData),
+        contentType: "application/x-www-form-urlencoded",
+        dataType: "json",
+        error: function (response) {
+          console.error("[ERROR] 찜한 스토어 리스트를 불러오는 데 실패하였습니다. 다시 시도해주세요.");
+        },
+        success: function (response) {
+          let {paginationInfo, zzimedStoreInfos} = response;
+          renderZzimStoreList(zzimedStoreInfos);
+          initializePagination(paginationInfo, 'zzimed-users');
+        }
+      });
+    }
+
+    // 찜한 스토어 리스트를 렌더링하는 함수
+    function renderZzimStoreList(zzimedStoreInfos) {
+      let htmlStr = "";
+      $.map(zzimedStoreInfos, function (item) {
+        htmlStr += "<div class='card'>";
+        htmlStr += "<div class='card-body mt-2'>";
+
+        htmlStr += "<p><a href='/brand/" + item.storeSeq + "'>" + item.storeName
+            + "</a>님을 <span style='color : mediumvioletred'>찜</span>했습니다.</p>";
+        htmlStr += "<p><span style='color: green;'>위치</span>: " + item.storeLocation + "</p>";
+        htmlStr += "<p><span style='color: mediumvioletred;'>활동 분야</span>: " + item.foodTypes.join(
+                ", ")
+            + "</p>";
+        htmlStr += "<p>" + item.createdAt.year + "년 " + item.createdAt.monthValue + "월 "
+            + item.createdAt.dayOfMonth + "일</p>";
+
+        htmlStr += "</div>";
+        htmlStr += "</div>";
+      });
+      $("#zzimedUserList").html(htmlStr);
+    }
+
+    // 찜 탭 클릭 이벤트
+    $("#zzim-tab").on("click", function () {
+      sendZzimStoreList(1); // 처음 페이지를 로드
+    });
 
     function initializePagination(paginationInfo, page) {
       let currentPage = paginationInfo.currentPage;
@@ -360,7 +410,9 @@
       $(".edit-btn").on("click", function () {
         let pageNumber = parseInt($(this).data("page"));
         if (pageNumber > 0) {
-          handlePageChange(page, pageNumber);
+          handlePageChange(
+              $(this).closest(".pagination-container").attr("id").replace("-pagination", ""),
+              pageNumber);
         }
       });
     }
@@ -373,10 +425,12 @@
       // 페이지에 따라 적절한 데이터를 로드
       if (tab === 'like-posts') {
         sendMyLikedPosts(page);
-      } else if (tab === 'zzimed-me-customers') {
-        sendZzimCustomerList(page);
-      } else if (tab === 'zzimed-me-stores') {
-        sendZZimedMeStoreList(page);
+      } else if (tab === 'zzimed-users') {
+        if ($("#zzimed-store-radio").is(":checked")) {
+          sendZzimStoreList(page);
+        } else if ($("#zzimed-customer-radio").is(":checked")) {
+          sendZzimCustomerList(page);
+        }
       }
     }
   });

@@ -1,7 +1,6 @@
 package com.nuguna.freview.customer.controller;
 
 import com.nuguna.freview.customer.dto.request.CustomerMyZzimedCustomersRetrieveRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerMyZzimedStoresRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyLikedPostsRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyZzimedCustomersResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyZzimedStoresRetrieveResponseDTO;
@@ -44,9 +43,9 @@ public class CustomerMyActivityInfoApiController {
   @RequestMapping(value = "/my-zzimed-stores", method = RequestMethod.GET)
   public ResponseEntity<CustomerMyZzimedStoresRetrieveResponseDTO> getMyZzimedStores(
       @RequestParam Long userSeq,
-      @Valid @RequestBody CustomerMyZzimedStoresRetrieveRequestDTO customerMyZzimedStoresRetrieveRequestDTO) {
+      @RequestParam Integer targetPage) {
     CustomerMyZzimedStoresRetrieveResponseDTO myZzimedStores = customerMyActivityService.getMyZzimedStores(
-        userSeq, customerMyZzimedStoresRetrieveRequestDTO);
+        userSeq, targetPage);
     return new ResponseEntity<>(myZzimedStores, HttpStatus.OK);
   }
 
