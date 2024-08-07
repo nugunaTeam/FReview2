@@ -358,19 +358,6 @@
                                            value="${otherBrandInfo.introduce}"
                                            class="form-control" readonly>
                                 </div>
-                                <div class="col-lg-1 col-md-2">
-                                    <button id="introduce-update-btn" type="button"
-                                            class="btn btn-primary edit-btn">수정
-                                    </button>
-                                    <button id="introduce-submit-btn" type="button"
-                                            class="btn btn-success send-btn"
-                                            style="display: none;">전송
-                                    </button>
-                                    <button id="introduce-cancel-btn" type="button"
-                                            class="btn btn-secondary cancel-btn"
-                                            style="display: none;">취소
-                                    </button>
-                                </div>
                             </div>
 
                             <div class="row">
@@ -379,17 +366,6 @@
                                     <input id="nickname-input" type="text" name="to_nickname"
                                            value="${otherBrandInfo.nickname}"
                                            class="form-control" readonly>
-                                </div>
-                                <div class="col-lg-1 col-md-2">
-                                    <button type="button" class="btn btn-primary edit-btn"
-                                            id="nickname-update-btn">수정
-                                    </button>
-                                    <button type="button" class="btn btn-success send-btn"
-                                            style="display: none;" id="nickname-submit-btn">전송
-                                    </button>
-                                    <button type="button" class="btn btn-secondary cancel-btn"
-                                            style="display: none;" id="nickname-cancel-btn">취소
-                                    </button>
                                 </div>
                             </div>
                             <div class="row">
