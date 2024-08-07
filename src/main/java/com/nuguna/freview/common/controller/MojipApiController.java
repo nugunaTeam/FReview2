@@ -1,13 +1,14 @@
 package com.nuguna.freview.common.controller;
 
+import static com.nuguna.freview.common.constant.BoardPageConstant.MOJIP_BOARD_PAGE_SIZE;
+
 import com.nuguna.freview.common.dto.request.MojipApplyRequestDTO;
 import com.nuguna.freview.common.dto.request.MojipInsertRequestDTO;
 import com.nuguna.freview.common.dto.request.MojipListRequestDTO;
 import com.nuguna.freview.common.dto.request.MojipUpdateRequestDTO;
-import com.nuguna.freview.common.dto.response.MojipPostDetailDTO;
+import com.nuguna.freview.common.dto.response.MojipPostDTO;
 import com.nuguna.freview.common.dto.response.page.MojipResponseDTO;
 import com.nuguna.freview.common.service.MojipService;
-import com.nuguna.freview.common.service.PostService;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -26,26 +27,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class MojipApiController {
 
   private final MojipService mojipService;
-  private final PostService postService;
-  private final int PAGE_SIZE = 12;
 
   @Autowired
-  public MojipApiController(MojipService mojipService, PostService postService) {
+  public MojipApiController(MojipService mojipService) {
     this.mojipService = mojipService;
-    this.postService = postService;
   }
 
   //TODO: 모집글의 지원자 수 함께 보여주기
   @RequestMapping(value = "/list", method = RequestMethod.POST)
   public MojipResponseDTO getMojipList(@RequestBody MojipListRequestDTO requestDTO) {
+    Long requesterSeq = requestDTO.getRequesterSeq();
     Long previousPostSeq = requestDTO.getPreviousPostSeq();
     String searchWord = requestDTO.getSearchWord();
-
     if (previousPostSeq == null) {
       previousPostSeq = Long.MAX_VALUE;
     }
-      List<MojipPostDetailDTO> mojipList = mojipService.getMojipList(previousPostSeq, searchWord, PAGE_SIZE);
-      boolean hasMore = mojipList.size() == PAGE_SIZE;
+      List<MojipPostDTO> mojipList = mojipService.getMojipList(requesterSeq, previousPostSeq, searchWord, MOJIP_BOARD_PAGE_SIZE);
+      boolean hasMore = mojipList.size() == MOJIP_BOARD_PAGE_SIZE;
       MojipResponseDTO responseDTO = new MojipResponseDTO();
       responseDTO.setMojipList(mojipList);
       responseDTO.setHasMore(hasMore);
@@ -96,14 +94,13 @@ public class MojipApiController {
 
   @RequestMapping(value = "/{deletePostSeq}", method = RequestMethod.DELETE)
   public ResponseEntity<?> deleteMojipPost(@PathVariable Long deletePostSeq) {
-    if (postService.deletePost(deletePostSeq)) {
+    if (mojipService.deletePost(deletePostSeq)) {
       return new ResponseEntity<>(HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  //TODO: 이미 지원한 모집글은 지원불가 옵션 추가
   @RequestMapping(value = "/apply", method = RequestMethod.POST)
   public ResponseEntity<?> applyMojipPost(@RequestBody MojipApplyRequestDTO requestDTO) {
     Long fromUserSeq = requestDTO.getFromUserSeq();

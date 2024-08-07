@@ -9,4 +9,5 @@ public interface UserMapper {
 
   void insertCustomer(UserVO uservo);
   UserVO selectUser(@Param("userSeq") Long userSeq);
+  int deleteUser(Long userSeq);
 }

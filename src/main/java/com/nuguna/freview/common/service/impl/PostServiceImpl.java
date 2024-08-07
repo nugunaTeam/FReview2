@@ -31,12 +31,6 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
-  public boolean deletePost(Long postSeq) {
-    int result = postMapper.deletePost(postSeq);
-    return result == 1;
-  }
-
-  @Override
   @Transactional
   public boolean addLikeToPost(Long postSeq, Long userSeq) {
     int result = postMapper.insertLike(postSeq, userSeq);

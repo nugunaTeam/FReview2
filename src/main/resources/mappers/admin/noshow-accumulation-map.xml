@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.admin.mapper.NoshowAccumulationMapper">
+
+  <!-- noshow_accumulation 데이터 삽입 또는 업데이트 -->
+  <insert id="insertNoshowAccumulation" parameterType="long">
+    INSERT INTO noshow_accumulation (user_seq, total_no_show)
+    VALUES (#{userSeq}, 1)
+  </insert>
+
+  <update id="updateNoshowAccumulation" parameterType="long">
+    UPDATE noshow_accumulation
+    SET total_no_show = total_no_show + 1
+    WHERE user_seq = #{userSeq}
+  </update>
+
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.admin.mapper.UserInterestLogMapper">
+
+  <!-- LikeLogVO resultMap -->
+  <resultMap id="interestResultMap" type="com.nuguna.freview.admin.vo.UserInterestLogVO">
+    <id property="seq" column="seq"/>
+    <result property="userSeq" column="user_seq"/>
+    <result property="code" column="code"/>
+    <result property="category" column="category"/>
+    <result property="dish" column="dish"/>
+  </resultMap>
+
+  <!-- sql 쿼리문 -->
+  <select id="getNewLogs" resultMap="interestResultMap">
+    SELECT seq, user_seq, code, category, dish
+    FROM interest_keyword_log
+    WHERE seq &gt; #{lastProcessedSeq}
+    ORDER BY seq
+    LIMIT 100
+  </select>
+
+  <insert id="insertInterestLog" parameterType="map" >
+    INSERT INTO interest_keyword_log (user_seq, code, category, dish)
+    VALUES (#{userSeq}, #{code}, #{category}, #{dish})
+  </insert>
+
+</mapper>

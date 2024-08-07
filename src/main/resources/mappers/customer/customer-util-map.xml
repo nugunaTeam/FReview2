@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.customer.mapper.CustomerUtilMapper">
+
+  <select id="getUserNickname" resultType="java.lang.String">
+    select nickname
+    from user
+    where seq = #{userSeq}
+  </select>
+
+  <select id="checkUserIsStore" resultType="java.lang.Boolean">
+    select count(1) > 0
+    from user u
+    where u.seq = #{userSeq}
+      and u.code = 'STORE'
+  </select>
+
+  <select id="checkZzimedOtherUser" resultType="java.lang.Boolean">
+    select count(1) > 0
+    from zzim
+    where from_user_seq = #{fromUserSeq}
+      and to_user_seq = #{toUserSeq}
+  </select>
+
+  <select id="checkStoreProposedToUser" resultType="java.lang.Boolean">
+    select count(1) > 0
+    from experience
+    where from_user_seq = #{storeSeq}
+      and to_user_seq = #{customerSeq}
+  </select>
+
+</mapper>

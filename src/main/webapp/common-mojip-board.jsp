@@ -5,7 +5,7 @@
 <c:set var="loginUser" value="${loginUser}"/>
 <c:set var="userSeq" value="${loginUser.seq}"/>
 <c:set var="nickname" value="${loginUser.nickname}"/>
-<c:set var="profileUrl" value="${loginUser.profilePhotoUrl}" />
+<c:set var="profileUrl" value="${loginUser.profilePhotoUrl}"/>
 <c:set var="code" value="${loginUser.code}"/>
 
 <!DOCTYPE html>
@@ -39,7 +39,6 @@
 
     <!-- Template Main CSS File -->
     <link href="/assets/css/style.css" rel="stylesheet">
-    <link href="/assets/css/hr.css" rel="stylesheet">
 
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
@@ -109,24 +108,7 @@
 
 <body>
 
-<!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center header-hr">
-    <div class="d-flex align-items-center justify-content-between ">
-        <a href="/main?seq=${userSeq}&pagecode=Requester"
-           class="logo d-flex align-items-center">
-            <img src="/assets/img/logo/logo-vertical.png" alt=""
-                 style="  width: 50px; margin-top: 20px;">
-            <span class="d-none d-lg-block">FReview</span>
-        </a>
-    </div>
-    <div class="header-hr-right">
-        <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
-            ${nickname}
-            <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
-        </a>
-        <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
-    </div>
-</header>
+<jsp:include page="/header.jsp"/>
 
 <main id="main" style="margin:auto; margin-top:50px">
 
@@ -138,22 +120,21 @@
         <div class="card-body">
             <h5 class="card-title">모집 게시판</h5>
             <p>매우 중요한 모집글이 올라옵니다 <br></p>
-
             <div class="search-container">
-            <div>
-                <input type="text" name="searchWord" id="searchWord" placeholder="원하는 키워드로 검색하세요!">
-                <input type="button" id="searchBtn" value="검색">
-            </div>
+                <div>
+                    <input type="text" name="searchWord" id="searchWord"
+                           placeholder="원하는 키워드로 검색하세요!">
+                    <input type="button" id="searchBtn" value="검색">
+                </div>
 
-            <c:if test="${code eq 'STORE'}">
-                <a href="/mojip/create" class="btn btn-register">
-                    모집 등록
-                </a>
-            </c:if>
+                <c:if test="${code eq 'STORE'}">
+                    <a href="/mojip/create" class="btn btn-register">
+                        모집 등록
+                    </a>
+                </c:if>
             </div>
-            </div>
-
-            <div id="postList" class="post-list">
+        </div>
+        <div id="postList" class="post-list">
         </div>
     </div>
     <div class="d-flex justify-content-center">
@@ -168,7 +149,7 @@
 
     loadInitialData();
 
-    $('#searchBtn').click(function() {
+    $('#searchBtn').click(function () {
       currentSearchWord = $('#searchWord').val();
       $('#postList').empty();
       loadInitialData(currentSearchWord);
@@ -185,12 +166,13 @@
         url: "/api/common/mojip/list",
         contentType: "application/json",
         data: JSON.stringify({
-          searchWord: searchWord
+          searchWord: searchWord,
+          requesterSeq: ${userSeq}
         }),
         dataType: "json",
         success: function (response) {
           $('#postList').empty();
-          renderData(response.mojipList); // 데이터 객체 접근 수정
+          renderData(response.mojipList);
           if (response.hasMore) {
             $('#loadMoreBtn').data('previous-post-seq',
                 response.mojipList[response.mojipList.length - 1].seq).show();
@@ -211,7 +193,8 @@
         contentType: "application/json",
         data: JSON.stringify({
           previousPostSeq: previousPostSeq,
-          searchWord: searchWord
+          searchWord: searchWord,
+          requesterSeq: ${userSeq}
         }),
         dataType: "json",
         success: function (response) {
@@ -256,19 +239,8 @@
 
   });
 </script>
-<!-- ======= Footer ======= -->
-<footer id="footer" class="footer">
-    <div class="copyright">
-        &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
-    </div>
-    <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-    </div>
-</footer><!-- End Footer -->
+
+<jsp:include page="/footer.jsp"/>
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>

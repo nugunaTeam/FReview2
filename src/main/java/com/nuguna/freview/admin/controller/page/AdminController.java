@@ -3,6 +3,7 @@ package com.nuguna.freview.admin.controller.page;
 import com.nuguna.freview.admin.service.AdminService;
 import com.nuguna.freview.admin.vo.AdminVO;
 import com.nuguna.freview.common.vo.user.UserCode;
+import java.time.YearMonth;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,11 @@ public class AdminController {
   @Autowired
   public AdminController(AdminService adminService) {
     this.adminService = adminService;
+  }
+
+  @RequestMapping(value = "", method = RequestMethod.GET)
+  public String adminHome() {
+    return "redirect:/admin/analysis";
   }
 
   @RequestMapping(value = "/manage/customer", method = RequestMethod.GET)
@@ -50,5 +56,53 @@ public class AdminController {
     model.addAttribute("loginUser", loginUser);
 
     return "admin-management-store";
+  }
+
+  @RequestMapping(value = "/manage/experience", method = RequestMethod.GET)
+  public String experienceManagePage(Model model) {
+    //HACK: 로그인 유저의 실제 seq 로 수정 필요
+    Long userSeq = 301L;
+    AdminVO loginUser = adminService.getAdminById(userSeq);
+    UserCode currentCode = UserCode.from(loginUser.getCode());
+
+    if (!currentCode.isAdmin()) {
+      return "common-error-404";
+    }
+    model.addAttribute("loginUser", loginUser);
+
+    return "admin-management-experience";
+  }
+
+  @RequestMapping(value = "/analysis", method = RequestMethod.GET)
+  public String analysisManagePage(Model model) {
+    //HACK: 로그인 유저의 실제 seq 로 수정 필요
+    Long userSeq = 301L;
+    AdminVO loginUser = adminService.getAdminById(userSeq);
+    UserCode currentCode = UserCode.from(loginUser.getCode());
+    YearMonth currentYearMonth = YearMonth.now();
+    String currentMonth = currentYearMonth.toString();
+
+    if (!currentCode.isAdmin()) {
+      return "common-error-404";
+    }
+    model.addAttribute("loginUser", loginUser);
+    model.addAttribute("currentMonth", currentMonth);
+
+    return "admin-analysis";
+  }
+
+  @RequestMapping(value = "/profile", method = RequestMethod.GET)
+  public String profileManagePage(Model model) {
+    //HACK: 로그인 유저의 실제 seq 로 수정 필요
+    Long userSeq = 301L;
+    AdminVO loginUser = adminService.getAdminById(userSeq);
+    UserCode currentCode = UserCode.from(loginUser.getCode());
+
+    if (!currentCode.isAdmin()) {
+      return "common-error-404";
+    }
+    model.addAttribute("loginUser", loginUser);
+
+    return "admin-personal-profile";
   }
 }

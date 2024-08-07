@@ -1,18 +1,18 @@
 package com.nuguna.freview.customer.controller;
 
-import com.nuguna.freview.customer.dto.request.CustomerAgeGroupUpdateRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerFoodTypesUpdateRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerIntroduceUpdateRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerNicknameUpdateRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerProfilePhotoUpdateRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerTagsUpdateRequestDTO;
-import com.nuguna.freview.customer.dto.response.CustomerAgeGroupUpdateResponseDTO;
-import com.nuguna.freview.customer.dto.response.CustomerFoodTypesUpdateResponseDTO;
-import com.nuguna.freview.customer.dto.response.CustomerIntroduceUpdateResponseDTO;
-import com.nuguna.freview.customer.dto.response.CustomerNicknameUpdateResponseDTO;
-import com.nuguna.freview.customer.dto.response.CustomerProfilePhotoUpdateResponseDTO;
-import com.nuguna.freview.customer.dto.response.CustomerTagsUpdateResponseDTO;
-import com.nuguna.freview.customer.service.CustomerBrandService;
+import com.nuguna.freview.customer.dto.request.CustomerMyAgeGroupUpdateRequestDTO;
+import com.nuguna.freview.customer.dto.request.CustomerMyFoodTypesUpdateRequestDTO;
+import com.nuguna.freview.customer.dto.request.CustomerMyIntroduceUpdateRequestDTO;
+import com.nuguna.freview.customer.dto.request.CustomerMyNicknameUpdateRequestDTO;
+import com.nuguna.freview.customer.dto.request.CustomerMyTagsUpdateRequestDTO;
+import com.nuguna.freview.customer.dto.response.CustomerMyAgeGroupUpdateResponseDTO;
+import com.nuguna.freview.customer.dto.response.CustomerMyFoodTypesUpdateResponseDTO;
+import com.nuguna.freview.customer.dto.response.CustomerMyIntroduceUpdateResponseDTO;
+import com.nuguna.freview.customer.dto.response.CustomerMyNicknameUpdateResponseDTO;
+import com.nuguna.freview.customer.dto.response.CustomerMyProfilePhotoUpdateResponseDTO;
+import com.nuguna.freview.customer.dto.response.CustomerMyTagsUpdateResponseDTO;
+import com.nuguna.freview.customer.service.CustomerMyBrandService;
+import java.io.IOException;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,71 +21,79 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/customer/my/brand-info")
 public class CustomerMyBrandInfoApiController {
 
-  private final CustomerBrandService customerBrandService;
+  private final CustomerMyBrandService customerMyBrandService;
 
   @Autowired
-  public CustomerMyBrandInfoApiController(CustomerBrandService customerBrandService) {
-    this.customerBrandService = customerBrandService;
+  public CustomerMyBrandInfoApiController(CustomerMyBrandService customerMyBrandService) {
+    this.customerMyBrandService = customerMyBrandService;
   }
 
-  @RequestMapping(value = "/profile-photo-url", method = RequestMethod.PUT)
-  public ResponseEntity<CustomerProfilePhotoUpdateResponseDTO> updateCustomerProfilePhoto(
-      @Valid @RequestBody CustomerProfilePhotoUpdateRequestDTO customerProfilePhotoUpdateRequestDTO
-  ) {
-    CustomerProfilePhotoUpdateResponseDTO responseDTO = customerBrandService.updateCustomerPhotoUrl(
-        customerProfilePhotoUpdateRequestDTO);
+  @RequestMapping(value = "/profile-photo-url", method = RequestMethod.POST)
+  public ResponseEntity<CustomerMyProfilePhotoUpdateResponseDTO> updateCustomerProfilePhoto(
+      @RequestParam("userSeq") Long userSeq,
+      @RequestParam("profileFile") MultipartFile profileFile)
+      throws IOException {
+
+    if (profileFile == null || profileFile.isEmpty()) {
+      throw new IllegalArgumentException("프로필 파일은 필수값입니다.");
+    }
+
+    CustomerMyProfilePhotoUpdateResponseDTO responseDTO = customerMyBrandService.updateCustomerPhotoUrl(
+        userSeq, profileFile);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
   @RequestMapping(value = "/nickname", method = RequestMethod.PUT)
-  public ResponseEntity<CustomerNicknameUpdateResponseDTO> updateCustomerNickname(
-      @Valid @RequestBody CustomerNicknameUpdateRequestDTO customerNicknameUpdateRequestDTO
+  public ResponseEntity<CustomerMyNicknameUpdateResponseDTO> updateCustomerNickname(
+      @Valid @RequestBody CustomerMyNicknameUpdateRequestDTO customerMyNicknameUpdateRequestDTO
   ) {
-    CustomerNicknameUpdateResponseDTO responseDTO = customerBrandService.updateCustomerNickname(
-        customerNicknameUpdateRequestDTO);
+    CustomerMyNicknameUpdateResponseDTO responseDTO = customerMyBrandService.updateCustomerNickname(
+        customerMyNicknameUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
   @RequestMapping(value = "/age-group", method = RequestMethod.PUT)
-  public ResponseEntity<CustomerAgeGroupUpdateResponseDTO> updateCustomerAgeGroup(
-      @Valid @RequestBody CustomerAgeGroupUpdateRequestDTO customerAgeGroupUpdateRequestDTO
+  public ResponseEntity<CustomerMyAgeGroupUpdateResponseDTO> updateCustomerAgeGroup(
+      @Valid @RequestBody CustomerMyAgeGroupUpdateRequestDTO customerMyAgeGroupUpdateRequestDTO
   ) {
-    CustomerAgeGroupUpdateResponseDTO responseDTO = customerBrandService.updateCustomerAgeGroup(
-        customerAgeGroupUpdateRequestDTO);
+    CustomerMyAgeGroupUpdateResponseDTO responseDTO = customerMyBrandService.updateCustomerAgeGroup(
+        customerMyAgeGroupUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
   @RequestMapping(value = "/introduce", method = RequestMethod.PUT)
-  public ResponseEntity<CustomerIntroduceUpdateResponseDTO> updateCustomerIntroduce(
-      @Valid @RequestBody CustomerIntroduceUpdateRequestDTO customerIntroduceUpdateRequestDTO
+  public ResponseEntity<CustomerMyIntroduceUpdateResponseDTO> updateCustomerIntroduce(
+      @Valid @RequestBody CustomerMyIntroduceUpdateRequestDTO customerMyIntroduceUpdateRequestDTO
   ) {
-    CustomerIntroduceUpdateResponseDTO responseDTO = customerBrandService.updateCustomerIntroduce(
-        customerIntroduceUpdateRequestDTO);
+    CustomerMyIntroduceUpdateResponseDTO responseDTO = customerMyBrandService.updateCustomerIntroduce(
+        customerMyIntroduceUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
   @RequestMapping(value = "/food-types", method = RequestMethod.PUT)
-  public ResponseEntity<CustomerFoodTypesUpdateResponseDTO> updateCustomerFoodTypes(
-      @Valid @RequestBody CustomerFoodTypesUpdateRequestDTO customerFoodTypesUpdateRequestDTO
+  public ResponseEntity<CustomerMyFoodTypesUpdateResponseDTO> updateCustomerFoodTypes(
+      @Valid @RequestBody CustomerMyFoodTypesUpdateRequestDTO customerMyFoodTypesUpdateRequestDTO
   ) {
-    CustomerFoodTypesUpdateResponseDTO responseDTO = customerBrandService.updateCustomerFoodTypes(
-        customerFoodTypesUpdateRequestDTO);
+    CustomerMyFoodTypesUpdateResponseDTO responseDTO = customerMyBrandService.updateCustomerFoodTypes(
+        customerMyFoodTypesUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
   @RequestMapping(value = "/tags", method = RequestMethod.PUT)
-  public ResponseEntity<CustomerTagsUpdateResponseDTO> updateCustomerTags(
-      @Valid @RequestBody CustomerTagsUpdateRequestDTO customerTagsUpdateRequestDTO
+  public ResponseEntity<CustomerMyTagsUpdateResponseDTO> updateCustomerTags(
+      @Valid @RequestBody CustomerMyTagsUpdateRequestDTO customerMyTagsUpdateRequestDTO
   ) {
-    CustomerTagsUpdateResponseDTO responseDTO = customerBrandService.updateCustomerTags(
-        customerTagsUpdateRequestDTO);
+    CustomerMyTagsUpdateResponseDTO responseDTO = customerMyBrandService.updateCustomerTags(
+        customerMyTagsUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.store.mapper.StoreBrandPageMapper">
+
+  <resultMap id="StoreBrandInfoResponseDTOMap"
+    type="com.nuguna.freview.store.dto.response.StoreBrandInfoResponseDTO">
+    <result property="storeSeq" column="seq"/>
+    <result property="storeName" column="store_name"/>
+    <result property="zzimCount" column="zzimCount"/>
+    <result property="introduce" column="introduce"/>
+    <result property="storeLocation" column="store_location"/>
+    <collection property="foodTypes" ofType="java.lang.String">
+      <result column="dish"/>
+    </collection>
+    <collection property="tags" ofType="java.lang.String">
+      <result column="name"/>
+    </collection>
+  </resultMap>
+
+  <select id="getStoreBrandInfo" resultMap="StoreBrandInfoResponseDTOMap">
+    with store_user_info as
+           (select store_basic_info.seq,
+                   nsbi.store_name,
+                   store_basic_info.introduce,
+                   store_basic_info.store_location,
+                   (select count(*)
+                    from zzim z
+                    where z.to_user_seq = store_basic_info.seq) as zzimCount
+            from (select u.seq,
+                         u.introduce,
+                         u.store_location,
+                         u.business_number
+                  from user u
+                  where u.seq = #{storeSeq}) store_basic_info
+                   inner join
+                 national_store_business_information nsbi
+                 on
+                   store_basic_info.business_number = nsbi.business_number)
+
+    select sui.*,
+           t.name,
+           ft.dish
+    from store_user_info sui
+           inner join user_tag ut
+                      on
+                        sui.seq = ut.user_seq
+           inner join tag t
+                      on
+                        ut.tag_seq = t.seq
+           inner join user_food_type uft
+                      on
+                        sui.seq = uft.user_seq
+           inner join food_type ft
+                      on
+                        uft.food_type_seq = ft.seq
+  </select>
+
+
+</mapper>

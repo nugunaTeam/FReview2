@@ -38,7 +38,6 @@
 
   <!-- Template Main CSS File -->
   <link href="/assets/css/style.css" rel="stylesheet">
-  <link href="/assets/css/hr.css" rel="stylesheet">
 
   <!-- JQuery -->
   <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
@@ -63,9 +62,16 @@
     background: none;
     cursor: pointer;
   }
+
+  .high-noshow {
+    color: red !important;
+  }
+
 </style>
 
 <body>
+
+<jsp:include page="/header.jsp" />
 
 <!-- 탈퇴 모달 창 -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -90,31 +96,17 @@
   </div>
 </div>
 
-<!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center header-hr">
-  <div class="d-flex align-items-center justify-content-between ">
-    <a href="/main?seq=${userSeq}&pagecode=Requester"
-       class="logo d-flex align-items-center">
-      <img src="/assets/img/logo/logo-vertical.png" alt=""
-           style="  width: 50px; margin-top: 20px;">
-      <span class="d-none d-lg-block">FReview</span>
-    </a>
-    <i class="bi bi-list toggle-sidebar-btn"></i>
-  </div>
-  <div class="header-hr-right">
-    <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
-      ${nickname}
-      <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
-    </a>
-    <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
-  </div>
-</header>
-
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
 
   <ul class="sidebar-nav" id="sidebar-nav">
-
+    <ul class="sidebar-nav">
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="/admin/analysis">
+          <i class="bi bi-person"></i><span>분석</span>
+        </a>
+      </li>
+    </ul>
     <li class="nav-item">
       <a class="nav-link " data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-layout-text-window-reverse"></i><span>관리</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -130,11 +122,16 @@
             <i class="bi bi-circle"></i><span>스토어</span>
           </a>
         </li>
+        <li>
+          <a href="/admin/manage/experience">
+            <i class="bi bi-circle"></i><span>체험</span>
+          </a>
+        </li>
       </ul>
     </li>
     <ul class="sidebar-nav">
       <li class="nav-item">
-        <a class="nav-link collapsed" href="/account/info">
+        <a class="nav-link collapsed" href="/admin/profile">
           <i class="bi bi-person"></i><span>개인정보수정</span>
         </a>
       </li>
@@ -169,7 +166,7 @@
                 <th>닉네임</th>
                 <th>아이디</th>
                 <th>가입일자</th>
-                <th>노쇼횟수</th>
+                <th>누적 노쇼 횟수</th>
                 <th>탈퇴</th>
               </tr>
               </thead>
@@ -270,12 +267,13 @@
       let htmlStr = "";
       $.map(data, function (user) {
         let formattedCreatedAt = dayjs(user["createdAt"]).format('YYYY-MM-DD HH:mm');
+        let highlightClass = user["totalNoshow"] > 3 ? 'high-noshow' : '';
 
         htmlStr += "<tr>";
         htmlStr += "<td>" + user["nickname"] + "</td>";
         htmlStr += "<td><a href='/brand-page?user_seq=" + user["seq"] + "'>" + user["email"] + "</a></td>";
         htmlStr += "<td>" + formattedCreatedAt + "</td>";
-        htmlStr += "<td>" + "0" + "</td>";
+        htmlStr += "<td class='" + highlightClass + "'>" + user["totalNoshow"] + "</td>";
         htmlStr += "<td><button class='btn btn-danger btn-sm delete-btn' data-bs-toggle='modal' data-bs-target='#deleteModal' data-id='" + user["email"] + "' data-seq='" + user["seq"] + "'>X</button></td>";
         htmlStr += "</tr>";
       });
@@ -336,19 +334,7 @@
 
 </script>
 
-<!-- ======= Footer ======= -->
-<footer id="footer" class="footer">
-  <div class="copyright">
-    &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
-  </div>
-  <div class="credits">
-    <!-- All the links in the footer should remain intact. -->
-    <!-- You can delete the links only if you purchased the pro version. -->
-    <!-- Licensing information: https://bootstrapmade.com/license/ -->
-    <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-    Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-  </div>
-</footer><!-- End Footer -->
+<jsp:include page="/footer.jsp" />
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 

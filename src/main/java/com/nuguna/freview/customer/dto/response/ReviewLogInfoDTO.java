@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class ReviewLogInfoDTO {
 
   private Long seq;
+  private Long storeSeq;
   private String storeName;
   private String status;
   private String url;
