@@ -17,6 +17,6 @@ public class StoreBrandInfoResponseDTO {
   private Long zzimCount;
   private String introduce;
   private List<String> foodTypes;
-  private List<String> tags;
+  private List<String> tagInfos;
   private String storeLocation;
 }

@@ -173,7 +173,8 @@
                     <img src="/user/${userSeq}/profile"
                          alt="Profile"
                          class="rounded-circle profile-img"
-                         style="margin-right: 5px;">
+                         style="margin-right: 5px;"
+                         onerror="this.onerror=null;this.src='/assets/img/basic/customer-basic-profile.png';">
                     <span id="nickname-holder-head"
                           class="d-none d-md-block"
                           style="font-size : 18px;">${brandInfo.nickname}</span>
@@ -247,7 +248,8 @@
                          alt="Profile"
                          class="rounded-circle clickable img-fluid profile-img"
                          style="position: relative;
-                         overflow: hidden; border-radius: 50%;">
+                         overflow: hidden; border-radius: 50%;"
+                         onerror="this.onerror=null;this.src='/assets/img/basic/customer-basic-profile.png';">
                     <input type="file" id="profile-img-upload" style="display: none;">
                     <h2 id="nickname-holder-section">${brandInfo.nickname}
                     </h2>
