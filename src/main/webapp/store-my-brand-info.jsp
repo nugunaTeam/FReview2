@@ -566,9 +566,9 @@
                                 <div class="col-lg-8 col-md-6">
                                     <select id="tag-select" class="form-select" multiple size="2"
                                             disabled>
-                                        <option value="뷰 맛집" data-custom-color="green">뷰 맛집</option>
-                                        <option value="오션뷰" data-custom-color="indianred">오션뷰</option>
-                                        <option value="반려동물 환영" data-custom-color="blue">반려동물 환영</option>
+                                        <option value="뷰 맛집" data-custom-color="mediumvioletred'">뷰 맛집</option>
+                                        <option value="오션뷰" data-custom-color="deepskyblue">오션뷰</option>
+                                        <option value="반려동물 환영" data-custom-color="green">반려동물 환영</option>
                                     </select>
                                     <p id="tag-select-message" class="text-primary"
                                        style="font-size: 14px;"></p>
