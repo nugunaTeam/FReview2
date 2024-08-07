@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,9 @@ public class ExperienceLogService {
   private final ExperiencePostProcessingLogMapper experiencePostProcessingLogMapper;
   private final DoneExperienceAccumulationMapper doneExperienceAccumulationMapper;
 
+  @Value("${experience.log.cycle.cron}")
+  private String experienceLogCycleCron;
+
   @Autowired
   public ExperienceLogService(ExperienceLogMapper experienceMapper,
       NoshowAccumulationMapper noshowAccumulationMapper,
@@ -37,7 +41,7 @@ public class ExperienceLogService {
     this.doneExperienceAccumulationMapper = doneExperienceAccumulationMapper;
   }
 
-  @Scheduled(cron = "0 0 12,0 * * *")
+  @Scheduled(cron = "${experience.log.cycle.cron}")
   @Transactional
   public void processNoShowExperiences() {
     String purpose = "NOSHOW_ACCUMULATION";

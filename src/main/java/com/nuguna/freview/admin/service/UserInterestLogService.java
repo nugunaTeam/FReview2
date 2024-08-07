@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,9 @@ public class UserInterestLogService {
   private final UserInterestAccumulationMapper userInterestAccumulationMapper;
   private final UserInterestPostprocessingLogMapper userInterestPostprocessingLogMapper;
 
+  @Value("${user.interest.log.cycle.fixedRate}")
+  private long interestLogCycle;
+
   @Autowired
   public UserInterestLogService(UserInterestLogMapper userInterestLogMapper,
       UserInterestAccumulationMapper userInterestAccumulationMapper,
@@ -31,7 +35,7 @@ public class UserInterestLogService {
     this.userInterestPostprocessingLogMapper = userInterestPostprocessingLogMapper;
   }
 
-  @Scheduled(fixedRate = 1000)
+  @Scheduled(fixedRateString = "${user.interest.log.cycle.fixedRate}")
   @Transactional
   public void processUserInterestLogs() {
     Long lastProcessedSeq = userInterestPostprocessingLogMapper.getLastProcessedSeq();

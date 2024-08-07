@@ -1,5 +1,7 @@
 package com.nuguna.freview.admin.controller;
 
+import static com.nuguna.freview.admin.constant.ManagementPageConstant.EXPERIENCE_MANAGEMENT_PAGE_SIZE;
+
 import com.nuguna.freview.admin.dto.HiddenReviewDTO;
 import com.nuguna.freview.admin.dto.response.page.HiddenReviewResponseDTO;
 import com.nuguna.freview.admin.service.ReviewService;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ExperienceManageApiController {
 
   private final ReviewService reviewService;
-  private final int PAGE_SIZE = 10;
 
   @Autowired
   public ExperienceManageApiController(ReviewService reviewService) {
@@ -28,9 +29,9 @@ public class ExperienceManageApiController {
 
   @RequestMapping(value = "/hidden-reviews/{currentPage}")
   public HiddenReviewResponseDTO getHiddenReviews(@PathVariable int currentPage) {
-    List<HiddenReviewDTO> reviews = reviewService.getHiddenReviews(currentPage, PAGE_SIZE);
+    List<HiddenReviewDTO> reviews = reviewService.getHiddenReviews(currentPage, EXPERIENCE_MANAGEMENT_PAGE_SIZE);
     int reviewTotal = reviewService.getTotalCount();
-    int totalPage = (int)Math.ceil((double)reviewTotal / (double)PAGE_SIZE);
+    int totalPage = (int)Math.ceil((double)reviewTotal / (double)EXPERIENCE_MANAGEMENT_PAGE_SIZE);
     return new HiddenReviewResponseDTO(reviews, totalPage);
   }
 
