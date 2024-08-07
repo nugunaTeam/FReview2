@@ -33,7 +33,6 @@ public class MojipApiController {
     this.mojipService = mojipService;
   }
 
-  //TODO: 모집글의 지원자 수 함께 보여주기
   @RequestMapping(value = "/list", method = RequestMethod.POST)
   public MojipResponseDTO getMojipList(@RequestBody MojipListRequestDTO requestDTO) {
     Long requesterSeq = requestDTO.getRequesterSeq();
