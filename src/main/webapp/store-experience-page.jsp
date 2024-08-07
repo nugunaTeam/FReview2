@@ -42,19 +42,8 @@
     <link href="/assets/css/style.css" rel="stylesheet">
     <style>
 
-      .form-control {
-        width: 100%;
-        height: 38px;
-        padding: 6px 12px;
-        font-size: 14px;
-        line-height: 1.42857143;
-        color: #555;
-        background-color: #fff;
-        background-image: none;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+      table {
+        text-align: center;
       }
 
       .pagination-container {
@@ -62,10 +51,6 @@
         justify-content: center;
         align-items: center;
         margin-top: 20px;
-      }
-
-      .table-container {
-        position: relative;
       }
 
       .profile-container img {
@@ -165,7 +150,7 @@
         </li><!-- End Dashboard Nav -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed"
+            <a class="nav-link "
                href="${pageContext.request.contextPath}/store/experience?userSeq=${userSeq}">
                 <i class="bi bi-card-checklist"></i>
                 <span>체험</span>
@@ -174,7 +159,7 @@
         <!-- End Profile Page Nav -->
 
         <li class="nav-item">
-            <a class="nav-link "
+            <a class="nav-link collapsed"
                href="${pageContext.request.contextPath}/store/activity?userSeq=${userSeq}">
                 <i class="bi bi-bell"></i>
                 <span>활동</span>
@@ -218,71 +203,108 @@
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="apply-tab" data-bs-toggle="tab"
                                         data-bs-target="#apply-list" type="button" role="tab"
-                                        aria-controls="like" aria-selected="true">지원자 리스트
+                                        aria-controls="apply" aria-selected="true">지원자 리스트
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="proposal-tab" data-bs-toggle="tab"
                                         data-bs-target="#proposal-list" type="button" role="tab"
-                                        aria-controls="zzim" aria-selected="false">제안자 리스트
+                                        aria-controls="proposal" aria-selected="false">제안자 리스트
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="final-tab" data-bs-toggle="tab"
                                         data-bs-target="#final-list" type="button" role="tab"
-                                        aria-controls="post" aria-selected="false">확정자 리스트
+                                        aria-controls="final" aria-selected="false">확정자 리스트
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="reviews-tab" data-bs-toggle="tab"
-                                        data-bs-target="#reviews-list" type="button" role="tab"
-                                        aria-controls="post" aria-selected="false">리뷰 리스트
+                                <button class="nav-link" id="review-tab" data-bs-toggle="tab"
+                                        data-bs-target="#review-list" type="button" role="tab"
+                                        aria-controls="review" aria-selected="false">리뷰 리스트
                                 </button>
                             </li>
                         </ul>
                         <div class="tab-content pt-4" id="borderedTabContent">
-                            <!-- 내가 좋아요 한 글 -->
+                            <!-- 지원자 리스트 -->
                             <div class="tab-pane fade show active" id="apply-list" role="tabpanel"
-                                 aria-labelledby="like-tab">
-                                <div id="sendLikeList" class="row">
-                                    <!-- 좋아요 리스트가 여기에 렌더링됩니다. -->
-                                </div>
-
-                                <!-- 페이지네이션 버튼 -->
-                                <div class="pagination-container" id="like-pagination"></div>
+                                 aria-labelledby="apply-tab">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>지원자</th>
+                                        <th>모집글</th>
+                                        <th>모집 시작일</th>
+                                        <th>모집 마감일</th>
+                                        <th>체험일</th>
+                                        <th>확정체크</th>
+                                        <th>상태</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="applyListHtml"></tbody>
+                                </table>
+                                <div class="pagination-container" id="apply-pagination"></div>
                             </div>
-
-                            <!-- 내가 찜한 유저 -->
-                            <div class="tab-pane fade" id="send-zzim" role="tabpanel"
-                                 aria-labelledby="zzim-tab">
-                                <div>
-                                    <div class="pb-4">
-                                        <input type="radio" id="customerZzim" name="code" value="CUSTOMER" checked /> 체험단
-                                        <input type="radio" id="storeZzim" name="code" value="STORE" /> 스토어
-                                    </div>
-                                </div>
-                                <div id="sendZzimListHtml" class="row"></div>
-                                <!-- 페이지네이션 버튼 -->
+                            <!-- 제안자 리스트 -->
+                            <div class="tab-pane fade show " id="proposal-list" role="tabpanel"
+                                 aria-labelledby="proposal-tab">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>제안자</th>
+                                        <th>제안 내용</th>
+                                        <th>제안 일자</th>
+                                        <th>진행 상황</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="proposalListHtml"></tbody>
+                                </table>
                                 <div class="pagination-container" id="proposal-pagination"></div>
                             </div>
-
-                            <!-- 내가 작성한 글 -->
+                            <!-- 확정자 리스트 -->
                             <div class="tab-pane fade" id="final-list" role="tabpanel"
                                  aria-labelledby="final-tab">
                                 <div>
-                                    <div id="finalList" class="row"></div>
-                                    <!-- 페이지네이션 버튼 -->
-                                    <div class="pagination-container" id="final-pagination"></div>
+                                    <div class="pb-4">
+                                        <input type="radio" name="code" value="APPLY" checked /> 지원
+                                        <input type="radio" name="code" value="PROPOSAL" /> 제안
+                                    </div>
                                 </div>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>지원자</th>
+                                        <th class="title-header">모집글</th>
+                                        <th class="proposal-header" style="display:none;">제안내용</th>
+                                        <th>체험일자</th>
+                                        <th>참여여부</th>
+                                        <th>상태</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="finalListHtml"></tbody>
+                                </table>
+                                <!-- 페이지네이션 버튼 -->
+                                <div class="pagination-container" id="final-pagination"></div>
                             </div>
-
-                            <!-- 내가 작성한 글 -->
-                            <div class="tab-pane fade" id="reviews-list" role="tabpanel"
-                                 aria-labelledby="reviews-tab">
+                            <!-- 리뷰 리스트ㅡ -->
+                            <div class="tab-pane fade" id="review-list" role="tabpanel"
+                                 aria-labelledby="review-tab">
                                 <div>
-                                    <div id="reviewsList" class="row"></div>
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>지원자</th>
+                                            <th>체험일자</th>
+                                            <th>리뷰상태</th>
+                                            <th>리뷰 url</th>
+                                            <th>리뷰 등록일</th>
+                                            <th>숨김</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="reviewListHtml"></tbody>
+                                    </table>
                                     <!-- 페이지네이션 버튼 -->
-                                    <div class="pagination-container" id="reviews-pagination"></div>
+                                    <div class="pagination-container" id="review-pagination"></div>
                                 </div>
                             </div>
 
@@ -325,108 +347,135 @@
 <script src="/assets/vendor/php-email-form/validate.js"></script>
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
+
 <script>
   $(document).ready(function () {
 
     let userSeq = '${userSeq}';
-    let selectedValue = $("input[name='code']:checked").val() || 'CUSTOMER'; // 기본값 설정
-    // let selectedValue = $("input[name='code']:checked").val();
+    let selectedValue = $("input[name='code']:checked").val() || 'APPLY'; // 기본값 설정
 
     // 초기 활동 페이지 로드 시 좋아요 리스트 우선.
-    sendLikeList(1);
+    // applyList(1);
 
-    // 좋아요 리스트 전송 함수
-    function sendLikeList(page) {
+    // ----- 지원자 리스트
+    function applyList(page) {
       let sendData = {
         'userSeq': userSeq,
         'currentPage': page
       };
       $.ajax({
         type: "GET",
-        url: "/api/store/activity/send-like",
+        url: "/api/store/experience/apply-list",
         data: $.param(sendData),
         contentType: "application/x-www-form-urlencoded",
         dataType: "json",
         error: function (response) {
-          console.error("[ERROR] 좋아요 리스트 불러오기 실패하였습니다. 다시 시도해주세요.");
+          console.error("[ERROR] 지원자 리스트 불러오기 실패하였습니다. 다시 시도해주세요.");
         },
         success: function (response) {
-          let {paginationInfo, sendLikeInfos} = response;
-          renderLikeList(sendLikeInfos);
-          initializePagination(paginationInfo, 'like');
+          let { paginationInfo, storeApplyList } = response;
+          renderApplyList(storeApplyList);
+          initializePagination(paginationInfo, 'apply');
         }
       });
     }
-    // 좋아요 - 리스트
-    function renderLikeList(sendLikeInfos) {
+    // 지원자 리스트
+    function renderApplyList(storeApplyList) {
       let htmlStr = "";
-      $.map(sendLikeInfos, function (item) {
-        let formattedDate = dayjs(item.createdAt).format('YYYY년 MM월 DD일');
-        htmlStr += "<div class='card'>";
-        htmlStr += "<div class='card-body-y'>";
-        htmlStr += "<h6 class='card-title-y'>";
-        htmlStr += "<a href='/mojip/" + item.postSeq + "'>";
-        htmlStr += (item.title.length > 20 ? item.title.substring(0, 20) + '...' : item.title);
-        htmlStr += "</a>";
-        htmlStr += "</h6>";
-        htmlStr += "<p>" + (item.content.length > 30 ? item.content.substring(0, 30) + '...'
-            : item.content) + "</p>";
-        htmlStr += "<p class='p-last'>" + formattedDate
-            + " &nbsp<i class='bi bi-heart-fill'></i> &nbsp" + item.likeCount + "</p>";
-        htmlStr += "</div>";
-        htmlStr += "</div>";
+      $.map(storeApplyList, function (item) {
+        let postTitle = item.title.length > 30 ? item.title.substring(0, 30) + '...' : item.title;
+        let startDateFormat = dayjs(item.applyStartDate).format('YYYY-MM-DD');
+        let endDateFormat = dayjs(item.applyEndDate).format('YYYY-MM-DD');
+        let experienceDateFormat = dayjs(item.experienceDate).format('YYYY-MM-DD');
+        htmlStr += "<tr>";
+        htmlStr += "<td><a href='/brand/" + item.fromUserSeq + "'>" + item.nickname + "</a></td>";
+        htmlStr += "<td><a href='/mojip/" + item.fromPostSeq + "'>" + postTitle + "</a></td>";
+        htmlStr += "<td>" + startDateFormat + "</td>";
+        htmlStr += "<td>" + endDateFormat + "</td>";
+        htmlStr += "<td>" + experienceDateFormat + "</td>";
+        // htmlStr += "<td data-id='"+ item.experienceSeq +"'><input type='button' class='status-apply' value='확정'></td>";
+        htmlStr += "<td><button class='status-apply' data-id='" + item.experienceSeq + "'>확정</button></td>";
+        htmlStr += "<td class='status-apply'>" + item.status + "</td>";
+        htmlStr += "</tr>";
       });
-      $("#sendLikeList").html(htmlStr);
+      $("#applyListHtml").html(htmlStr);
+
+      // 이벤트 위임을 통해 동적으로 생성된 요소에 이벤트 바인딩
+      $(document).off("click", ".status-apply").on("click", ".status-apply", function() {
+        let experienceSeq = $(this).data("id");
+
+        if (experienceSeq !== undefined) {
+          statusConfirm(experienceSeq);
+        } else {
+          console.error("[ERROR] experienceSeq is undefined.");
+        }
+      });
+    }
+    // 지원자 리스트 status function
+    function statusConfirm(experienceSeq) {
+      let status = 'ACCEPTED';
+      $.ajax({
+        type: "POST",
+        url: "/api/store/experience/apply-confirm?status=" + status + "&experienceSeq=" + experienceSeq,
+        success: function(response) {
+          alert("상태가 성공적으로 업데이트되었습니다.");
+        },
+        error: function() {
+          console.error("[ERROR] 지원자 상태값을 수정할 수 없습니다.");
+        }
+      });
     }
 
-
-    // 페이지 변경 핸들러
-    function handlePageChange(location, page) {
-      if (location === 'post') {        // 작성한 글
-        writtenPostList(page);
-      } else if (location === 'like') { // 좋아요
-        sendLikeList(page);
-      } else if (location === 'zzim') { // 찜
-        sendZzimList(page, selectedValue)
-        .then(response => {
-          if (selectedValue === 'CUSTOMER') {
-            renderZzimCustomerList(response.sendZzimCustomerInfos);
-          } else if (selectedValue === 'STORE') {
-            renderZzimStoreList(response.sendZzimStoreInfos);
-          } else {
-            console.error("[Not Found!] 데이터를 찾을 수 없습니다. 다시 시도해주세요.");
-          }
-          initializePagination(response.paginationInfo, 'zzim');
-        })
-        .catch(error => {
-          console.error("[ERROR] 데이터가 정상적이지 않습니다. 다시 시도해주세요.");
-        });
-
-      }
-    }
-
-    // // selectedValue 값에 따른 input value 선택.
-    // function handleZzimPageChange(value) {
-    //   selectedValue = value;
-    //   sendZzimPageList(selectedValue);
-    // }
-
-    // 페이지에 따라 찜 리스트를 로드하는 함수
-    // function sendZzimPageList(page) {
-    //   sendZzimList(1, page);
-    // }
-
-    // 찜(체험단/스토어) 리스트 전송 함수
-    function sendZzimList(page, selectedValue) {
+    // 제안자 리스트
+    function proposalList(page) {
       let sendData = {
         'userSeq': userSeq,
         'currentPage': page
       };
+      $.ajax({
+        type: "GET",
+        url: "/api/store/experience/proposal-list",
+        data: $.param(sendData),
+        contentType: "application/x-www-form-urlencoded",
+        dataType: "json",
+        error: function (response) {
+          console.error("[ERROR] 제안자 리스트 불러오기 실패하였습니다. 다시 시도해주세요.");
+        },
+        success: function (response) {
+          let {proposalList, paginationInfo} = response;
+          renderProposalList(proposalList);
+          initializePagination(paginationInfo, 'proposal');
+        }
+      });
+    }
+    // 제안자 리스트 랜더링 함수
+    function renderProposalList(proposalList) {
+      let htmlStr = "";
+      $.map(proposalList, function (item) {
+        let proposalDetail = item.proposalDetail.length > 30 ? item.proposalDetail.substring(0, 30) + '...' : item.proposalDetail;
+        let proposalDate = dayjs(item.createdAt).format('YYYY-MM-DD');
+        htmlStr += "<tr>";
+        htmlStr += "<td><a href='/brand/" + item.toUserSeq + "'>" + item.nickname + "</a></td>";
+        htmlStr += "<td>" + proposalDetail + "</td>";
+        htmlStr += "<td>" + proposalDate + "</td>";
+        htmlStr += "<td>" + item.status + "</td>";
+        htmlStr += "</tr>";
+      });
+      $("#proposalListHtml").html(htmlStr);
 
-      let apiUrl = selectedValue === 'CUSTOMER'
-          ? "/api/store/activity/send-zzim-to-customer"
-          : "/api/store/activity/send-zzim-to-store";
 
+    }
+
+
+    // 확정 리스트 전송 함수
+    function finalList(page, selectedValue) {
+      let sendData = {
+        'userSeq': userSeq,
+        'currentPage': page
+      };
+      let apiUrl = selectedValue === 'APPLY'
+          ? "/api/store/experience/final-apply-list"
+          : "/api/store/experience/final-proposal-list";
       return new Promise((resolve, reject) => {
         $.ajax({
           type: "GET",
@@ -436,95 +485,246 @@
           dataType: "json",
           success: function (response) {
             let paginationInfo = response.paginationInfo;
-            if (selectedValue === 'CUSTOMER') {
-              renderZzimCustomerList(response.sendZzimCustomerInfos);
-            } else if (selectedValue === 'STORE') {
-              renderZzimStoreList(response.sendZzimStoreInfos);
+            if (selectedValue === 'APPLY') {
+              renderFinalApplyList(response.storeFinalApplyList);
+              $(".title-header").show();
+              $(".proposal-header").hide();
+            } else if (selectedValue === 'PROPOSAL') {
+              renderFinalProposalList(response.storeFinalProposalList);
+              $(".title-header").hide();
+              $(".proposal-header").show();
             }
-            initializePagination(paginationInfo, 'zzim');
+            initializePagination(paginationInfo, 'final');
             resolve(response);
+
+            $(".status-checkbox").on("change", function () {
+              let isChecked = $(this).is(":checked");
+              let row = $(this).closest("tr");
+              let statusFinal = row.find(".status-apply");
+              // 상태 업데이트
+              if (isChecked) {
+                statusFinal.text("ACCEPTED");
+              } else {
+                statusFinal.text("SENT");
+              }
+              let experienceSeq = row.find("td[data-id]").data("id"); // 경험 ID 추출
+              updateApplyStatus(experienceSeq, isChecked ? "ACCEPTED" : "SENT");
+            });
           },
           error: function (response) {
             reject(response);
-            console.error("[ERROR] 찜 리스트 불러오기 실패하였습니다. 다시 시도해주세요.");
+            console.error("[ERROR] 리스트 불러오기 실패하였습니다. 다시 시도해주세요.");
           }
         });
       });
     }
-    // 찜 - 체험단 리스트 렌더링 함수
-    function renderZzimCustomerList(sendZzimCustomerInfos) {
+    // 확정 -- 지원 리스트 렌더링 함수
+    function renderFinalApplyList(storeFinalApplyList) {
       let htmlStr = "";
-      $.map(sendZzimCustomerInfos, function (item) {
-        htmlStr += "<div class='card'>";
-        htmlStr += "<div class='card-body-y mt-2'>";
-        htmlStr += "<p><a href='/brand/" + item.zzimUserSeq + "'>" + item.nickname
-            + "</a>님을 찜 하였습니다.</p>";
-        htmlStr += "<p class='p-last'>분야 : " + item.foodTypes + "</p>";
-        htmlStr += "</div>";
-        htmlStr += "</div>";
+      $.map(storeFinalApplyList, function (item) {
+        let experienceDateFormat = item.experienceDate ? dayjs(item.experienceDate).format(
+            'YYYY-MM-DD') : "날짜를 입력하세요";
+        htmlStr += "<tr>";
+        htmlStr += "<td data-id='" + item.experienceSeq + "'><a href='/brand/" + item.fromUserSeq
+            + "'>" + item.nickname + "</a></td>";
+        htmlStr += "<td class='title-cell'><a href='/mojip/" + item.fromPostSeq + "'>" + item.title
+            + "</a></td>";
+        htmlStr += "<td>" + experienceDateFormat + "</td>";
+        htmlStr += "<td><button class='status-button' data-action='DONE' data-id='" + item.experienceSeq + "'>확정</button>" +
+            "<button class='status-button' data-action='NOSHOW' data-id='" + item.experienceSeq + "'>노쇼</button></td>";
+        htmlStr += "<td class='status-accepted'>" + item.status + "</td>";
+        htmlStr += "</tr>";
       });
-      $("#sendZzimListHtml").html(htmlStr);
-    }
-    // 찜 - 스토어 리스트 렌더링 함수
-    function renderZzimStoreList(sendZzimStoreInfos) {
-      let htmlStr = "";
-      $.map(sendZzimStoreInfos, function (item) {
-        htmlStr += "<div class='card'>";
-        htmlStr += "<div class='card-body-y mt-2'>";
-        htmlStr += "<p><a href='/brand/" + item.zzimUserSeq + "'>" + item.nickname
-            + "</a>님을 찜 하였습니다.</p>";
-        htmlStr += "<p class='text-body-y'>스토어 위치 : " + item.storeLocation + "</p>";
-        htmlStr += "<p class='p-last'>분야 : " + item.foodTypes + "</p>";
-        htmlStr += "</div>";
-        htmlStr += "</div>";
-      });
-      $("#sendZzimListHtml").html(htmlStr);
+      $("#finalListHtml").html(htmlStr);
     }
 
-    // 작성한 글 리스트 전송 함수
-    function writtenPostList(page) {
+    // 확정 -- 제안 리스트 렌더링 함수
+    function renderFinalProposalList(storeFinalProposalList) {
+      let htmlStr = "";
+      $.map(storeFinalProposalList, function (item) {
+        let experienceDateFormat = item.experienceDate
+            ? dayjs(item.experienceDate).format("YYYY-MM-DD")
+            : "";
+
+        htmlStr += "<tr>";
+        htmlStr += "<td><a href='/brand/" + item.toUserSeq + "'>" + item.nickname + "</a></td>";
+        htmlStr += "<td class='proposal-cell''>" + item.proposalDetail + "</td>";
+        htmlStr +=
+            "<td class='experience-date'>" +
+            "<input type='date' class='form-control date-picker' data-id='" +
+            item.experienceSeq +
+            "' value='" +
+            experienceDateFormat +
+            "'>" +
+            "<input type='button' class='confirm-date-btn' value='확인'/>" +
+            "</td>";
+        htmlStr += "<td><button class='status-button' data-action='DONE' data-id='" + item.experienceSeq + "'>확정</button>" +
+            "<button class='status-button' data-action='NOSHOW' data-id='" + item.experienceSeq + "'>노쇼</button></td>";
+        htmlStr += "<td class='status-accepted'>" + item.status + "</td>";
+        htmlStr += "</tr>";
+      });
+      $("#finalListHtml").html(htmlStr);
+
+      function updateExperienceDate(experienceSeq, selectedDate) {
+        $.ajax({
+          type: "POST",
+          url: "/api/store/experience/experience-date-update?experienceSeq="+experienceSeq+"&experienceDate="+selectedDate,
+          success: function (response) {
+            alert("날짜가 성공적으로 업데이트되었습니다.");
+          },
+          error: function () {
+            console.error("[ERROR] 날짜 업데이트에 실패했습니다.");
+          },
+        });
+      }
+
+      $(".confirm-date-btn").on("click", function () {
+        let parentRow = $(this).closest("tr");
+        let selectedDate = parentRow.find(".date-picker").val();
+        let experienceSeq = parentRow.find(".date-picker").data("id");
+
+        if (selectedDate && experienceSeq) {
+          updateExperienceDate(experienceSeq, selectedDate);
+        } else {
+          console.error("[ERROR] experienceSeq 또는 날짜가 올바르지 않습니다.");
+        }
+      });
+
+
+
+    }
+
+
+    $(document).off("click", ".status-button").on("click", ".status-button", function() {
+      let experienceSeq = $(this).data("id");
+      let action = $(this).data("action");
+      experienceStatusUpdate(experienceSeq, action);
+    });
+
+
+    //확정자 > 지원
+    function experienceDateUpdate(experienceSeq, status) {
+      $.ajax({
+        type: "POST",
+        url: "/api/store/experience/experience-date-update?status=" + status + "&experienceSeq=" + experienceSeq,
+        success: function(response) {
+          alert("상태가 성공적으로 업데이트되었습니다.");
+        },
+        error: function() {
+          console.error("[ERROR] 지원자 상태값을 수정할 수 없습니다.");
+        }
+      });
+    }
+    // 확정자 > 제안
+    function experienceStatusUpdate(experienceSeq, status) {
+      $.ajax({
+        type: "POST",
+        url: "/api/store/experience/experience-update-status?status=" + status + "&experienceSeq=" + experienceSeq,
+        success: function(response) {
+          alert("상태가 성공적으로 업데이트되었습니다.");
+        },
+        error: function() {
+          console.error("[ERROR] 제안자 상태값을 수정할 수 없습니다.");
+        }
+      });
+    }
+
+
+    // 리뷰 리스트
+    function reviewList(page) {
       let sendData = {
         'userSeq': userSeq,
         'currentPage': page
       };
       $.ajax({
         type: "GET",
-        url: "/api/store/activity/written-post",
-        data: $.param(sendData),
+        url: "/api/store/experience/review-list",
+        data: sendData,
         contentType: "application/x-www-form-urlencoded",
         dataType: "json",
         error: function (response) {
-          console.error("[ERROR] 작성한 글 리스트 불러오기 실패하였습니다. 다시 시도해주세요.");
+          console.error("[ERROR] 리스트 불러오기 실패하였습니다. 다시 시도해주세요.");
         },
         success: function (response) {
-          let {writtenPostInfos, paginationInfo} = response;
-          renderWrittenPostList(writtenPostInfos);
-          initializePagination(paginationInfo, 'post');
+          let { storeReviewList, paginationInfo } = response;
+          renderReviewList(storeReviewList);
+          initializePagination(paginationInfo, 'review');
+
         }
       });
     }
-    // 작성한 글 리스트 랜더링 함수
-    function renderWrittenPostList(writtenPostInfos) {
+    // 리뷰 리스트 랜더링 함수
+    function renderReviewList(storeReviewList) {
       let htmlStr = "";
-      $.map(writtenPostInfos, function (item) {
-        let formattedDate = dayjs(item.createdAt).format('YYYY년 MM월 DD일');
-        htmlStr += "<div class='card'>";
-        htmlStr += "<div class='card-body-y'>";
-        htmlStr += "<h6 class='card-title-y'>";
-        htmlStr += "<a href='/mojip/" + item.postSeq + "'>";
-        htmlStr += (item.title.length > 20 ? item.title.substring(0, 20) + '...' : item.title);
-        htmlStr += "</a>";
-        htmlStr += "</h6>";
-        htmlStr += "<p>" + (item.content.length > 30 ? item.content.substring(0, 30) + '...'
-            : item.content) + "</p>";
-        htmlStr += "<p class='p-last'>" + formattedDate
-            + " &nbsp<i class='bi bi-heart-fill'></i> &nbsp" + item.likeCount + "</p>";
-        htmlStr += "</div>";
-        htmlStr += "</div>";
+      $.map(storeReviewList, function (item) {
+        let visitDate = dayjs(item.visitDate).format('YYYY-MM-DD');
+        let createdAt = item.createdAt ? dayjs(item.createdAt).format('YYYY-MM-DD') : "";
+        let encodedUrl = item.url ? encodeURIComponent(item.url) : "";
+        htmlStr += "<tr>";
+        htmlStr += "<td data-customer-id='" + item.customerSeq + "'><a href='/brand/" + item.customerSeq
+            + "'>" + item.nickname + "</a></td>";
+        htmlStr += "<td>" + visitDate + "</td>";
+        htmlStr += "<td class='status-review'>" + item.status + "</td>";
+        htmlStr += "<td><a href='" + encodedUrl + "'>" + encodedUrl + "</a></td>";
+        htmlStr += "<td>" + createdAt + "</td>";
+        htmlStr += "<td><button class='status-hidden' data-id='" + item.seq
+            + "'>숨김</button></td>";
+        htmlStr += "</tr>";
       });
-      $("#writtenPostList").html(htmlStr);
+      $("#reviewListHtml").html(htmlStr);
+
+      $(document).off("click", ".status-hidden").on("click", ".status-hidden", function() {
+        let seq = $(this).data("id");
+        if (seq !== undefined) {
+          let status = 'STORE_HIDDEN';
+          updateReviewStatus(seq, status);
+        } else {
+          console.error("[ERROR] experienceSeq is undefined.");
+        }
+      });
+    }
+    // 리뷰 리스트 status function
+    function updateReviewStatus(seq, status) {
+      $.ajax({
+        type: "POST",
+        url: "/api/store/experience/review-hidden?seq="+seq+"&status="+status,
+        // data : { 'customerSeq': seq, 'status' : status },
+        success: function (response) {
+          alert("숨김 처리 되었습니다.");
+        },
+        error: function () {
+          console.error("[ERROR] 리뷰 상태값을 수정할 수 없습니다.");
+        }
+      });
     }
 
+
+    //페이지 변경 핸들러
+    function handlePageChange(location, page) {
+      if (location === 'apply') {
+        applyList(page);
+      } else if (location === 'proposal') {
+        proposalList(page);
+      } else if (location === 'review') {
+        reviewList(page);
+      } else if (location === 'final') { // 찜
+        finalList(page, selectedValue)
+        .then(response => {
+          if (selectedValue === 'APPLY') {
+            renderFinalApplyList(response.storeFinalApplyList);
+          } else if (selectedValue === 'PROPOSAL') {
+            renderFinalProposalList(response.storeFinalProposalList);
+          } else {
+            console.error("[Not Found!] 데이터를 찾을 수 없습니다. 다시 시도해주세요.");
+          }
+          initializePagination(response.paginationInfo, 'proposal');
+        })
+        .catch(error => {
+          console.error("[ERROR] 데이터가 정상적이지 않습니다. 다시 시도해주세요.");
+        });
+
+      }
+    }
     // 페이지 네이션 처리.
     function initializePagination(paginationInfo, page) {
       let currentPage = paginationInfo.currentPage;
@@ -572,27 +772,23 @@
       });
     }
 
-
     // 초기 zzim탭 로드
-    sendZzimList(1, selectedValue);
-
-    // 찜 탭 클릭시, 우선 순위
+    applyList(1, selectedValue);
+    // 확정자 리스트 초기 로드
+    finalList(1, selectedValue);
+    // 확정자 리스트 탭 클릭시, 우선 순위
     $("input[name='code']").on('change', function () {
       selectedValue = $(this).val();
-      sendZzimList(1, selectedValue);
+      finalList(1, selectedValue);
     });
-
-    // post 탭 클릭시,
-    $("#post-tab").on('click', function () {
-      writtenPostList(1);
+    // proposal 탭 클릭시,
+    $("#proposal-tab").on('click', function () {
+      proposalList(1);
     });
-
-    // 라디오 버튼 클릭 시, input value 에 따라 code 변경.
-    // $("input[name='code']").on('change', function () {
-    //   let select = $(this).val();
-    //   sendZzimList(1, select);
-    // });
-
+    // review 탭 클릭시,
+    $("#review-tab").on('click', function () {
+      reviewList(1);
+    });
     // 페이지 버튼 클릭 이벤트
     $(document).on("click", ".btn.edit-btn", function (e) {
       let pageNumber = parseInt($(this).data("page"));
