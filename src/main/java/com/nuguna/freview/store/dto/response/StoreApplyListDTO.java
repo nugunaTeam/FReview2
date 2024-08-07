@@ -9,13 +9,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StoreApplyListDTO {
+  private Long experienceSeq;
   private Long fromPostSeq;
   private Long fromUserSeq;
-  private Long toUserSeq;
+  private String nickname;
   private String title;
   private String status;
   private Timestamp applyStartDate;
   private Timestamp applyEndDate;
   private Timestamp experienceDate;
   private Timestamp createdAt;
+
 }

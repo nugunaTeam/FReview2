@@ -5,6 +5,7 @@ import com.nuguna.freview.store.dto.response.StoreFinalApplyListDTO;
 import com.nuguna.freview.store.dto.response.StoreFinalProposalListDTO;
 import com.nuguna.freview.store.dto.response.StoreProposalListDTO;
 import com.nuguna.freview.store.dto.response.StoreReviewListDTO;
+import java.time.LocalDate;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -19,10 +20,10 @@ public interface StoreExperiencePageMapper {
   Integer getStoreReviewListCount(@Param("userSeq") Long userSeq);
 
   void setStoreApplyStatus(@Param("experienceSeq") Long experienceSeq);
-  void setUpdateExperienceDate(@Param("experienceSeq") Long experienceSeq);
 
+  void setUpdateExperienceDate(@Param("experienceSeq") Long experienceSeq, @Param("experienceDate") LocalDate experienceDate);
   void setUpdateExperienceStatus(@Param("experienceSeq") Long experienceSeq, @Param("status") String status);
-  void setUpdateReviewStatus(@Param("customerSeq") Long customerSeq, @Param("status") String status);
+  void setUpdateReviewStatus(@Param("seq") Long seq, @Param("status") String status);
 
   List<StoreApplyListDTO> getStoreApplyList(@Param("userSeq") Long userSeq, @Param("offset") Integer offset, @Param("pageSize") Integer pageSize);
   List<StoreProposalListDTO> getStoreProposalList(@Param("userSeq") Long userSeq, @Param("offset") Integer offset, @Param("pageSize") Integer pageSize);

@@ -9,8 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StoreFinalApplyListDTO {
+  private Long experienceSeq;
   private Long fromUserSeq;
   private String title;
+  private Long fromPostSeq;
   private String nickname;
   private Timestamp experienceDate;
   private String status;

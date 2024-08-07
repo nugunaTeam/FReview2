@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StoreApplyListResponseDTO {
-  private List<StoreApplyListDTO> storeFianalApplyList;
+  private List<StoreApplyListDTO> storeApplyList;
   private PaginationInfoResponseDTO paginationInfo;
 }

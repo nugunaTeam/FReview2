@@ -9,8 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StoreReviewListDTO {
+  private Long seq;
   private Long customerSeq;
   private Long experienceSeq;
+  private Timestamp visitDate;
   private String nickname;
   private String status;
   private String url;
