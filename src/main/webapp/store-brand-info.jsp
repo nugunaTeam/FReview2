@@ -295,6 +295,15 @@
                             </div>
 
                             <div class="row">
+                                <div class="col-lg-3 col-md-4 label" style="color:blue">위치</div>
+                                <div class="col-lg-8 col-md-6">
+                                    <input id="location-holder" type="text" name="location"
+                                           value="${otherBrandInfo.storeLocation}"
+                                           class="form-control" readonly>
+                                </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-lg-3 col-md-4 label" style="color : blue">활동 분야</div>
                                 <div class="col-lg-8 col-md-6">
                                     <div id="food-type-buttons">
