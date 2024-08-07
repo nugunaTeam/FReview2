@@ -23,7 +23,7 @@
     SELECT seq, post_seq, user_seq, code, created_at
     FROM like_log
     WHERE seq &gt; #{lastProcessedSeq}
-    ORDER BY seq ASC
+    ORDER BY seq
     LIMIT 100
   </select>
 

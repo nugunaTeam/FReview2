@@ -6,10 +6,11 @@
 
   <!-- 특정 게시글 좋아요 여부 확인 -->
   <select id="checkPostLiked" parameterType="map" resultType="int">
-    select
-      count(*)
-    from `like`
-    where user_seq = #{userSeq} and post_seq = #{postSeq}
+    SELECT EXISTS (
+      SELECT 1
+      FROM `like`
+      WHERE user_seq = #{userSeq} AND post_seq = #{postSeq}
+    )
   </select>
 
   <!-- 특정 게시글 조회수 증가 -->
@@ -22,27 +23,27 @@
 
   <!-- 특정 게시글 삭제 -->
   <delete id="deletePost" parameterType="Long">
-    delete
-    from post
-    where seq = #{postSeq}
+    DELETE
+    FROM post
+    WHERE seq = #{postSeq}
   </delete>
 
   <!-- 특정 게시글 좋아요 추가 -->
   <insert id="insertLike" parameterType="map">
-    insert into `like` (user_seq, post_seq)
-    values (#{userSeq}, #{postSeq})
+    INSERT INTO `like` (user_seq, post_seq)
+    VALUES (#{userSeq}, #{postSeq})
   </insert>
 
   <!-- 특정 게시글 좋아요 취소 -->
   <delete id="deleteLike" parameterType="map">
-    delete
-    from `like`
-    where user_seq = #{userSeq} and post_seq = #{postSeq}
+    DELETE
+    FROM `like`
+    WHERE user_seq = #{userSeq} AND post_seq = #{postSeq}
   </delete>
 
   <!-- 특정 게시글 작성자 조회 -->
   <select id="selectWriterSeqByPostSeq" parameterType="Long">
-    select seq from post where seq = #{postSeq}
+    SELECT seq FROM post WHERE seq = #{postSeq}
   </select>
 
 </mapper>

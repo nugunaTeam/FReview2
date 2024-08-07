@@ -1,5 +1,7 @@
 package com.nuguna.freview.admin.controller;
 
+import static com.nuguna.freview.admin.constant.ManagementPageConstant.STORE_MANAGEMENT_PAGE_SIZE;
+
 import com.nuguna.freview.admin.dto.request.StoreListRequestDTO;
 import com.nuguna.freview.admin.dto.response.StoreInfoDTO;
 import com.nuguna.freview.admin.dto.response.page.StoreManageResponseDTO;
@@ -22,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/admin/store")
 public class StoreManageApiController {
   private final AdminService adminService;
-  private final Integer PAGE_SIZE = 30;
 
   @Autowired
   public StoreManageApiController(AdminService adminService) {
@@ -37,8 +38,8 @@ public class StoreManageApiController {
     if (previousUserSeq == null) {
       previousUserSeq = Long.MAX_VALUE;
     }
-    List<StoreInfoDTO> storeList = adminService.getStoreList(previousUserSeq, searchWord, PAGE_SIZE);
-    boolean hasMore = storeList.size() == PAGE_SIZE;
+    List<StoreInfoDTO> storeList = adminService.getStoreList(previousUserSeq, searchWord, STORE_MANAGEMENT_PAGE_SIZE);
+    boolean hasMore = storeList.size() == STORE_MANAGEMENT_PAGE_SIZE;
     StoreManageResponseDTO responseDTO = new StoreManageResponseDTO();
     responseDTO.setStoreList(storeList);
     responseDTO.setHasMore(hasMore);

@@ -23,7 +23,7 @@
   </resultMap>
 
   <insert id="insertCustomer" parameterType="com.nuguna.freview.common.vo.user.UserVO">
-    insert into freview2.user(business_number, code, email, password, nickname, profile_photo_url,
+    insert into user(business_number, code, email, password, nickname, profile_photo_url,
                      sub_email, login_type, is_withdrawn, age_group, store_location,
                      created_at, updated_at)
     values (null, #{code}, #{email}, #{password}, #{nickname}, null,

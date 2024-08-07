@@ -1,5 +1,7 @@
 package com.nuguna.freview.admin.controller;
 
+import static com.nuguna.freview.admin.constant.ManagementPageConstant.CUSTOMER_MANAGEMENT_PAGE_SIZE;
+
 import com.nuguna.freview.admin.dto.request.CustomerListRequestDTO;
 import com.nuguna.freview.admin.dto.response.CustomerInfoDTO;
 import com.nuguna.freview.admin.dto.response.page.CustomerManageResponseDTO;
@@ -22,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/admin/customer")
 public class CustomerManageApiController {
   private final AdminService adminService;
-  private final int PAGE_SIZE = 30;
 
   @Autowired
   public CustomerManageApiController(AdminService adminService) { this.adminService = adminService; }
@@ -35,8 +36,8 @@ public class CustomerManageApiController {
     if (previousUserSeq == null) {
       previousUserSeq = Long.MAX_VALUE;
     }
-    List<CustomerInfoDTO> customerList = adminService.getCustomerList(previousUserSeq, searchWord, PAGE_SIZE);
-    boolean hasMore = customerList.size() == PAGE_SIZE;
+    List<CustomerInfoDTO> customerList = adminService.getCustomerList(previousUserSeq, searchWord, CUSTOMER_MANAGEMENT_PAGE_SIZE);
+    boolean hasMore = customerList.size() == CUSTOMER_MANAGEMENT_PAGE_SIZE;
     CustomerManageResponseDTO responseDTO = new CustomerManageResponseDTO();
     responseDTO.setCustomerList(customerList);
     responseDTO.setHasMore(hasMore);

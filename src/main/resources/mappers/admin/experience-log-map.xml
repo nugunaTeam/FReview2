@@ -21,16 +21,17 @@
 
   <!-- SQL 쿼리문 -->
   <insert id="insertExperienceLog" parameterType="map">
-    insert into experience_log (from_user_seq, to_user_seq, from_post_seq, visit_date, status)
-    values (#{fromUserSeq}, #{toUserSeq}, #{fromPostSeq}, #{visitDate}, #{status})
+    INSERT INTO experience_log (from_user_seq, to_user_seq, from_post_seq, visit_date, status)
+    VALUES (#{fromUserSeq}, #{toUserSeq}, #{fromPostSeq}, #{visitDate}, #{status})
   </insert>
 
   <!-- 'NOSHOW' experience 데이터 조회 -->
   <select id="selectNoShowExperiences" parameterType="map" resultMap="noShowExperienceResultMap">
     SELECT seq, from_user_seq, to_user_seq, from_post_seq, status
     FROM experience_log
-    WHERE status = #{status} AND seq > #{lastProcessedSeq}
-    ORDER BY seq ASC
+    WHERE status = #{status}
+      AND seq > #{lastProcessedSeq}
+    ORDER BY seq
     LIMIT 100
   </select>
 
@@ -38,8 +39,9 @@
   <select id="selectDoneExperiences" parameterType="map" resultMap="DoneExperienceResultMap">
     SELECT seq, visit_date
     FROM experience_log
-    WHERE status = #{status} AND seq > #{lastProcessedSeq}
-    ORDER BY seq ASC
+    WHERE status = #{status}
+      AND seq > #{lastProcessedSeq}
+    ORDER BY seq
     LIMIT 100
   </select>
 

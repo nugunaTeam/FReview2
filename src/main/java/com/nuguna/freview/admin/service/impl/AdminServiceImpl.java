@@ -1,5 +1,7 @@
 package com.nuguna.freview.admin.service.impl;
 
+import static com.nuguna.freview.global.util.ShaUtil.sha256Encoding;
+
 import com.nuguna.freview.admin.dto.response.CustomerInfoDTO;
 import com.nuguna.freview.admin.dto.response.StoreInfoDTO;
 import com.nuguna.freview.admin.dto.response.page.AdminProfileDTO;
@@ -47,7 +49,8 @@ public class AdminServiceImpl implements AdminService {
 
   @Override
   public boolean isPasswordValid(Long adminSeq, String password) {
-    return adminMapper.selectMatchingAdmin(adminSeq, password) > 0;
+    String oldPasswordHash = sha256Encoding(password);
+    return adminMapper.selectMatchingAdmin(adminSeq, oldPasswordHash) > 0;
   }
 
   @Override
@@ -76,7 +79,8 @@ public class AdminServiceImpl implements AdminService {
   @Override
   @Transactional
   public void updatePassword(Long userSeq, String newPassword) {
-    adminMapper.updatePassword(userSeq, newPassword);
+    String newPasswordHash = sha256Encoding(newPassword);
+    adminMapper.updatePassword(userSeq, newPasswordHash);
   }
 
   @Override

@@ -19,10 +19,10 @@
   <!-- SQL 쿼리 -->
   <!-- 특정 공지글 정보 조회 -->
   <select id="selectNotice" parameterType="Long" resultMap="noticeDetailMap">
-    select
+    SELECT
       seq, user_seq, title, created_at, updated_at, content, view_count
-    from post
-    where seq = #{postSeq}
+    FROM post
+    WHERE seq = #{postSeq}
   </select>
 
   <!-- 특정 공지글 수정 -->
