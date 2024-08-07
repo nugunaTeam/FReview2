@@ -297,6 +297,15 @@
                                            class="form-control" readonly>
                                 </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label" style="color:blue">위치</div>
+                                <div class="col-lg-8 col-md-6">
+                                    <input id="location-holder" type="text" name="location"
+                                           value="${brandInfo.storeLocation}"
+                                           class="form-control" readonly>
+                                </div>
+                            </div>
                 <script>
                   $(document).ready(function () {
                     $('#profile-img').click(function () {
