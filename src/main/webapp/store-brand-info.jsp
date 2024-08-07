@@ -172,7 +172,11 @@
                          alt="Profile"
                          class="rounded-circle profile-img"
                          style="margin-right: 5px;"
-                         onerror="this.onerror=null;this.src='/assets/img/basic/store-basic-profile.png';"
+                         onerror="
+                                 this.onerror = null;
+                                 this.src = ${isFromUserStore}
+                                 ? '/assets/img/basic/store-basic-profile.png'
+                                 : '/assets/img/basic/customer-basic-profile.png';"
                     >
                     <span id="nickname-holder-head"
                           class="d-none d-md-block"
@@ -200,7 +204,11 @@
                          class="rounded-circle clickable img-fluid profile-img"
                          style="position: relative;
                          overflow: hidden; border-radius: 50%;"
-                         onerror="this.onerror=null;this.src='/assets/img/basic/store-basic-profile.png';">
+                         onerror="
+                                 this.onerror = null;
+                                 this.src = ${isFromUserStore}
+                                 ? '/assets/img/basic/store-basic-profile.png'
+                                 : '/assets/img/basic/customer-basic-profile.png';">
                     <input type="file" id="profile-img-upload" style="display: none;">
                     <h2 id="nickname-holder-section">${otherBrandInfo.storeName}
                     </h2>

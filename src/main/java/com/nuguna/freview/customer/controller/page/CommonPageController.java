@@ -46,9 +46,9 @@ public class CommonPageController {
     boolean isFromUserStore = otherBrandPageUtilService.checkUserIsStore(fromUserSeq);
     String userNickname;
     if(isFromUserStore){
-      userNickname = otherBrandPageUtilService.getUserNickname(fromUserSeq);
-    } else {
       userNickname = otherBrandPageUtilService.getStoreName(fromUserSeq);
+    } else {
+      userNickname = otherBrandPageUtilService.getUserNickname(fromUserSeq);
     }
 
     model.addAttribute("zzimed", zzimed);
