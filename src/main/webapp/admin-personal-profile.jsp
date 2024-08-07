@@ -197,7 +197,7 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <div id="memberInfo"></div>
+            <div id="userInfo"></div>
         </div>
     </div>
 </main>
@@ -215,7 +215,7 @@
         method: "POST",
         url: "/api/admin/profile/" + userSeq,
         success: function (response) {
-          $('#memberInfo').empty();
+          $('#userInfo').empty();
           renderData(response);
         },
         error: function () {
