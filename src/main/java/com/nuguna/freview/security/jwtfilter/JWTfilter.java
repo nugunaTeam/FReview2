@@ -93,7 +93,7 @@ public class JWTfilter extends OncePerRequestFilter {
 
     UserVO uvo = new UserVO(seq,businessNumber,code,email,null,nickname,profile,introduce,subEmail,loginType,isWithDrawn,ageGroup,storeLocation,null,null);
 
-    httpServletRequest.setAttribute("UserVO", uvo);
+    JwtContextHolder.setUserVO(uvo);
     filterChain.doFilter(httpServletRequest, httpServletResponse);
   }
 }
