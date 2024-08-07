@@ -3,10 +3,12 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.nuguna.freview.store.mapper.StoreExperiencePageMapper">
+
   <resultMap id="getStoreApplyListResultMap" type="com.nuguna.freview.store.dto.response.StoreApplyListDTO" >
+    <result property="experienceSeq" column="seq" />
     <result property="fromPostSeq" column="from_post_seq" />
     <result property="fromUserSeq" column="from_user_seq" />
-    <result property="toUserSeq" column="to_user_seq" />
+    <result property="nickname" column="nickname" />
     <result property="title" column="title" />
     <result property="status" column="status" />
     <result property="applyStartDate" column="apply_start_date" />
@@ -25,26 +27,31 @@
 
   <!-- 확정 : 지원자 -->
   <resultMap id="getStoreFinalApplyListResultMap" type="com.nuguna.freview.store.dto.response.StoreFinalApplyListDTO">
+    <result property="experienceSeq" column="seq" />
     <result property="fromUserSeq" column="from_user_seq" />
     <result property="title" column="title" />
+    <result property="fromPostSeq" column="from_post_seq"/>
     <result property="nickname" column="nickname" />
     <result property="experienceDate" column="experience_date" />
     <result property="status" column="status" />
   </resultMap>
   <!-- 확정 : 제안자 -->
   <resultMap id="getStoreFinalProposalListResultMap" type="com.nuguna.freview.store.dto.response.StoreFinalProposalListDTO">
+    <result property="experienceSeq" column="seq"/>
     <result property="toUserSeq" column="to_user_seq"/>
     <result property="proposalDetail" column="proposal_detail" />
     <result property="nickname" column="nickname" />
-    <result property="experienceDate" column="experience_date" />
+    <result property="experienceDate" column="visit_date" />
     <result property="status" column="status" />
   </resultMap>
 
 
   <!-- 리뷰 리스트 -->
   <resultMap id="getStoreReviewListResultMap" type="com.nuguna.freview.store.dto.response.StoreReviewListDTO">
+    <result property="seq" column="seq" />
     <result property="customerSeq" column="customer_seq" />
     <result property="experienceSeq" column="experience_seq" />
+    <result property="visitDate" column="visit_date" />
     <result property="nickname" column="nickname" />
     <result property="status" column="status" />
     <result property="url" column="url" />
@@ -55,22 +62,15 @@
 
   <select id="getStoreApplyCount" resultType="java.lang.Integer">
     select COUNT(*)
-    FROM experience e
-           INNER JOIN post p
-                      ON p.user_seq = e.to_user_seq
-                        AND p.user_seq = #{userSeq}
-    WHERE p.user_seq = e.to_user_seq
+    from experience e join user u on e.from_user_seq = u.seq join post p on e.from_post_seq = p.seq
+    where e.to_user_seq = #{userSeq} and e.from_user_seq = u.seq
   </select>
 
   <select id="getStoreApplyList" resultMap="getStoreApplyListResultMap">
-    SELECT e.from_user_seq, e.to_user_seq, e.from_post_seq, e.`status`, e.created_at,
-           p.apply_start_date, p.apply_end_date, p.experience_date,
-           p.title
-    FROM experience e
-           INNER JOIN post p
-               ON p.user_seq = e.to_user_seq
-                 AND p.user_seq = #{userSeq}
-    WHERE p.user_seq = e.to_user_seq
+    select u.nickname, p.title, p.apply_start_date, p.apply_end_date, p.experience_date,
+           e.status, e.from_post_seq, e.from_user_seq, e.created_at, e.seq
+    from experience e join user u on e.from_user_seq = u.seq join post p on e.from_post_seq = p.seq
+    where e.to_user_seq = #{userSeq} and e.from_user_seq = u.seq
     LIMIT #{pageSize}
     OFFSET #{offset}
   </select>
@@ -86,8 +86,9 @@
     FROM experience e
            INNER JOIN `user` u ON u.seq = e.to_user_seq
     WHERE e.from_user_seq = #{userSeq}
+    ORDER BY e. created_at DESC
     LIMIT #{pageSize}
-      OFFSET #{offset}
+    OFFSET #{offset}
   </select>
   <select id="getStoreProposalListCount" resultType="java.lang.Integer">
     select COUNT(*)
@@ -96,9 +97,10 @@
     WHERE e.from_user_seq = #{userSeq}
   </select>
 
+
   <!--  확정 - 지원자 -->
   <select id="getStoreFinalApplyList" resultMap="getStoreFinalApplyListResultMap">
-    SELECT p.title, p.experience_date, e.from_user_seq, u.nickname, e.`status`
+    SELECT p.title, p.experience_date, e.from_post_seq, e.from_user_seq, u.nickname, e.`status`, e.seq
     FROM experience e
            INNER JOIN post p ON p.seq = e.from_post_seq
            INNER JOIN `user` u ON u.seq = e.from_user_seq
@@ -114,14 +116,12 @@
 
   <!-- 확정 - 제안자 -->
   <select id="getStoreFinalProposalList" resultMap="getStoreFinalProposalListResultMap">
-    SELECT e.to_user_seq, e.proposal_detail, e.`status`, p.experience_date, u.nickname
-    FROM experience e
-           INNER JOIN post p ON p.user_seq = e.from_user_seq
-           INNER JOIN `user` u ON u.seq = e.to_user_seq
-    WHERE e.from_user_seq = #{userSeq}
-    LIMIT ${pageSize}
-    OFFSET #{offset}
+    select e.to_user_seq, e.proposal_detail, e.`status`, e.seq,
+              u.nickname, e.visit_date
+    from user u join experience e on u.seq = e.to_user_seq
+    where e.from_user_seq = #{userSeq}
   </select>
+
   <select id="getStoreFinalProposalListCount" resultType="java.lang.Integer">
     SELECT COUNT(*)
     FROM experience e
@@ -132,7 +132,7 @@
 
   <update id="setUpdateExperienceDate">
     update experience
-    set confirm_date = sysdate()
+    set visit_date = #{experienceDate}
     where seq = #{experienceSeq}
   </update>
 
@@ -144,9 +144,11 @@
 
 
   <select id="getStoreReviewList" resultMap="getStoreReviewListResultMap">
-    SELECT u.nickname, r.customer_seq, r.experience_seq, r.`status`, r.url
+    SELECT u.nickname, r.customer_seq, r.experience_seq, r.`status`, r.seq,
+           r.url, e.visit_date, r.created_at
     FROM review r
            INNER JOIN `user` u ON u.seq = r.customer_seq
+            INNER JOIN experience e ON e.seq = r.experience_seq
     WHERE r.store_seq = #{userSeq}
     LIMIT #{pageSize}
     OFFSET #{offset}
@@ -157,11 +159,10 @@
            INNER JOIN `user` u ON u.seq = r.customer_seq
     WHERE r.store_seq = #{userSeq}
   </select>
-
-  <update id="setUpdateReviewStatus">
+  <update id="setUpdateReviewStatus" parameterType="map">
     update review
     set status = #{status}
-    where customer_seq = #{customerSeq}
+    where seq = #{seq}
   </update>
 
 </mapper>
