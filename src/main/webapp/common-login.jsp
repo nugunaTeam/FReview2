@@ -6,6 +6,10 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -76,7 +80,7 @@
                                     <p class="text-center small">아이디와 비밀번호를 입력해주세요</p>
                                 </div>
 
-                                <form class="row g-3 needs-validation" id="COMM_LGN_form_login" method="post" action="/auth?pagecode=login_check" novalidate>
+                                <form class="row g-3 needs-validation" id="COMM_LGN_form_login" method="post" action="/login" novalidate>
 
                                     <div class="col-12">
                                         <label for="COMM_LGN_input_id" class="form-label">아이디</label>
@@ -105,7 +109,7 @@
                                         <p class="small mb-0">회원이 아니신가요?     <a href="/auth?pagecode=register">회원가입 하러가기</a></p>
                                     </div>
                                     <div class="col-12">
-                                        <a href="/login/GOOGLE"><img src="https://test.codemshop.com/wp-content/plugins/mshop-mcommerce-premium-s2/lib/mshop-members-s2/assets/images/social/logo/Google.png" style="border: 1px solid #bbbbbb;  border-radius:15%;"></a>
+                                        <a href="${googleLoginUrl}"><img src="https://test.codemshop.com/wp-content/plugins/mshop-mcommerce-premium-s2/lib/mshop-members-s2/assets/images/social/logo/Google.png" style="border: 1px solid #bbbbbb;  border-radius:15%;"></a>
                                     </div>
                                 </form>
 

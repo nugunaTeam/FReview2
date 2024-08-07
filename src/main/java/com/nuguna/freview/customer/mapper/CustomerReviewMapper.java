@@ -4,6 +4,8 @@ import com.nuguna.freview.customer.dto.response.ReviewLogInfoDTO;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
+
+
 public interface CustomerReviewMapper {
 
   Boolean checkAlreadyExistReview(@Param("reviewSeq") Long reviewSeq);
