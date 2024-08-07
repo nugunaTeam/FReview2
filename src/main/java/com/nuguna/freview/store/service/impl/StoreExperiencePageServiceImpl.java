@@ -17,6 +17,7 @@ import com.nuguna.freview.store.dto.response.page.StoreProposalListResponseDTO;
 import com.nuguna.freview.store.dto.response.page.StoreReviewListResponseDTO;
 import com.nuguna.freview.store.mapper.StoreExperiencePageMapper;
 import com.nuguna.freview.store.service.StoreExperiencePageService;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,7 @@ public class StoreExperiencePageServiceImpl implements StoreExperiencePageServic
   }
 
   @Override
-  public void applyConfirm(Long experienceSeq) {
+  public void applyConfirm(Long experienceSeq, String status) {
     // 상태를 승인으로 업데이트함
     storeExperiencePageMapper.setStoreApplyStatus(experienceSeq);
   }
@@ -99,8 +100,8 @@ public class StoreExperiencePageServiceImpl implements StoreExperiencePageServic
   }
 
   //
-  public void updateExperienceDate(@RequestParam Long experienceSeq){
-    storeExperiencePageMapper.setUpdateExperienceDate(experienceSeq);
+  public void updateExperienceDate(@RequestParam Long experienceSeq, @RequestParam LocalDate experienceDate){
+    storeExperiencePageMapper.setUpdateExperienceDate(experienceSeq, experienceDate);
   };
   public void updateExperienceStatus(@RequestParam Long experienceSeq, @RequestParam String status){
     storeExperiencePageMapper.setUpdateExperienceStatus(experienceSeq, status);
@@ -124,8 +125,8 @@ public class StoreExperiencePageServiceImpl implements StoreExperiencePageServic
   }
 
   // 리뷰 숨김
-  public void updateReviewStatus(@RequestParam Long customerSeq, @RequestParam String status){
-    storeExperiencePageMapper.setUpdateReviewStatus(customerSeq, status);
+  public void updateReviewStatus(@RequestParam Long seq, @RequestParam String status){
+    storeExperiencePageMapper.setUpdateReviewStatus(seq, status);
   };
 
 }
