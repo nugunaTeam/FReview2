@@ -5,7 +5,7 @@
 <c:set var="loginUser" value="${loginUser}"/>
 <c:set var="userSeq" value="${loginUser.seq}"/>
 <c:set var="nickname" value="${loginUser.nickname}"/>
-<c:set var="profileUrl" value="${loginUser.profilePhotoUrl}" />
+<c:set var="profileUrl" value="${loginUser.profilePhotoUrl}"/>
 <c:set var="code" value="${loginUser.code}"/>
 
 <!DOCTYPE html>
@@ -59,6 +59,45 @@
         width: 20%;
       }
 
+      #personalizedInfoContainer {
+        border: 2px solid #007bff; /* 테두리 강조 */
+        border-radius: 10px; /* 테두리 둥글게 */
+        padding: 20px; /* 내부 여백 */
+        margin-bottom: 20px; /* 아래 여백 */
+      }
+
+      #personalizedInfo {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      #personalizedInfo .col-xl-2 {
+        flex: 0 0 auto;
+        width: 20%; /* 한 행에 5개의 카드가 들어가도록 설정 */
+      }
+
+      .col-md-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding: 10px;
+      }
+
+      #rankingInfoContainer {
+        border: 1px solid #007bff;
+        border-radius: 10px;
+        padding: 20px;
+        background-color: #f8f9fa;
+      }
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .col-md-6 {
+        flex: 1;
+      }
+
     </style>
 
     <!-- =======================================================
@@ -73,23 +112,7 @@
 
 <body>
 
-<header id="header" class="header fixed-top d-flex align-items-center header-hr">
-    <div class="d-flex align-items-center justify-content-between ">
-        <a href="/main?seq=${userSeq}&pagecode=Requester"
-           class="logo d-flex align-items-center">
-            <img src="/assets/img/logo/logo-vertical.png" alt=""
-                 style="  width: 50px; margin-top: 20px;">
-            <span class="d-none d-lg-block">FReview</span>
-        </a>
-    </div>
-    <div class="header-hr-right">
-        <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
-            ${nickname}
-            <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
-        </a>
-        <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
-    </div>
-</header>
+<jsp:include page="/header.jsp" />
 
 <main id="main" style="margin: auto; margin-top: 50px;">
     <div class="pagetitle">
@@ -98,53 +121,81 @@
 
     <section class="section profile">
         <div class="row">
-            <div class="tab-pane fade show active" id="customer" role="tabpanel"
-                 aria-labelledby="customer-tab">
-                <form id="filterForm">
-                    <div>
-                        <h3>음식 유형</h3>
-                        <label><input type="checkbox" name="foodType" value="한식"> 한식</label>
-                        <label><input type="checkbox" name="foodType" value="양식"> 양식</label>
-                        <label><input type="checkbox" name="foodType" value="중식"> 중식</label>
-                        <label><input type="checkbox" name="foodType" value="일식"> 일식</label>
-                        <label><input type="checkbox" name="foodType" value="베이커리"> 베이커리</label>
-                        <label><input type="checkbox" name="foodType" value="기타"> 기타</label>
-                    </div>
-                    <div>
-                        <h3>태그</h3>
-                        <label><input type="checkbox" name="tag" value="초식"> 초식</label>
-                        <label><input type="checkbox" name="tag" value="육식"> 육식</label>
-                        <label><input type="checkbox" name="tag" value="맛집블로거"> 맛집블로거</label>
-                        <label><input type="checkbox" name="tag" value="정성리뷰어"> 정성리뷰어</label>
-                    </div>
-                    <div>
-                        <button type="submit">필터링</button>
-                    </div>
-                </form>
-                <br>
-                <button id="resetBtn">모든 필터 제거</button>
-                <div class="row" id="customerInfo"></div>
-                <div class="d-flex justify-content-center">
-                    <button class="btn btn-primary" id="loadMoreBtn" data-previous-user-seq="0">
-                        더보기
-                    </button>
+            <div class="col-md-6">
+                <div class="tab-pane fade show active" id="customer" role="tabpanel"
+                     aria-labelledby="customer-tab">
+                    <form id="filterForm">
+                        <div>
+                            <h3>음식 유형</h3>
+                            <label><input type="checkbox" name="foodType" value="한식"> 한식</label>
+                            <label><input type="checkbox" name="foodType" value="양식"> 양식</label>
+                            <label><input type="checkbox" name="foodType" value="중식"> 중식</label>
+                            <label><input type="checkbox" name="foodType" value="일식"> 일식</label>
+                            <label><input type="checkbox" name="foodType" value="베이커리"> 베이커리</label>
+                            <label><input type="checkbox" name="foodType" value="기타"> 기타</label>
+                        </div>
+                        <div>
+                            <h3>태그</h3>
+                            <label><input type="checkbox" name="tag" value="초식"> 초식</label>
+                            <label><input type="checkbox" name="tag" value="육식"> 육식</label>
+                            <label><input type="checkbox" name="tag" value="맛집블로거"> 맛집블로거</label>
+                            <label><input type="checkbox" name="tag" value="정성리뷰어"> 정성리뷰어</label>
+                        </div>
+                        <div>
+                            <button type="submit">필터링</button>
+                            <button id="resetBtn">모든 필터 제거</button>
+                        </div>
+                    </form>
                 </div>
             </div>
+
+            <div class="col-md-6" id="rankingSection">
+                <div id="rankingInfoContainer">
+                    <div id="rankingInfo"></div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <div id="personalizedInfoSection" style="display: none;">
+            <h2> ${nickname}님이 요즘 관심있을만한 체험단들을 추천해드려요 </h2>
+            <div id="personalizedInfoContainer">
+                <div class="row" id="personalizedInfo"></div>
+            </div>
+        </div>
+        <h2> 전체 보기 </h2>
+        <div class="row" id="customerInfo"></div>
+        <div class="d-flex justify-content-center">
+            <button class="btn btn-primary" id="loadMoreBtn" data-previous-user-seq="0">
+                더보기
+            </button>
+        </div>
         </div>
     </section>
 </main>
 
 <script>
   $(document).ready(function () {
+    let code = "${code}";
+    if (code !== "ADMIN") {
+      $('#personalizedInfoSection').show();
+      loadInitialPersonalizationData();
+    }
 
+    loadInitialRankingData();
     loadInitialData();
+    loadInitialPersonalizationData();
 
     $('#filterForm').submit(function (event) {
       event.preventDefault();
       let formData = {
         previousUserSeq: $('#previousUserSeq').val(),
-        foodTypes: $('input[name="foodType"]:checked').map(function(){ return this.value; }).get(),
-        tags: $('input[name="tag"]:checked').map(function(){ return this.value; }).get(),
+        foodTypes: $('input[name="foodType"]:checked').map(function () {
+          return this.value;
+        }).get(),
+        tags: $('input[name="tag"]:checked').map(function () {
+          return this.value;
+        }).get(),
         userCode: 'CUSTOMER'
       };
 
@@ -165,10 +216,10 @@
       let tags = [];
 
       if (isFiltered) {
-        $('input[name="foodType"]:checked').each(function() {
+        $('input[name="foodType"]:checked').each(function () {
           foodTypes.push($(this).val());
         });
-        $('input[name="tag"]:checked').each(function() {
+        $('input[name="tag"]:checked').each(function () {
           tags.push($(this).val());
         });
 
@@ -189,17 +240,55 @@
         }),
         dataType: "json",
         success: function (response) {
-          renderData(response.userList);
+          renderData(response.userList, 'customerInfo');
           if (response.hasMore) {
-            $('#loadMoreBtn').data('previous-user-seq', response.userList[response.userList.length - 1].userSeq).show();
+            $('#loadMoreBtn').data('previous-user-seq',
+                response.userList[response.userList.length - 1].userSeq).show();
           } else {
             $('#loadMoreBtn').hide();
           }
         },
         error: function () {
-          console.error("[ERROR] 데이터 초기화 중 오류 발생");
+          console.error("[ERROR] 추천 데이터 초기화 중 오류 발생");
         }
       });
+    }
+
+    function loadInitialPersonalizationData() {
+      $.ajax({
+        method: "POST",
+        url: "/api/common/recommendation/personalization",
+        contentType: "application/json",
+        data: JSON.stringify({
+          requesterSeq: ${userSeq},
+          pageCode: "CUSTOMER"
+        }),
+        dataType: "json",
+        success: function (response) {
+          renderData(response.userList, 'personalizedInfo');
+        },
+        error: function () {
+          console.error("[ERROR] 개인화 추천 데이터 초기화 중 오류 발생");
+        }
+      })
+    }
+
+    function loadInitialRankingData() {
+      $.ajax({
+        method: "POST",
+        url: "/api/common/recommendation/top-performers",
+        contentType: "application/json",
+        data: JSON.stringify({
+          pageCode: "CUSTOMER"
+        }),
+        dataType: "json",
+        success: function (response) {
+          renderRankingData(response.topPerformers, 'rankingInfo');
+        },
+        error: function () {
+          console.error("[ERROR] 랭킹 데이터 초기화 중 오류 발생")
+        }
+      })
     }
 
     function loadFilteredData(formData) {
@@ -211,9 +300,10 @@
         dataType: "json",
         success: function (response) {
           $('#customerInfo').html('');
-          renderData(response.userList);
+          renderData(response.userList, 'customerInfo');
           if (response.hasMore) {
-            $('#loadMoreBtn').data('previous-user-seq', response.userList[response.userList.length - 1].userSeq)
+            $('#loadMoreBtn').data('previous-user-seq',
+                response.userList[response.userList.length - 1].userSeq)
             .data('isFiltered', true)
             .show();
           } else {
@@ -238,9 +328,10 @@
         dataType: "json",
         success: function (response) {
           if (response.userList.length > 0) {
-            renderData(response.userList);
+            renderData(response.userList, 'customerInfo');
             if (response.hasMore) {
-              $('#loadMoreBtn').data('previous-user-seq', response.userList[response.userList.length - 1].userSeq).show();
+              $('#loadMoreBtn').data('previous-user-seq',
+                  response.userList[response.userList.length - 1].userSeq).show();
             } else {
               $('#loadMoreBtn').hide();
             }
@@ -266,9 +357,10 @@
         dataType: "json",
         success: function (response) {
           if (response.userList.length > 0) {
-            renderData(response.userList);
+            renderData(response.userList, 'customerInfo');
             if (response.hasMore) {
-              $('#loadMoreBtn').data('previous-user-seq', response.userList[response.userList.length - 1].userSeq).show();
+              $('#loadMoreBtn').data('previous-user-seq',
+                  response.userList[response.userList.length - 1].userSeq).show();
             } else {
               $('#loadMoreBtn').hide();
             }
@@ -280,13 +372,13 @@
       });
     }
 
-    function renderData(data) {
+    function renderData(data, targetId) {
       let htmlStr = "";
       $.map(data, function (val) {
         htmlStr += "<div class='col-xl-2'>";
         htmlStr += "<div class='card'>";
         htmlStr += "<div class='card-body profile-card pt-4 d-flex flex-column align-items-center'>";
-        htmlStr += "<a href='/brand-page?user_seq=" + val["userSeq"] + "'>";
+        htmlStr += "<a href='/brand/" + val["userSeq"] + `?fromUserSeq=${userSeq}'>`;
         htmlStr += "<img src='" + val["profilePhotoUrl"] + "' alt='Profile' class='profile-img'>";
         htmlStr += "<h2>" + val["nickname"] + "</h2>";
 
@@ -303,24 +395,40 @@
         htmlStr += "</div>";
         htmlStr += "</div>";
       });
-      $('#customerInfo').append(htmlStr);
+      $('#' + targetId).append(htmlStr);
+    }
+
+    function renderRankingData(data, targetId) {
+      let htmlStr = "<div>";
+      htmlStr += "<h2>지금 핫한 체험단은?</h2>";
+      htmlStr += "<table>";
+
+      let numRows = Math.ceil(data.length / 2);
+
+      for (let i = 0; i < numRows; i++) {
+        htmlStr += "<tr>";
+
+        if (i < data.length) {
+          htmlStr += "<td style='padding-right: 100px;'>" + (i + 1) + ". <a href='/brand/" + data[i]["userSeq"] + `?fromUserSeq=${userSeq}'>`
+              + data[i]["nickname"] + "</a></td>";
+        }
+
+        let rightIndex = i + numRows;
+        if (rightIndex < data.length) {
+          htmlStr += "<td>" + (rightIndex + 1) + ". <a href='/brand/" + data[rightIndex]["userSeq"] + `?fromUserSeq=${userSeq}'>` + data[rightIndex]["nickname"] + "</a></td>";
+        }
+
+        htmlStr += "</tr>";
+      }
+
+      htmlStr += "</table>";
+      htmlStr += "</div>";
+      $('#' + targetId).append(htmlStr);
     }
   });
 </script>
 
-<!-- ======= Footer ======= -->
-<footer id="footer" class="footer">
-    <div class="copyright">
-        &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
-    </div>
-    <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-    </div>
-</footer><!-- End Footer -->
+<jsp:include page="/footer.jsp" />
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>

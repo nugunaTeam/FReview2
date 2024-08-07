@@ -12,7 +12,7 @@
   </resultMap>
 
   <!-- SQL 쿼리문 -->
-  <insert id="insertLog" parameterType="map">
+  <insert id="insertPointLog" parameterType="map">
     insert into point_log (user_seq, code)
     values (#{userSeq}, #{code})
   </insert>
@@ -21,6 +21,7 @@
     SELECT seq, user_seq, code, created_at
     FROM point_log
     WHERE seq &gt; #{lastProcessedSeq}
+    ORDER BY seq
     limit 100;
   </select>
 

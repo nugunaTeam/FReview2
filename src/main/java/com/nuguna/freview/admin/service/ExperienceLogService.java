@@ -4,7 +4,7 @@ import com.nuguna.freview.admin.dto.DoneExperienceDTO;
 import com.nuguna.freview.admin.dto.DoneExperienceLogDTO;
 import com.nuguna.freview.admin.dto.NoShowExperienceLogDTO;
 import com.nuguna.freview.admin.mapper.DoneExperienceAccumulationMapper;
-import com.nuguna.freview.admin.mapper.ExperienceMapper;
+import com.nuguna.freview.admin.mapper.ExperienceLogMapper;
 import com.nuguna.freview.admin.mapper.ExperiencePostProcessingLogMapper;
 import com.nuguna.freview.admin.mapper.NoshowAccumulationMapper;
 import java.time.LocalDate;
@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,13 +22,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ExperienceLogService {
 
-  private final ExperienceMapper experienceMapper;
+  private final ExperienceLogMapper experienceMapper;
   private final NoshowAccumulationMapper noshowAccumulationMapper;
   private final ExperiencePostProcessingLogMapper experiencePostProcessingLogMapper;
   private final DoneExperienceAccumulationMapper doneExperienceAccumulationMapper;
 
+  @Value("${experience.log.cycle.cron}")
+  private String experienceLogCycleCron;
+
   @Autowired
-  public ExperienceLogService(ExperienceMapper experienceMapper,
+  public ExperienceLogService(ExperienceLogMapper experienceMapper,
       NoshowAccumulationMapper noshowAccumulationMapper,
       ExperiencePostProcessingLogMapper experiencePostProcessingLogMapper,
       DoneExperienceAccumulationMapper doneExperienceAccumulationMapper) {
@@ -37,7 +41,7 @@ public class ExperienceLogService {
     this.doneExperienceAccumulationMapper = doneExperienceAccumulationMapper;
   }
 
-  @Scheduled(cron = "0 0 12,0 * * *")
+  @Scheduled(cron = "${experience.log.cycle.cron}")
   @Transactional
   public void processNoShowExperiences() {
     String purpose = "NOSHOW_ACCUMULATION";

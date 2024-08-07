@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.common.mapper.InterestAccumulationMapper">
+
+  <resultMap id="InterestAccumulationDTOResultMap" type="com.nuguna.freview.common.dto.InterestAccumulationDTO">
+    <id property="userSeq" column="user_seq" />
+    <result property="dish" column="dish" />
+    <result property="category" column="category" />
+    <result property="totalScore" column="total_score" />
+  </resultMap>
+
+  <select id="getByUserSeq" parameterType="long" resultMap="InterestAccumulationDTOResultMap">
+    SELECT user_seq, dish, category, total_score
+    FROM interest_accumulation
+    WHERE user_seq = #{userSeq}
+  </select>
+
+  <select id="findAll" resultMap="InterestAccumulationDTOResultMap">
+    SELECT user_seq, dish, category, total_score
+    FROM interest_accumulation
+  </select>
+</mapper>

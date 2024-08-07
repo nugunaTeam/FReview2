@@ -17,5 +17,11 @@ public interface CustomerReviewMapper {
   List<ReviewLogInfoDTO> getReviewsInfo(@Param("userSeq") Long userSeq,
       @Param("offset") int offset, @Param("pageSize") int pageSize);
 
+  List<ReviewLogInfoDTO> getOtherReviewsInfo(@Param("userSeq") Long userSeq,
+      @Param("offset") int offset, @Param("pageSize") int pageSize);
+
   Integer getReviewCount(@Param("userSeq") Long userSeq);
+
+  Integer getOtherReviewCount(@Param("userSeq") Long userSeq);
+
 }

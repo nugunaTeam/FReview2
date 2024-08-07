@@ -4,18 +4,18 @@
 
 <mapper namespace="com.nuguna.freview.admin.mapper.UserInterestAccumulationMapper">
 
-  <insert id="insertScore">
+  <insert id="insertScore" parameterType="map">
     INSERT INTO interest_accumulation (user_seq, category, dish, total_score)
     VALUES (#{userSeq}, #{category}, #{dish}, #{increment})
   </insert>
 
-  <update id="updateScore">
+  <update id="updateScore" parameterType="map">
     UPDATE interest_accumulation
     SET total_score = total_score + #{increment}
     WHERE user_seq = #{userSeq} AND category = #{category} AND dish = #{dish}
   </update>
 
-  <select id="getExistingKeys" resultType="java.lang.String">
+  <select id="getExistingKeys" resultType="String">
     SELECT CONCAT(user_seq, '|', category, '|', dish) as `key`
     FROM interest_accumulation
     WHERE CONCAT(user_seq, '|', category, '|', dish) IN

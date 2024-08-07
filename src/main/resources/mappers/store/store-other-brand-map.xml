@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.store.mapper.StoreOtherBrandMapper">
+
+  <!--다른 사람은 스토어 브랜딩 페이지의 'WRITTEN' 상태의 리뷰만 열람 가능 -->
+  <select id="getOtherStoreReviewsCount" resultType="java.lang.Integer">
+    select count(*)
+    from review r
+    where r.store_seq = #{storeSeq}
+      and r.status in ('WRITTEN')
+  </select>
+
+  <resultMap id="storeOtherReviewLogInfoMap"
+    type="com.nuguna.freview.store.dto.response.StoreOtherReviewLogInfoDTO">
+    <id property="seq" column="seq"/>
+    <result property="customerSeq" column="customer_seq"/>
+    <result property="customerNickname" column="nickname"/>
+    <result property="status" column="status"/>
+    <result property="url" column="url"/>
+    <result property="visitDate" column="visit_date"/>
+    <result property="createdAt" column="created_at"/>
+  </resultMap>
+
+  <select id="getOtherStoreReviewInfos" resultMap="storeOtherReviewLogInfoMap">
+    select other_show_store_reviews.seq,
+           other_show_store_reviews.customer_seq,
+           u.nickname,
+           other_show_store_reviews.status,
+           other_show_store_reviews.url,
+           e.visit_date,
+           other_show_store_reviews.created_at
+    from (select r.seq,
+                 r.experience_seq,
+                 r.customer_seq,
+                 r.status,
+                 r.url,
+                 r.created_at
+          from review r
+          where r.store_seq = #{storeSeq}
+            and r.status in ('WRITTEN')) other_show_store_reviews
+           inner join
+         user u
+         on
+           other_show_store_reviews.customer_seq = u.seq
+           inner join
+         experience e
+         on
+           other_show_store_reviews.experience_seq = e.seq
+    limit #{pageSize} offset #{offset}
+  </select>
+
+
+</mapper>

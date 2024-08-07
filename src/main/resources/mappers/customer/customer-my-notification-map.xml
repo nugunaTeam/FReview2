@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.customer.mapper.CustomerMyNotificationMapper">
+
+  <select id="getZzimedMeCustomersCount" resultType="java.lang.Integer">
+    select
+    count(*)
+    from
+    (select n.from_user_seq
+    from notification n
+    where n.to_user_seq = #{userSeq}
+    and n.code in ('ZZIMED')
+    <if test="isRead != null">and is_read = #{isRead}
+    </if>
+    ) zzimed_me_customer
+    inner join
+    user u
+    on
+    zzimed_me_customer.from_user_seq = u.seq
+    where
+    u.code = 'CUSTOMER'
+  </select>
+
+  <resultMap id="ZzimedMeCustomerInfoResultMap"
+    type="com.nuguna.freview.customer.dto.response.ZzimedMeCustomerInfoDTO">
+    <result property="notificationSeq" column="noti_seq"/>
+    <result property="customerSeq" column="from_user_seq"/>
+    <result property="nickname" column="nickname"/>
+    <result property="createdAt" column="created_at"/>
+  </resultMap>
+
+  <select id="getZzimedMeCustomers" resultMap="ZzimedMeCustomerInfoResultMap">
+    select
+    zzimed_me_customer.noti_seq,
+    zzimed_me_customer.from_user_seq,
+    u.nickname,
+    zzimed_me_customer.created_at
+    from
+    (select
+    n.seq as noti_seq,
+    n.from_user_seq,
+    n.created_at
+    from
+    notification n
+    where
+    n.to_user_seq = #{userSeq}
+    and n.code in ('ZZIMED')
+    <if test="isRead != null">
+      and n.is_read = #{isRead}
+    </if>
+    ) zzimed_me_customer
+    inner join user u
+    on zzimed_me_customer.from_user_seq = u.seq
+    where
+    u.code = 'CUSTOMER'
+    order by
+    zzimed_me_customer.created_at desc
+    limit #{pageSize} offset #{offset}
+  </select>
+
+  <select id="getZzimedMeStoresCount" resultType="java.lang.Integer">
+    select
+    count(*)
+    from
+    (select n.from_user_seq
+    from notification n
+    where n.to_user_seq = #{userSeq}
+    and n.code in ('ZZIMED')
+    <if test="isRead != null">and is_read = #{isRead}
+    </if>
+    ) zzimed_me_store
+    inner join
+    user u
+    on
+    zzimed_me_store.from_user_seq = u.seq
+    where
+    u.code = 'STORE'
+  </select>
+
+  <resultMap id="ZzimedMeStoreInfoResultMap"
+    type="com.nuguna.freview.customer.dto.response.ZzimedMeStoreInfoDTO">
+    <result property="notificationSeq" column="noti_seq"/>
+    <result property="storeSeq" column="from_user_seq"/>
+    <result property="storeName" column="store_name"/>
+    <result property="createdAt" column="created_at"/>
+  </resultMap>
+
+  <select id="getZzimedMeStores" resultMap="ZzimedMeStoreInfoResultMap">
+    with zzimed_store as (
+    select
+    noti.noti_seq,
+    noti.from_user_seq,
+    noti.created_at,
+    u.business_number
+    from
+    (select
+    n.seq as noti_seq,
+    n.from_user_seq,
+    n.created_at
+    from
+    notification n
+    where
+    n.code = 'ZZIMED'
+    and
+    n.to_user_seq = #{userSeq}
+    <if test="isRead != null">and n.is_read = #{isRead}
+    </if>
+    ) noti
+    inner join
+    user u
+    on noti.from_user_seq = u.seq
+    where
+    u.code='STORE'
+    )
+
+    select
+    zzimed_store.noti_seq,
+    zzimed_store.from_user_seq,
+    nsbi.store_name,
+    zzimed_store.created_at
+    from
+    zzimed_store
+    inner join
+    national_store_business_information nsbi
+    on
+    zzimed_store.business_number = nsbi.business_number
+    order by
+    zzimed_store.created_at desc
+    limit #{pageSize} offset #{offset}
+  </select>
+
+  <select id="checkExistUnReadNotification" resultType="java.lang.Boolean">
+    select count(1)
+    from notification n
+    where n.seq = #{notificationSeq}
+      and n.is_read = false
+      and n.to_user_seq = #{userSeq}
+  </select>
+
+  <update id="makeNotificationRead">
+    update notification n
+    set n.is_read = true
+    where n.seq = #{notificationSeq}
+  </update>
+
+
+</mapper>

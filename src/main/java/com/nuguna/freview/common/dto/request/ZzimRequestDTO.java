@@ -15,7 +15,7 @@ public class ZzimRequestDTO {
 
   @Min(1)
   @NotNull
-  private Long userSeq;
+  private Long fromUserSeq;
 
   @Min(1)
   @NotNull

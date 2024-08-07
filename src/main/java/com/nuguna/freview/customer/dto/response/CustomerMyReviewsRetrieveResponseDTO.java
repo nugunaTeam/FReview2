@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 public class CustomerMyReviewsRetrieveResponseDTO {
 
   private List<ReviewLogInfoDTO> reviewInfos;
-  private ReviewPaginationInfoResponseDTO reviewPageInfo;
+  private PaginationInfoResponseDTO reviewPageInfo;
 
 }

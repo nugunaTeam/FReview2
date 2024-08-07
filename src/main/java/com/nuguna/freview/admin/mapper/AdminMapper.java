@@ -2,6 +2,7 @@ package com.nuguna.freview.admin.mapper;
 
 import com.nuguna.freview.admin.dto.response.CustomerInfoDTO;
 import com.nuguna.freview.admin.dto.response.StoreInfoDTO;
+import com.nuguna.freview.admin.dto.response.page.AdminProfileDTO;
 import com.nuguna.freview.admin.vo.AdminVO;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
@@ -18,4 +19,9 @@ public interface AdminMapper {
   List<StoreInfoDTO> searchStore(@Param("previousUserSeq") Long previousUserSeq, @Param("searchWord") String searchWord, @Param("limit") Integer limit);
   int selectMatchingAdmin(@Param("adminSeq") Long userSeq, @Param("password")String password);
   int deleteUser(Long userSeq);
+  AdminProfileDTO selectAdminProfile(Long userSeq);
+  void updatePassword(@Param("userSeq") Long userSeq, @Param("newPassword") String newPassword);
+  int updateSubEmail(@Param("userSeq") Long userSeq, @Param("newEmail") String newEmail);
 }
+
+
