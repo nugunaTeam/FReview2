@@ -497,9 +497,9 @@
         if (item.status === 'ACCEPTED') {
           htmlStr += "<span style='color:green'>수락됨</span>";
         } else if (item.status === 'NOSHOW') {
-          htmlStr += "<span style='color:blue'>완료됨</span>";
-        } else if (item.status === 'DONE') {
           htmlStr += "<span style='color:mediumvioletred'>노쇼</span>";
+        } else if (item.status === 'DONE') {
+          htmlStr += "<span style='color:blue'>완료됨</span>";
         }
         htmlStr += "</p>";
         htmlStr += "<p>체험 날짜: " + item.experienceDate.year + "년 " + item.experienceDate.monthValue
@@ -519,13 +519,14 @@
         htmlStr += "<div class='card-body-y mt-2'>";
         htmlStr += "<p><a href='/brand/" + item.storeSeq + "'>" + item.storeName
             + "</a>님의 <span style='color:chocolate'>체험 제안</span>을 수락했습니다.</p>";
+        htmlStr += "<p>제안 내용: " + item.proposalDetails + "</p>";
         htmlStr += "<p>진행 현황: ";
         if (item.status === 'ACCEPTED') {
           htmlStr += "<span style='color:green'>수락됨</span>";
         } else if (item.status === 'NOSHOW') {
-          htmlStr += "<span style='color:blue'>완료됨</span>";
-        } else if (item.status === 'DONE') {
           htmlStr += "<span style='color:mediumvioletred'>노쇼</span>";
+        } else if (item.status === 'DONE') {
+          htmlStr += "<span style='color:blue'>완료됨</span>";
         }
         htmlStr += "</p>";
         htmlStr += "<p>체험 날짜: " + item.experienceDate.year + "년 " + item.experienceDate.monthValue
