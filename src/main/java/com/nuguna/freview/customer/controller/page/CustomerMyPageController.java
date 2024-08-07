@@ -41,6 +41,7 @@ public class CustomerMyPageController {
   public String customerMyExperiencePage(@RequestParam Long userSeq, Model model) {
     String nickname = customerUtilService.getUserNickname(userSeq);
     model.addAttribute("nickname", nickname);
+    model.addAttribute("userSeq", userSeq);
     return "customer-my-experience-info";
   }
 
