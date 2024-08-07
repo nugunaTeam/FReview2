@@ -260,10 +260,10 @@
                                  aria-labelledby="my-accepted-experience-tab">
                                 <div>
                                     <div class="pb-4">
-                                        <input type="radio" id="is-experience-"
+                                        <input type="radio" id="is-experience-apply"
                                                name="isExperienceByApplies" value="true" checked/>
                                         지원
-                                        <input type="radio" id="zzimed-me-customers-noti-not-read"
+                                        <input type="radio" id="is-experience-proposal"
                                                name="isExperienceByApplies" value="false"/> 제안
                                     </div>
                                 </div>
@@ -319,6 +319,28 @@
       sendMyAppliedExperienceList(1);
     });
 
+    // 제안 리스트 탭 클릭 시 데이터 요청
+    $("#proposal-to-me-experience-tab").on('click', function () {
+      sendProposalToMeExperienceList(1);
+    });
+
+    // 수락 리스트 탭 클릭 시 데이터 요청
+    $("#my-accepted-experience-tab").on('click', function () {
+      // 기본적으로 "체험" 라디오 버튼을 클릭한 상태로 설정
+      $('#is-experience-apply').prop('checked', true);
+      sendMyAcceptedApplyList(1);
+    });
+
+    // "체험" 라디오 버튼 클릭 시 데이터 요청
+    $('#is-experience-apply').on('change', function () {
+      sendMyAcceptedApplyList(1);
+    });
+
+    // "제안" 라디오 버튼 클릭 시 데이터 요청
+    $('#is-experience-proposal').on('change', function () {
+      sendMyAcceptedProposalList(1);
+    });
+
     // 지원 리스트 전송 함수
     function sendMyAppliedExperienceList(page) {
       let sendData = {
@@ -342,6 +364,75 @@
       });
     }
 
+    // 제안 리스트 전송 함수
+    function sendProposalToMeExperienceList(page) {
+      let sendData = {
+        'userSeq': userSeq,
+        'targetPage': page
+      };
+      $.ajax({
+        type: "GET",
+        url: "/api/customer/my/experience/proposal-list",
+        data: $.param(sendData),
+        contentType: "application/x-www-form-urlencoded",
+        dataType: "json",
+        error: function (response) {
+          console.error("[ERROR] 제안 리스트 불러오기 실패하였습니다. 다시 시도해주세요.");
+        },
+        success: function (response) {
+          let {paginationInfo, proposalInfos} = response;
+          renderProposalToMeExperienceList(proposalInfos);
+          initializePagination(paginationInfo, 'proposal-to-me-experience');
+        }
+      });
+    }
+
+    // 수락 리스트(체험) 데이터 요청 함수
+    function sendMyAcceptedApplyList(page) {
+      let sendData = {
+        'userSeq': userSeq,
+        'targetPage': page
+      };
+      $.ajax({
+        type: "GET",
+        url: "/api/customer/my/experience/accepted-apply-list",
+        data: $.param(sendData),
+        contentType: "application/x-www-form-urlencoded",
+        dataType: "json",
+        error: function (response) {
+          console.error("[ERROR] 수락 리스트(체험) 불러오기 실패하였습니다. 다시 시도해주세요.");
+        },
+        success: function (response) {
+          let {paginationInfo, myAcceptedApplyInfos} = response;
+          renderMyAcceptedApplyList(myAcceptedApplyInfos);
+          initializePagination(paginationInfo, 'my-accepted-experience');
+        }
+      });
+    }
+
+    // 수락 리스트(제안) 데이터 요청 함수
+    function sendMyAcceptedProposalList(page) {
+      let sendData = {
+        'userSeq': userSeq,
+        'targetPage': page
+      };
+      $.ajax({
+        type: "GET",
+        url: "/api/customer/my/experience/accepted-proposal-list",
+        data: $.param(sendData),
+        contentType: "application/x-www-form-urlencoded",
+        dataType: "json",
+        error: function (response) {
+          console.error("[ERROR] 수락 리스트(제안) 불러오기 실패하였습니다. 다시 시도해주세요.");
+        },
+        success: function (response) {
+          let {paginationInfo, acceptedProposalInfos} = response;
+          renderMyAcceptedProposalList(acceptedProposalInfos);
+          initializePagination(paginationInfo, 'my-accepted-experience');
+        }
+      });
+    }
+
     // 지원 리스트 렌더링 함수
     function renderMyAppliedExperienceList(applyInfos) {
       let htmlStr = "";
@@ -354,15 +445,96 @@
         if (item.status === 'SENT') {
           htmlStr += "<span style='color:green'>요청 진행중</span>";
         } else if (item.status === 'REJECTED') {
-          htmlStr += "<span style='color:grey'>거절됨</span>";
+          htmlStr += "<span style='color:mediumvioletred'>거절됨</span>";
         }
         htmlStr += "</p>";
-        htmlStr += "<p>날짜: " + item.applyDate.year + "년 " + item.applyDate.monthValue + "월 "
+        htmlStr += "<p>지원 날짜: " + item.applyDate.year + "년 " + item.applyDate.monthValue + "월 "
             + item.applyDate.dayOfMonth + "일</p>";
         htmlStr += "</div>";
         htmlStr += "</div>";
       });
       $("#myAppliedExperienceList").html(htmlStr);
+    }
+
+    // 제안 리스트 렌더링 함수
+    function renderProposalToMeExperienceList(proposalInfos) {
+      let htmlStr = "";
+      $.map(proposalInfos, function (item) {
+        htmlStr += "<div class='card'>";
+        htmlStr += "<div class='card-body-y mt-2'>";
+        htmlStr += "<p><a href='/brand/" + item.storeSeq + "'>" + item.storeName
+            + "</a>님으로부터 <span style='color: chocolate'>체험 제안</span>이 왔어요!</p>";
+        htmlStr += "<p>제안 내용: " + item.proposalDetails + "</p>";
+        htmlStr += "<p>진행 현황: ";
+        if (item.status === 'REJECTED') {
+          htmlStr += "<span style='color:mediumvioletred'>거절함</span>";
+        } else if (item.status === 'SENT') {
+          htmlStr += "<button class='btn btn-success accept-btn' data-experience-seq='"
+              + item.experienceSeq + "'>수락</button>";
+          htmlStr += "<button class='btn btn-danger reject-btn' data-experience-seq='"
+              + item.experienceSeq + "'>거절</button>";
+        }
+        htmlStr += "</p>";
+        htmlStr += "<p>제안 날짜: " + item.proposalDate.year + "년 " + item.proposalDate.monthValue
+            + "월 "
+            + item.proposalDate.dayOfMonth + "일</p>";
+        htmlStr += "</div>";
+        htmlStr += "</div>";
+      });
+      $("#proposalToMeExperienceList").html(htmlStr);
+    }
+
+    // 수락 리스트(체험) 렌더링 함수
+    function renderMyAcceptedApplyList(myAcceptedApplyInfos) {
+      let htmlStr = "";
+      $.map(myAcceptedApplyInfos, function (item) {
+        htmlStr += "<div class='card'>";
+        htmlStr += "<div class='card-body-y mt-2'>";
+        htmlStr += "<p><a href='/brand/" + item.storeSeq + "'>" + item.storeName
+            + "</a>님이 내 <a href='/mojip/" + item.postSeq
+            + "'><span style='color: green'>체험 지원</span></a>을 수락했습니다.</p>";
+        htmlStr += "<p>진행 현황: ";
+        if (item.status === 'ACCEPTED') {
+          htmlStr += "<span style='color:green'>수락됨</span>";
+        } else if (item.status === 'NOSHOW') {
+          htmlStr += "<span style='color:blue'>완료됨</span>";
+        } else if (item.status === 'DONE') {
+          htmlStr += "<span style='color:mediumvioletred'>노쇼</span>";
+        }
+        htmlStr += "</p>";
+        htmlStr += "<p>체험 날짜: " + item.experienceDate.year + "년 " + item.experienceDate.monthValue
+            + "월 "
+            + item.experienceDate.dayOfMonth + "일</p>";
+        htmlStr += "</div>";
+        htmlStr += "</div>";
+      });
+      $("#myAcceptedExperienceList").html(htmlStr);
+    }
+
+    // 수락 리스트(제안) 렌더링 함수
+    function renderMyAcceptedProposalList(acceptedProposalInfos) {
+      let htmlStr = "";
+      $.map(acceptedProposalInfos, function (item) {
+        htmlStr += "<div class='card'>";
+        htmlStr += "<div class='card-body-y mt-2'>";
+        htmlStr += "<p><a href='/brand/" + item.storeSeq + "'>" + item.storeName
+            + "</a>님의 <span style='color:chocolate'>체험 제안</span>을 수락했습니다.</p>";
+        htmlStr += "<p>진행 현황: ";
+        if (item.status === 'ACCEPTED') {
+          htmlStr += "<span style='color:green'>수락됨</span>";
+        } else if (item.status === 'NOSHOW') {
+          htmlStr += "<span style='color:blue'>완료됨</span>";
+        } else if (item.status === 'DONE') {
+          htmlStr += "<span style='color:mediumvioletred'>노쇼</span>";
+        }
+        htmlStr += "</p>";
+        htmlStr += "<p>체험 날짜: " + item.experienceDate.year + "년 " + item.experienceDate.monthValue
+            + "월 "
+            + item.experienceDate.dayOfMonth + "일</p>";
+        htmlStr += "</div>";
+        htmlStr += "</div>";
+      });
+      $("#myAcceptedExperienceList").html(htmlStr);
     }
 
     // 페이지 네이션 처리
@@ -409,8 +581,55 @@
       currentPage = page;
       if (tab === 'my-applied-experience') {
         sendMyAppliedExperienceList(page);
+      } else if (tab === 'proposal-to-me-experience') {
+        sendProposalToMeExperienceList(page);
+      } else if (tab === 'my-accepted-experience') {
+        let isExperienceApply = $('#is-experience-apply').is(':checked');
+        if (isExperienceApply) {
+          sendMyAcceptedApplyList(page);
+        } else {
+          sendMyAcceptedProposalList(page);
+        }
       }
     }
+
+    // 수락 버튼 클릭 이벤트
+    $(document).on("click", ".accept-btn", function (e) {
+      let experienceSeq = $(this).data("experience-seq");
+      $.ajax({
+        type: "POST",
+        url: "/api/customer/my/experience/" + experienceSeq + "/accept",
+        data: {
+          'userSeq': userSeq
+        },
+        success: function () {
+          alert('해당 체험 제안을 수락했습니다.');
+          sendProposalToMeExperienceList(currentPage);
+        },
+        error: function () {
+          alert('수락 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+        }
+      });
+    });
+
+    // 거절 버튼 클릭 이벤트
+    $(document).on("click", ".reject-btn", function (e) {
+      let experienceSeq = $(this).data("experience-seq");
+      $.ajax({
+        type: "POST",
+        url: "/api/customer/my/experience/" + experienceSeq + "/reject",
+        data: {
+          'userSeq': userSeq
+        },
+        success: function () {
+          alert('해당 체험 제안을 거절했습니다.');
+          sendProposalToMeExperienceList(currentPage);
+        },
+        error: function () {
+          alert('거절 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+        }
+      });
+    });
   });
 </script>
 

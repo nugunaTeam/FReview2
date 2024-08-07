@@ -95,6 +95,7 @@
     from experience e
     where from_user_seq = #{userSeq}
       and status in ('ACCEPTED', 'NOSHOW', 'DONE')
+      and e.visit_date is not null
   </select>
 
   <resultMap id="MyAcceptedApplyInfoResultMap"
@@ -119,7 +120,8 @@
                  e.status
           from experience e
           where from_user_seq = #{userSeq}
-            and e.status in ('ACCEPTED', 'NOSHOW', 'DONE')) my_accepted_applied_experiences
+            and e.status in ('ACCEPTED', 'NOSHOW', 'DONE')
+            and e.visit_date is not null) my_accepted_applied_experiences
            inner join
          user u
          on
@@ -137,6 +139,7 @@
     from experience e
     where to_user_seq = #{userSeq}
       and status in ('ACCEPTED', 'NOSHOW', 'DONE')
+      and e.visit_date is not null
   </select>
 
   <resultMap id="AcceptedProposalToMeInfoResultMap"
@@ -162,7 +165,8 @@
                  e.created_at
           from experience e
           where to_user_seq = #{userSeq}
-            and e.status in ('ACCEPTED', 'NOSHOW', 'DONE')) accepted_proposal_to_me_experiences
+            and e.status in ('ACCEPTED', 'NOSHOW', 'DONE')
+            and e.visit_date is not null) accepted_proposal_to_me_experiences
            inner join
          user u
          on
