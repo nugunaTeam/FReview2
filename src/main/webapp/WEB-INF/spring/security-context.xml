@@ -93,6 +93,53 @@
 		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
 		<access-denied-handler ref="accessDeniedHandler"/>
 	</http>
+	<http pattern="/mojip/*" entry-point-ref="jwtAuthenticationEntryPoint">
+		<csrf disabled="true"/>
+		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
+		<access-denied-handler ref="accessDeniedHandler"/>
+	</http>
+
+	<http pattern="/notice/*" entry-point-ref="jwtAuthenticationEntryPoint">
+		<csrf disabled="true"/>
+		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
+		<access-denied-handler ref="accessDeniedHandler"/>
+	</http>
+
+	<http pattern="/recommendation/*" entry-point-ref="jwtAuthenticationEntryPoint">
+		<csrf disabled="true"/>
+		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
+		<access-denied-handler ref="accessDeniedHandler"/>
+	</http>
+
+	<http pattern="/api/common/mojip/*" entry-point-ref="jwtAuthenticationEntryPoint">
+		<csrf disabled="true"/>
+		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
+		<access-denied-handler ref="accessDeniedHandler"/>
+	</http>
+
+	<http pattern="/api/common/notice/*" entry-point-ref="jwtAuthenticationEntryPoint">
+		<csrf disabled="true"/>
+		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
+		<access-denied-handler ref="accessDeniedHandler"/>
+	</http>
+
+	<http pattern="/api/common/post/*" entry-point-ref="jwtAuthenticationEntryPoint">
+		<csrf disabled="true"/>
+		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
+		<access-denied-handler ref="accessDeniedHandler"/>
+	</http>
+
+	<http pattern="/mojip" entry-point-ref="jwtAuthenticationEntryPoint">
+		<csrf disabled="true"/>
+		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
+		<access-denied-handler ref="accessDeniedHandler"/>
+	</http>
+
+	<http pattern="/notice" entry-point-ref="jwtAuthenticationEntryPoint">
+		<csrf disabled="true"/>
+		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
+		<access-denied-handler ref="accessDeniedHandler"/>
+	</http>
 
 	<http>
 		<csrf disabled="true"/>
