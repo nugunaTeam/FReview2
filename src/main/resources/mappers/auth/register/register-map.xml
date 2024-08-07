@@ -44,5 +44,20 @@
     INSERT INTO user (business_number,code,email,password,nickname,sub_email,login_type,is_withdrawn,age_Group,store_location)
     values(#{businessNumber},#{code},#{email},#{password},#{nickname},#{subEmail},#{loginType},#{isWithDrawn},#{ageGroup},#{storeLocation})
   </insert>
+
+  <insert id="insertOAuthCustomerInfo" parameterType="com.nuguna.freview.common.vo.user.UserVO">
+    INSERT INTO user (code,email,nickname,sub_email,login_type,is_withdrawn,age_group)
+    VALUES (#{code},#{email},#{nickname},#{subEmail},#{loginType},#{isWithDrawn},#{ageGroup})
+  </insert>
+
+
+  <insert id="insertOAuthStoreInfo" parameterType="com.nuguna.freview.common.vo.user.UserVO">
+    <selectKey resultType="String" keyProperty="nickname" order="BEFORE">
+      select store_name from national_store_business_information where business_number = #{businessNumber}
+    </selectKey>
+    INSERT INTO user (business_number,code,email,nickname,sub_email,login_type,is_withdrawn,age_Group,store_location)
+    values(#{businessNumber},#{code},#{email},#{nickname},#{subEmail},#{loginType},#{isWithDrawn},#{ageGroup},#{storeLocation})
+  </insert>
+
 </mapper>
 

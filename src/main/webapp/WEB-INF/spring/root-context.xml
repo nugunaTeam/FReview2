@@ -1,6 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
-		
+			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			 xmlns:context="http://www.springframework.org/schema/context"
+			 xmlns:tx="http://www.springframework.org/schema/tx"
+			 xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+										  		 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+													 http://www.springframework.org/schema/tx
+													 http://www.springframework.org/schema/tx/spring-tx.xsd
+">
+	<context:component-scan base-package="com.nuguna.freview" />
+
+	<context:property-placeholder location="classpath:maria.properties,classpath:sendEmail.properties, classpath:googleLoginInfo.properties"/>
+	<!-- ################################################################################  -->
+	<!-- =============================== datasource : 프로퍼티 파일을 사용한 형태 -->
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${driver-class-name}"/>
+		<property name="url" value="${db-url}"/>
+		<property name="username" value="${db-username}"/>
+		<property name="password" value="${db-password}"/>
+	</bean>
+	<!-- ===================================================
+     트랜잭션 관련 설정
+     - annotation-driven :: txManager(Datasource) - @Transactional
+   ======================================================= -->
+	<!-- txManager [ DataSource ... sqlSession ] 관리를 위한 매니저 설정 -->
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="logDataSource"/>
+	</bean>
+
+	<!-- annotation 기반 설정 시  @Transactional이 붙은 메서드만 관리  -->
+	<tx:annotation-driven transaction-manager="txManager"/>
+
+	<!-- ################################################################################  -->
+	<!-- =============================== DBCPool + MyBatis
+       [ DataSource == SqlSessionFactoryBean - *SqlSessionTemplate -  sqlSession ]
+                                            (datasource 에서 가져온 session 관리)
+  -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="logDataSource"/>
+		<property name="mapperLocations" value="classpath:mappers/**/*-map.xml"/>
+		<property name="configLocation" value="classpath:mybatis-context.xml"/>
+	</bean>
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory"/>
+	</bean>
+
+	<!-- =============================== MYBATIS 콘솔 로그 출력 : log4jdbc-remix.jar -->
+	<bean id="logDataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+		<constructor-arg ref="dataSource"/>
+		<property name="logFormatter">
+			<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+				<property name="loggingType" value="MULTI_LINE"/>
+				<property name="sqlPrefix" value=""/>
+			</bean>
+		</property>
+	</bean>
+
+	<!-- =============================== MyBatis + Mapper인터페이스
+     MapperScannerConfigurer : @Mapper 찾기 + sqlSessionFactory  -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.nuguna.freview.admin.mapper"/>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.nuguna.freview.common.mapper"/>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.nuguna.freview.customer.mapper"/>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.nuguna.freview.store.mapper"/>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.nuguna.freview.security.login.mapper"/>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+	</bean>
+
+	<!-- ################################################################################  -->
+	<!-- =============================== datasource : 프로퍼티 파일을 사용한 형태 -->
+
+	<bean id="sendEmail" class="com.nuguna.freview.global.util.SendMailUtil" >
+		<constructor-arg index="0" value="${gmail-encoding}"/>
+		<constructor-arg index="1" value="${gmail-port}"/>
+		<constructor-arg index="2" value="${gmail-smtphost}"/>
+		<constructor-arg index="3" value="${gmail-usermail}"/>
+		<constructor-arg index="4" value="${gmail-password}"/>
+	</bean>
+
+	<bean id="oauthServiceImpl" class="com.nuguna.freview.OAuth.service.impl.OAuthServiceImpl">
+		<constructor-arg index="0" value="${clientId}"/>
+		<constructor-arg index="1" value="${clientSecret}"/>
+		<constructor-arg index="2" value="${redirectUrl}"/>
+		<constructor-arg index="3" value="${tokenEndpoint}"/>
+		<constructor-arg index="4" value="${userInfoEndpoint}"/>
+	</bean>
+
 </beans>
