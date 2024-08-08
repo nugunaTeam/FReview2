@@ -65,7 +65,7 @@
 
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="/main?seq=${userSeq}&pagecode=Requester" class="logo d-flex align-items-center">
+        <a href="/main" class="logo d-flex align-items-center">
             <img src="/assets/img/logo/logo-vertical.png" alt="" style="width: 50px; margin-top: 20px;">
             <span class="d-none d-lg-block">FReview</span>
         </a>
@@ -80,9 +80,8 @@
         </ul>
     </nav>
 
-<%--    TODO: 마이페이지 이동하는 컨트롤러 체험단/사장님/관리자 통합 후 링크 수정 필요--%>
     <div class="header-right">
-        <a href="/my-info?user_seq=${userSeq}" style="margin-right: 20px">
+        <a href="/my" style="margin-right: 20px">
             ${nickname}
             <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
         </a>
