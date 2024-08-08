@@ -6,48 +6,47 @@
 
   <select id="getLikesCount" resultType="java.lang.Integer">
     select count(*)
-    from `like`
-    where user_seq = #{userSeq}
+    from `like` l
+           inner join `post` p
+                      on l.post_seq = p.seq
+    where p.code in ('모집')
+      and l.user_seq = #{userSeq}
   </select>
 
   <resultMap id="MyLikePostInfoDTOResultMap"
     type="com.nuguna.freview.customer.dto.response.MyLikePostInfoDTO">
-    <id property="seq" column="seq"/>
+    <id property="seq" column="post_seq"/>
     <result property="authorSeq" column="user_seq"/>
-    <result property="title" column="title"/>
-    <result property="content" column="content"/>
     <result property="createdAt" column="created_at"/>
     <result property="storeName" column="store_name"/>
     <result property="likeCount" column="likeCount"/>
   </resultMap>
 
   <select id="getMyLikedPosts" resultMap="MyLikePostInfoDTOResultMap">
-    WITH like_post AS (SELECT l.user_seq,
-                              l.post_seq,
-                              l.created_at,
-                              ROW_NUMBER() OVER (ORDER BY l.created_at DESC) AS row_num
-                       FROM `like` l
-                       WHERE l.post_seq IN (SELECT ll.post_seq
-                                            FROM `like` ll
-                                            WHERE ll.user_seq = #{userSeq})),
-         filtered_like_post AS (SELECT *
-                                FROM like_post
-                                WHERE row_num &gt; #{offset}
-                                  AND row_num &lt;= #{offset} + #{pageSize})
+    WITH filtered_like_post AS (SELECT l.user_seq,
+                                       l.post_seq,
+                                       l.created_at
+                                FROM `like` l
+                                       INNER JOIN
+                                     `post` p
+                                     ON
+                                       l.post_seq = p.seq
+                                WHERE p.code IN ('모집')
+                                  AND l.user_seq = #{userSeq})
 
     SELECT like_post_info.*,
-           (SELECT count(*) FROM `like` WHERE post_seq = like_post_info.seq) AS likeCount
-    FROM (SELECT p.seq,
-                 p.user_seq,
-                 p.title,
-                 p.content,
+           (SELECT count(*) FROM `like` WHERE post_seq = like_post_info.post_seq) AS likeCount
+    FROM (SELECT flp.user_seq,
+                 flp.post_seq,
                  flp.created_at,
                  nsbi.store_name
           FROM post p
                  INNER JOIN filtered_like_post flp ON p.seq = flp.post_seq
-                 LEFT JOIN user u ON p.user_seq = u.seq
+                 INNER JOIN user u ON p.user_seq = u.seq
                  INNER JOIN national_store_business_information nsbi
                             ON u.business_number = nsbi.business_number) AS like_post_info
+    ORDER BY like_post_info.created_at desc
+    limit #{pageSize} offset #{offset}
   </select>
 
 
@@ -81,11 +80,10 @@
                                   WHERE z.from_user_seq = #{userSeq}
                                     AND u.code = 'STORE')
     SELECT u.seq,
-           u.business_number,
            nsbi.store_name,
            u.store_location,
            fzu.created_at,
-           GROUP_CONCAT(ft.dish ORDER BY ft.dish ASC) AS foodTypes
+           GROUP_CONCAT(DISTINCT ft.dish ORDER BY ft.dish ASC) AS foodTypes
     FROM filtered_zzimed_user fzu
            INNER JOIN user u ON u.seq = fzu.to_user_seq
            INNER JOIN national_store_business_information nsbi
@@ -131,7 +129,7 @@
     SELECT u.seq,
            u.nickname,
            fzu.created_at,
-           GROUP_CONCAT(ft.dish ORDER BY ft.dish ASC) AS foodTypes
+           GROUP_CONCAT(DISTINCT ft.dish ORDER BY ft.dish ASC) AS foodTypes
     FROM filtered_zzimed_user fzu
            INNER JOIN user u ON u.seq = fzu.to_user_seq
            LEFT JOIN user_food_type uft ON u.seq = uft.user_seq

@@ -1,5 +1,7 @@
 package com.nuguna.freview.common.controller;
 
+import static com.nuguna.freview.common.constant.BoardPageConstant.RECOMMENDATION_BOARD_PAGE_SIZE;
+
 import com.nuguna.freview.common.dto.PersonalizedUserDTO;
 import com.nuguna.freview.common.dto.request.PersonalizedUserRequestDTO;
 import com.nuguna.freview.common.dto.request.RecommendationFilteringRequestDTO;
@@ -27,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class RecommendationApiController {
 
   private final RecommendationService recommendationService;
-  private final int PAGE_SIZE = 20;
 
   @Autowired
   public RecommendationApiController(RecommendationService customerService) {
@@ -47,8 +48,8 @@ public class RecommendationApiController {
     RecommendationListResponseDTO responseDTO = new RecommendationListResponseDTO();
     try {
       List<RecommendationResponseDTO> userList = recommendationService.getRecommendationUserList(
-          previousUserSeq, PAGE_SIZE, userCode);
-      boolean hasMore = userList.size() == PAGE_SIZE;
+          previousUserSeq, RECOMMENDATION_BOARD_PAGE_SIZE, userCode);
+      boolean hasMore = userList.size() == RECOMMENDATION_BOARD_PAGE_SIZE;
       responseDTO.setUserList(userList);
       responseDTO.setHasMore(hasMore);
     } catch (Exception e) {
@@ -71,8 +72,8 @@ public class RecommendationApiController {
     RecommendationListResponseDTO responseDTO = new RecommendationListResponseDTO();
     try {
       List<RecommendationResponseDTO> userList = recommendationService.getFilteredRecommendationUserList(
-          previousUserSeq, PAGE_SIZE, foodTypes, tags, userCode);
-      boolean hasMore = userList.size() == PAGE_SIZE;
+          previousUserSeq, RECOMMENDATION_BOARD_PAGE_SIZE, foodTypes, tags, userCode);
+      boolean hasMore = userList.size() == RECOMMENDATION_BOARD_PAGE_SIZE;
       responseDTO.setUserList(userList);
       responseDTO.setHasMore(hasMore);
     } catch (Exception e) {

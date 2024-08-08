@@ -27,16 +27,17 @@
         INNER JOIN user u2 ON r.customer_seq = u2.seq
     WHERE
       r.status = 'STORE_HIDDEN'
+    ORDER BY r.seq DESC
     LIMIT #{pageSize}
     OFFSET #{offset}
   </select>
 
   <select id="selectTotalPage" resultType="int">
-    select count(*) from review where status = 'STORE_HIDDEN'
+    SELECT count(*) FROM review WHERE status = 'STORE_HIDDEN'
   </select>
 
   <delete id="deleteReview">
-    delete from review where seq = #{seq}
+    DELETE FROM review WHERE seq = #{seq}
   </delete>
 
 </mapper>

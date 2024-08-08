@@ -184,7 +184,6 @@
 
     loadInitialRankingData();
     loadInitialData();
-    loadInitialPersonalizationData();
 
     $('#filterForm').submit(function (event) {
       event.preventDefault();

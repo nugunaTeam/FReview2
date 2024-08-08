@@ -1,19 +1,15 @@
 package com.nuguna.freview.customer.controller;
 
-import com.nuguna.freview.customer.dto.request.CustomerMyLikedPostsRetrieveRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerMyZzimedCustomersRetrieveRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerMyZzimedStoresRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyLikedPostsRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyZzimedCustomersResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyZzimedStoresRetrieveResponseDTO;
 import com.nuguna.freview.customer.service.CustomerMyActivityService;
-import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,30 +28,30 @@ public class CustomerMyActivityInfoApiController {
     this.customerMyActivityService = customerMyActivityService;
   }
 
-  @RequestMapping("/my-liked-posts")
+  @RequestMapping(value = "/my-liked-posts", method = RequestMethod.GET)
   public ResponseEntity<CustomerMyLikedPostsRetrieveResponseDTO> getMyLikedPosts(
       @RequestParam Long userSeq,
-      @Valid @RequestBody CustomerMyLikedPostsRetrieveRequestDTO customerMyLikedPostsRetrieveRequestDTO) {
+      @RequestParam Integer targetPage) {
     CustomerMyLikedPostsRetrieveResponseDTO myLikedPosts = customerMyActivityService.getMyLikedPosts(
-        userSeq, customerMyLikedPostsRetrieveRequestDTO);
+        userSeq, targetPage);
     return new ResponseEntity<>(myLikedPosts, HttpStatus.OK);
   }
 
-  @RequestMapping("/my-zzimed-stores")
+  @RequestMapping(value = "/my-zzimed-stores", method = RequestMethod.GET)
   public ResponseEntity<CustomerMyZzimedStoresRetrieveResponseDTO> getMyZzimedStores(
       @RequestParam Long userSeq,
-      @Valid @RequestBody CustomerMyZzimedStoresRetrieveRequestDTO customerMyZzimedStoresRetrieveRequestDTO) {
+      @RequestParam Integer targetPage) {
     CustomerMyZzimedStoresRetrieveResponseDTO myZzimedStores = customerMyActivityService.getMyZzimedStores(
-        userSeq, customerMyZzimedStoresRetrieveRequestDTO);
+        userSeq, targetPage);
     return new ResponseEntity<>(myZzimedStores, HttpStatus.OK);
   }
 
-  @RequestMapping("/my-zzimed-customers")
+  @RequestMapping(value = "/my-zzimed-customers", method = RequestMethod.GET)
   public ResponseEntity<CustomerMyZzimedCustomersResponseDTO> getMyZzimedCustomers(
       @RequestParam Long userSeq,
-      @Valid @RequestBody CustomerMyZzimedCustomersRetrieveRequestDTO customerMyZzimedCustomersRetrieveRequestDTO) {
+      @RequestParam Integer targetPage) {
     CustomerMyZzimedCustomersResponseDTO myZzimedCustomers = customerMyActivityService.getMyZzimedCustomers(
-        userSeq, customerMyZzimedCustomersRetrieveRequestDTO);
+        userSeq, targetPage);
     return new ResponseEntity<>(myZzimedCustomers, HttpStatus.OK);
   }
 

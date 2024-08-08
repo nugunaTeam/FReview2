@@ -25,6 +25,7 @@
 
   <resultMap id="ZzimedMeCustomerInfoResultMap"
     type="com.nuguna.freview.customer.dto.response.ZzimedMeCustomerInfoDTO">
+    <result property="notificationSeq" column="noti_seq"/>
     <result property="customerSeq" column="from_user_seq"/>
     <result property="nickname" column="nickname"/>
     <result property="createdAt" column="created_at"/>
@@ -32,11 +33,13 @@
 
   <select id="getZzimedMeCustomers" resultMap="ZzimedMeCustomerInfoResultMap">
     select
+    zzimed_me_customer.noti_seq,
     zzimed_me_customer.from_user_seq,
     u.nickname,
     zzimed_me_customer.created_at
     from
     (select
+    n.seq as noti_seq,
     n.from_user_seq,
     n.created_at
     from
@@ -47,13 +50,14 @@
     <if test="isRead != null">
       and n.is_read = #{isRead}
     </if>
-    order by
-    n.created_at desc
-    limit #{pageSize} offset #{offset}) zzimed_me_customer
+    ) zzimed_me_customer
     inner join user u
     on zzimed_me_customer.from_user_seq = u.seq
     where
     u.code = 'CUSTOMER'
+    order by
+    zzimed_me_customer.created_at desc
+    limit #{pageSize} offset #{offset}
   </select>
 
   <select id="getZzimedMeStoresCount" resultType="java.lang.Integer">
@@ -77,6 +81,7 @@
 
   <resultMap id="ZzimedMeStoreInfoResultMap"
     type="com.nuguna.freview.customer.dto.response.ZzimedMeStoreInfoDTO">
+    <result property="notificationSeq" column="noti_seq"/>
     <result property="storeSeq" column="from_user_seq"/>
     <result property="storeName" column="store_name"/>
     <result property="createdAt" column="created_at"/>
@@ -85,11 +90,13 @@
   <select id="getZzimedMeStores" resultMap="ZzimedMeStoreInfoResultMap">
     with zzimed_store as (
     select
+    noti.noti_seq,
     noti.from_user_seq,
     noti.created_at,
     u.business_number
     from
     (select
+    n.seq as noti_seq,
     n.from_user_seq,
     n.created_at
     from
@@ -109,6 +116,7 @@
     )
 
     select
+    zzimed_store.noti_seq,
     zzimed_store.from_user_seq,
     nsbi.store_name,
     zzimed_store.created_at

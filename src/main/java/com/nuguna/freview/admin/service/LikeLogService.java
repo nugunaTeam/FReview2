@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,9 @@ public class LikeLogService {
   private final LikeAccumulationMapper likeAccumulationMapper;
   private final LikePostProcessingLogMapper likePostProcessingLogMapper;
 
+  @Value("${like.log.cycle.fixedRate}")
+  private long likeLogCycle;
+
   @Autowired
   public LikeLogService(LikeLogMapper likeMapper, LikeAccumulationMapper likeAccumulationMapper,
       LikePostProcessingLogMapper likePostProcessingLogMapper) {
@@ -30,7 +34,7 @@ public class LikeLogService {
     this.likePostProcessingLogMapper = likePostProcessingLogMapper;
   }
 
-  @Scheduled(fixedRate = 1000)
+  @Scheduled(fixedRateString = "${like.log.cycle.fixedRate}")
   @Transactional
   public void processLikeLogs() {
     Long lastProcessedSeq = likePostProcessingLogMapper.getLastProcessedSeq();
@@ -53,6 +57,10 @@ public class LikeLogService {
         } else {
           currentAccumulation.updateTotalLike(currentAccumulation.getTotalLike() + count);
           likeAccumulationMapper.update(currentAccumulation);
+        }
+
+        if (currentAccumulation.getTotalLike() < 0) {
+          throw new IllegalArgumentException("[ERROR] -" + postSeq +"- 누적 좋아요 개수가 0 미만입니다.");
         }
       });
 

@@ -1,5 +1,6 @@
 package com.nuguna.freview.common.service.impl;
 
+import com.nuguna.freview.OAuth.dto.request.GoogleUserRegistRequestDTO;
 import com.nuguna.freview.common.dto.request.RegisterCheckBusinessNumberDTO;
 import com.nuguna.freview.common.dto.request.RegisterCheckIdRequestDTO;
 import com.nuguna.freview.common.dto.request.RegisterCheckNickNameRequestDTO;
@@ -83,5 +84,32 @@ public class RegisterServiceImpl implements RegisterService {
         .loginType("FORM")
         .isWithDrawn(false).build();
     registerMapper.insertStoreInfo(uvo);
+  }
+
+  @Override
+  public void oAuthCustomerRegist(GoogleUserRegistRequestDTO googleUserRegistRequestDTO) {
+    UserVO uvo = UserVO.builder()
+        .email(googleUserRegistRequestDTO.getEmail())
+        .subEmail(googleUserRegistRequestDTO.getSubEmail())
+        .nickname(googleUserRegistRequestDTO.getNickname())
+        .ageGroup(googleUserRegistRequestDTO.getAgeGroup())
+        .code(googleUserRegistRequestDTO.getCode())
+        .loginType("GOOGLE")
+        .isWithDrawn(false).build();
+    registerMapper.insertOAuthCustomerInfo(uvo);
+  }
+
+  @Override
+  public void oAuthStoreRegist(GoogleUserRegistRequestDTO googleUserRegistRequestDTO) {
+    UserVO uvo = UserVO.builder()
+        .email(googleUserRegistRequestDTO.getEmail())
+        .subEmail(googleUserRegistRequestDTO.getSubEmail())
+        .businessNumber(googleUserRegistRequestDTO.getBusinessNumber())
+        .storeLocation(googleUserRegistRequestDTO.getStoreLocation())
+        .code(googleUserRegistRequestDTO.getCode())
+        .ageGroup(googleUserRegistRequestDTO.getAgeGroup())
+        .loginType("GOOGLE")
+        .isWithDrawn(false).build();
+    registerMapper.insertOAuthStoreInfo(uvo);
   }
 }

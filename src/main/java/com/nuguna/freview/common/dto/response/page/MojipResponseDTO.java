@@ -1,6 +1,6 @@
 package com.nuguna.freview.common.dto.response.page;
 
-import com.nuguna.freview.common.dto.response.MojipPostDetailDTO;
+import com.nuguna.freview.common.dto.response.MojipPostDTO;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MojipResponseDTO {
 
-  private List<MojipPostDetailDTO> mojipList;
+  private List<MojipPostDTO> mojipList;
   private boolean hasMore;
 }

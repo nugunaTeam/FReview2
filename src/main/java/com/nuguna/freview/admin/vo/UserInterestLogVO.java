@@ -13,5 +13,4 @@ public class UserInterestLogVO {
   private String code;
   private String category;
   private String dish;
-  private String createdAt;
 }

@@ -38,7 +38,7 @@ $(function(){
         success: function(myval){
           console.log("성공"+myval.checkDuplicated);
 
-          if (!myval.checkDuplicated) {
+          if (myval.checkDuplicated) {
             $("#COMM_register_IDdeny").removeClass("remove");
             $("#COMM_register_IDavail").addClass("remove");
             $("#Input_ID").val("");
@@ -175,7 +175,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
       success: function(myval){
         console.log("성공"+myval);
 
-        if (!myval.checkDuplicated) {
+        if (myval.checkDuplicated) {
           $("#COMM_register_NickNamedeny").removeClass("remove");
           $("#COMM_register_NickNameavail").addClass("remove");
           $("#Input_NickName").val("");
@@ -228,7 +228,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
           console.log("성공"+myval);
 
           alert("회원가입 완료되었습니다");
-          location.replace("/login");
+          location.replace("/login-page");
 
         }
       })
@@ -266,7 +266,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
         success: function(myval){
           console.log("성공"+myval);
 
-          if (!myval.checkDuplicated) {
+          if (myval.checkDuplicated) {
             $("#COMM_register_Boss_IDdeny").removeClass("remove");
             $("#COMM_register_Boss_IDavail").addClass("remove");
             $("#Boss_Input_ID").val("");
@@ -525,7 +525,7 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
           console.log("성공"+myval);
 
           alert("회원가입 완료되었습니다");
-          location.replace("/login");
+          location.replace("/login-page");
 
         }
       })
@@ -637,6 +637,100 @@ $("#Input_pw").change(function(){ // COMM_register 비밀번호 형식 확인
       }
     })
 
+  })
+
+  $("#COMM_register_btn_oauth_Boss_regist").click(function(){             //common-oauth-register Store 회원가입
+
+    let inputSubEmail = $("#COMM_register_input_Boss_email").val();
+    let inputEmail = $("#Boss_Input_ID").val();
+    let inputBusinessNumber = $("#COMM_register_input_Boss_buisnessInfo").val();
+    let inputBusinessAddress =  $("#COMM_register_input_Boss_buisnessaddress").val();
+    let inputAgeGroup = $("#Input_Boss_AgeGroup").val();
+
+    let email_subEmail_check = false;
+    if(inputEmail!=inputSubEmail)
+      email_subEmail_check = true;
+
+    if(COMM_register_emailNumberCheck&&COMM_register_acceptTerms&&COMM_register_businessInfo&&COMM_register_buisnessloc&&email_subEmail_check){
+
+      $.ajax({
+        method: "post",
+        url : "/api/google/register",
+        contentType: "application/json",
+        data: JSON.stringify({
+          email : inputEmail,
+          subEmail : inputSubEmail,
+          businessNumber: inputBusinessNumber,
+          storeLocation: inputBusinessAddress,
+          ageGroup: inputAgeGroup,
+          code: "STORE"}),
+        error: function(myval){console.log("에러"+myval)},
+        success: function(myval){
+          console.log("성공"+myval);
+
+          alert("회원가입 완료되었습니다");
+          location.replace("/login-page");
+
+        }
+      })
+
+    }else if(!COMM_register_emailNumberCheck){
+      alert("이메일 인증번호를 체크해주세요!");
+    } else if(!COMM_register_businessInfo){
+      alert("사업자인증을 해주세요!");
+    } else if(!COMM_register_buisnessloc){
+      alert("사업자 주소를 입력해주세요");
+    } else if(!COMM_register_acceptTerms){
+      alert("개인정보 및 이용약관에 동의해주세요");
+    } else if(!email_subEmail_check){
+      alert("이메일과 보조 이메일이 동일하면 안됩니다");
+    }
+
+  })
+
+  $("#COMM_register_btn_oauth_reviewer_regist").click(function(){         //common-oauth-register 체험단 회원가입
+    let inputSubEmail = $("#COMM_register_input_email").val();
+    let inputEmail = $("#Input_ID").val();
+    let inputNickname = $("#Input_NickName").val();
+    let inputAgeGroup = $("#Input_AgeGroup").val()
+
+
+    let email_subEmail_check = false;
+    if(inputEmail!=inputSubEmail)
+      email_subEmail_check = true;
+
+    if(COMM_register_emailNumberCheck&&COMM_register_nickNameCheck&&email_subEmail_check){
+
+      $.ajax({
+        method: "post",
+        url : "/api/google/register",
+        contentType: "application/json",
+        data: JSON.stringify({
+          email : inputEmail,
+          subEmail : inputSubEmail,
+          nickname: inputNickname,
+          ageGroup: inputAgeGroup,
+          code: "CUSTOMER"}),
+        error: function(myval){console.log("에러"+myval)},
+        success: function(myval){
+          console.log("성공"+myval);
+
+          alert("회원가입 완료되었습니다");
+          location.replace("/login-page");
+
+        }
+      })
+
+      //$("#COMM_register_form_reviewer_regist").attr({"action": "/auth?pagecode=reviewer_regist", "method":"post"}).submit();
+    }else if(!COMM_register_emailNumberCheck){
+      alert("이메일 인증번호를 체크해주세요!");
+    } else if(!COMM_register_nickNameCheck){
+      alert("닉네임 중복확인을 체크해주세요!");
+    } else if(!COMM_register_acceptTerms){
+      alert("개인정보 및 이용약관를 확인하고 동의해주세요");
+    }else if(!email_subEmail_check){
+      alert("이메일과 보조 이메일이 동일하면 안됩니다")
+    }
   })
 
 })

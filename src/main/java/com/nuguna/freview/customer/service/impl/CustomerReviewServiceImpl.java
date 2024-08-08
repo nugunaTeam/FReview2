@@ -1,7 +1,7 @@
 package com.nuguna.freview.customer.service.impl;
 
-import static com.nuguna.freview.customer.constant.CustomerReviewLogConstant.CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE;
-import static com.nuguna.freview.customer.constant.CustomerReviewLogConstant.CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE;
+import static com.nuguna.freview.customer.constant.CustomerReviewLogConstant.CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_BLOCK_SIZE;
+import static com.nuguna.freview.customer.constant.CustomerReviewLogConstant.CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_SIZE;
 
 import com.nuguna.freview.customer.dto.request.CustomerMyReviewRegisterRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerMyReviewsRetrieveRequestDTO;
@@ -58,27 +58,27 @@ public class CustomerReviewServiceImpl implements CustomerReviewService {
     Long userSeq = customerMyReviewsRetrieveRequestDTO.getUserSeq();
     Integer currentPage = customerMyReviewsRetrieveRequestDTO.getPage();
 
-    int offset = (currentPage - 1) * CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE;
+    int offset = (currentPage - 1) * CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_SIZE;
     int reviewCount = customerReviewMapper.getReviewCount(userSeq);
     if (offset > reviewCount) {
       throw new IllegalReviewPageAccessException("해당하는 페이지에 대한 리뷰가 존재하지 않습니다.");
     }
     List<ReviewLogInfoDTO> reviewsInfo = customerReviewMapper.getReviewsInfo(userSeq, offset,
-        CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE);
+        CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_SIZE);
 
     int startPage =
-        ((currentPage - 1) / CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE)
-            * CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE
+        ((currentPage - 1) / CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_BLOCK_SIZE)
+            * CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_BLOCK_SIZE
             + 1;
     int endPage;
-    int pageBlockThreshold = startPage + CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE - 1;
-    if (reviewCount >= pageBlockThreshold * CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE) {
+    int pageBlockThreshold = startPage + CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_BLOCK_SIZE - 1;
+    if (reviewCount >= pageBlockThreshold * CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_SIZE) {
       endPage = pageBlockThreshold;
     } else {
-      endPage = (int) Math.ceil((double) reviewCount / CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE);
+      endPage = (int) Math.ceil((double) reviewCount / CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_SIZE);
     }
     boolean hasNext = ((currentPage < endPage) || (reviewCount
-        > pageBlockThreshold * CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE));
+        > pageBlockThreshold * CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_SIZE));
     boolean hasPrevious = (currentPage > 1);
 
     PaginationInfoResponseDTO paginationInfoResponseDTO = new PaginationInfoResponseDTO(
@@ -92,27 +92,27 @@ public class CustomerReviewServiceImpl implements CustomerReviewService {
     Long userSeq = customerOtherReviewsRetrieveRequestDTO.getUserSeq();
     Integer currentPage = customerOtherReviewsRetrieveRequestDTO.getPage();
 
-    int offset = (currentPage - 1) * CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE;
+    int offset = (currentPage - 1) * CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_SIZE;
     int reviewCount = customerReviewMapper.getOtherReviewCount(userSeq);
     if (offset > reviewCount) {
       throw new IllegalReviewPageAccessException("해당하는 페이지에 대한 리뷰가 존재하지 않습니다.");
     }
     List<ReviewLogInfoDTO> reviewsInfo = customerReviewMapper.getOtherReviewsInfo(userSeq, offset,
-        CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE);
+        CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_SIZE);
 
     int startPage =
-        ((currentPage - 1) / CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE)
-            * CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE
+        ((currentPage - 1) / CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_BLOCK_SIZE)
+            * CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_BLOCK_SIZE
             + 1;
     int endPage;
-    int pageBlockThreshold = startPage + CUSTOMER_REVIEW_LOG_PAGE_BLOCK_SIZE - 1;
-    if (reviewCount >= pageBlockThreshold * CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE) {
+    int pageBlockThreshold = startPage + CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_BLOCK_SIZE - 1;
+    if (reviewCount >= pageBlockThreshold * CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_SIZE) {
       endPage = pageBlockThreshold;
     } else {
-      endPage = (int) Math.ceil((double) reviewCount / CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE);
+      endPage = (int) Math.ceil((double) reviewCount / CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_SIZE);
     }
     boolean hasNext = ((currentPage < endPage) || (reviewCount
-        > pageBlockThreshold * CUSTOMER_MY_BRAND_REVIEW_LOG_SIZE));
+        > pageBlockThreshold * CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_SIZE));
     boolean hasPrevious = (currentPage > 1);
 
     PaginationInfoResponseDTO paginationInfoResponseDTO = new PaginationInfoResponseDTO(

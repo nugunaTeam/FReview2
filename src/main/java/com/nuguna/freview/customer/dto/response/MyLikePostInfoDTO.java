@@ -1,6 +1,6 @@
 package com.nuguna.freview.customer.dto.response;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,9 +12,7 @@ public class MyLikePostInfoDTO {
 
   private Long seq;
   private Long authorSeq; // store임.
-  private String title;
-  private String content;
-  private Date createdAt;
+  private LocalDate createdAt;
   private String storeName;
   private Integer likeCount;
 
