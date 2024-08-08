@@ -39,7 +39,7 @@ public class CommonPageController {
   public String customerOtherBrandPage(@PathVariable("userSeq") Long userSeq,
       @RequestParam Long fromUserSeq, Model model) {
 
-    UserCode userCode = UserCode.CUSTOMER; // TODO : 시큐리티 적용하여 로그인한 유저 정보인 UserVO로 부터 userCode를 받아와서 처리해야함 , fromUserSeq도 마찬가지
+    UserCode userCode = UserCode.STORE; // TODO : 시큐리티 적용하여 로그인한 유저 정보인 UserVO로 부터 userCode를 받아와서 처리해야함 , fromUserSeq도 마찬가지
 //    Long fromUserSeq = userVO.getSeq();
 
     boolean zzimed = otherBrandPageUtilService.checkZzimedOtherUser(fromUserSeq, userSeq);

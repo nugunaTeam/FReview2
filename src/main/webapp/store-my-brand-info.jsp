@@ -288,12 +288,21 @@
                                 </div>
                             </div>
 
-                            <!-- 닉네임 보여주기/등록하기 -->
+                            <!-- 스토어명 보여주기/등록하기 -->
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 label" style="color:blue">스토어명</div>
                                 <div class="col-lg-8 col-md-6">
                                     <input id="nickname-input" type="text" name="to_nickname"
                                            value="${brandInfo.storeName}"
+                                           class="form-control" readonly>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label" style="color:blue">위치</div>
+                                <div class="col-lg-8 col-md-6">
+                                    <input id="location-holder" type="text" name="location"
+                                           value="${brandInfo.storeLocation}"
                                            class="form-control" readonly>
                                 </div>
                             </div>
