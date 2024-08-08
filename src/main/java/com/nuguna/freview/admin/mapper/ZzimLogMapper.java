@@ -8,5 +8,5 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface ZzimLogMapper {
   List<ZzimLogVO> getNewLogs(Long lastProcessedSeq);
-  int insertZzimLog(@Param("fromUserSeq") Long fromUseSeq, @Param("toUserSeq") Long toUserSeq, @Param("code") String code);
+  int insertZzimLog(@Param("fromUserSeq") Long fromUserSeq, @Param("toUserSeq") Long toUserSeq, @Param("code") String code);
 }
