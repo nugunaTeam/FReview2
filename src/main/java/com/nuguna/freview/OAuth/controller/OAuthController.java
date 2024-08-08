@@ -93,13 +93,7 @@ public class OAuthController {
     httpServletResponse.addCookie(accessCookie);
     httpServletResponse.addCookie(refreshCookie);
 
-    if(role.equals("ROLE_ADMIN")) {
-      return "redirect: /admin/manage/store";
-    }else if(role.equals("ROLE_CUSTOMER")) {
-      return "redirect: /customer/main-page";
-    } else{
-      return "redirect: /user/main-page";
-    }
+    return "redirect: /main-page";
   }
 
 }
