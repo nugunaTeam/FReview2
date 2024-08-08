@@ -123,11 +123,9 @@
   </select>
 
   <select id="getStoreFinalProposalListCount" resultType="java.lang.Integer">
-    SELECT COUNT(*)
-    FROM experience e
-           INNER JOIN post p ON p.user_seq = e.from_user_seq
-           INNER JOIN `user` u ON u.seq = e.to_user_seq
-    WHERE e.from_user_seq = #{userSeq}
+    select count(*)
+    from user u join experience e on u.seq = e.to_user_seq
+    where e.from_user_seq = #{userSeq}
   </select>
 
   <update id="setUpdateExperienceDate">
