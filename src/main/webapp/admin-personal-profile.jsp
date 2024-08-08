@@ -41,6 +41,8 @@
     <!-- Day.js -->
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
 
+    <script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+
     <!-- =======================================================
     * Template Name: NiceAdmin
     * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -277,7 +279,7 @@
       htmlStr += '  </div>';
       htmlStr += '</div>';
 
-      $('#memberInfo').html(htmlStr);
+      $('#userInfo').html(htmlStr);
     }
 
     function toggleEditField(fieldId, button) {
