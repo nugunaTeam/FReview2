@@ -1077,13 +1077,12 @@
                               }
 
                               function loadPage(page) {
-                                var userSeq = $('#userSeq').val();
 
                                 $.ajax({
                                   url: '/api/customer/reviews',
                                   method: 'POST',
                                   contentType: 'application/json',
-                                  data: JSON.stringify({'userSeq': userSeq, 'page': page}),
+                                  data: JSON.stringify({'userSeq': ${userSeq}, 'page': page}),
                                   success: function (response) {
                                     // 리뷰 목록 업데이트
                                     var reviewInfos = response.reviewInfos;
