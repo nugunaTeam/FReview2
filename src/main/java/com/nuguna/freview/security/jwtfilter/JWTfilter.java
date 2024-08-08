@@ -5,6 +5,7 @@ import com.nuguna.freview.security.JwtUtil;
 import com.nuguna.freview.security.jwtfilter.service.JwtUserService;
 import java.io.IOException;
 import javax.servlet.FilterChain;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -43,57 +44,66 @@ public class JWTfilter extends OncePerRequestFilter {
     }
 
     // accessToken만 없으면 토큰 재생성, refreshToken까지 없으면 로그아웃
-    if(accessToken == null) {
+    if(refreshToken != null) {
 
-      Cookie[] cookiess = httpServletRequest.getCookies();
-      for(Cookie c : cookiess) {
-        if(c.getName().equals("refresh")) {
-          c.setValue("");
-          c.setPath("/");
-          c.setMaxAge(0); // 쿠키 만료 설정
-          httpServletResponse.addCookie(c);
+      if(accessToken == null) {
+
+        Cookie[] cookiess = httpServletRequest.getCookies();
+        for(Cookie c : cookiess) {
+          if(c.getName().equals("refresh")) {
+            c.setValue("");
+            c.setPath("/");
+            c.setMaxAge(0); // 쿠키 만료 설정
+            httpServletResponse.addCookie(c);
+          }
         }
+
+        Cookie accessCookie = new Cookie("access", refreshToken);
+        accessCookie.setPath("/");
+        accessCookie.setMaxAge(10);
+        accessCookie.setSecure(true);
+        httpServletResponse.addCookie(accessCookie);
+
+        Cookie refreshCookie = new Cookie("refresh", refreshToken);
+        refreshCookie.setPath("/");
+        refreshCookie.setMaxAge(60*60);
+        refreshCookie.setSecure(true);
+        httpServletResponse.addCookie(refreshCookie);
+
+        accessToken = refreshToken;
       }
 
-      Cookie accessCookie = new Cookie("access", refreshToken);
-      accessCookie.setPath("/");
-      accessCookie.setMaxAge(10);
-      accessCookie.setSecure(true);
-      httpServletResponse.addCookie(accessCookie);
+      String role = jwtutl.getRole(accessToken);
+      String email = jwtutl.getUserEmail(accessToken);
+      Long seq = jwtutl.getUserSeq(accessToken);
+      String businessNumber = jwtutl.getBusinessNumber(accessToken);
+      String code = jwtutl.getCode(accessToken);
+      String nickname = jwtutl.getNickname(accessToken);
+      String profile = jwtutl.getProfilePhotoUrl(accessToken);
+      String introduce = jwtutl.getIntroduce(accessToken);
+      String subEmail = jwtutl.getSubEmail(accessToken);
+      String loginType = jwtutl.getLoginType(accessToken);
+      boolean isWithDrawn = jwtutl.getIsWithDrawn(accessToken);
+      String ageGroup = jwtutl.getAgeGroup(accessToken);
+      String storeLocation = jwtutl.getStoreLocation(accessToken);
 
-      Cookie refreshCookie = new Cookie("refresh", refreshToken);
-      refreshCookie.setPath("/");
-      refreshCookie.setMaxAge(60*60);
-      refreshCookie.setSecure(true);
-      httpServletResponse.addCookie(refreshCookie);
+      UserVO uvo = new UserVO(seq, businessNumber, code, email, null, nickname, profile, introduce,
+          subEmail, loginType, isWithDrawn, ageGroup, storeLocation, null, null);
 
-      accessToken = refreshToken;
-    }
+      JwtContextHolder.setUserVO(uvo);
 
 
-    if(refreshToken == null) {
+    }else{
+      String requestURI = httpServletRequest.getRequestURI();
+      if(requestURI.equals("/main-page")) {
+        RequestDispatcher dispatcher = httpServletRequest.getRequestDispatcher("/main-page");
+        dispatcher.forward(httpServletRequest, httpServletResponse);
+        return;
+      }
       httpServletResponse.sendRedirect("/expired-token");
       return;
     }
 
-    // 토큰 값으로 UserVO 만들기
-    String role = jwtutl.getRole(accessToken);
-    String email = jwtutl.getUserEmail(accessToken);
-    Long seq = jwtutl.getUserSeq(accessToken);
-    String businessNumber = jwtutl.getBusinessNumber(accessToken);
-    String code = jwtutl.getCode(accessToken);
-    String nickname = jwtutl.getNickname(accessToken);
-    String profile = jwtutl.getProfilePhotoUrl(accessToken);
-    String introduce = jwtutl.getIntroduce(accessToken);
-    String subEmail = jwtutl.getSubEmail(accessToken);
-    String loginType = jwtutl.getLoginType(accessToken);
-    boolean isWithDrawn = jwtutl.getIsWithDrawn(accessToken);
-    String ageGroup = jwtutl.getAgeGroup(accessToken);
-    String storeLocation = jwtutl.getStoreLocation(accessToken);
-
-    UserVO uvo = new UserVO(seq,businessNumber,code,email,null,nickname,profile,introduce,subEmail,loginType,isWithDrawn,ageGroup,storeLocation,null,null);
-
-    JwtContextHolder.setUserVO(uvo);
     filterChain.doFilter(httpServletRequest, httpServletResponse);
   }
 }
