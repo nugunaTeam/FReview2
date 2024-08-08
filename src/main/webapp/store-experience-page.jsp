@@ -11,6 +11,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
     <link rel="stylesheet" type="text/css" href="/assets/css/style-h.css"/>
     <meta charset="utf-8">
@@ -45,6 +46,15 @@
       table {
         text-align: center;
       }
+
+      .experience-date {
+        display: flex; align-items: center;
+      }
+
+      .date-picker {
+        margin-right: 10px;
+      }
+
 
       .pagination-container {
         display: flex;
@@ -113,28 +123,7 @@
 <body>
 
 <!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center">
-    <div class="d-flex align-items-center justify-content-between">
-        <a href="/main?seq=${userSeq}&pagecode=Requester"
-           class="logo d-flex align-items-center">
-            <img src="/assets/img/logo/logo-vertical.png" alt="">
-            <span class="d-none d-lg-block">FReview</span>
-        </a>
-        <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div><!-- End Logo -->
-    <div class="header-hr-right ms-auto">
-        <div class="d-flex align-items-center">
-            <div class="pe-3">
-                <a href="/my/brand-info?userSeq=${userSeq}" style="margin-right: 20px">
-                    ${nickname}
-                    <img class="rounded-circle" src="${profileUrl}" alt=" "
-                         style="width: 30px; margin-top: 15px; ">
-                </a>
-                <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
-            </div>
-        </div>
-    </div>
-</header><!-- End Header -->
+<jsp:include page="/header.jsp" />
 
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
@@ -319,20 +308,6 @@
 </main><!-- End #main -->
 
 
-<!-- ======= Footer ======= -->
-<footer id="footer" class="footer">
-    <div class="copyright">
-        &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
-    </div>
-    <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-    </div>
-</footer><!-- End Footer -->
-
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>
 
@@ -394,7 +369,7 @@
         htmlStr += "<td>" + endDateFormat + "</td>";
         htmlStr += "<td>" + experienceDateFormat + "</td>";
         // htmlStr += "<td data-id='"+ item.experienceSeq +"'><input type='button' class='status-apply' value='확정'></td>";
-        htmlStr += "<td><button class='status-apply' data-id='" + item.experienceSeq + "'>확정</button></td>";
+        htmlStr += "<td><button class='status-apply btn btn-primary' data-id='" + item.experienceSeq + "'>확정</button></td>";
         htmlStr += "<td class='status-apply'>" + item.status + "</td>";
         htmlStr += "</tr>";
       });
@@ -530,8 +505,8 @@
         htmlStr += "<td class='title-cell'><a href='/mojip/" + item.fromPostSeq + "'>" + item.title
             + "</a></td>";
         htmlStr += "<td>" + experienceDateFormat + "</td>";
-        htmlStr += "<td><button class='status-button' data-action='DONE' data-id='" + item.experienceSeq + "'>확정</button>" +
-            "<button class='status-button' data-action='NOSHOW' data-id='" + item.experienceSeq + "'>노쇼</button></td>";
+        htmlStr += "<td><button class='status-button btn btn-primary me-2' data-action='DONE' data-id='" + item.experienceSeq + "'>확정</button>" +
+            "<button class='status-button btn btn-primary' data-action='NOSHOW' data-id='" + item.experienceSeq + "'>노쇼</button></td>";
         htmlStr += "<td class='status-accepted'>" + item.status + "</td>";
         htmlStr += "</tr>";
       });
@@ -556,10 +531,10 @@
             "' value='" +
             experienceDateFormat +
             "'>" +
-            "<input type='button' class='confirm-date-btn' value='확인'/>" +
+            "<input type='button' class='confirm-date-btn btn btn-primary me-2' value='확인'/>" +
             "</td>";
-        htmlStr += "<td><button class='status-button' data-action='DONE' data-id='" + item.experienceSeq + "'>확정</button>" +
-            "<button class='status-button' data-action='NOSHOW' data-id='" + item.experienceSeq + "'>노쇼</button></td>";
+        htmlStr += "<td><button class='status-button btn btn-primary me-2' data-action='DONE' data-id='" + item.experienceSeq + "'>확정</button>" +
+            "<button class='status-button btn btn-primary' data-action='NOSHOW' data-id='" + item.experienceSeq + "'>노쇼</button></td>";
         htmlStr += "<td class='status-accepted'>" + item.status + "</td>";
         htmlStr += "</tr>";
       });
@@ -589,9 +564,6 @@
           console.error("[ERROR] experienceSeq 또는 날짜가 올바르지 않습니다.");
         }
       });
-
-
-
     }
 
 
@@ -667,7 +639,7 @@
         htmlStr += "<td class='status-review'>" + item.status + "</td>";
         htmlStr += "<td><a href='" + encodedUrl + "'>" + encodedUrl + "</a></td>";
         htmlStr += "<td>" + createdAt + "</td>";
-        htmlStr += "<td><button class='status-hidden' data-id='" + item.seq
+        htmlStr += "<td><button class='status-hidden btn btn-primary' data-id='" + item.seq
             + "'>숨김</button></td>";
         htmlStr += "</tr>";
       });
@@ -803,8 +775,8 @@
 
   });
 </script>
-
-
 </body>
 
+<!-- ======= Footer ======= -->
+<jsp:include page="/footer.jsp" />
 </html>
