@@ -2,6 +2,7 @@ package com.nuguna.freview.store.controller.page;
 
 import com.nuguna.freview.common.service.UserService;
 import com.nuguna.freview.common.vo.user.UserVO;
+import com.nuguna.freview.security.jwtfilter.JwtContextHolder;
 import com.nuguna.freview.store.service.StoreNotificationPageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class StoreNotificationPageController {
 
   @RequestMapping("/store/notification")
   public String storeNotificationPage(@RequestParam Long userSeq, Model model) {
-    UserVO loginUser = userService.getUserInfo(userSeq);
+    UserVO loginUser = JwtContextHolder.getUserVO();
     model.addAttribute("loginUser", loginUser);
     return "store-notification-page";
   }

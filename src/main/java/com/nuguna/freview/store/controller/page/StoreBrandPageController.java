@@ -1,4 +1,4 @@
-package com.nuguna.freview.store.controller;
+package com.nuguna.freview.store.controller.page;
 
 import com.nuguna.freview.store.dto.response.StoreBrandInfoResponseDTO;
 import com.nuguna.freview.store.service.StoreBrandPageService;
