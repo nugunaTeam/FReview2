@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class StoreBrandInfoResponseDTO {
@@ -17,6 +16,6 @@ public class StoreBrandInfoResponseDTO {
   private Long zzimCount;
   private String introduce;
   private List<String> foodTypes;
-  private List<String> tags;
+  private List<String> tagInfos;
   private String storeLocation;
 }

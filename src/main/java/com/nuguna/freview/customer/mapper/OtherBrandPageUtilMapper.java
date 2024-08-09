@@ -4,10 +4,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 @Mapper
-public interface CustomerUtilMapper {
+public interface OtherBrandPageUtilMapper {
 
   String getUserNickname(Long userSeq);
-
+  String getStoreName(Long userSeq);
   Boolean checkUserIsStore(Long userSeq);
 
   Boolean checkZzimedOtherUser(@Param("fromUserSeq") Long fromUserSeq,
