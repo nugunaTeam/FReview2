@@ -89,9 +89,9 @@ public class StoreExperienceApiController {
   // 체험 여부 확인 (방문 했냐? 노쇼냐?) jsp에서 들어올 값은 status도 있다~!
   // 컨트롤러 하나 ajax도 하나 버튼은 두개, 확정버튼status = ACCEPTED / 노쇼버튼status = NOSHOW
   @RequestMapping(value = "/experience-update-status", method = RequestMethod.POST)
-  public ResponseEntity<?> updateExperienceStatus(@RequestParam Long experienceSeq, @RequestParam String status){
+  public ResponseEntity<?> updateExperienceStatus(@RequestParam Long toUserSeq, @RequestParam Long experienceSeq, @RequestParam String status){
     try{
-      storeExperiencePageService.updateExperienceStatus(experienceSeq, status);
+      storeExperiencePageService.updateExperienceStatus(toUserSeq, experienceSeq, status);
       log.info(experienceSeq + " 씨큐다!" + status + " 변경될값");
       return new ResponseEntity<>(HttpStatus.OK);
     } catch (Exception e){

@@ -28,6 +28,6 @@ public interface StoreExperiencePageService {
       @RequestParam Integer currentPage, @RequestParam Integer pageSize);
 
   void updateExperienceDate(@RequestParam Long experienceSeq, @RequestParam LocalDate status);
-  void updateExperienceStatus(@RequestParam Long experienceSeq, @RequestParam String status);
+  void updateExperienceStatus(@RequestParam Long toUserSeq, @RequestParam Long experienceSeq, @RequestParam String status);
   void updateReviewStatus(@RequestParam Long seq, @RequestParam String status);
 }
