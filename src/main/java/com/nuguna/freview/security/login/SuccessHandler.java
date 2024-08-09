@@ -61,20 +61,7 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
 
     httpServletResponse.addCookie(accessCookie);
     httpServletResponse.addCookie(refreshCookie);
-    String targetUrl = determinTargetUrl(role);
-    httpServletResponse.sendRedirect(targetUrl);
+    httpServletResponse.sendRedirect("/main-page");
   }
-
-  private String determinTargetUrl(String role) {
-    if(role.equals("ROLE_ADMIN")) {
-      return "/admin/manage/store";
-    }else if(role.equals("ROLE_CUSTOMER")) {
-      return "/customer/main-page";
-    } else if(role.equals("ROLE_STORE")) {
-      return "/store/main-page";
-    }
-    return "/error";
-  }
-
 
 }

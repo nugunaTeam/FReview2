@@ -137,7 +137,11 @@
             <li class="nav-item dropdown pe-3">
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
                     <img src="/user/${fromUserSeq}/profile" alt="Profile"
-                         class="rounded-circle" style="margin-right: 5px;">
+                         class="rounded-circle" style="margin-right: 5px;" onerror="
+                            this.onerror = null;
+                            this.src = ${isFromUserStore}
+                            ? '/assets/img/basic/store-basic-profile.png'
+                            : '/assets/img/basic/customer-basic-profile.png';">
                     <span id="nickname-holder-head"
                           class="d-none d-md-block"
                           style="font-size : 18px;">${userNickname}</span>
@@ -158,7 +162,11 @@
             <div class="card">
                 <!-- profile  -->
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                    <img src="/user/${userSeq}/profile" alt="Profile" class="rounded-circle">
+                    <img src="/user/${userSeq}/profile" alt="Profile" class="rounded-circle" onerror="
+                            this.onerror = null;
+                            this.src = ${isFromUserStore}
+                            ? '/assets/img/basic/store-basic-profile.png'
+                            : '/assets/img/basic/customer-basic-profile.png';">
                     <h2 id="nickname-holder-section" style="font-size: 1.5rem; margin: 0.5rem 0;">
                         ${otherBrandInfo.nickname}
                     </h2>
@@ -350,19 +358,6 @@
                                            value="${otherBrandInfo.introduce}"
                                            class="form-control" readonly>
                                 </div>
-                                <div class="col-lg-1 col-md-2">
-                                    <button id="introduce-update-btn" type="button"
-                                            class="btn btn-primary edit-btn">수정
-                                    </button>
-                                    <button id="introduce-submit-btn" type="button"
-                                            class="btn btn-success send-btn"
-                                            style="display: none;">전송
-                                    </button>
-                                    <button id="introduce-cancel-btn" type="button"
-                                            class="btn btn-secondary cancel-btn"
-                                            style="display: none;">취소
-                                    </button>
-                                </div>
                             </div>
 
                             <div class="row">
@@ -371,17 +366,6 @@
                                     <input id="nickname-input" type="text" name="to_nickname"
                                            value="${otherBrandInfo.nickname}"
                                            class="form-control" readonly>
-                                </div>
-                                <div class="col-lg-1 col-md-2">
-                                    <button type="button" class="btn btn-primary edit-btn"
-                                            id="nickname-update-btn">수정
-                                    </button>
-                                    <button type="button" class="btn btn-success send-btn"
-                                            style="display: none;" id="nickname-submit-btn">전송
-                                    </button>
-                                    <button type="button" class="btn btn-secondary cancel-btn"
-                                            style="display: none;" id="nickname-cancel-btn">취소
-                                    </button>
                                 </div>
                             </div>
                             <div class="row">
@@ -646,13 +630,12 @@
                           }
 
                           function loadPage(page) {
-                            var userSeq = $('#userSeq').val();
 
                             $.ajax({
                               url: '/api/customer/other/reviews',
                               method: 'POST',
                               contentType: 'application/json',
-                              data: JSON.stringify({'userSeq': userSeq, 'page': page}),
+                              data: JSON.stringify({'userSeq': ${userSeq}, 'page': page}),
                               success: function (response) {
                                 // 리뷰 목록 업데이트
                                 var reviewInfos = response.reviewInfos;

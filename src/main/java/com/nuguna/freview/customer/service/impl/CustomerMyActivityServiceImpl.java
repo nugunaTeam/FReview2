@@ -7,9 +7,6 @@ import static com.nuguna.freview.customer.constant.CustomerMyActivityPageConstan
 import static com.nuguna.freview.customer.constant.CustomerMyActivityPageConstant.CUSTOMER_ZZIMED_STORES_PAGE_BLOCK_SIZE;
 import static com.nuguna.freview.customer.constant.CustomerMyActivityPageConstant.CUSTOMER_ZZIMED_STORES_PAGE_SIZE;
 
-import com.nuguna.freview.customer.dto.request.CustomerMyLikedPostsRetrieveRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerMyZzimedCustomersRetrieveRequestDTO;
-import com.nuguna.freview.customer.dto.request.CustomerMyZzimedStoresRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyLikedPostsRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyZzimedCustomersResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyZzimedStoresRetrieveResponseDTO;
@@ -40,8 +37,7 @@ public class CustomerMyActivityServiceImpl implements CustomerMyActivityService 
   @Override
   @Transactional(readOnly = true)
   public CustomerMyLikedPostsRetrieveResponseDTO getMyLikedPosts(Long userSeq,
-      CustomerMyLikedPostsRetrieveRequestDTO customerMyLikedPostsRetrieveRequestDTO) {
-    Integer targetPage = customerMyLikedPostsRetrieveRequestDTO.getTargetPage();
+      int targetPage) {
     int likesCount = customerMyActivityMapper.getLikesCount(userSeq);
 
     PaginationInfoResponseDTO paginationInfoResponseDTO = PaginationUtil.makePaginationViewInfo(
@@ -57,8 +53,7 @@ public class CustomerMyActivityServiceImpl implements CustomerMyActivityService 
   @Override
   @Transactional(readOnly = true)
   public CustomerMyZzimedStoresRetrieveResponseDTO getMyZzimedStores(Long userSeq,
-      CustomerMyZzimedStoresRetrieveRequestDTO customerMyZzimedStoresRetrieveRequestDTO) {
-    Integer targetPage = customerMyZzimedStoresRetrieveRequestDTO.getTargetPage();
+      int targetPage) {
     int zzimedStoresCount = customerMyActivityMapper.getZzimedStoresCount(userSeq);
 
     PaginationInfoResponseDTO paginationInfoResponseDTO = PaginationUtil.makePaginationViewInfo(
@@ -76,8 +71,7 @@ public class CustomerMyActivityServiceImpl implements CustomerMyActivityService 
   @Override
   @Transactional(readOnly = true)
   public CustomerMyZzimedCustomersResponseDTO getMyZzimedCustomers(Long userSeq,
-      CustomerMyZzimedCustomersRetrieveRequestDTO customerMyZzimedCustomersRetrieveRequestDTO) {
-    Integer targetPage = customerMyZzimedCustomersRetrieveRequestDTO.getTargetPage();
+      int targetPage) {
     int zzimedCustomersCount = customerMyActivityMapper.getZzimedCustomersCount(userSeq);
 
     PaginationInfoResponseDTO paginationInfoResponseDTO = PaginationUtil.makePaginationViewInfo(

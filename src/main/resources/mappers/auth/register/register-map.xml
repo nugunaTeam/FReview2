@@ -32,7 +32,7 @@
   </insert>
 
   <select id="getCheckBusinessNumber" parameterType="String" resultType="boolean">
-    select count(1) > 1
+    select count(*) = 1
     from national_store_business_information
     WHERE business_number = #{#businessNumber}
   </select>
