@@ -14,7 +14,7 @@
     <collection property="foodTypes" ofType="java.lang.String">
       <result column="dish"/>
     </collection>
-    <collection property="tags" ofType="java.lang.String">
+    <collection property="tagInfos" ofType="java.lang.String">
       <result column="name"/>
     </collection>
   </resultMap>

@@ -27,7 +27,6 @@ public class StoreBrandPageController {
     StoreBrandInfoResponseDTO storeBrandPageInfo = storeBrandPageService.getMyBrandPageInfo(
         storeSeq);
     model.addAttribute("brandInfo", storeBrandPageInfo);
-    log.info(String.valueOf(storeBrandPageInfo));
     return "store-my-brand-info";
   }
 

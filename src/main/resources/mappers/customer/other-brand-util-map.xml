@@ -2,12 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.nuguna.freview.customer.mapper.CustomerUtilMapper">
+<mapper namespace="com.nuguna.freview.customer.mapper.OtherBrandPageUtilMapper">
 
   <select id="getUserNickname" resultType="java.lang.String">
     select nickname
     from user
     where seq = #{userSeq}
+  </select>
+
+  <select id="getStoreName" resultType="java.lang.String">
+    select
+        nsbi.store_name
+    from
+    (select
+         u.nickname,
+         u.business_number
+    from user u
+    where u.seq = #{userSeq}) store_user
+    inner join national_store_business_information nsbi
+    on
+      store_user.business_number = nsbi.business_number
   </select>
 
   <select id="checkUserIsStore" resultType="java.lang.Boolean">

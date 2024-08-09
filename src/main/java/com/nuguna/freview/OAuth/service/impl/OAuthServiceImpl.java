@@ -49,6 +49,7 @@ public class OAuthServiceImpl implements OAuthService {
     params.put("grant_type"		, "authorization_code");
 
     Map<String, String> response = restTemplate.postForObject(tokenEndpoint, params, Map.class);
+
     return response.get("access_token");
   }
 
