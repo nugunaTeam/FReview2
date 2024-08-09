@@ -1,8 +1,10 @@
 package com.nuguna.freview.customer.service;
 
-public interface CustomerUtilService {
+public interface OtherBrandPageUtilService {
 
   String getUserNickname(Long userSeq);
+
+  String getStoreName(Long userSeq);
 
   boolean checkUserIsStore(Long userSeq);
 
