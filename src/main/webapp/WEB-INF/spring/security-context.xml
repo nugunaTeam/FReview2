@@ -40,7 +40,7 @@
 		<custom-filter ref="logoutFilter" before="FORM_LOGIN_FILTER"/>
 	</http>
 
-	<!--<http pattern="/customer/**" entry-point-ref="jwtAuthenticationEntryPoint">
+	<http pattern="/customer/**" entry-point-ref="jwtAuthenticationEntryPoint">
 		<csrf disabled="true"/>
 		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
 		<access-denied-handler ref="accessDeniedHandler"/>
@@ -133,15 +133,13 @@
 		<csrf disabled="true"/>
 		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
 		<access-denied-handler ref="accessDeniedHandler"/>
-	</http>-->
+	</http>
 
-<!--
 	<http pattern="/notice" entry-point-ref="jwtAuthenticationEntryPoint">
 		<csrf disabled="true"/>
 		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
 		<access-denied-handler ref="accessDeniedHandler"/>
 	</http>
--->
 
 	<http>
 		<csrf disabled="true"/>
