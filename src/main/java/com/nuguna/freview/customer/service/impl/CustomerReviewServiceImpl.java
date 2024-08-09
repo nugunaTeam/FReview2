@@ -3,6 +3,7 @@ package com.nuguna.freview.customer.service.impl;
 import static com.nuguna.freview.customer.constant.CustomerReviewLogConstant.CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_BLOCK_SIZE;
 import static com.nuguna.freview.customer.constant.CustomerReviewLogConstant.CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_SIZE;
 
+import com.nuguna.freview.admin.mapper.RankPointLogMapper;
 import com.nuguna.freview.customer.dto.request.CustomerMyReviewRegisterRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerMyReviewsRetrieveRequestDTO;
 import com.nuguna.freview.customer.dto.request.CustomerOtherReviewsRetrieveRequestDTO;
@@ -26,10 +27,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class CustomerReviewServiceImpl implements CustomerReviewService {
 
   private final CustomerReviewMapper customerReviewMapper;
+  private final RankPointLogMapper rankPointLogMapper;
 
   @Autowired
-  public CustomerReviewServiceImpl(CustomerReviewMapper customerReviewMapper) {
+  public CustomerReviewServiceImpl(CustomerReviewMapper customerReviewMapper,
+      RankPointLogMapper rankPointLogMapper) {
     this.customerReviewMapper = customerReviewMapper;
+    this.rankPointLogMapper = rankPointLogMapper;
   }
 
   @Override
@@ -48,6 +52,7 @@ public class CustomerReviewServiceImpl implements CustomerReviewService {
     }
 
     customerReviewMapper.registerReview(reviewSeq, reviewUrl);
+    rankPointLogMapper.insertPointLog(userSeq, "POST");
     return new CustomerMyReviewRegisterResponseDTO(reviewUrl);
   }
 
