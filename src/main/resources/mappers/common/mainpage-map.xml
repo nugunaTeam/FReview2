@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.common.mapper.MainPageMapper">
+
+  <!-- ResultMap 설정 -->
+  <!-- mojipListMap 설정 -->
+
+  <resultMap id="MainPageMojipMap" type="com.nuguna.freview.common.dto.response.MainPageMojipMapperDTO">
+    <id property="postSeq" column="post_seq"/>
+    <result property="title" column="title"/>
+    <result property="applyStartDate" column="apply_start_date"/>
+    <result property="applyEndDate" column="apply_end_date"/>
+    <result property="experienceDate" column="experience_date"/>
+    <result property="profilePhotoUrl" column="profile_photo_url"/>
+    <result property="storeLocation" column="store_location"/>
+    <result property="storeName" column="store_name"/>
+  </resultMap>
+
+  <select id="selectHotMojipList"  resultMap="MainPageMojipMap">
+    SELECT  p.seq as post_seq,
+            p.title,
+            p.apply_start_date,
+            p.apply_end_date,
+            p.experience_date,
+            m.profile_photo_url,
+            m.store_location,
+            s.store_name
+    FROM post p
+           JOIN (
+      SELECT post_seq
+      FROM `like` l join post p ON l.post_seq = p.seq
+      WHERE p.code = '모집'
+      GROUP BY post_seq
+      ORDER BY COUNT(*) DESC
+        LIMIT 5
+    ) top_likes ON p.seq = top_likes.post_seq
+           LEFT JOIN user m ON p.user_seq = m.seq
+           LEFT JOIN national_store_business_information s ON m.business_number = s.business_number
+  </select>
+
+
+  <resultMap id="MainPageCustomerMap" type="com.nuguna.freview.common.dto.response.MainPageCustomerMapperDTO">
+    <id property="seq" column="seq"/>
+    <result property="profilePhotoUrl" column="profile_photo_url"/>
+    <result property="nickname" column="nickname"/>
+  </resultMap>
+
+  <select id="selectHotCustomerList"  resultMap="MainPageCustomerMap">
+    SELECT u.seq , u.profile_photo_url, u.nickname
+    FROM user u
+           join (SELECT user.seq, count(*)
+                 FROM user join zzim
+                                on user.seq = zzim.to_user_seq
+                 WHERE user.code = 'CUSTOMER'
+                 GROUP BY user.seq
+                 ORDER BY count(*) desc
+                   limit 5) top_zzim
+                ON u.seq = top_zzim.seq;
+  </select>
+
+  <resultMap id="MainPageGongjiMap" type="com.nuguna.freview.common.dto.response.MainPageRecentGongjiMapperDTO">
+    <id property="seq" column="seq"/>
+    <result property="title" column="title"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="updatedAt" column="updated_at"/>
+  </resultMap>
+
+  <select id="selectRecentGongjiList" resultMap="MainPageGongjiMap">
+    SELECT seq, title, created_at, updated_at
+    FROM post
+    WHERE code = '공지'
+    ORDER BY created_at desc
+    limit 5
+  </select>
+
+</mapper>
