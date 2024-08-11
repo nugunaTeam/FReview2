@@ -6,7 +6,6 @@ import com.nuguna.freview.admin.dto.request.StoreListRequestDTO;
 import com.nuguna.freview.admin.dto.response.StoreInfoDTO;
 import com.nuguna.freview.admin.dto.response.page.StoreManageResponseDTO;
 import com.nuguna.freview.admin.service.AdminService;
-import com.nuguna.freview.global.util.ShaUtil;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,10 +50,8 @@ public class StoreManageApiController {
   public ResponseEntity<?> deleteStore(@PathVariable Long deleteUserSeq,
       @RequestParam String adminVerificationPW,
       @RequestParam Long adminSeq) {
-    String encodedPW = ShaUtil.sha256Encoding(adminVerificationPW);
-
     try {
-      adminService.deleteUser(adminSeq, encodedPW, deleteUserSeq);
+      adminService.deleteUser(adminSeq, adminVerificationPW, deleteUserSeq);
       return new ResponseEntity<>(HttpStatus.OK);
     } catch (IllegalArgumentException e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
