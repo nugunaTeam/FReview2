@@ -156,7 +156,7 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="${pageContext.request.contextPath}/main?seq=${brandInfo.storeSeq}&pagecode=Requester"
+        <a href="/main"
            class="logo d-flex align-items-center">
             <img src="/assets/img/logo/logo-vertical.png" alt="">
             <span class="d-none d-lg-block">FReview</span>

@@ -1,5 +1,6 @@
 package com.nuguna.freview.store.controller;
 
+import com.nuguna.freview.security.jwtfilter.JwtContextHolder;
 import com.nuguna.freview.store.dto.request.StoreHideReviewRequestDTO;
 import com.nuguna.freview.store.dto.request.StoreMyFoodTypesUpdateRequestDTO;
 import com.nuguna.freview.store.dto.request.StoreMyIntroduceUpdateRequestDTO;
@@ -41,39 +42,41 @@ public class StoreMyBrandInfoApiController {
 
   @RequestMapping(value = "/recent-mojip-posts", method = RequestMethod.GET)
   public ResponseEntity<StoreRecentMojipPostInfosRetrieveResponseDTO> getRecentMojipPostInfos(
-      @RequestParam Long userSeq, @RequestParam Integer targetPage) {
+      @RequestParam Integer targetPage) {
+    Long storeSeq = JwtContextHolder.getUserVO().getSeq();
     StoreRecentMojipPostInfosRetrieveResponseDTO responseDTO = storeMyBrandService.getStoreRecentMojipPosts(
-        userSeq, targetPage);
+        storeSeq, targetPage);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
   @RequestMapping(value = "/reviews", method = RequestMethod.GET)
   public ResponseEntity<StoreReviewInfosRetrieveResponseDTO> getStoreReviewInfos(
-      @RequestParam Long userSeq, @RequestParam Integer targetPage) {
+      @RequestParam Integer targetPage) {
+    Long storeSeq = JwtContextHolder.getUserVO().getSeq();
     StoreReviewInfosRetrieveResponseDTO responseDTO = storeMyBrandService.getStoreReviewInfos(
-        userSeq, targetPage);
+        storeSeq, targetPage);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
   @RequestMapping(value = "/review/hide/{reviewSeq}", method = RequestMethod.POST)
-  public ResponseEntity<Void> hideStoreReview(@PathVariable("reviewSeq") Long reviewSeq,
-      @RequestBody @Valid StoreHideReviewRequestDTO storeHideReviewRequestDTO) {
-    storeMyBrandService.hideStoreReview(storeHideReviewRequestDTO.getUserSeq(), reviewSeq);
+  public ResponseEntity<Void> hideStoreReview(@PathVariable("reviewSeq") Long reviewSeq) {
+    Long storeSeq = JwtContextHolder.getUserVO().getSeq();
+    storeMyBrandService.hideStoreReview(storeSeq, reviewSeq);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @RequestMapping(value = "/profile-photo-url", method = RequestMethod.POST)
   public ResponseEntity<StoreMyProfileUpdateResponseDTO> updateStoreProfilePhoto(
-      @RequestParam("userSeq") Long userSeq,
       @RequestParam("profileFile") MultipartFile profileFile)
       throws IOException {
+    Long storeSeq = JwtContextHolder.getUserVO().getSeq();
 
     if (profileFile == null || profileFile.isEmpty()) {
       throw new IllegalArgumentException("프로필 파일은 필수값입니다.");
     }
 
     StoreMyProfileUpdateResponseDTO storeMyProfileUpdateResponseDTO = storeMyBrandService.updateStorePhotoUrl(
-        userSeq, profileFile);
+        storeSeq, profileFile);
     return new ResponseEntity<>(storeMyProfileUpdateResponseDTO, HttpStatus.OK);
   }
 
@@ -81,7 +84,8 @@ public class StoreMyBrandInfoApiController {
   public ResponseEntity<StoreMyIntroduceUpdateResponseDTO> updateStoreIntroduce(
       @Valid @RequestBody StoreMyIntroduceUpdateRequestDTO storeMyIntroduceUpdateRequestDTO
   ) {
-    StoreMyIntroduceUpdateResponseDTO responseDTO = storeMyBrandService.updateStoreIntroduce(
+    Long storeSeq = JwtContextHolder.getUserVO().getSeq();
+    StoreMyIntroduceUpdateResponseDTO responseDTO = storeMyBrandService.updateStoreIntroduce(storeSeq,
         storeMyIntroduceUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
@@ -90,7 +94,8 @@ public class StoreMyBrandInfoApiController {
   public ResponseEntity<StoreMyFoodTypesUpdateResponseDTO> updateStoreFoodTypes(
       @Valid @RequestBody StoreMyFoodTypesUpdateRequestDTO storeMyFoodTypesUpdateRequestDTO
   ) {
-    StoreMyFoodTypesUpdateResponseDTO responseDTO = storeMyBrandService.updateStoreFoodTypes(
+    Long storeSeq = JwtContextHolder.getUserVO().getSeq();
+    StoreMyFoodTypesUpdateResponseDTO responseDTO = storeMyBrandService.updateStoreFoodTypes(storeSeq,
         storeMyFoodTypesUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
@@ -99,7 +104,8 @@ public class StoreMyBrandInfoApiController {
   public ResponseEntity<StoreMyTagsUpdateResponseDTO> updateStoreTags(
       @Valid @RequestBody StoreMyTagsUpdateRequestDTO storeMyTagsUpdateRequestDTO
   ) {
-    StoreMyTagsUpdateResponseDTO responseDTO = storeMyBrandService.updateStoreTags(
+    Long storeSeq = JwtContextHolder.getUserVO().getSeq();
+    StoreMyTagsUpdateResponseDTO responseDTO = storeMyBrandService.updateStoreTags(storeSeq,
         storeMyTagsUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
@@ -108,7 +114,8 @@ public class StoreMyBrandInfoApiController {
   public ResponseEntity<StoreMyStoreLocationUpdateResponseDTO> updateStoreLocation(
       @Valid @RequestBody StoreMyStoreLocationUpdateRequestDTO storeMyStoreLocationUpdateRequestDTO
   ) {
-    StoreMyStoreLocationUpdateResponseDTO responseDTO = storeMyBrandService.updateStoreLocation(
+    Long storeSeq = JwtContextHolder.getUserVO().getSeq();
+    StoreMyStoreLocationUpdateResponseDTO responseDTO = storeMyBrandService.updateStoreLocation(storeSeq,
         storeMyStoreLocationUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
