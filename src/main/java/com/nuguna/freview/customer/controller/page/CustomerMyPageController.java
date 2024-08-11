@@ -76,8 +76,9 @@ public class CustomerMyPageController {
   }
 
   @RequestMapping(value = "/personal-info", method = RequestMethod.GET)
-  public String customerMyPersonalInfoPage(@RequestParam Long userSeq, Model model) {
+  public String customerMyPersonalInfoPage(Model model) {
     UserVO loginUser = JwtContextHolder.getUserVO();
+    Long userSeq = JwtContextHolder.getUserVO().getSeq();
     String nickname = otherBrandPageUtilService.getUserNickname(userSeq);
     model.addAttribute("nickname", nickname);
     model.addAttribute("userSeq", userSeq);
