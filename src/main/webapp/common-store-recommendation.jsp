@@ -60,8 +60,9 @@
       }
 
       #personalizedInfoContainer {
-        border: 2px solid #007bff; /* 테두리 강조 */
+        border: none; /* 테두리 제거 */
         border-radius: 10px; /* 테두리 둥글게 */
+        background-color: #2E64FE; /* 남색 배경 */
         padding: 20px; /* 내부 여백 */
         margin-bottom: 20px; /* 아래 여백 */
       }
@@ -83,10 +84,38 @@
       }
 
       #rankingInfoContainer {
-        border: 1px solid #007bff;
-        border-radius: 10px;
-        padding: 20px;
-        background-color: #f8f9fa;
+        border: none; /* 테두리 제거 */
+        background-color: #2E64FE; /* 남색 배경 */
+        width: fit-content; /* 글자양에 맞게 가로 사이즈 줄임 */
+        margin-left: auto; /* 오른쪽 정렬 */
+        padding: 10px; /* 내부 여백 */
+        border-radius: 10px; /* 테두리 둥글게 */
+        color: white; /* 글자색 흰색 */
+      }
+
+      #rankingInfoContainer h2 {
+        text-align: center; /* 제목 가운데 정렬 */
+        margin-bottom: 15px; /* 제목과 목록 간의 간격 추가 */
+        color: white; /* 제목 글자색 흰색 */
+      }
+
+      #rankingInfoContainer table {
+        width: 100%; /* 테이블 너비를 컨테이너에 맞춤 */
+      }
+
+      #rankingInfoContainer td {
+        padding: 5px 15px; /* 테이블 셀 패딩 */
+        text-align: center; /* 텍스트 가운데 정렬 */
+        color: white; /* 테이블 셀 글자색 흰색 */
+      }
+
+      #rankingInfoContainer a {
+        color: white; /* 링크 텍스트 색상을 흰색으로 변경 */
+        text-decoration: none; /* 필요 시, 링크의 밑줄 제거 */
+      }
+
+      #rankingInfoContainer a:hover {
+        color: #d3d3d3; /* 마우스를 올렸을 때 링크 텍스트 색상을 회색으로 변경 */
       }
 
       .row {
@@ -158,7 +187,7 @@
 
         <br>
         <div id="personalizedInfoSection" style="display: none;">
-            <h2> ${nickname}님이 요즘 관심있을만한 스토어들을 추천해드려요 </h2>
+            <h2> ${nickname}님이 요즘 관심 있을만한 스토어들을 추천해 드려요 </h2>
             <div id="personalizedInfoContainer">
                 <div class="row" id="personalizedInfo"></div>
             </div>
