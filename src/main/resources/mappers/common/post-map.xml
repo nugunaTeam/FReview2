@@ -42,8 +42,8 @@
   </delete>
 
   <!-- 특정 게시글 작성자 조회 -->
-  <select id="selectWriterSeqByPostSeq" parameterType="Long">
-    SELECT seq FROM post WHERE seq = #{postSeq}
+  <select id="selectWriterSeqByPostSeq" resultType="Long">
+    SELECT user_seq FROM post WHERE seq = #{postSeq}
   </select>
 
 </mapper>

@@ -7,6 +7,7 @@ import com.nuguna.freview.admin.service.AdminService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +32,7 @@ public class ProfileApiController {
   }
 
   @RequestMapping(value = "/password-update", method = RequestMethod.POST)
-  public HttpStatus updatePassword(@RequestBody PasswordModifyRequestDTO requestDTO) {
+  public ResponseEntity<?> updatePassword(@RequestBody PasswordModifyRequestDTO requestDTO) {
     Long userSeq = requestDTO.getUserSeq();
     String oldPassword = requestDTO.getOldPassword();
     String newPassword = requestDTO.getNewPassword();
@@ -39,21 +40,21 @@ public class ProfileApiController {
     boolean isMatching = adminService.isPasswordValid(userSeq, oldPassword);
     if (isMatching) {
       adminService.updatePassword(userSeq, newPassword);
-      return HttpStatus.OK;
+      return new ResponseEntity<>(HttpStatus.OK);
     } else {
-      return HttpStatus.UNAUTHORIZED;
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
   @RequestMapping(value = "/sub-email-update", method = RequestMethod.POST)
-  public HttpStatus updateSubEmail(@RequestBody EmailModifyRequestDTO requestDTO) {
+  public ResponseEntity<?> updateSubEmail(@RequestBody EmailModifyRequestDTO requestDTO) {
     Long userSeq = requestDTO.getUserSeq();
     String newEmail = requestDTO.getNewEmail();
 
       if (adminService.updateSubEmail(userSeq, newEmail)) {
-        return HttpStatus.OK;
+        return new ResponseEntity<>(HttpStatus.OK);
       } else {
-        return HttpStatus.INTERNAL_SERVER_ERROR;
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
       }
   }
 }
