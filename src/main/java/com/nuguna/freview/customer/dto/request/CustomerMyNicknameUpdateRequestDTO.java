@@ -1,6 +1,5 @@
 package com.nuguna.freview.customer.dto.request;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

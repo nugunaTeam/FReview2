@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ZzimedMeCustomerInfoDTO {
 
-  // EX MESSAGE : "${nickname}" 님이 나를 찜하였습니다.
   private Long notificationSeq;
   private Long customerSeq;
   private String nickname;
