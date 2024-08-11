@@ -123,34 +123,7 @@
 
 <body>
 
-<header id="header" class="header fixed-top d-flex align-items-center">
-    <div class="d-flex align-items-center justify-content-between">
-        <a href="${pageContext.request.contextPath}/main?seq=${userSeq}&pagecode=Requester"
-           class="logo d-flex align-items-center">
-            <img src="/assets/img/logo/logo-vertical.png" alt="">
-            <span class="d-none d-lg-block">FReview</span>
-        </a>
-        <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div>
-
-    <nav class="header-nav ms-auto">
-        <ul class="d-flex align-items-center">
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-
-                    <img src="/user/${userSeq}/profile"
-                         alt="Profile"
-                         class="rounded-circle profile-img"
-                         style="margin-right: 5px;">
-                    <span id="nickname-holder-head"
-                          class="d-none d-md-block"
-                          style="font-size : 18px;">${nickname}</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</header>
-
+<jsp:include page="/header.jsp" />
 
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
@@ -279,7 +252,11 @@
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
-        &copy; Copyright <strong><span>nugunaTeam</span></strong>. All Rights Reserved
+        &copy; Copyright <strong><span><a
+            href="https://github.com/nugunaTeam/FReview2"> nugunaTeam </a></span></strong>.
+        All
+        Rights
+        Reserved
     </div>
     <div class="credits">
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
