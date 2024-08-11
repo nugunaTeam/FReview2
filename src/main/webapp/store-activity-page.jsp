@@ -128,28 +128,7 @@
 <body>
 
 <!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center">
-    <div class="d-flex align-items-center justify-content-between">
-        <a href="/main?seq=${userSeq}&pagecode=Requester"
-           class="logo d-flex align-items-center">
-            <img src="/assets/img/logo/logo-vertical.png" alt="">
-            <span class="d-none d-lg-block">FReview</span>
-        </a>
-        <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div><!-- End Logo -->
-    <div class="header-hr-right ms-auto">
-        <div class="d-flex align-items-center">
-            <div class="pe-3">
-                <a href="/my/brand-info?userSeq=${userSeq}" style="margin-right: 20px">
-                    ${nickname}
-                    <img class="rounded-circle" src="${profileUrl}" alt=" "
-                         style="width: 30px; margin-top: 15px; ">
-                </a>
-                <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
-            </div>
-        </div>
-    </div>
-</header><!-- End Header -->
+<jsp:include page="/header.jsp" />
 
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
@@ -162,7 +141,7 @@
                 <i class="bi bi-grid"></i>
                 <span>브랜딩</span>
             </a>
-        </li><!-- End Dashboard Nav -->
+        </li>
 
         <li class="nav-item">
             <a class="nav-link collapsed"
@@ -180,7 +159,6 @@
                 <span>활동</span>
             </a>
         </li>
-        <!-- End Profile Page Nav -->
 
         <li class="nav-item">
             <a class="nav-link collapsed"
@@ -189,7 +167,6 @@
                 <span>알림</span>
             </a>
         </li>
-        <!-- End Profile Page Nav -->
 
         <li class="nav-item">
             <a class="nav-link collapsed"
@@ -204,7 +181,6 @@
 </aside><!-- End Sidebar-->
 
 <main id="main" class="main">
-    <%--    <div id="userSeqData" data-user-seq="${userSeq}" hidden="hidden"></div>--%>
     <section class="section profile">
         <div class="row">
             <div class="col-xl-12">
@@ -235,18 +211,13 @@
                             </li>
                         </ul>
                         <div class="tab-content pt-4" id="borderedTabContent">
-                            <!-- 내가 좋아요 한 글 -->
                             <div class="tab-pane fade show active" id="send-like" role="tabpanel"
                                  aria-labelledby="like-tab">
                                 <div id="sendLikeList" class="row">
-                                    <!-- 좋아요 리스트가 여기에 렌더링됩니다. -->
                                 </div>
-
-                                <!-- 페이지네이션 버튼 -->
                                 <div class="pagination-container" id="like-pagination"></div>
                             </div>
 
-                            <!-- 내가 찜한 유저 -->
                             <div class="tab-pane fade" id="send-zzim" role="tabpanel"
                                  aria-labelledby="zzim-tab">
                                 <div>
@@ -254,21 +225,11 @@
                                         <input type="radio" id="customerZzim" name="code" value="CUSTOMER" checked /> 체험단
                                         <input type="radio" id="storeZzim" name="code" value="STORE" /> 스토어
                                     </div>
-<%--                                    <div class="pb-4">--%>
-<%--                                        <input type="radio" id="customerZzim" name="code"--%>
-<%--                                               value="CUSTOMER"--%>
-<%--                                               onchange="handleZzimPageChange('CUSTOMER')" checked/>--%>
-<%--                                        체험단--%>
-<%--                                        <input type="radio" id="storeZzim" name="code" value="STORE"--%>
-<%--                                               onchange="handleZzimPageChange('STORE')"/> 스토어--%>
-<%--                                    </div>--%>
                                 </div>
                                 <div id="sendZzimListHtml" class="row"></div>
-                                <!-- 페이지네이션 버튼 -->
                                 <div class="pagination-container" id="zzim-pagination"></div>
                             </div>
 
-                            <!-- 내가 작성한 글 -->
                             <div class="tab-pane fade" id="written-post" role="tabpanel"
                                  aria-labelledby="post-tab">
                                 <div>
@@ -288,20 +249,6 @@
 
 </main><!-- End #main -->
 
-
-<!-- ======= Footer ======= -->
-<footer id="footer" class="footer">
-    <div class="copyright">
-        &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
-    </div>
-    <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-    </div>
-</footer><!-- End Footer -->
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>
@@ -324,10 +271,9 @@
     let selectedValue = $("input[name='code']:checked").val() || 'CUSTOMER'; // 기본값 설정
     // let selectedValue = $("input[name='code']:checked").val();
 
-    // 초기 활동 페이지 로드 시 좋아요 리스트 우선.
     sendLikeList(1);
 
-    // 좋아요 리스트 전송 함수
+
     function sendLikeList(page) {
       let sendData = {
         'userSeq': userSeq,
@@ -349,7 +295,7 @@
         }
       });
     }
-    // 좋아요 - 리스트
+
     function renderLikeList(sendLikeInfos) {
       let htmlStr = "";
       $.map(sendLikeInfos, function (item) {
@@ -371,8 +317,6 @@
       $("#sendLikeList").html(htmlStr);
     }
 
-
-    // 페이지 변경 핸들러
     function handlePageChange(location, page) {
       if (location === 'post') {        // 작성한 글
         writtenPostList(page);
@@ -397,18 +341,6 @@
       }
     }
 
-    // // selectedValue 값에 따른 input value 선택.
-    // function handleZzimPageChange(value) {
-    //   selectedValue = value;
-    //   sendZzimPageList(selectedValue);
-    // }
-
-    // 페이지에 따라 찜 리스트를 로드하는 함수
-    // function sendZzimPageList(page) {
-    //   sendZzimList(1, page);
-    // }
-
-    // 찜(체험단/스토어) 리스트 전송 함수
     function sendZzimList(page, selectedValue) {
       let sendData = {
         'userSeq': userSeq,
@@ -443,7 +375,7 @@
         });
       });
     }
-    // 찜 - 체험단 리스트 렌더링 함수
+
     function renderZzimCustomerList(sendZzimCustomerInfos) {
       let htmlStr = "";
       $.map(sendZzimCustomerInfos, function (item) {
@@ -457,7 +389,7 @@
       });
       $("#sendZzimListHtml").html(htmlStr);
     }
-    // 찜 - 스토어 리스트 렌더링 함수
+
     function renderZzimStoreList(sendZzimStoreInfos) {
       let htmlStr = "";
       $.map(sendZzimStoreInfos, function (item) {
@@ -473,7 +405,6 @@
       $("#sendZzimListHtml").html(htmlStr);
     }
 
-    // 작성한 글 리스트 전송 함수
     function writtenPostList(page) {
       let sendData = {
         'userSeq': userSeq,
@@ -495,7 +426,7 @@
         }
       });
     }
-    // 작성한 글 리스트 랜더링 함수
+
     function renderWrittenPostList(writtenPostInfos) {
       let htmlStr = "";
       $.map(writtenPostInfos, function (item) {
@@ -525,32 +456,26 @@
       let hasNext = paginationInfo.hasNext;
       let hasPrevious = paginationInfo.hasPrevious;
 
-      // 각 id에 맞는 위치에 데이터 뿌릴 변수명 = paginationContainer
       let paginationContainer = $("#" + page + "-pagination");
 
       let paginationHTML = '';
-      // 이전 버튼
       if (hasPrevious) {
         paginationHTML += '<button id="prev-block-button" class="btn btn-primary edit-btn" data-page="'
             + (parseInt(currentPage) - 1) + '">&lt;</button>';
       }
 
-      // 페이지 버튼들
       for (let i = startPage; i <= endPage; i++) {
         paginationHTML += '<button class="btn ' + (i == currentPage ? 'btn-secondary'
             : 'btn-primary') + ' edit-btn" data-page="' + i + '">' + i + '</button>';
       }
 
-      // 다음 버튼
       if (hasNext) {
         paginationHTML += '<button id="next-block-button" class="btn btn-primary edit-btn" data-page="'
             + (currentPage + 1) + '">&gt;</button>';
       }
 
-      // 각 id에 맞는 위치에 데이터 뿌릴 변수명에 paginationHTML 코드 입력.
       paginationContainer.html(paginationHTML);
 
-      // 이전 및 다음 버튼에 대한 페이지 이동처리
       $('#prev-block-button').off('click').on('click', function () {
         if (hasPrevious) {
           handlePageChange(page, currentPage - 1);
@@ -564,28 +489,17 @@
       });
     }
 
-
-    // 초기 zzim탭 로드
     sendZzimList(1, selectedValue);
 
-    // 찜 탭 클릭시, 우선 순위
     $("input[name='code']").on('change', function () {
       selectedValue = $(this).val();
       sendZzimList(1, selectedValue);
     });
 
-    // post 탭 클릭시,
     $("#post-tab").on('click', function () {
       writtenPostList(1);
     });
 
-    // 라디오 버튼 클릭 시, input value 에 따라 code 변경.
-    // $("input[name='code']").on('change', function () {
-    //   let select = $(this).val();
-    //   sendZzimList(1, select);
-    // });
-
-    // 페이지 버튼 클릭 이벤트
     $(document).on("click", ".btn.edit-btn", function (e) {
       let pageNumber = parseInt($(this).data("page"));
       if (pageNumber > 0) {
@@ -602,5 +516,7 @@
 
 
 </body>
+<!-- ======= Footer ======= -->
+<jsp:include page="/footer.jsp" />
 
 </html>

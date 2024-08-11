@@ -1,4 +1,4 @@
-package com.nuguna.freview.store.controller;
+package com.nuguna.freview.store.controller.page;
 
 import com.nuguna.freview.common.vo.user.UserVO;
 import com.nuguna.freview.security.jwtfilter.JwtContextHolder;
@@ -15,7 +15,8 @@ public class StoreMainPageController {
   public String customerMyBrandPage(Model model) {
     UserVO uvo = JwtContextHolder.getUserVO();
     log.info(uvo.getEmail());
-    return "store_main";
+    model.addAttribute("user", uvo);
+    return "store_mainpage";
   }
 
 }

@@ -2,6 +2,7 @@ package com.nuguna.freview.store.controller.page;
 
 import com.nuguna.freview.common.service.UserService;
 import com.nuguna.freview.common.vo.user.UserVO;
+import com.nuguna.freview.security.jwtfilter.JwtContextHolder;
 import com.nuguna.freview.store.service.StoreActivityPageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Controller
-
 public class StoreActivityPageController {
 
   private final StoreActivityPageService storeActivityPageService;
@@ -27,7 +27,7 @@ public class StoreActivityPageController {
 
   @RequestMapping("/store/activity")
   public String storeActivityPage(@RequestParam Long userSeq, Model model) {
-    UserVO loginUser = userService.getUserInfo(userSeq);
+    UserVO loginUser = JwtContextHolder.getUserVO();
     model.addAttribute("loginUser", loginUser);
     return "store-activity-page";
   }
