@@ -25,10 +25,10 @@ public class StoreBrandPageController {
   }
 
   @RequestMapping(value = "/my/brand", method = RequestMethod.GET)
-  public String storeMyBrandPage(@RequestParam Long storeSeq, Model model) {
+  public String storeMyBrandPage(Model model) {
     UserVO loginUser = JwtContextHolder.getUserVO();
     StoreBrandInfoResponseDTO storeBrandPageInfo = storeBrandPageService.getMyBrandPageInfo(
-        storeSeq);
+        loginUser.getSeq());
     model.addAttribute("loginUser", loginUser);
     model.addAttribute("brandInfo", storeBrandPageInfo);
     return "store-my-brand-info";

@@ -26,7 +26,7 @@ public class StoreExperiencePageController {
   }
 
   @RequestMapping("/store/experience")
-  public String storeActivityPage(@RequestParam Long userSeq, Model model) {
+  public String storeActivityPage(Model model) {
     UserVO loginUser = JwtContextHolder.getUserVO();
     model.addAttribute("loginUser", loginUser);
     return "store-experience-page";

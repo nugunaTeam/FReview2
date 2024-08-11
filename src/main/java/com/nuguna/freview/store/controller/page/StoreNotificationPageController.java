@@ -25,7 +25,7 @@ public class StoreNotificationPageController {
   }
 
   @RequestMapping("/store/notification")
-  public String storeNotificationPage(@RequestParam Long userSeq, Model model) {
+  public String storeNotificationPage(Model model) {
     UserVO loginUser = JwtContextHolder.getUserVO();
     model.addAttribute("loginUser", loginUser);
     return "store-notification-page";

@@ -13,9 +13,8 @@ public class StoreMainPageController {
 
   @RequestMapping("/store/main-page")
   public String customerMyBrandPage(Model model) {
-    UserVO uvo = JwtContextHolder.getUserVO();
-    log.info(uvo.getEmail());
-    model.addAttribute("user", uvo);
+    UserVO loginUser = JwtContextHolder.getUserVO();
+    model.addAttribute("loginUser", loginUser);
     return "store_mainpage";
   }
 
