@@ -147,7 +147,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="/my/brand-info?userSeq=${userSeq}">
+               href="/my/brand">
                 <i class="bi bi-award"></i>
                 <span>브랜딩</span>
             </a>
@@ -155,7 +155,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/store/experience?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/store/experience">
                 <i class="bi bi-grid"></i>
                 <span>체험</span>
             </a>
@@ -163,7 +163,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/store/activity?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/store/activity">
                 <i class="bi bi-card-checklist"></i>
                 <span>활동</span>
             </a>
@@ -171,7 +171,7 @@
 
         <li class="nav-item">
             <a class="nav-link"
-               href="${pageContext.request.contextPath}/store/notification?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/store/notification">
                 <i class="bi bi-bell"></i>
                 <span>알림</span>
             </a>
@@ -179,7 +179,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/store/my-info?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/store/personal-info">
                 <i class="bi bi-person"></i>
                 <span>개인정보수정</span>
             </a>
