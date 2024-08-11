@@ -158,7 +158,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="/my/brand-info?userSeq=${userSeq}">
+               href="/my/brand-info">
                 <i class="bi bi-grid"></i>
                 <span>브랜딩</span>
             </a>
@@ -166,7 +166,7 @@
 
         <li class="nav-item">
             <a class="nav-link"
-               href="${pageContext.request.contextPath}/my/experience?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/my/experience">
                 <i class="bi bi-card-checklist"></i>
                 <span>체험</span>
             </a>
@@ -175,7 +175,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed "
-               href="${pageContext.request.contextPath}/my/activity?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/my/activity">
                 <i class="bi bi-bell"></i>
                 <span>활동</span>
             </a>
@@ -184,7 +184,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/my/notification?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/my/notification">
                 <i class="bi bi-card-checklist"></i>
                 <span>알림</span>
             </a>
@@ -193,7 +193,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/my/personal-info?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/my/personal-info">
                 <i class="bi bi-person"></i>
                 <span>개인정보수정</span>
             </a>
@@ -344,7 +344,6 @@
     // 지원 리스트 전송 함수
     function sendMyAppliedExperienceList(page) {
       let sendData = {
-        'userSeq': userSeq,
         'targetPage': page
       };
       $.ajax({
@@ -367,7 +366,6 @@
     // 제안 리스트 전송 함수
     function sendProposalToMeExperienceList(page) {
       let sendData = {
-        'userSeq': userSeq,
         'targetPage': page
       };
       $.ajax({
@@ -390,7 +388,6 @@
     // 수락 리스트(체험) 데이터 요청 함수
     function sendMyAcceptedApplyList(page) {
       let sendData = {
-        'userSeq': userSeq,
         'targetPage': page
       };
       $.ajax({
@@ -413,7 +410,6 @@
     // 수락 리스트(제안) 데이터 요청 함수
     function sendMyAcceptedProposalList(page) {
       let sendData = {
-        'userSeq': userSeq,
         'targetPage': page
       };
       $.ajax({
@@ -464,7 +460,7 @@
         htmlStr += "<div class='card-body-y mt-2'>";
         htmlStr += "<p><a href='/brand/" + item.storeSeq + "'>" + item.storeName
             + "</a>님으로부터 <span style='color: chocolate'>체험 제안</span>이 왔어요!</p>";
-        htmlStr += "<p>제안 내용: " + item.proposalDetails + "</p>";
+        htmlStr += "<p>제안 내용: " + (item.proposalDetails !== null ? item.proposalDetails : "") + "</p>";
         htmlStr += "<p>진행 현황: ";
         if (item.status === 'REJECTED') {
           htmlStr += "<span style='color:mediumvioletred'>거절함</span>";
@@ -600,9 +596,6 @@
       $.ajax({
         type: "POST",
         url: "/api/customer/my/experience/" + experienceSeq + "/accept",
-        data: {
-          'userSeq': userSeq
-        },
         success: function () {
           alert('해당 체험 제안을 수락했습니다.');
           sendProposalToMeExperienceList(currentPage);
@@ -619,9 +612,6 @@
       $.ajax({
         type: "POST",
         url: "/api/customer/my/experience/" + experienceSeq + "/reject",
-        data: {
-          'userSeq': userSeq
-        },
         success: function () {
           alert('해당 체험 제안을 거절했습니다.');
           sendProposalToMeExperienceList(currentPage);

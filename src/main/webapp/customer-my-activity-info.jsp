@@ -139,7 +139,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="/my/brand-info?userSeq=${userSeq}">
+               href="/my/brand-info">
                 <i class="bi bi-grid"></i>
                 <span>브랜딩</span>
             </a>
@@ -147,7 +147,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/my/experience?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/my/experience">
                 <i class="bi bi-card-checklist"></i>
                 <span>체험</span>
             </a>
@@ -156,7 +156,7 @@
 
         <li class="nav-item">
             <a class="nav-link "
-               href="${pageContext.request.contextPath}/my/activity?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/my/activity">
                 <i class="bi bi-bell"></i>
                 <span>활동</span>
             </a>
@@ -165,7 +165,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/my/notification?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/my/notification">
                 <i class="bi bi-card-checklist"></i>
                 <span>알림</span>
             </a>
@@ -174,7 +174,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/my/personal-info?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/my/personal-info">
                 <i class="bi bi-person"></i>
                 <span>개인정보수정</span>
             </a>
@@ -268,7 +268,6 @@
 <script src="/assets/js/main.js"></script>
 <script>
   $(document).ready(function () {
-    let userSeq = '${userSeq}'; // 사용자 시퀀스
     let currentPage = 1; // 현재 페이지 번호
 
     // 페이지 로드 시 좋아요 리스트를 가져옵니다.
@@ -277,7 +276,6 @@
     // 좋아요한 글 리스트를 가져오는 함수
     function sendMyLikedPosts(page) {
       let sendData = {
-        'userSeq': userSeq,
         'targetPage': page
       };
 
@@ -305,7 +303,7 @@
         htmlStr += "<div class='card-body mt-2'>";
 
         htmlStr += "<p><a href='/brand/" + item.authorSeq + "'>" + item.storeName + "</a> 님의 ";
-        htmlStr += "<a href='/post/" + item.seq
+        htmlStr += "<a href='/mojip/" + item.seq
             + "'>모집글</a>에 <span style='color : green'>좋아요</span> 했습니다.</p>";
 
         // 날짜와 좋아요 수를 상단에 표시
@@ -325,7 +323,6 @@
     // 찜한 스토어 리스트를 가져오는 함수
     function sendZzimStoreList(page) {
       let sendData = {
-        'userSeq': userSeq,
         'targetPage': page
       };
 
@@ -370,7 +367,6 @@
     // 찜한 체험단 리스트를 가져오는 함수
     function sendZzimCustomerList(page) {
       let sendData = {
-        'userSeq': userSeq,
         'targetPage': page
       };
 

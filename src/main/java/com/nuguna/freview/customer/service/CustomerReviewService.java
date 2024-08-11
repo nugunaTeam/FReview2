@@ -10,11 +10,11 @@ import com.nuguna.freview.customer.dto.response.CustomerOtherReviewsRetrieveResp
 public interface CustomerReviewService {
 
   CustomerMyReviewRegisterResponseDTO registerCustomerReview(
-      CustomerMyReviewRegisterRequestDTO customerMyReviewRegisterRequestDTO);
+      Long userSeq, CustomerMyReviewRegisterRequestDTO customerMyReviewRegisterRequestDTO);
 
   CustomerMyReviewsRetrieveResponseDTO getCustomerMyReviews(
-      CustomerMyReviewsRetrieveRequestDTO customerMyReviewsRetrieveRequestDTO);
+      Long userSeq, CustomerMyReviewsRetrieveRequestDTO customerMyReviewsRetrieveRequestDTO);
 
   CustomerOtherReviewsRetrieveResponseDTO getOtherCustomerReviews(
-      CustomerOtherReviewsRetrieveRequestDTO customerOtherReviewsRetrieveRequestDTO);
+      Long userSeq, CustomerOtherReviewsRetrieveRequestDTO customerOtherReviewsRetrieveRequestDTO);
 }

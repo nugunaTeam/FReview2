@@ -1,4 +1,4 @@
-package com.nuguna.freview.customer.mapper;
+package com.nuguna.freview.store.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

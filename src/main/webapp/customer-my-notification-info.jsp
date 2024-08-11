@@ -157,7 +157,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="/my/brand-info?userSeq=${userSeq}">
+               href="/my/brand-info">
                 <i class="bi bi-grid"></i>
                 <span>브랜딩</span>
             </a>
@@ -165,7 +165,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/my/experience?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/my/experience">
                 <i class="bi bi-card-checklist"></i>
                 <span>체험</span>
             </a>
@@ -174,7 +174,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed "
-               href="${pageContext.request.contextPath}/my/activity?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/my/activity">
                 <i class="bi bi-bell"></i>
                 <span>활동</span>
             </a>
@@ -183,7 +183,7 @@
 
         <li class="nav-item">
             <a class="nav-link "
-               href="${pageContext.request.contextPath}/my/notification?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/my/notification">
                 <i class="bi bi-card-checklist"></i>
                 <span>알림</span>
             </a>
@@ -192,7 +192,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/my/personal-info?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/my/personal-info">
                 <i class="bi bi-person"></i>
                 <span>개인정보수정</span>
             </a>
@@ -312,7 +312,6 @@
     function sendZZimedMeStoreList(page) {
       let isRead = $("input[name='isReadStores']:checked").val() === 'true';
       let sendData = {
-        'userSeq': userSeq,
         'isRead': isRead,
         'targetPage': page
       };
@@ -337,7 +336,6 @@
     function sendZzimCustomerList(page) {
       let isRead = $("input[name='isReadCustomers']:checked").val() === 'true';
       let sendData = {
-        'userSeq': userSeq,
         'isRead': isRead,
         'targetPage': page
       };
@@ -364,7 +362,7 @@
       $.map(zzimedMeStoreInfos, function (item) {
         htmlStr += "<div class='card'>";
         htmlStr += "<div class='card-body-y mt-2'>";
-        htmlStr += "<p><a href='/brand/" + item.storeSeq + "?fromUserSeq=${userSeq}" + "'>"
+        htmlStr += "<p><a href='/brand/" + item.storeSeq + "'>"
             + item.storeName + "</a>님이 나를 <span style='color: mediumvioletred'>찜</span>하였습니다.</p>";
         htmlStr += "<p class='p-last'>" + item.createdAt.year + "년 " + item.createdAt.monthValue
             + "월 " + item.createdAt.dayOfMonth + "일</p>";
@@ -384,7 +382,7 @@
       $.map(zzimedMeCustomerInfos, function (item) {
         htmlStr += "<div class='card'>";
         htmlStr += "<div class='card-body-y mt-2'>";
-        htmlStr += "<p><a href='/brand/" + item.customerSeq + "?fromUserSeq=${userSeq}" + "'>"
+        htmlStr += "<p><a href='/brand/" + item.customerSeq +  "'>"
             + item.nickname + "</a>님이 나를 <span style='color: mediumvioletred'>찜</span>하였습니다.</p>";
         htmlStr += "<p class='p-last'>" + item.createdAt.year + "년 " + item.createdAt.monthValue
             + "월 " + item.createdAt.dayOfMonth + "일</p>";
@@ -468,7 +466,6 @@
       $.ajax({
         type: "POST",
         url: "/api/customer/my/notification/" + notificationSeq,
-        data: $.param({userSeq: userSeq}),
         contentType: "application/x-www-form-urlencoded",
         dataType: "text",
         success: function (response) {

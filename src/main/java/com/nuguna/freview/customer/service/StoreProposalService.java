@@ -1,9 +1,9 @@
 package com.nuguna.freview.customer.service;
 
-import com.nuguna.freview.customer.dto.request.ProposalToCustomerRequestDTO;
+import com.nuguna.freview.store.dto.request.StoreProposalToCustomerRequestDTO;
 
-public interface CustomerProposalService {
+public interface StoreProposalService {
 
-  void makeProposalToCustomer(ProposalToCustomerRequestDTO proposalToCustomerRequestDTO);
+  void makeProposalToCustomer(Long storeSeq, StoreProposalToCustomerRequestDTO storeProposalToCustomerRequestDTO);
 
 }

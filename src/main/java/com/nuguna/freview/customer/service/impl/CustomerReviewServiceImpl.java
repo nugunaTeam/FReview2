@@ -38,8 +38,7 @@ public class CustomerReviewServiceImpl implements CustomerReviewService {
 
   @Override
   public CustomerMyReviewRegisterResponseDTO registerCustomerReview(
-      CustomerMyReviewRegisterRequestDTO customerMyReviewRegisterRequestDTO) {
-    Long userSeq = customerMyReviewRegisterRequestDTO.getUserSeq(); // Customer의 Seq
+      Long userSeq, CustomerMyReviewRegisterRequestDTO customerMyReviewRegisterRequestDTO) {
     Long reviewSeq = customerMyReviewRegisterRequestDTO.getReviewSeq();
     String reviewUrl = customerMyReviewRegisterRequestDTO.getReviewUrl();
 
@@ -59,8 +58,7 @@ public class CustomerReviewServiceImpl implements CustomerReviewService {
   @Override
   @Transactional(readOnly = true)
   public CustomerMyReviewsRetrieveResponseDTO getCustomerMyReviews(
-      CustomerMyReviewsRetrieveRequestDTO customerMyReviewsRetrieveRequestDTO) {
-    Long userSeq = customerMyReviewsRetrieveRequestDTO.getUserSeq();
+      Long userSeq, CustomerMyReviewsRetrieveRequestDTO customerMyReviewsRetrieveRequestDTO) {
     Integer currentPage = customerMyReviewsRetrieveRequestDTO.getPage();
 
     int offset = (currentPage - 1) * CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_SIZE;
@@ -93,8 +91,7 @@ public class CustomerReviewServiceImpl implements CustomerReviewService {
 
   @Override
   public CustomerOtherReviewsRetrieveResponseDTO getOtherCustomerReviews(
-      CustomerOtherReviewsRetrieveRequestDTO customerOtherReviewsRetrieveRequestDTO) {
-    Long userSeq = customerOtherReviewsRetrieveRequestDTO.getUserSeq();
+      Long userSeq, CustomerOtherReviewsRetrieveRequestDTO customerOtherReviewsRetrieveRequestDTO) {
     Integer currentPage = customerOtherReviewsRetrieveRequestDTO.getPage();
 
     int offset = (currentPage - 1) * CUSTOMER_MY_BRAND_REVIEW_LOG_PAGE_SIZE;

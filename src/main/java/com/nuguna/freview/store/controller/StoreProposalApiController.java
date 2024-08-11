@@ -1,6 +1,7 @@
-package com.nuguna.freview.customer.controller;
+package com.nuguna.freview.store.controller;
 
-import com.nuguna.freview.customer.dto.request.ProposalToCustomerRequestDTO;
+import com.nuguna.freview.security.jwtfilter.JwtContextHolder;
+import com.nuguna.freview.store.dto.request.StoreProposalToCustomerRequestDTO;
 import com.nuguna.freview.customer.service.StoreProposalService;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +27,9 @@ public class StoreProposalApiController {
 
   @RequestMapping(value = "/proposal", method = RequestMethod.POST)
   public ResponseEntity<Void> proposeToCustomer(
-      @Valid @RequestBody ProposalToCustomerRequestDTO proposalToCustomerRequestDTO) {
-    log.info("intro in proposeToCustomer");
-    storeProposalService.makeProposalToCustomer(proposalToCustomerRequestDTO);
+      @Valid @RequestBody StoreProposalToCustomerRequestDTO storeProposalToCustomerRequestDTO) {
+    Long storeSeq = JwtContextHolder.getUserVO().getSeq();
+    storeProposalService.makeProposalToCustomer(storeSeq, storeProposalToCustomerRequestDTO);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 }
