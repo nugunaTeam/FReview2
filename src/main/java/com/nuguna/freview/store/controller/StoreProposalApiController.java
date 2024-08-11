@@ -1,7 +1,7 @@
 package com.nuguna.freview.customer.controller;
 
 import com.nuguna.freview.customer.dto.request.ProposalToCustomerRequestDTO;
-import com.nuguna.freview.customer.service.CustomerProposalService;
+import com.nuguna.freview.customer.service.StoreProposalService;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,21 +14,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/other/customer")
-public class CustomerProposalApiController {
+@RequestMapping("/api/store")
+public class StoreProposalApiController {
 
-  private final CustomerProposalService customerProposalService;
+  private final StoreProposalService storeProposalService;
 
   @Autowired
-  public CustomerProposalApiController(CustomerProposalService customerProposalService) {
-    this.customerProposalService = customerProposalService;
+  public StoreProposalApiController(StoreProposalService storeProposalService) {
+    this.storeProposalService = storeProposalService;
   }
 
   @RequestMapping(value = "/proposal", method = RequestMethod.POST)
   public ResponseEntity<Void> proposeToCustomer(
       @Valid @RequestBody ProposalToCustomerRequestDTO proposalToCustomerRequestDTO) {
     log.info("intro in proposeToCustomer");
-    customerProposalService.makeProposalToCustomer(proposalToCustomerRequestDTO);
+    storeProposalService.makeProposalToCustomer(proposalToCustomerRequestDTO);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 }
