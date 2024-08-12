@@ -72,7 +72,6 @@ public class StoreActivityPageServiceImpl implements StoreActivityPageService {
   public StoreActivitySendZzimStoreResponseDTO storeActivitySendZzimStore(Long userSeq,
                                                   int currentPage) throws IllegalPageAccessException {
     int zzimStoreCount = storeActivityPageMapper.storeActivitySendZzimStoreCount(userSeq);
-    log.info("zzimStoreCount : ", zzimStoreCount);
     PaginationInfoResponseDTO paginationInfo = PaginationUtil.makePaginationViewInfo(
         currentPage, zzimStoreCount, STORE_LIST_PAGE_SIZE, STORE_LIST_PAGE_BLOCK_SIZE
     );

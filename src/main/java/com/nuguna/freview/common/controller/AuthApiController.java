@@ -33,8 +33,6 @@ public class AuthApiController {
 
   @RequestMapping(value = "/api/auth/check-id", method = RequestMethod.POST)
   public ResponseEntity<RegisterCheckInfoResponseDTO> checkDuplicatedId(@Valid @RequestBody RegisterCheckIdRequestDTO registerCheckIdRequestDTO) {
-    log.info("아이디 중복 확인");
-    log.info(registerCheckIdRequestDTO.getEmail());
     boolean result = registerService.checkDuplicatedEmail(registerCheckIdRequestDTO);
 
     RegisterCheckInfoResponseDTO registerCheckInfoResponseDTO = new RegisterCheckInfoResponseDTO(result);
@@ -45,13 +43,8 @@ public class AuthApiController {
   @RequestMapping(value = "/api/auth/send-randomNumber-toEmail", method = RequestMethod.POST)
   public ResponseEntity<RegisterSendEmailResponseDTO> sendEmail(@Valid @RequestBody RegisterSendEmailRequestDTO registerSendEmailRequestDTO) {
 
-    log.info("이메일 보내기 확인");
-    log.info(registerSendEmailRequestDTO.getEmail());
-    log.info(registerSendEmailRequestDTO.getRandomNumber());
-
     String randomNumber = registerSendEmailRequestDTO.getRandomNumber();
     String toEmail = registerSendEmailRequestDTO.getEmail();
-
 
     String title = "[FReview] 이메일 인증번호 확인";
     String content = "인증번호는 "+randomNumber +" 입니다";
@@ -67,8 +60,6 @@ public class AuthApiController {
   @RequestMapping(value = "/api/auth/nickname-check", method = RequestMethod.POST)
   public ResponseEntity<RegisterCheckInfoResponseDTO> checkDuplicatedNick(@Valid @RequestBody
       RegisterCheckNickNameRequestDTO requestCheckNicknameRequestDTO) {
-    log.info("닉네임 중복 확인");
-    log.info(requestCheckNicknameRequestDTO.getNickname());
 
     boolean result = registerService.checkDuplicatedNickName(requestCheckNicknameRequestDTO);
 
@@ -79,8 +70,7 @@ public class AuthApiController {
 
   @RequestMapping(value = "/api/auth/register", method = RequestMethod.POST)
   public void register(@Valid @RequestBody RegisterRequestDTO registerRequestDTO) {
-    log.info("닉네임 중복 확인");
-    log.info(registerRequestDTO.getCode());
+
     if(registerRequestDTO.getCode().equals("CUSTOMER")){
       registerService.cutomerRegist(registerRequestDTO);
     }else if(registerRequestDTO.getCode().equals("STORE")){
@@ -90,8 +80,6 @@ public class AuthApiController {
 
   @RequestMapping(value = "/api/auth/business-number-check", method = RequestMethod.POST)
   public ResponseEntity<RegisterCheckInfoResponseDTO> checkBuisnessNumber(@Valid @RequestBody RegisterCheckBusinessNumberDTO registerCheckBusinessNumberDTO) {
-    log.info("사업자번호 확인");
-    log.info(registerCheckBusinessNumberDTO.getBuisnessNumber());
     boolean result = registerService.checkBusinessNumber(registerCheckBusinessNumberDTO);
     RegisterCheckInfoResponseDTO registerCheckInfoResponseDTO = new RegisterCheckInfoResponseDTO(result);
     return new ResponseEntity<>(registerCheckInfoResponseDTO,HttpStatus.OK);

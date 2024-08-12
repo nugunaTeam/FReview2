@@ -17,11 +17,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JWTfilter extends OncePerRequestFilter {
 
   final JwtUtil jwtutl;
-  private final JwtUserService jwtUserService;
 
-  public JWTfilter(JwtUtil jwtutl, JwtUserService jwtUserService) {
+  public JWTfilter(JwtUtil jwtutl) {
     this.jwtutl = jwtutl;
-    this.jwtUserService = jwtUserService;
   }
 
 
@@ -29,7 +27,6 @@ public class JWTfilter extends OncePerRequestFilter {
   protected void doFilterInternal(HttpServletRequest httpServletRequest,
       HttpServletResponse httpServletResponse, FilterChain filterChain)
       throws ServletException, IOException {
-    log.info("JWTfilter doFilterInternal");
     Cookie[] cookies = httpServletRequest.getCookies();
     String accessToken = null;
     String refreshToken = null;

@@ -26,16 +26,6 @@ public class UserApiController {
     this.userService = userService;
   }
 
-  @RequestMapping(value = "/signup/form/customer", method = RequestMethod.POST)
-  public ResponseEntity<CustomerSignupResponseDTO> signup(
-      @Valid @RequestBody CustomerSignupRequestDTO customerSignupRequestDTO) {
-    log.info("체험단 회원 가입 진행");
-    userService.signup(customerSignupRequestDTO);
-    CustomerSignupResponseDTO customerSignupResponseDTO = new CustomerSignupResponseDTO(
-        "폼 회원 가입이 완료되었습니다.");
-    return new ResponseEntity<>(customerSignupResponseDTO, HttpStatus.OK);
-  }
-
   @RequestMapping(value = "withdrawal/{userSeq}", method = RequestMethod.POST)
   public HttpStatus withdrawalUser(@PathVariable Long userSeq) {
     if (userService.withdrawalUser(userSeq)) {

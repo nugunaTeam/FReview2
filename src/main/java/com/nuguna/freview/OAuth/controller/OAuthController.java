@@ -50,7 +50,6 @@ public class OAuthController {
   public String goToRegisterPage(Model model, HttpServletRequest httpRequest) {
 
     GoogleUserInfoDTO userInfo = (GoogleUserInfoDTO)httpRequest.getSession().getAttribute("OAuthUser");
-    System.out.println(userInfo);
     model.addAttribute("userInfo", userInfo);
     return "/common-google-register";
   }

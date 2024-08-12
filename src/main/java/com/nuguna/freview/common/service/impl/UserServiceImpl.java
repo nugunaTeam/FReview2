@@ -24,7 +24,6 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public void signup(CustomerSignupRequestDTO customerSignupRequestDTO) {
-    log.info("UserServiceImpl - signup");
     UserVO uvo = UserVO.builder()
         .nickname(customerSignupRequestDTO.getNickname())
         .code(customerSignupRequestDTO.getCode())
@@ -35,11 +34,6 @@ public class UserServiceImpl implements UserService {
         .loginType("FORM")
         .build();
     userMapper.insertCustomer(uvo);
-  }
-
-  @Override
-  public UserVO getUserInfo(Long userSeq) {
-    return userMapper.selectUser(userSeq);
   }
 
   @Override

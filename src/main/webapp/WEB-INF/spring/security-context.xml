@@ -31,7 +31,6 @@
 
 	<beans:bean id="jwtFilter" class="com.nuguna.freview.security.jwtfilter.JWTfilter">
 		<beans:constructor-arg name="jwtutl" ref="jwtUtil"/>
-		<beans:constructor-arg name="jwtUserService" ref="jwtUserSerive"/>
 	</beans:bean>
 
 	<http pattern="/assets/**"  security="none"/>

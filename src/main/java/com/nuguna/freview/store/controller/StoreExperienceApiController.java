@@ -76,7 +76,6 @@ public class StoreExperienceApiController {
   // 체험일자는 DATE 타입으로 들어온다.
   @RequestMapping(value = "/experience-date-update", method = RequestMethod.POST)
   public ResponseEntity<?> updateExperienceDate(@RequestParam Long experienceSeq,  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate experienceDate){
-    log.info("experinec" + experienceSeq + "/" + experienceDate);
     try{
       storeExperiencePageService.updateExperienceDate(experienceSeq, experienceDate);
       return new ResponseEntity<>(HttpStatus.OK);
@@ -92,7 +91,6 @@ public class StoreExperienceApiController {
   public ResponseEntity<?> updateExperienceStatus(@RequestParam Long toUserSeq, @RequestParam Long experienceSeq, @RequestParam String status){
     try{
       storeExperiencePageService.updateExperienceStatus(toUserSeq, experienceSeq, status);
-      log.info(experienceSeq + " 씨큐다!" + status + " 변경될값");
       return new ResponseEntity<>(HttpStatus.OK);
     } catch (Exception e){
       e.printStackTrace();

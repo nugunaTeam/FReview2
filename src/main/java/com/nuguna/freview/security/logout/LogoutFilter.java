@@ -16,8 +16,7 @@ public class LogoutFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest httpServletRequest,
       HttpServletResponse httpServletResponse, FilterChain filterChain)
-      throws ServletException, IOException {
-    log.info("doFilter");
+      throws IOException {
 
     Cookie[] cookies = httpServletRequest.getCookies();
 

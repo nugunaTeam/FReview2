@@ -24,7 +24,6 @@ public class AuthController {
 
   @RequestMapping(value = "/login-page", method = RequestMethod.GET)
   public String goToLogin(Model model) {
-    log.info("로그인 페이지로 이동");
     String googleLoginUrl = oauthService.getLoginFormUrl();
     model.addAttribute("googleLoginUrl", googleLoginUrl);
     return "common-login";
@@ -32,13 +31,11 @@ public class AuthController {
 
   @RequestMapping(value = "/register-page", method = RequestMethod.GET)
   public String goToRegister() {
-    log.info("회원가입 페이지로 이동");
     return "common-register";
   }
 
   @RequestMapping(value = "/login-fail-page", method = RequestMethod.GET)
   public String goToLoginFail() {
-    log.info("로그인 에러 페이지로 이동");
     return "common-login-fail";
   }
 

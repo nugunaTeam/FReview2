@@ -55,7 +55,6 @@ public class SendMailUtil {
         }
       });
     } catch(Exception e){
-      System.out.println("Session setting 실패");
       e.printStackTrace();
     }
 
@@ -73,11 +72,9 @@ public class SendMailUtil {
       msg.setContent(content, "text/html; charset=utf-8");
 
       Transport.send(msg);
-      System.out.println("메일 보내기 성공");
     } catch(Exception e){
 
       e.printStackTrace();
-      System.out.println("메일 보내시 실패");
     }
   }
 }

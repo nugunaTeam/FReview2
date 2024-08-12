@@ -28,7 +28,6 @@ public class RegisterServiceImpl implements RegisterService {
   public boolean checkDuplicatedEmail(RegisterCheckIdRequestDTO registerCheckIdRequestDTO) {
     boolean result = false;
     String email = registerCheckIdRequestDTO.getEmail();
-    log.info(email);
     result = registerMapper.getDuplicatedEmail(email);
     return result;
   }
@@ -38,14 +37,12 @@ public class RegisterServiceImpl implements RegisterService {
       RegisterCheckNickNameRequestDTO requestCheckNicknameRequestDTO) {
     boolean result = false;
     String nickName = requestCheckNicknameRequestDTO.getNickname();
-    log.info(nickName);
     result = registerMapper.getDuplicatedNickName(nickName);
     return result;
   }
 
   @Override
   public void cutomerRegist(RegisterRequestDTO registerRequestDTO) {
-    log.info("회원가입 서비스");
     String shaPassword = shaUtil.sha256Encoding(registerRequestDTO.getPassword());
     UserVO uvo = UserVO.builder()
         .email(registerRequestDTO.getEmail())
@@ -56,7 +53,6 @@ public class RegisterServiceImpl implements RegisterService {
         .code(registerRequestDTO.getCode())
         .loginType("FORM")
         .isWithDrawn(false).build();
-    log.info(uvo.toString());
     registerMapper.insertCustomerInfo(uvo);
   }
 
@@ -71,7 +67,6 @@ public class RegisterServiceImpl implements RegisterService {
 
   @Override
   public void storeRegist(RegisterRequestDTO registerRequestDTO) {
-    log.info("회원가입 서비스");
     String shaPassword = shaUtil.sha256Encoding(registerRequestDTO.getPassword());
     UserVO uvo = UserVO.builder()
         .email(registerRequestDTO.getEmail())
