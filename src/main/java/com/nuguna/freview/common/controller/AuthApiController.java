@@ -36,7 +36,6 @@ public class AuthApiController {
     log.info("아이디 중복 확인");
     log.info(registerCheckIdRequestDTO.getEmail());
     boolean result = registerService.checkDuplicatedEmail(registerCheckIdRequestDTO);
-    log.info("이메일 중복 결과 "+result);
 
     RegisterCheckInfoResponseDTO registerCheckInfoResponseDTO = new RegisterCheckInfoResponseDTO(result);
 
@@ -72,7 +71,7 @@ public class AuthApiController {
     log.info(requestCheckNicknameRequestDTO.getNickname());
 
     boolean result = registerService.checkDuplicatedNickName(requestCheckNicknameRequestDTO);
-    log.info("이메일 중복 결과 "+result);
+
    RegisterCheckInfoResponseDTO registerCheckInfoResponseDTO = new RegisterCheckInfoResponseDTO(result);
 
    return new ResponseEntity<>(registerCheckInfoResponseDTO,HttpStatus.OK);
