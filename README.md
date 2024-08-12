@@ -9,13 +9,13 @@ FReview는 리뷰가 필요한 스토어와 무상으로 제품을 제공받는 
 
 ## nugunaTeam?
 
-김하람 (인증|인가) - https://github.com/ram9611
+팀장) 최원준 (체험단|공통Util) - https://github.com/junslog
 >
-윤승 (관리자|공통|시스템) - https://github.com/seungdangdang
+팀원) 김하람 (인증|인가) - https://github.com/ram9611
 >
-최원준 (체험단) - https://github.com/junslog
+팀원) 윤승 (관리자|공통|시스템) - https://github.com/seungdangdang
 >
-허영롱 (스토어) - https://github.com/yeong1203
+팀원) 허영롱 (스토어) - https://github.com/yeong1203
 
 ## **Description**
 
