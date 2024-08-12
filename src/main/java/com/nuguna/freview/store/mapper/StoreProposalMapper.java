@@ -1,10 +1,10 @@
-package com.nuguna.freview.customer.mapper;
+package com.nuguna.freview.store.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 @Mapper
-public interface CustomerProposalMapper {
+public interface StoreProposalMapper {
 
   String getUserCode(@Param("userSeq") Long userSeq);
 

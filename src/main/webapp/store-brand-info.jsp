@@ -205,11 +205,9 @@
                     }
 
                     $('#zzimButton').on('click', function () {
-                      const fromUserSeq = ${fromUserSeq};
                       const userSeq = ${userSeq};
 
                       const data = {
-                        fromUserSeq: fromUserSeq,
                         toUserSeq: userSeq
                       };
 

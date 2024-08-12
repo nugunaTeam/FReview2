@@ -7,6 +7,7 @@ import com.nuguna.freview.customer.dto.response.CustomerMyReviewRegisterResponse
 import com.nuguna.freview.customer.dto.response.CustomerMyReviewsRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerOtherReviewsRetrieveResponseDTO;
 import com.nuguna.freview.customer.service.CustomerReviewService;
+import com.nuguna.freview.security.jwtfilter.JwtContextHolder;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,9 @@ public class CustomerReviewApiController {
   public ResponseEntity<CustomerMyReviewRegisterResponseDTO> registerCustomerReview(
       @Valid @RequestBody CustomerMyReviewRegisterRequestDTO customerMyReviewRegisterRequestDTO
   ) {
+    Long userSeq = JwtContextHolder.getUserVO().getSeq();
     CustomerMyReviewRegisterResponseDTO responseDTO = reviewService.registerCustomerReview(
-        customerMyReviewRegisterRequestDTO);
+        userSeq, customerMyReviewRegisterRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
   }
 
@@ -42,8 +44,9 @@ public class CustomerReviewApiController {
   public ResponseEntity<CustomerMyReviewsRetrieveResponseDTO> getCustomerReviews(
       @Valid @RequestBody CustomerMyReviewsRetrieveRequestDTO customerMyReviewsRetrieveRequestDTO
   ) {
+    Long userSeq = JwtContextHolder.getUserVO().getSeq();
     CustomerMyReviewsRetrieveResponseDTO responseDTO = reviewService.getCustomerMyReviews(
-        customerMyReviewsRetrieveRequestDTO);
+        userSeq, customerMyReviewsRetrieveRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
@@ -51,8 +54,9 @@ public class CustomerReviewApiController {
   public ResponseEntity<CustomerOtherReviewsRetrieveResponseDTO> getOtherCustomerReviews(
       @Valid @RequestBody CustomerOtherReviewsRetrieveRequestDTO customerOtherReviewsRetrieveRequestDTO
   ) {
+    Long userSeq = JwtContextHolder.getUserVO().getSeq();
     CustomerOtherReviewsRetrieveResponseDTO responseDTO = reviewService.getOtherCustomerReviews(
-        customerOtherReviewsRetrieveRequestDTO);
+        userSeq, customerOtherReviewsRetrieveRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 

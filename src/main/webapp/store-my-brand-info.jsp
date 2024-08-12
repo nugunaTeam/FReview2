@@ -161,7 +161,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
             <a class="nav-link "
-               href="/store/brand-info?userSeq=${brandInfo.storeSeq}">
+               href="${pageContext.request.contextPath}/store/my/brand">
                 <i class="bi bi-grid"></i>
                 <span>브랜딩</span>
             </a>
@@ -169,7 +169,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/store/experience?userSeq=${brandInfo.storeSeq}">
+               href="${pageContext.request.contextPath}/store/experience">
                 <i class="bi bi-card-checklist"></i>
                 <span>체험</span>
             </a>
@@ -178,7 +178,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed "
-               href="${pageContext.request.contextPath}/store/activity?userSeq=${brandInfo.storeSeq}">
+               href="${pageContext.request.contextPath}/store/activity">
                 <i class="bi bi-bell"></i>
                 <span>활동</span>
             </a>
@@ -187,7 +187,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/store/notification?userSeq=${brandInfo.storeSeq}">
+               href="${pageContext.request.contextPath}/store/notification">
                 <i class="bi bi-card-checklist"></i>
                 <span>알림</span>
             </a>
@@ -196,7 +196,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/store/personal-info?userSeq=${brandInfo.storeSeq}">
+               href="${pageContext.request.contextPath}/store/personal-info">
                 <i class="bi bi-person"></i>
                 <span>개인정보수정</span>
             </a>
@@ -287,7 +287,6 @@
 
                     $('#profile-img-upload').change(function () {
                       var formData = new FormData();
-                      formData.append('userSeq', ${brandInfo.storeSeq});
                       formData.append('profileFile', this.files[0]);
 
                       $.ajax({
@@ -335,10 +334,9 @@
                                 $("#introduce-submit-btn").click(function () {
                                   var newIntroduce = $('#introduce-input').val();
                                   $.ajax({
-                                    url: '<%=request.getContextPath()%>/api/store/my/brand-info/introduce',
+                                    url: '${pageContext.request.contextPath}/api/store/my/brand-info/introduce',
                                     method: 'PUT',
                                     data: JSON.stringify({
-                                      'userSeq': ${brandInfo.storeSeq},
                                       'toIntroduce': newIntroduce
                                     }),
                                     contentType: 'application/json',
@@ -517,7 +515,6 @@
                                     method: 'PUT',
                                     contentType: 'application/json',
                                     data: JSON.stringify({
-                                      'userSeq': ${brandInfo.storeSeq},
                                       'toFoodTypes': selectedFoodTypes
                                     }),
                                     success: function (response) {
@@ -663,7 +660,6 @@
                                     method: 'PUT',
                                     contentType: 'application/json',
                                     data: JSON.stringify({
-                                      'userSeq': ${brandInfo.storeSeq},
                                       'toTags': selectedTags
                                     }),
                                     success: function (response) {

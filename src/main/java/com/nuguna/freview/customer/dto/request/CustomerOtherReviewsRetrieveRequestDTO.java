@@ -13,9 +13,5 @@ public class CustomerOtherReviewsRetrieveRequestDTO {
 
   @Min(1)
   @NotNull
-  private Long userSeq;
-
-  @Min(1)
-  @NotNull
   private Integer page;
 }

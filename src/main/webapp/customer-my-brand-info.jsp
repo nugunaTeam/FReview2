@@ -45,8 +45,6 @@
 
     </style>
 
-    <%-- <link rel="stylesheet"
-           href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">--%>
     <style>
       .alert-custom {
         background-color: transparent;
@@ -143,6 +141,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="/assets/vendor/tinymce/tinymce.min.js"></script>
 
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -154,42 +153,14 @@
 
 <body>
 
-<!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center">
-    <div class="d-flex align-items-center justify-content-between">
-        <a href="${pageContext.request.contextPath}/main?seq=${userSeq}&pagecode=Requester"
-           class="logo d-flex align-items-center">
-            <img src="/assets/img/logo/logo-vertical.png" alt="">
-            <span class="d-none d-lg-block">FReview</span>
-        </a>
-        <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div>
-
-    <nav class="header-nav ms-auto">
-        <ul class="d-flex align-items-center">
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-
-                    <img src="/user/${userSeq}/profile"
-                         alt="Profile"
-                         class="rounded-circle profile-img"
-                         style="margin-right: 5px;"
-                         onerror="this.onerror=null;this.src='/assets/img/basic/customer-basic-profile.png';">
-                    <span id="nickname-holder-head"
-                          class="d-none d-md-block"
-                          style="font-size : 18px;">${brandInfo.nickname}</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</header>
+<jsp:include page="/header.jsp" />
 
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
             <a class="nav-link "
-               href="/my/brand-info?userSeq=${userSeq}">
+               href="/my/brand-info">
                 <i class="bi bi-grid"></i>
                 <span>브랜딩</span>
             </a>
@@ -197,7 +168,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/my/experience?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/my/experience">
                 <i class="bi bi-card-checklist"></i>
                 <span>체험</span>
             </a>
@@ -206,7 +177,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed "
-               href="${pageContext.request.contextPath}/my/activity?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/my/activity">
                 <i class="bi bi-bell"></i>
                 <span>활동</span>
             </a>
@@ -215,7 +186,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/my/notification?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/my/notification">
                 <i class="bi bi-card-checklist"></i>
                 <span>알림</span>
             </a>
@@ -224,7 +195,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/my/personal-info?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/my/personal-info">
                 <i class="bi bi-person"></i>
                 <span>개인정보수정</span>
             </a>
@@ -266,15 +237,14 @@
 
                     $('#profile-img-upload').change(function () {
                       var formData = new FormData();
-                      formData.append('userSeq', ${userSeq});
                       formData.append('profileFile', this.files[0]);
 
                       $.ajax({
-                        url: '<%=request.getContextPath()%>/api/customer/my/brand-info/profile-photo-url',
+                        url: '${pageContext.request.contextPath}/api/customer/my/brand-info/profile-photo-url',
                         method: 'POST',
                         data: formData,
-                        contentType: false, // 필수
-                        processData: false, // 필수
+                        contentType: false,
+                        processData: false,
                         success: function (response) {
                           var newImageUrl = "/user/${userSeq}/profile?" + new Date().getTime();
                           $('.profile-img').attr('src', newImageUrl);
@@ -373,10 +343,9 @@
                                 $("#introduce-submit-btn").click(function () {
                                   var newIntroduce = $('#introduce-input').val();
                                   $.ajax({
-                                    url: '<%=request.getContextPath()%>/api/customer/my/brand-info/introduce',
+                                    url: '${pageContext.request.contextPath}/api/customer/my/brand-info/introduce',
                                     method: 'PUT',
                                     data: JSON.stringify({
-                                      'userSeq': ${userSeq},
                                       'toIntroduce': newIntroduce
                                     }),
                                     contentType: 'application/json',
@@ -409,10 +378,9 @@
                                 $("#nickname-submit-btn").click(function () {
                                   var newNickname = $('#nickname-input').val();
                                   $.ajax({
-                                    url: '<%=request.getContextPath()%>/api/customer/my/brand-info/nickname',
+                                    url: '${pageContext.request.contextPath}/api/customer/my/brand-info/nickname',
                                     method: 'PUT',
                                     data: JSON.stringify({
-                                      'userSeq': ${userSeq},
                                       'toNickname': newNickname
                                     }),
                                     contentType: 'application/json',
@@ -483,11 +451,10 @@
                                       var newAgeGroup = $('#age-group-input').val();
                                       // Ajax 요청
                                       $.ajax({
-                                        url: '<%=request.getContextPath()%>/api/customer/my/brand-info/age-group',
+                                        url: '${pageContext.request.contextPath}/api/customer/my/brand-info/age-group',
                                         method: 'PUT',
                                         contentType: 'application/json',
                                         data: JSON.stringify({
-                                          'userSeq': ${userSeq},
                                           'toAgeGroup': newAgeGroup
                                         }),
                                         success: function (response) {
@@ -679,11 +646,10 @@
                                   var selectedFoodTypes = $('#food-type-select').val();
 
                                   $.ajax({
-                                    url: '<%=request.getContextPath()%>/api/customer/my/brand-info/food-types',
+                                    url: '${pageContext.request.contextPath}/api/customer/my/brand-info/food-types',
                                     method: 'PUT',
                                     contentType: 'application/json',
                                     data: JSON.stringify({
-                                      'userSeq': ${userSeq},
                                       'toFoodTypes': selectedFoodTypes
                                     }),
                                     success: function (response) {
@@ -829,11 +795,10 @@
                                   var selectedTags = $('#tag-select').val();
 
                                   $.ajax({
-                                    url: '<%=request.getContextPath()%>/api/customer/my/brand-info/tags',
+                                    url: '${pageContext.request.contextPath}/api/customer/my/brand-info/tags',
                                     method: 'PUT',
                                     contentType: 'application/json',
                                     data: JSON.stringify({
-                                      'userSeq': ${userSeq},
                                       'toTags': selectedTags
                                     }),
                                     success: function (response) {
@@ -975,7 +940,7 @@
                                                        name="reviewSeq">
                                                 <input type="hidden" id="userSeq" name="userSeq"
                                                        value="${userSeq}">
-                                                <button id="reviewInsert" <%--type="submit"--%>
+                                                <button id="reviewInsert"
                                                         class="btn btn-primary">등록
                                                 </button>
                                             </form>
@@ -1000,13 +965,12 @@
                                 $('#reviewForm').on('submit', function (event) {
                                   event.preventDefault();
                                   var formData = {
-                                    userSeq: $('#userSeq').val(),
                                     reviewSeq: $('#reviewSeq').val(),
                                     reviewUrl: $('#reviewUrl').val()
                                   };
 
                                   $.ajax({
-                                    url: '/api/customer/review',
+                                    url: '${pageContext.request.contextPath}/api/customer/review',
                                     method: 'POST',
                                     contentType: 'application/json',
                                     data: JSON.stringify(formData),
@@ -1079,10 +1043,10 @@
                               function loadPage(page) {
 
                                 $.ajax({
-                                  url: '/api/customer/reviews',
+                                  url: '${pageContext.request.contextPath}/api/customer/reviews',
                                   method: 'POST',
                                   contentType: 'application/json',
-                                  data: JSON.stringify({'userSeq': ${userSeq}, 'page': page}),
+                                  data: JSON.stringify({'page': page}),
                                   success: function (response) {
                                     // 리뷰 목록 업데이트
                                     var reviewInfos = response.reviewInfos;
@@ -1142,6 +1106,8 @@
     </section>
 </main>
 
+
+
 <footer id="footer" class="footer">
     <div class="copyright">
         &copy; Copyright <strong><span><a
@@ -1154,6 +1120,7 @@
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
     </div>
 </footer><!-- End Footer -->
+
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>
@@ -1176,6 +1143,7 @@
 
 <!-- Template Main JS File -->
 <script src="/assets/js/main.js"></script>
+
 
 
 </body>
