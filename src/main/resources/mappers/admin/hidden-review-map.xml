@@ -27,7 +27,7 @@
         INNER JOIN user u2 ON r.customer_seq = u2.seq
     WHERE
       r.status = 'STORE_HIDDEN'
-    ORDER BY r.seq DESC
+    ORDER BY r.updated_at DESC
     LIMIT #{pageSize}
     OFFSET #{offset}
   </select>

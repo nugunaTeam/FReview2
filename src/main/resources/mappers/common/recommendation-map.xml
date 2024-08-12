@@ -139,7 +139,7 @@
     ORDER BY RAND()
   </select>
 
-  <select id="findRandomUsers" parameterType="int" resultMap="personalizedUserResultMap">
+  <select id="findRandomUsers" parameterType="map" resultMap="personalizedUserResultMap">
     SELECT u.seq,
            u.nickname,
            u.email,

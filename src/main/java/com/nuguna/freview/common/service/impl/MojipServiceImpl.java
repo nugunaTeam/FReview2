@@ -30,7 +30,8 @@ public class MojipServiceImpl implements MojipService {
 
   @Autowired
   public MojipServiceImpl(MojipMapper mojipMapper, UserInterestLogMapper userInterestLogMapper,
-      UserFoodTypeMapper userFoodTypeMapper, PostMapper postMapper1, RankPointLogMapper rankPointLogMapper1) {
+      UserFoodTypeMapper userFoodTypeMapper, PostMapper postMapper1,
+      RankPointLogMapper rankPointLogMapper1) {
     this.mojipMapper = mojipMapper;
     this.userInterestLogMapper = userInterestLogMapper;
     this.userFoodTypeMapper = userFoodTypeMapper;
@@ -40,7 +41,8 @@ public class MojipServiceImpl implements MojipService {
 
   @Override
   @Transactional
-  public List<MojipPostDTO> getMojipList(Long requesterSeq, Long previousPostSeq, String searchWord, int pageSize) {
+  public List<MojipPostDTO> getMojipList(Long requesterSeq, Long previousPostSeq, String searchWord,
+      int pageSize) {
     if (searchWord != null && !searchWord.isEmpty()) {
       insertSearchLog(requesterSeq, searchWord);
       return mojipMapper.searchMojipList(previousPostSeq, pageSize, searchWord);
@@ -66,8 +68,8 @@ public class MojipServiceImpl implements MojipService {
   @Override
   @Transactional
   public boolean deletePost(Long postSeq) {
-    int result = postMapper.deletePost(postSeq);
     Long writerSeq = postMapper.selectWriterSeqByPostSeq(postSeq);
+    int result = postMapper.deletePost(postSeq);
     int result2 = rankPointLogMapper.insertPointLog(writerSeq, "UNPOST");
     return result == 1 && result2 == 1;
   }
@@ -81,7 +83,8 @@ public class MojipServiceImpl implements MojipService {
   @Transactional
   public boolean createMojip(Long userSeq, String title, Date applyStartDate,
       Date applyEndDate, Date experienceDate, String content) {
-    int result = mojipMapper.insertMojip(userSeq, title, applyStartDate, applyEndDate, experienceDate, content);
+    int result = mojipMapper.insertMojip(userSeq, title, applyStartDate, applyEndDate,
+        experienceDate, content);
     int result2 = rankPointLogMapper.insertPointLog(userSeq, "POST");
     insertMojipLog(userSeq, title + " " + content);
     return result == 1 && result2 == 1;
@@ -89,8 +92,8 @@ public class MojipServiceImpl implements MojipService {
 
   @Override
   public boolean updateMojip(Long postSeq, String title, String content) {
-   int result = mojipMapper.updateMojip(postSeq, title, content);
-   return result == 1;
+    int result = mojipMapper.updateMojip(postSeq, title, content);
+    return result == 1;
   }
 
   @Override
@@ -104,7 +107,8 @@ public class MojipServiceImpl implements MojipService {
   private void insertSearchLog(Long requesterSeq, String searchWord) {
     Arrays.stream(FoodDish.values())
         .filter(food -> searchWord.contains(food.getCode()))
-        .forEach(food -> userInterestLogMapper.insertInterestLog(requesterSeq, "SEARCH", food.getFoodType().getCode(), food.getCode()));
+        .forEach(food -> userInterestLogMapper.insertInterestLog(requesterSeq, "SEARCH",
+            food.getFoodType().getCode(), food.getCode()));
   }
 
   private void insertApplyLog(Long fromUserSeq, Long toUserSeq) {
@@ -120,7 +124,8 @@ public class MojipServiceImpl implements MojipService {
   private void insertMojipLog(Long fromUserSeq, String text) {
     for (FoodDish dish : FoodDish.values()) {
       if (text.contains(dish.getCode())) {
-        userInterestLogMapper.insertInterestLog(fromUserSeq, "POST", dish.getFoodType().getCode(), dish.getCode());
+        userInterestLogMapper.insertInterestLog(fromUserSeq, "POST", dish.getFoodType().getCode(),
+            dish.getCode());
       }
     }
   }

@@ -271,8 +271,7 @@
         htmlStr += "<tr>";
         htmlStr += "<td>" + user["nickname"] + "</td>";
         htmlStr += "<td>" + user["businessNumber"] + "</td>";
-        htmlStr += "<td><a href='/brand-page?user_seq=" + user["seq"] + "'>" + user["email"]
-            + "</a></td>";
+        htmlStr += "<td><a href='/brand/"+user["seq"] + "'>" + user["email"] + "</a></td>";
         htmlStr += "<td>" + formattedCreatedAt + "</td>";
         htmlStr += "<td><button class='btn btn-danger btn-sm delete-btn' data-bs-toggle='modal' data-bs-target='#deleteModal' data-id='"
             + user["email"] + "' data-seq='" + user["seq"] + "'>X</button></td>";

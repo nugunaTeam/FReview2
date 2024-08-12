@@ -46,54 +46,69 @@ public class RecommendationServiceImpl implements RecommendationService {
   @Override
   public List<PersonalizedUserDTO> getPersonalizedRecommendationUsers(Long userSeq,
       String pageCode) {
-    List<PersonalizedUserDTO> recommendations = new ArrayList<>();
-    Set<Long> userIds = new HashSet<>();
+    try {
+      List<PersonalizedUserDTO> recommendations = new ArrayList<>();
+      Set<Long> userIds = new HashSet<>();
 
-    List<InterestAccumulationDTO> interests = interestAccumulationMapper.getByUserSeq(userSeq);
+      List<InterestAccumulationDTO> interests = interestAccumulationMapper.getByUserSeq(userSeq);
 
-    int maxTotalScore = interests.stream()
-        .mapToInt(InterestAccumulationDTO::getTotalScore)
-        .max()
-        .orElse(0);
+      if (interests.isEmpty()) {
+        List<PersonalizedUserDTO> randomUsers = recommendationMapper.findRandomUsers(5, pageCode);
+        for (PersonalizedUserDTO user : randomUsers) {
+          if (userIds.add(user.getUserSeq())) {
+            recommendations.add(user);
+          }
+        }
+        return recommendations;
+      }
 
-    List<InterestAccumulationDTO> topDishInterests = interests.stream()
-        .filter(interest -> interest.getTotalScore() == maxTotalScore)
-        .collect(Collectors.toList());
+      int maxTotalScore = interests.stream()
+          .mapToInt(InterestAccumulationDTO::getTotalScore)
+          .max()
+          .orElse(0);
 
-    if (!topDishInterests.isEmpty()) {
-      InterestAccumulationDTO topDishInterest = topDishInterests.get(
-          new Random().nextInt(topDishInterests.size()));
-      String topDish = topDishInterest.getDish();
-      String topCategory = topDishInterest.getCategory();
+      List<InterestAccumulationDTO> topDishInterests = interests.stream()
+          .filter(interest -> interest.getTotalScore() == maxTotalScore)
+          .collect(Collectors.toList());
 
-      List<PersonalizedUserDTO> dishUsers = recommendationMapper.findByDish(topDish, pageCode);
-      for (PersonalizedUserDTO user : dishUsers) {
-        if (recommendations.size() < 3 && userIds.add(user.getUserSeq())) {
-          recommendations.add(user);
+      if (!topDishInterests.isEmpty()) {
+        InterestAccumulationDTO topDishInterest = topDishInterests.get(
+            new Random().nextInt(topDishInterests.size()));
+        String topDish = topDishInterest.getDish();
+        String topCategory = topDishInterest.getCategory();
+
+        List<PersonalizedUserDTO> dishUsers = recommendationMapper.findByDish(topDish, pageCode);
+        for (PersonalizedUserDTO user : dishUsers) {
+          if (recommendations.size() < 3 && userIds.add(user.getUserSeq())) {
+            recommendations.add(user);
+          }
+        }
+
+        if (recommendations.size() < 5) {
+          List<PersonalizedUserDTO> additionalUsers = recommendationMapper.findByCategoryExcludingDish(
+                  topCategory, topDish, pageCode).stream()
+              .filter(user -> userIds.add(user.getUserSeq()))
+              .limit(2)
+              .collect(Collectors.toList());
+          recommendations.addAll(additionalUsers);
         }
       }
 
       if (recommendations.size() < 5) {
-        List<PersonalizedUserDTO> additionalUsers = recommendationMapper.findByCategoryExcludingDish(
-                topCategory, topDish, pageCode).stream()
-            .filter(user -> userIds.add(user.getUserSeq()))
-            .limit(2)
-            .collect(Collectors.toList());
-        recommendations.addAll(additionalUsers);
-      }
-    }
-
-    if (recommendations.size() < 5) {
-      List<PersonalizedUserDTO> randomUsers = recommendationMapper.findRandomUsers(
-          5 - recommendations.size(), pageCode);
-      for (PersonalizedUserDTO user : randomUsers) {
-        if (recommendations.size() < 5 && userIds.add(user.getUserSeq())) {
-          recommendations.add(user);
+        List<PersonalizedUserDTO> randomUsers = recommendationMapper.findRandomUsers(
+            5 - recommendations.size(), pageCode);
+        for (PersonalizedUserDTO user : randomUsers) {
+          if (recommendations.size() < 5 && userIds.add(user.getUserSeq())) {
+            recommendations.add(user);
+          }
         }
       }
-    }
 
-    return recommendations.stream().limit(5).collect(Collectors.toList());
+      return recommendations.stream().limit(5).collect(Collectors.toList());
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new IllegalArgumentException();
+    }
   }
 
   @Override

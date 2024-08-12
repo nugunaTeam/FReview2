@@ -175,9 +175,7 @@
                          overflow: hidden; border-radius: 50%;"
                          onerror="
                                  this.onerror = null;
-                                 this.src = ${isFromUserStore}
-                                 ? '/assets/img/basic/store-basic-profile.png'
-                                 : '/assets/img/basic/customer-basic-profile.png';">
+                                 this.src ='/assets/img/basic/store-basic-profile.png';">
                     <input type="file" id="profile-img-upload" style="display: none;">
                     <h2 id="nickname-holder-section">${otherBrandInfo.storeName}
                     </h2>
