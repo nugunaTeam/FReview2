@@ -1,4 +1,4 @@
-package com.nuguna.freview.store.controller;
+package com.nuguna.freview.store.controller.page;
 
 import com.nuguna.freview.common.vo.user.UserVO;
 import com.nuguna.freview.security.jwtfilter.JwtContextHolder;
