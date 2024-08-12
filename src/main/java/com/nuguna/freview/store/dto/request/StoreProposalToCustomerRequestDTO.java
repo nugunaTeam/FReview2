@@ -1,4 +1,4 @@
-package com.nuguna.freview.customer.dto.request;
+package com.nuguna.freview.store.dto.request;
 
 import javax.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -9,10 +9,7 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProposalToCustomerRequestDTO {
-
-  @Min(1)
-  private Long storeSeq;
+public class StoreProposalToCustomerRequestDTO {
 
   @Min(1)
   private Long customerSeq;

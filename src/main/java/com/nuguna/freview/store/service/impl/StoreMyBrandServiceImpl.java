@@ -106,9 +106,8 @@ public class StoreMyBrandServiceImpl implements StoreMyBrandService {
   }
 
   @Override
-  public StoreMyIntroduceUpdateResponseDTO updateStoreIntroduce(
+  public StoreMyIntroduceUpdateResponseDTO updateStoreIntroduce(Long storeSeq,
       StoreMyIntroduceUpdateRequestDTO storeMyIntroduceUpdateRequestDTO) {
-    Long storeSeq = storeMyIntroduceUpdateRequestDTO.getUserSeq();
     String toIntroduce = storeMyIntroduceUpdateRequestDTO.getToIntroduce();
 
     storeMyBrandMapper.updateStoreIntroduce(storeSeq, toIntroduce);
@@ -116,9 +115,8 @@ public class StoreMyBrandServiceImpl implements StoreMyBrandService {
   }
 
   @Override
-  public StoreMyFoodTypesUpdateResponseDTO updateStoreFoodTypes(
+  public StoreMyFoodTypesUpdateResponseDTO updateStoreFoodTypes(Long storeSeq,
       StoreMyFoodTypesUpdateRequestDTO storeMyFoodTypesUpdateRequestDTO) {
-    Long storeSeq = storeMyFoodTypesUpdateRequestDTO.getUserSeq();
     List<String> toFoodTypes = storeMyFoodTypesUpdateRequestDTO.getToFoodTypes();
 
     storeMyBrandMapper.deleteFoodTypesByUserSeq(storeSeq);
@@ -129,9 +127,8 @@ public class StoreMyBrandServiceImpl implements StoreMyBrandService {
   }
 
   @Override
-  public StoreMyTagsUpdateResponseDTO updateStoreTags(
+  public StoreMyTagsUpdateResponseDTO updateStoreTags(Long storeSeq,
       StoreMyTagsUpdateRequestDTO storeMyTagsUpdateRequestDTO) {
-    Long storeSeq = storeMyTagsUpdateRequestDTO.getUserSeq();
     List<String> toTags = storeMyTagsUpdateRequestDTO.getToTags();
 
     storeMyBrandMapper.deleteTagsByUserSeq(storeSeq);
@@ -142,9 +139,8 @@ public class StoreMyBrandServiceImpl implements StoreMyBrandService {
   }
 
   @Override
-  public StoreMyStoreLocationUpdateResponseDTO updateStoreLocation(
+  public StoreMyStoreLocationUpdateResponseDTO updateStoreLocation(Long storeSeq,
       StoreMyStoreLocationUpdateRequestDTO storeMyStoreLocationUpdateRequestDTO) {
-    Long storeSeq = storeMyStoreLocationUpdateRequestDTO.getUserSeq();
     String toStoreLocation = storeMyStoreLocationUpdateRequestDTO.getToStoreLocation();
     storeMyBrandMapper.updateStoreLocation(storeSeq, toStoreLocation);
     return new StoreMyStoreLocationUpdateResponseDTO(toStoreLocation);

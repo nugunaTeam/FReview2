@@ -12,7 +12,7 @@ public class AcceptedProposalToMeInfoDTO {
 
   private Long storeSeq;
   private String storeName;
-  private String proposalDetails; // TODO: 제안 내용 보여주기
-  private String status; // TODO: 'ACCEPTED' => 진행 중, 'NOSHOW' => 노쇼, "DONE" => 체험 완료
-  private LocalDate experienceDate; // 체험 날짜
+  private String proposalDetails;
+  private String status;
+  private LocalDate experienceDate;
 }

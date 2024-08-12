@@ -3,6 +3,7 @@ package com.nuguna.freview.store.service.impl;
 import static com.nuguna.freview.store.constant.StoreListConstant.STORE_LIST_PAGE_BLOCK_SIZE;
 import static com.nuguna.freview.store.constant.StoreListConstant.STORE_LIST_PAGE_SIZE;
 
+import com.nuguna.freview.admin.mapper.ExperienceLogMapper;
 import com.nuguna.freview.customer.dto.response.PaginationInfoResponseDTO;
 import com.nuguna.freview.global.util.PaginationUtil;
 import com.nuguna.freview.store.dto.response.StoreApplyListDTO;
@@ -30,10 +31,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class StoreExperiencePageServiceImpl implements StoreExperiencePageService {
 
   private final StoreExperiencePageMapper storeExperiencePageMapper;
+  private final ExperienceLogMapper experienceLogMapper;
 
   @Autowired
-  public StoreExperiencePageServiceImpl(StoreExperiencePageMapper storeExperiencePageMapper) {
+  public StoreExperiencePageServiceImpl(StoreExperiencePageMapper storeExperiencePageMapper,
+      ExperienceLogMapper experienceLogMapper) {
     this.storeExperiencePageMapper = storeExperiencePageMapper;
+    this.experienceLogMapper = experienceLogMapper;
   }
 
   @Override
@@ -99,11 +103,13 @@ public class StoreExperiencePageServiceImpl implements StoreExperiencePageServic
     return new StoreFinalProposalListResponseDTO(storeFinalProposalListInfo, paginationInfo);
   }
 
-  //
   public void updateExperienceDate(@RequestParam Long experienceSeq, @RequestParam LocalDate experienceDate){
     storeExperiencePageMapper.setUpdateExperienceDate(experienceSeq, experienceDate);
   };
-  public void updateExperienceStatus(@RequestParam Long experienceSeq, @RequestParam String status){
+
+  @Transactional
+  public void updateExperienceStatus(@RequestParam Long toUserSeq, @RequestParam Long experienceSeq, @RequestParam String status){
+    experienceLogMapper.insertExperienceLog(null, toUserSeq, null, null, status);
     storeExperiencePageMapper.setUpdateExperienceStatus(experienceSeq, status);
   };
 

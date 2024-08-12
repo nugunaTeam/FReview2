@@ -154,38 +154,7 @@
 <body>
 
 <!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center">
-    <div class="d-flex align-items-center justify-content-between">
-        <a href="${pageContext.request.contextPath}/main?seq=${brandInfo.storeSeq}&pagecode=Requester"
-           class="logo d-flex align-items-center">
-            <img src="/assets/img/logo/logo-vertical.png" alt="">
-            <span class="d-none d-lg-block">FReview</span>
-        </a>
-        <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div>
-
-    <nav class="header-nav ms-auto">
-        <ul class="d-flex align-items-center">
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-                    <img src="/user/${fromUserSeq}/profile"
-                         alt="Profile"
-                         class="rounded-circle profile-img"
-                         style="margin-right: 5px;"
-                         onerror="
-                                 this.onerror = null;
-                                 this.src = ${isFromUserStore}
-                                 ? '/assets/img/basic/store-basic-profile.png'
-                                 : '/assets/img/basic/customer-basic-profile.png';"
-                    >
-                    <span id="nickname-holder-head"
-                          class="d-none d-md-block"
-                          style="font-size : 18px;">${userNickname}</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</header>
+<jsp:include page="/header.jsp" />
 
 <main id="main" class="main">
 
@@ -206,9 +175,7 @@
                          overflow: hidden; border-radius: 50%;"
                          onerror="
                                  this.onerror = null;
-                                 this.src = ${isFromUserStore}
-                                 ? '/assets/img/basic/store-basic-profile.png'
-                                 : '/assets/img/basic/customer-basic-profile.png';">
+                                 this.src ='/assets/img/basic/store-basic-profile.png';">
                     <input type="file" id="profile-img-upload" style="display: none;">
                     <h2 id="nickname-holder-section">${otherBrandInfo.storeName}
                     </h2>
@@ -236,11 +203,9 @@
                     }
 
                     $('#zzimButton').on('click', function () {
-                      const fromUserSeq = ${fromUserSeq};
                       const userSeq = ${userSeq};
 
                       const data = {
-                        fromUserSeq: fromUserSeq,
                         toUserSeq: userSeq
                       };
 
@@ -432,18 +397,6 @@
     </section>
 </main>
 
-<footer id="footer" class="footer">
-    <div class="copyright">
-        &copy; Copyright <strong><span><a
-            href="https://github.com/nugunaTeam/FReview2"> nugunaTeam </a></span></strong>.
-        All
-        Rights
-        Reserved
-    </div>
-    <div class="credits">
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-    </div>
-</footer><!-- End Footer -->
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>
@@ -469,5 +422,7 @@
 
 
 </body>
+<!-- ======= Footer ======= -->
+<jsp:include page="/footer.jsp" />
 
 </html>

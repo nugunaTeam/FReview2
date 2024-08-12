@@ -6,7 +6,6 @@ import com.nuguna.freview.admin.dto.request.CustomerListRequestDTO;
 import com.nuguna.freview.admin.dto.response.CustomerInfoDTO;
 import com.nuguna.freview.admin.dto.response.page.CustomerManageResponseDTO;
 import com.nuguna.freview.admin.service.AdminService;
-import com.nuguna.freview.global.util.ShaUtil;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +48,8 @@ public class CustomerManageApiController {
   public ResponseEntity<?> deleteCustomer(@PathVariable Long deleteUserSeq,
       @RequestParam String adminVerificationPW,
       @RequestParam Long adminSeq) {
-    String encodedPW = ShaUtil.sha256Encoding(adminVerificationPW);
-
     try {
-      adminService.deleteUser(adminSeq, encodedPW, deleteUserSeq);
+      adminService.deleteUser(adminSeq, adminVerificationPW, deleteUserSeq);
       return new ResponseEntity<>(HttpStatus.OK);
     } catch (IllegalArgumentException e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);

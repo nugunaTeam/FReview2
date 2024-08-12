@@ -12,4 +12,6 @@ public interface PostMapper {
   int insertLike(@Param("postSeq") Long postSeq, @Param("userSeq") Long userSeq);
   int deleteLike(@Param("postSeq") Long postSeq, @Param("userSeq") Long userSeq);
   Long selectWriterSeqByPostSeq(Long postSeq);
+  int selectTotalPage(String postCode);
+  int selectTotalPageWithSearchWord(@Param("postCode") String postCode, @Param("searchWord") String searchWord);
 }

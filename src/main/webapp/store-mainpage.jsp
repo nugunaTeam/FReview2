@@ -55,8 +55,8 @@
 
 <body>
 
-<!-- ======= Header ======= -->
-<jsp:include page="/header.jsp" /><!-- End Header -->
+<jsp:include page="/header.jsp" />
+
 <main id="main_wrap" class="main">
     <div id="main" style="margin:auto; margin-top:80px">
         <div class="pagetitle">
@@ -120,5 +120,8 @@
     </div>
 </main><!-- End #main -->
 
+</body>
 <!-- ======= Footer ======= -->
+  
 <jsp:include page="/footer.jsp" />
+</html>

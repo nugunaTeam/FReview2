@@ -103,7 +103,7 @@
                 <img src="${mojipPost.profilePhotoUrl}" alt="Profile" class="profile-img">
                 <div class="ml-4">
                     <h3>
-                        <a href='/brand-page?user_seq=${mojipPost.userSeq}'>${mojipPost.storeName}</a>
+                        <a href='/brand/${mojipPost.userSeq}'>${mojipPost.storeName}</a>
                     </h3>
                     <p>분야: ${mojipPost.foodTypeWord}</p>
                     <p>태그: ${mojipPost.tagWord}</p>
@@ -336,18 +336,15 @@
       method: 'DELETE',
     })
     .then(response => {
-      if (response.ok) {
-        return response.text().then(data => {
-          console.log(data);
+      return response.text().then(data => {
+        if (response.ok) {
           alert('게시글이 성공적으로 삭제되었습니다.');
           location.replace("/mojip");
-        });
-      } else {
-        response.text().then(data => {
+        } else {
           console.error(data);
           alert('게시글 삭제에 실패했습니다. 다시 시도해 주세요.');
-        });
-      }
+        }
+      });
     })
     .catch(error => console.error('Error:', error));
   }

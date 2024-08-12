@@ -83,8 +83,12 @@
     <div class="header-right">
         <a href="/my" style="margin-right: 20px">
             ${nickname}
-            <img src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;">
+                <img src="/user/${userSeq}/profile"
+                     alt="Profile Image"
+                     class="profile-img"
+                     style="width: 30px; margin-top: 15px;"
+                     onerror="this.onerror=null; this.src='${profileUrl}';">
         </a>
-        <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
+        <a href="/logout" style="margin-top: 17px;">로그아웃</a>
     </div>
 </header>

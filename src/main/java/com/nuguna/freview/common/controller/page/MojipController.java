@@ -37,7 +37,7 @@ public class MojipController {
   }
 
   @RequestMapping(value = "/{postSeq}", method = RequestMethod.GET)
-  public String noticePostDetail(@PathVariable Long postSeq, Model model) {
+  public String mojipPostDetail(@PathVariable Long postSeq, Model model) {
     UserVO loginUser = JwtContextHolder.getUserVO();
     postService.addViewCount(postSeq);
     MojipPostDetailDTO mojipPost = mojipService.getMojipDetail(postSeq);
