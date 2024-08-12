@@ -12,6 +12,7 @@ import com.nuguna.freview.customer.dto.response.CustomerMyNicknameUpdateResponse
 import com.nuguna.freview.customer.dto.response.CustomerMyProfilePhotoUpdateResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerMyTagsUpdateResponseDTO;
 import com.nuguna.freview.customer.service.CustomerMyBrandService;
+import com.nuguna.freview.security.jwtfilter.JwtContextHolder;
 import java.io.IOException;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -39,10 +40,10 @@ public class CustomerMyBrandInfoApiController {
 
   @RequestMapping(value = "/profile-photo-url", method = RequestMethod.POST)
   public ResponseEntity<CustomerMyProfilePhotoUpdateResponseDTO> updateCustomerProfilePhoto(
-      @RequestParam("userSeq") Long userSeq,
       @RequestParam("profileFile") MultipartFile profileFile)
       throws IOException {
 
+    Long userSeq = JwtContextHolder.getUserVO().getSeq();
     if (profileFile == null || profileFile.isEmpty()) {
       throw new IllegalArgumentException("프로필 파일은 필수값입니다.");
     }
@@ -56,8 +57,9 @@ public class CustomerMyBrandInfoApiController {
   public ResponseEntity<CustomerMyNicknameUpdateResponseDTO> updateCustomerNickname(
       @Valid @RequestBody CustomerMyNicknameUpdateRequestDTO customerMyNicknameUpdateRequestDTO
   ) {
+    Long userSeq = JwtContextHolder.getUserVO().getSeq();
     CustomerMyNicknameUpdateResponseDTO responseDTO = customerMyBrandService.updateCustomerNickname(
-        customerMyNicknameUpdateRequestDTO);
+        userSeq, customerMyNicknameUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
@@ -65,8 +67,9 @@ public class CustomerMyBrandInfoApiController {
   public ResponseEntity<CustomerMyAgeGroupUpdateResponseDTO> updateCustomerAgeGroup(
       @Valid @RequestBody CustomerMyAgeGroupUpdateRequestDTO customerMyAgeGroupUpdateRequestDTO
   ) {
+    Long userSeq = JwtContextHolder.getUserVO().getSeq();
     CustomerMyAgeGroupUpdateResponseDTO responseDTO = customerMyBrandService.updateCustomerAgeGroup(
-        customerMyAgeGroupUpdateRequestDTO);
+        userSeq, customerMyAgeGroupUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
@@ -74,8 +77,9 @@ public class CustomerMyBrandInfoApiController {
   public ResponseEntity<CustomerMyIntroduceUpdateResponseDTO> updateCustomerIntroduce(
       @Valid @RequestBody CustomerMyIntroduceUpdateRequestDTO customerMyIntroduceUpdateRequestDTO
   ) {
+    Long userSeq = JwtContextHolder.getUserVO().getSeq();
     CustomerMyIntroduceUpdateResponseDTO responseDTO = customerMyBrandService.updateCustomerIntroduce(
-        customerMyIntroduceUpdateRequestDTO);
+        userSeq, customerMyIntroduceUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
@@ -83,8 +87,9 @@ public class CustomerMyBrandInfoApiController {
   public ResponseEntity<CustomerMyFoodTypesUpdateResponseDTO> updateCustomerFoodTypes(
       @Valid @RequestBody CustomerMyFoodTypesUpdateRequestDTO customerMyFoodTypesUpdateRequestDTO
   ) {
+    Long userSeq = JwtContextHolder.getUserVO().getSeq();
     CustomerMyFoodTypesUpdateResponseDTO responseDTO = customerMyBrandService.updateCustomerFoodTypes(
-        customerMyFoodTypesUpdateRequestDTO);
+        userSeq, customerMyFoodTypesUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 
@@ -92,8 +97,9 @@ public class CustomerMyBrandInfoApiController {
   public ResponseEntity<CustomerMyTagsUpdateResponseDTO> updateCustomerTags(
       @Valid @RequestBody CustomerMyTagsUpdateRequestDTO customerMyTagsUpdateRequestDTO
   ) {
+    Long userSeq = JwtContextHolder.getUserVO().getSeq();
     CustomerMyTagsUpdateResponseDTO responseDTO = customerMyBrandService.updateCustomerTags(
-        customerMyTagsUpdateRequestDTO);
+        userSeq, customerMyTagsUpdateRequestDTO);
     return new ResponseEntity<>(responseDTO, HttpStatus.OK);
   }
 

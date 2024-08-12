@@ -138,27 +138,7 @@
 <body>
 
 <!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center header-hr">
-    <div class="d-flex align-items-center justify-content-between ">
-        <a href="/main?seq=${userSeq}&pagecode=Requester" class="logo d-flex align-items-center">
-            <img src="/assets/img/logo/logo-vertical.png" alt=""
-                 style="  width: 50px; margin-top: 20px;">
-            <span class="d-none d-lg-block">FReview</span>
-        </a>
-<%--        <i class="bi bi-list toggle-sidebar-btn"></i>--%>
-    </div>
-    <div class="header-hr-right ms-auto">
-        <div class="d-flex align-items-center">
-            <div class="pe-3">
-                <a href="/my/brand-info?userSeq=${userSeq}" style="margin-right: 20px">
-                    ${nickname}
-                    <img class="rounded-circle" src="${profileUrl}" alt=" " style="width: 30px; margin-top: 15px;" >
-                </a>
-                <a href="/COMM_logout.jsp" style="margin-top: 17px;">로그아웃</a>
-            </div>
-        </div>
-    </div>
-</header>
+<jsp:include page="/header.jsp" />
 
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
@@ -167,7 +147,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="/my/brand-info?userSeq=${userSeq}">
+               href="/my/brand">
                 <i class="bi bi-award"></i>
                 <span>브랜딩</span>
             </a>
@@ -175,7 +155,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/store/experience?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/store/experience">
                 <i class="bi bi-grid"></i>
                 <span>체험</span>
             </a>
@@ -183,7 +163,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/store/activity?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/store/activity">
                 <i class="bi bi-card-checklist"></i>
                 <span>활동</span>
             </a>
@@ -191,7 +171,7 @@
 
         <li class="nav-item">
             <a class="nav-link"
-               href="${pageContext.request.contextPath}/store/notification?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/store/notification">
                 <i class="bi bi-bell"></i>
                 <span>알림</span>
             </a>
@@ -199,7 +179,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/store/my-info?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/store/personal-info">
                 <i class="bi bi-person"></i>
                 <span>개인정보수정</span>
             </a>
@@ -284,7 +264,7 @@
         </div>
     </section>
 
-</main><!-- End #main -->
+</main>
 
 <script>
   $(document).ready(function () {
@@ -292,7 +272,6 @@
     let zzimSelectedValue = $("input[name='code']:checked").val() || 'CUSTOMER';    // default
     let experienceSelectedValue = $("input[name='exp']:checked").val() || 'apply' ;   // default
 
-    // 초기 로딩 페이지
     receivedLikeList(1);
 
     // 알림 > 좋아요 전송 함수
@@ -317,13 +296,10 @@
         }
       });
     }
-    // 알림 > 좋아요 - 리스트
+
     function renderLikeData(receivedLikeInfos) {
       let htmlStr = "";
         $.map(receivedLikeInfos, function (item) {
-          //let cutTitle = item.title.length > 30 ? item.title.substring(0, 30) + '...' : item.title;
-          //let cutContent = item.content.length > 30 ? item.content.substring(0, 30) + '...'
-          //    : item.content;
           let formattedLikeDate = dayjs(item.createdAt).format('YYYY년 MM월 DD일');
           if (item.postCode === '모집') {
             htmlStr += "<div class='card' id='receivedLikeList'>";
@@ -337,11 +313,10 @@
       $('#likeListHtml').empty().html(htmlStr);
     }
 
-    // 페이지 변경 핸들러
     function handlePageChange(location, page) {
-      if (location === 'like') {        // 좋아요
+      if (location === 'like') {
         receivedLikeList(page);
-      } else if (location === 'zzim') { // 체험
+      } else if (location === 'zzim') {
         receivedZzimList(page, zzimSelectedValue).then(response => {
           if (zzimSelectedValue === 'CUSTOMER') {
             renderZzimCustomerList(response.receivedZzimCustomerInfo);
@@ -370,7 +345,6 @@
       }
     }
 
-    // 찜(체험단/스토어) 리스트 전송 함수
     function receivedZzimList(page, zzimSelectedValue) {
       let sendData = {
         'userSeq': userSeq,
@@ -405,7 +379,7 @@
         });
       });
     }
-    // 찜 > 체험단 리스트 랜더링 함수
+
     function renderZzimCustomerList(receivedZzimCustomerInfo) {
       let htmlStr = "";
       $.map(receivedZzimCustomerInfo, function (item) {
@@ -472,7 +446,6 @@
       });
     }
 
-    // 알림 > 체험 > 지원
     function renderExperienceApply(experienceApplyInfo) {
       let htmlStr = "";
       $.map(experienceApplyInfo, function (item) {
@@ -487,14 +460,14 @@
       });
       $("#experienceListHtml").html(htmlStr);
     }
-    // 알림 > 체험 > 제안
+
     function renderExperienceProposal(experienceProposalInfo) {
       let htmlStr = "";
       $.map(experienceProposalInfo, function (item) {
         let formattedCreatedAt = dayjs(item["createdAt"]).format('YYYY년 MM월 DD일');
         let status = item.status === 'REJECTED' ? '거절' :
                     item.status === 'ACCEPTED' ? '승낙' : '미확인';
-        if (status !== '미확인') { // '미확인'인 경우 제외
+        if (status !== '미확인') {
             htmlStr += "<div class='card'>";
             htmlStr += "<div class='card-body-y'>";
             htmlStr += "<p><a href='/brand/" + item.proposalUserSeq + "'>"
@@ -517,32 +490,26 @@
         let hasNext = paginationInfo.hasNext;
         let hasPrevious = paginationInfo.hasPrevious;
 
-        // 각 id에 맞는 위치에 데이터 뿌릴 변수명 = paginationContainer
         let paginationContainer = $("#" + page + "-pagination");
 
         let paginationHTML = '';
-        // 이전 버튼
         if (hasPrevious) {
           paginationHTML += '<button id="prev-block-button" class="btn btn-primary edit-btn" data-page="'
               + (parseInt(currentPage) - 1) + '">&lt;</button>';
         }
 
-        // 페이지 버튼들
         for (let i = startPage; i <= endPage; i++) {
           paginationHTML += '<button class="btn ' + (i == currentPage ? 'btn-secondary'
               : 'btn-primary') + ' edit-btn" data-page="' + i + '">' + i + '</button>';
         }
 
-        // 다음 버튼
         if (hasNext) {
           paginationHTML += '<button id="next-block-button" class="btn btn-primary edit-btn" data-page="'
               + (currentPage + 1) + '">&gt;</button>';
         }
 
-        // 각 id에 맞는 위치에 데이터 뿌릴 변수명에 paginationHTML 코드 입력.
         paginationContainer.html(paginationHTML);
 
-        // 이전 및 다음 버튼에 대한 페이지 이동처리
         $('#prev-block-button').off('click').on('click', function () {
           if (hasPrevious) {
             handlePageChange(page, currentPage - 1);
@@ -556,13 +523,11 @@
         });
       }
 
-    // 찜 라디오 클릭시, 데이터 변경
     $("input[name='code']").on('change', function () {
       zzimSelectedValue = $(this).val();
       receivedZzimList(1, zzimSelectedValue);
     });
 
-    // 체험 라디오 클릭시, 데이터 변경
     $("input[name='exp']").on('change', function () {
       experienceSelectedValue = $(this).val();
       receivedExperienceList(1, experienceSelectedValue);
@@ -573,12 +538,10 @@
       receivedZzimList(1, zzimSelectedValue);
     });
 
-    // 체험 탭 클릭 시, 우선 순위
     $("#experience-tab").on('click', function () {
       receivedExperienceList(1, experienceSelectedValue);
     });
 
-    // 페이지 버튼 클릭 이벤트
   $(document).on("click", ".btn.edit-btn", function (e) {
     let pageNumber = parseInt($(this).data("page"));
     if (pageNumber > 0) {
@@ -592,20 +555,6 @@
   });
 </script>
 
-
-<!-- ======= Footer ======= -->
-<footer id="footer" class="footer">
-    <div class="copyright">
-        &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
-    </div>
-    <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-    </div>
-</footer><!-- End Footer -->
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>
@@ -624,6 +573,8 @@
 <script src="/assets/js/main.js"></script>
 
 </body>
+<!-- ======= Footer ======= -->
+<jsp:include page="/footer.jsp" />
 
 </html>
 

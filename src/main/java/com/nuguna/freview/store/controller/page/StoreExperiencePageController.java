@@ -2,6 +2,7 @@ package com.nuguna.freview.store.controller.page;
 
 import com.nuguna.freview.common.service.UserService;
 import com.nuguna.freview.common.vo.user.UserVO;
+import com.nuguna.freview.security.jwtfilter.JwtContextHolder;
 import com.nuguna.freview.store.service.StoreExperiencePageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,8 @@ public class StoreExperiencePageController {
   }
 
   @RequestMapping("/store/experience")
-  public String storeActivityPage(@RequestParam Long userSeq, Model model) {
-    UserVO loginUser = userService.getUserInfo(userSeq);
+  public String storeActivityPage(Model model) {
+    UserVO loginUser = JwtContextHolder.getUserVO();
     model.addAttribute("loginUser", loginUser);
     return "store-experience-page";
   }

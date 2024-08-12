@@ -61,7 +61,7 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
 
     httpServletResponse.addCookie(accessCookie);
     httpServletResponse.addCookie(refreshCookie);
-    httpServletResponse.sendRedirect("/main-page");
+    httpServletResponse.sendRedirect("/main");
   }
 
 }

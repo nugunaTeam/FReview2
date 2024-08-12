@@ -59,7 +59,7 @@
     GROUP BY
       p.seq
     ORDER BY
-      p.seq DESC
+      p.created_at DESC
     LIMIT #{limit}
   </select>
 
@@ -92,7 +92,7 @@
     GROUP BY
       p.seq
     ORDER BY
-      p.seq DESC
+      p.created_at DESC
     LIMIT #{limit}
   </select>
 

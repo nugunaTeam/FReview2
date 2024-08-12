@@ -124,7 +124,7 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="${pageContext.request.contextPath}/main?seq=${userSeq}&pagecode=Requester"
+        <a href="/main"
            class="logo d-flex align-items-center">
             <img src="/assets/img/logo/logo-vertical.png" alt="">
             <span class="d-none d-lg-block">FReview</span>
@@ -162,11 +162,10 @@
             <div class="card">
                 <!-- profile  -->
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                    <img src="/user/${userSeq}/profile" alt="Profile" class="rounded-circle" onerror="
-                            this.onerror = null;
-                            this.src = ${isFromUserStore}
-                            ? '/assets/img/basic/store-basic-profile.png'
-                            : '/assets/img/basic/customer-basic-profile.png';">
+                    <img src="/user/${userSeq}/profile" alt="Profile" class="rounded-circle"
+                         onerror="
+                                 this.onerror = null;
+                                 this.src ='/assets/img/basic/customer-basic-profile.png';">
                     <h2 id="nickname-holder-section" style="font-size: 1.5rem; margin: 0.5rem 0;">
                         ${otherBrandInfo.nickname}
                     </h2>
@@ -277,13 +276,12 @@
                       var proposalDetail = $('#proposalDetail').val();
 
                       var dataObject = {
-                        storeSeq: fromUserSeq,
                         customerSeq: userSeq,
                         proposalDetail: proposalDetail
                       };
 
                       $.ajax({
-                        url: '/api/other/customer/proposal',
+                        url: '/api/store/proposal',
                         type: 'POST',
                         contentType: 'application/json',
                         data: JSON.stringify(dataObject),
@@ -314,11 +312,9 @@
                     }
 
                     $('#zzimButton').on('click', function () {
-                      const fromUserSeq = ${fromUserSeq};
                       const userSeq = ${userSeq};
 
                       const data = {
-                        fromUserSeq: fromUserSeq,
                         toUserSeq: userSeq
                       };
 
@@ -337,8 +333,8 @@
                           }
                           $('#zzimCount').text(response.zzimCount);
                         },
-                        error: function (error) {
-                          console.error('Error:', error);
+                        error: function (response) {
+                          alert(response.responseText.message);
                         }
                       });
                     });

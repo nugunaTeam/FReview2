@@ -5,6 +5,7 @@ import com.nuguna.freview.customer.dto.response.CustomerMyAcceptedApplyInfosRetr
 import com.nuguna.freview.customer.dto.response.CustomerMyApplyInfosRetrieveResponseDTO;
 import com.nuguna.freview.customer.dto.response.CustomerProposalToMeInfosRetrieveResponseDTO;
 import com.nuguna.freview.customer.service.CustomerMyExperienceService;
+import com.nuguna.freview.security.jwtfilter.JwtContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,8 +31,8 @@ public class CustomerMyExperienceInfoApiController {
 
   @RequestMapping(value = "/apply-list", method = RequestMethod.GET)
   public ResponseEntity<CustomerMyApplyInfosRetrieveResponseDTO> getMyApplyInfos(
-      @RequestParam Long userSeq,
       @RequestParam Integer targetPage) {
+    Long userSeq = JwtContextHolder.getUserVO().getSeq();
     CustomerMyApplyInfosRetrieveResponseDTO myApplyInfos = customerMyExperienceService.getMyApplyInfos(
         userSeq, targetPage);
     return new ResponseEntity<>(myApplyInfos, HttpStatus.OK);
@@ -39,8 +40,8 @@ public class CustomerMyExperienceInfoApiController {
 
   @RequestMapping(value = "/proposal-list", method = RequestMethod.GET)
   public ResponseEntity<CustomerProposalToMeInfosRetrieveResponseDTO> getProposalToMeInfos(
-      @RequestParam Long userSeq,
       @RequestParam Integer targetPage) {
+    Long userSeq = JwtContextHolder.getUserVO().getSeq();
     CustomerProposalToMeInfosRetrieveResponseDTO proposalToMeInfos = customerMyExperienceService.getProposalToMeInfos(
         userSeq, targetPage);
     return new ResponseEntity<>(proposalToMeInfos, HttpStatus.OK);
@@ -48,24 +49,24 @@ public class CustomerMyExperienceInfoApiController {
 
   @RequestMapping(value = "/{experienceSeq}/accept", method = RequestMethod.POST)
   public ResponseEntity<Void> acceptProposalToMe(
-      @RequestParam Long userSeq,
       @PathVariable("experienceSeq") Long experienceSeq) {
+    Long userSeq = JwtContextHolder.getUserVO().getSeq();
     customerMyExperienceService.acceptProposalToMe(userSeq, experienceSeq);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @RequestMapping(value = "/{experienceSeq}/reject", method = RequestMethod.POST)
   public ResponseEntity<Void> rejectProposalToMe(
-      @RequestParam Long userSeq,
       @PathVariable("experienceSeq") Long experienceSeq) {
+    Long userSeq = JwtContextHolder.getUserVO().getSeq();
     customerMyExperienceService.rejectProposalToMe(userSeq, experienceSeq);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @RequestMapping(value = "/accepted-apply-list", method = RequestMethod.GET)
   public ResponseEntity<CustomerMyAcceptedApplyInfosRetrieveResponseDTO> getMyAcceptedApplyInfos(
-      @RequestParam Long userSeq,
       @RequestParam Integer targetPage) {
+    Long userSeq = JwtContextHolder.getUserVO().getSeq();
     CustomerMyAcceptedApplyInfosRetrieveResponseDTO myAcceptedApplyInfos = customerMyExperienceService.getMyAcceptedApplyInfos(
         userSeq, targetPage);
     return new ResponseEntity<>(myAcceptedApplyInfos, HttpStatus.OK);
@@ -73,8 +74,8 @@ public class CustomerMyExperienceInfoApiController {
 
   @RequestMapping(value = "/accepted-proposal-list", method = RequestMethod.GET)
   public ResponseEntity<CustomerAcceptedProposalToMeInfosRetrieveResponseDTO> getMyAcceptedProposalInfos(
-      @RequestParam Long userSeq,
       @RequestParam Integer targetPage) {
+    Long userSeq = JwtContextHolder.getUserVO().getSeq();
     CustomerAcceptedProposalToMeInfosRetrieveResponseDTO myAcceptedProposalInfos = customerMyExperienceService.getMyAcceptedProposalInfos(
         userSeq, targetPage);
     return new ResponseEntity<>(myAcceptedProposalInfos, HttpStatus.OK);

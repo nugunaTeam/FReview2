@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Slf4j
 @Controller
-@RequestMapping("/main-page")
 public class MainPageController {
 
   private final MainPageService mainPageService;
@@ -33,7 +32,7 @@ public class MainPageController {
     this.mainPageService = mainPageService;
   }
 
-  @RequestMapping(value = "", method = RequestMethod.GET)
+  @RequestMapping(value = "/main", method = RequestMethod.GET)
   public String goToMainPage(Model model) {
 
     UserVO uvo = JwtContextHolder.getUserVO();

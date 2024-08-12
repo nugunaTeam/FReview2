@@ -41,6 +41,8 @@
     <!-- Day.js -->
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
 
+    <script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+
     <!-- =======================================================
     * Template Name: NiceAdmin
     * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -206,6 +208,7 @@
   $(document).ready(function () {
     let emailVerificationCode;
     let userSeq = ${userSeq};
+    let code = "${code}";
     let emailVerify = false;
 
     loadInitialData();
@@ -243,7 +246,7 @@
       htmlStr += '  <label for="password" class="form-label">비밀번호</label>';
       htmlStr += '  <div class="input-group">';
       htmlStr += '    <input type="password" id="password" class="form-control" value="'
-          + data["password"] + '" readonly>';
+          + "****" + '" readonly>';
       htmlStr += '    <button class="btn btn-custom" type="button" data-toggle="edit" data-target="password-edit">수정</button>';
       htmlStr += '  </div>';
       htmlStr += '  <div id="password-edit" class="edit-field">';
@@ -273,11 +276,15 @@
       htmlStr += '    <button class="btn btn-primary" type="button" data-update="email">완료</button>';
       htmlStr += '  </div>';
       htmlStr += '  <div class="text-center">';
-      htmlStr += '    <button class="btn btn-link text-muted" type="button" id="deleteAccountBtn" style="font-size: small;">탈퇴하기</button>';
+      htmlStr += '    <button class="btn btn-link text-muted" type="button" id="deleteAccountBtn" style="font-size: small;"';
+      if (code === 'ADMIN') {
+        htmlStr += ' hidden';
+      }
+      htmlStr += '>';
+      htmlStr += '탈퇴하기</button>';
       htmlStr += '  </div>';
       htmlStr += '</div>';
-
-      $('#memberInfo').html(htmlStr);
+      $('#userInfo').html(htmlStr);
     }
 
     function toggleEditField(fieldId, button) {
@@ -419,7 +426,7 @@
           success: function (response, textStatus, jqXHR) {
             if (jqXHR.status === 200) {
               alert('계정이 성공적으로 삭제되었습니다.');
-              window.location.href = '/';
+              window.location.href = '/logout';
             } else {
               alert('계정 삭제에 실패했습니다. 다시 시도해 주세요.');
             }

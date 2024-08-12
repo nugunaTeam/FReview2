@@ -93,7 +93,7 @@ public class OAuthController {
     httpServletResponse.addCookie(accessCookie);
     httpServletResponse.addCookie(refreshCookie);
 
-    return "redirect: /main-page";
+    return "redirect: /main";
   }
 
 }

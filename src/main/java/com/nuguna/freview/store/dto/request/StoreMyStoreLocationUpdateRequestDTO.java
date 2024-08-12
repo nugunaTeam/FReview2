@@ -11,8 +11,6 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 public class StoreMyStoreLocationUpdateRequestDTO {
 
-  @Min(1)
-  private Long userSeq;
   @Length(max = 255)
   private String toStoreLocation;
 }

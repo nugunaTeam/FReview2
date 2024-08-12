@@ -26,15 +26,15 @@ public interface StoreMyBrandService {
   StoreMyProfileUpdateResponseDTO updateStorePhotoUrl(Long storeSeq, MultipartFile profileFile)
       throws IOException;
 
-  StoreMyIntroduceUpdateResponseDTO updateStoreIntroduce(
+  StoreMyIntroduceUpdateResponseDTO updateStoreIntroduce(Long storeSeq,
       StoreMyIntroduceUpdateRequestDTO storeMyIntroduceUpdateRequestDTO);
 
-  StoreMyFoodTypesUpdateResponseDTO updateStoreFoodTypes(
+  StoreMyFoodTypesUpdateResponseDTO updateStoreFoodTypes(Long storeSeq,
       StoreMyFoodTypesUpdateRequestDTO storeMyFoodTypesUpdateRequestDTO);
 
-  StoreMyTagsUpdateResponseDTO updateStoreTags(
+  StoreMyTagsUpdateResponseDTO updateStoreTags(Long storeSeq,
       StoreMyTagsUpdateRequestDTO storeMyTagsUpdateRequestDTO);
 
-  StoreMyStoreLocationUpdateResponseDTO updateStoreLocation(
+  StoreMyStoreLocationUpdateResponseDTO updateStoreLocation(Long storeSeq,
       StoreMyStoreLocationUpdateRequestDTO storeMyStoreLocationUpdateRequestDTO);
 }

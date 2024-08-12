@@ -132,7 +132,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="/my/brand-info?userSeq=${userSeq}">
+               href="/my/brand">
                 <i class="bi bi-grid"></i>
                 <span>브랜딩</span>
             </a>
@@ -140,7 +140,7 @@
 
         <li class="nav-item">
             <a class="nav-link "
-               href="${pageContext.request.contextPath}/store/experience?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/store/experience">
                 <i class="bi bi-card-checklist"></i>
                 <span>체험</span>
             </a>
@@ -149,7 +149,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/store/activity?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/store/activity">
                 <i class="bi bi-bell"></i>
                 <span>활동</span>
             </a>
@@ -158,7 +158,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/store/notification?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/store/notification">
                 <i class="bi bi-card-checklist"></i>
                 <span>알림</span>
             </a>
@@ -167,7 +167,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/store/my-info?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/store/personal-info">
                 <i class="bi bi-person"></i>
                 <span>개인정보수정</span>
             </a>
@@ -534,7 +534,7 @@
             "<input type='button' class='confirm-date-btn btn btn-primary me-2' value='확인'/>" +
             "</td>";
         htmlStr += "<td><button class='status-button btn btn-primary me-2' data-action='DONE' data-id='" + item.experienceSeq + "'>확정</button>" +
-            "<button class='status-button btn btn-primary' data-action='NOSHOW' data-id='" + item.experienceSeq + "'>노쇼</button></td>";
+            <button class='status-button btn btn-primary' data-action='NOSHOW' data-id='" + item.experienceSeq + "' data-to-user-id='" + item.toUserSeq + "'>노쇼</button>
         htmlStr += "<td class='status-accepted'>" + item.status + "</td>";
         htmlStr += "</tr>";
       });
@@ -570,7 +570,8 @@
     $(document).off("click", ".status-button").on("click", ".status-button", function() {
       let experienceSeq = $(this).data("id");
       let action = $(this).data("action");
-      experienceStatusUpdate(experienceSeq, action);
+      let toUserSeq = $(this).data("to-user-id");
+      experienceStatusUpdate(experienceSeq, action, toUserSeq);
     });
 
 
@@ -588,10 +589,10 @@
       });
     }
     // 확정자 > 제안
-    function experienceStatusUpdate(experienceSeq, status) {
+    function experienceStatusUpdate(experienceSeq, status, toUserSeq) {
       $.ajax({
         type: "POST",
-        url: "/api/store/experience/experience-update-status?status=" + status + "&experienceSeq=" + experienceSeq,
+        url: "/api/store/experience/experience-update-status?status=" + status + "&experienceSeq=" + experienceSeq + "&toUserSeq=" + toUserSeq,
         success: function(response) {
           alert("상태가 성공적으로 업데이트되었습니다.");
         },

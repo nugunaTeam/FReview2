@@ -42,9 +42,8 @@ public class CustomerMyBrandServiceImpl implements CustomerMyBrandService {
 
   @Override
   public CustomerMyNicknameUpdateResponseDTO updateCustomerNickname(
-      CustomerMyNicknameUpdateRequestDTO customerMyNicknameUpdateRequestDTO) {
+      Long userSeq, CustomerMyNicknameUpdateRequestDTO customerMyNicknameUpdateRequestDTO) {
     String toNickname = customerMyNicknameUpdateRequestDTO.getToNickname();
-    Long userSeq = customerMyNicknameUpdateRequestDTO.getUserSeq();
 
     if (customerBrandMapper.checkNicknameExist(toNickname, userSeq)) {
       throw new AlreadyExistNicknameException("이미 존재하는 닉네임입니다.");
@@ -55,8 +54,7 @@ public class CustomerMyBrandServiceImpl implements CustomerMyBrandService {
 
   @Override
   public CustomerMyAgeGroupUpdateResponseDTO updateCustomerAgeGroup(
-      CustomerMyAgeGroupUpdateRequestDTO customerMyAgeGroupUpdateRequestDTO) {
-    Long userSeq = customerMyAgeGroupUpdateRequestDTO.getUserSeq();
+      Long userSeq, CustomerMyAgeGroupUpdateRequestDTO customerMyAgeGroupUpdateRequestDTO) {
     String toAgeGroup = customerMyAgeGroupUpdateRequestDTO.getToAgeGroup();
 
     customerBrandMapper.updateAgeGroup(userSeq, toAgeGroup);
@@ -82,8 +80,7 @@ public class CustomerMyBrandServiceImpl implements CustomerMyBrandService {
 
   @Override
   public CustomerMyIntroduceUpdateResponseDTO updateCustomerIntroduce(
-      CustomerMyIntroduceUpdateRequestDTO customerMyIntroduceUpdateRequestDTO) {
-    Long userSeq = customerMyIntroduceUpdateRequestDTO.getUserSeq();
+      Long userSeq, CustomerMyIntroduceUpdateRequestDTO customerMyIntroduceUpdateRequestDTO) {
     String toIntroduce = customerMyIntroduceUpdateRequestDTO.getToIntroduce();
 
     customerBrandMapper.updateIntroduce(userSeq, toIntroduce);
@@ -92,8 +89,7 @@ public class CustomerMyBrandServiceImpl implements CustomerMyBrandService {
 
   @Override
   public CustomerMyFoodTypesUpdateResponseDTO updateCustomerFoodTypes(
-      CustomerMyFoodTypesUpdateRequestDTO customerMyFoodTypesUpdateRequestDTO) {
-    Long userSeq = customerMyFoodTypesUpdateRequestDTO.getUserSeq();
+      Long userSeq, CustomerMyFoodTypesUpdateRequestDTO customerMyFoodTypesUpdateRequestDTO) {
     List<String> toFoodTypes = customerMyFoodTypesUpdateRequestDTO.getToFoodTypes();
 
     customerBrandMapper.deleteFoodTypesByUserSeq(userSeq);
@@ -105,8 +101,7 @@ public class CustomerMyBrandServiceImpl implements CustomerMyBrandService {
 
   @Override
   public CustomerMyTagsUpdateResponseDTO updateCustomerTags(
-      CustomerMyTagsUpdateRequestDTO customerMyTagsUpdateRequestDTO) {
-    Long userSeq = customerMyTagsUpdateRequestDTO.getUserSeq();
+      Long userSeq, CustomerMyTagsUpdateRequestDTO customerMyTagsUpdateRequestDTO) {
     List<String> toTags = customerMyTagsUpdateRequestDTO.getToTags();
 
     customerBrandMapper.deleteTagsByUserSeq(userSeq);

@@ -154,41 +154,14 @@
 <body>
 
 <!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center">
-    <div class="d-flex align-items-center justify-content-between">
-        <a href="${pageContext.request.contextPath}/main?seq=${brandInfo.storeSeq}&pagecode=Requester"
-           class="logo d-flex align-items-center">
-            <img src="/assets/img/logo/logo-vertical.png" alt="">
-            <span class="d-none d-lg-block">FReview</span>
-        </a>
-        <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div>
-
-    <nav class="header-nav ms-auto">
-        <ul class="d-flex align-items-center">
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-                    <img src="/user/${brandInfo.storeSeq}/profile"
-                         alt="Profile"
-                         class="rounded-circle profile-img"
-                         style="margin-right: 5px;"
-                         onerror="this.onerror=null;this.src='/assets/img/basic/store-basic-profile.png';"
-                    >
-                    <span id="nickname-holder-head"
-                          class="d-none d-md-block"
-                          style="font-size : 18px;">${brandInfo.storeName}</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</header>
+<jsp:include page="/header.jsp" />
 
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
             <a class="nav-link "
-               href="/store/brand-info?userSeq=${brandInfo.storeSeq}">
+               href="${pageContext.request.contextPath}/store/my/brand">
                 <i class="bi bi-grid"></i>
                 <span>브랜딩</span>
             </a>
@@ -196,7 +169,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/store/experience?userSeq=${brandInfo.storeSeq}">
+               href="${pageContext.request.contextPath}/store/experience">
                 <i class="bi bi-card-checklist"></i>
                 <span>체험</span>
             </a>
@@ -205,7 +178,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed "
-               href="${pageContext.request.contextPath}/store/activity?userSeq=${brandInfo.storeSeq}">
+               href="${pageContext.request.contextPath}/store/activity">
                 <i class="bi bi-bell"></i>
                 <span>활동</span>
             </a>
@@ -214,7 +187,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/store/notification?userSeq=${brandInfo.storeSeq}">
+               href="${pageContext.request.contextPath}/store/notification">
                 <i class="bi bi-card-checklist"></i>
                 <span>알림</span>
             </a>
@@ -223,7 +196,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/store/personal-info?userSeq=${brandInfo.storeSeq}">
+               href="${pageContext.request.contextPath}/store/personal-info">
                 <i class="bi bi-person"></i>
                 <span>개인정보수정</span>
             </a>
@@ -314,7 +287,6 @@
 
                     $('#profile-img-upload').change(function () {
                       var formData = new FormData();
-                      formData.append('userSeq', ${brandInfo.storeSeq});
                       formData.append('profileFile', this.files[0]);
 
                       $.ajax({
@@ -362,10 +334,9 @@
                                 $("#introduce-submit-btn").click(function () {
                                   var newIntroduce = $('#introduce-input').val();
                                   $.ajax({
-                                    url: '<%=request.getContextPath()%>/api/store/my/brand-info/introduce',
+                                    url: '${pageContext.request.contextPath}/api/store/my/brand-info/introduce',
                                     method: 'PUT',
                                     data: JSON.stringify({
-                                      'userSeq': ${brandInfo.storeSeq},
                                       'toIntroduce': newIntroduce
                                     }),
                                     contentType: 'application/json',
@@ -544,7 +515,6 @@
                                     method: 'PUT',
                                     contentType: 'application/json',
                                     data: JSON.stringify({
-                                      'userSeq': ${brandInfo.storeSeq},
                                       'toFoodTypes': selectedFoodTypes
                                     }),
                                     success: function (response) {
@@ -690,7 +660,6 @@
                                     method: 'PUT',
                                     contentType: 'application/json',
                                     data: JSON.stringify({
-                                      'userSeq': ${brandInfo.storeSeq},
                                       'toTags': selectedTags
                                     }),
                                     success: function (response) {
@@ -716,18 +685,6 @@
     </section>
 </main>
 
-<footer id="footer" class="footer">
-    <div class="copyright">
-        &copy; Copyright <strong><span><a
-            href="https://github.com/nugunaTeam/FReview2"> nugunaTeam </a></span></strong>.
-        All
-        Rights
-        Reserved
-    </div>
-    <div class="credits">
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-    </div>
-</footer><!-- End Footer -->
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>
@@ -753,5 +710,5 @@
 
 
 </body>
-
+<jsp:include page="/footer.jsp" />
 </html>

@@ -130,7 +130,7 @@
 		<access-denied-handler ref="accessDeniedHandler"/>
 	</http>
 
-	<http pattern="/main-page" entry-point-ref="jwtAuthenticationEntryPoint">
+	<http pattern="/main" entry-point-ref="jwtAuthenticationEntryPoint">
 		<csrf disabled="true"/>
 		<custom-filter ref="jwtFilter" before="FORM_LOGIN_FILTER"/>
 		<access-denied-handler ref="accessDeniedHandler"/>
