@@ -23,7 +23,7 @@
   </resultMap>
 
   <select id="getMyLikedPosts" resultMap="MyLikePostInfoDTOResultMap">
-    WITH filtered_like_post AS (SELECT l.user_seq,
+    WITH filtered_like_post AS (SELECT p.user_seq,
                                        l.post_seq,
                                        l.created_at
                                 FROM `like` l

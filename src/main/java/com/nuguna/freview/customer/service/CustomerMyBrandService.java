@@ -17,20 +17,20 @@ import org.springframework.web.multipart.MultipartFile;
 public interface CustomerMyBrandService {
 
   CustomerMyNicknameUpdateResponseDTO updateCustomerNickname(
-      CustomerMyNicknameUpdateRequestDTO customerMyNicknameUpdateRequestDTO);
+      Long userSeq, CustomerMyNicknameUpdateRequestDTO customerMyNicknameUpdateRequestDTO);
 
   CustomerMyAgeGroupUpdateResponseDTO updateCustomerAgeGroup(
-      CustomerMyAgeGroupUpdateRequestDTO customerMyAgeGroupUpdateRequestDTO);
+      Long userSeq, CustomerMyAgeGroupUpdateRequestDTO customerMyAgeGroupUpdateRequestDTO);
 
   CustomerMyProfilePhotoUpdateResponseDTO updateCustomerPhotoUrl(
       Long userSeq, MultipartFile profileFile) throws IOException;
 
   CustomerMyIntroduceUpdateResponseDTO updateCustomerIntroduce(
-      CustomerMyIntroduceUpdateRequestDTO customerMyIntroduceUpdateRequestDTO);
+      Long userSeq, CustomerMyIntroduceUpdateRequestDTO customerMyIntroduceUpdateRequestDTO);
 
   CustomerMyFoodTypesUpdateResponseDTO updateCustomerFoodTypes(
-      CustomerMyFoodTypesUpdateRequestDTO customerMyFoodTypesUpdateRequestDTO);
+      Long userSeq, CustomerMyFoodTypesUpdateRequestDTO customerMyFoodTypesUpdateRequestDTO);
 
   CustomerMyTagsUpdateResponseDTO updateCustomerTags(
-      CustomerMyTagsUpdateRequestDTO customerMyTagsUpdateRequestDTO);
+      Long userSeq, CustomerMyTagsUpdateRequestDTO customerMyTagsUpdateRequestDTO);
 }

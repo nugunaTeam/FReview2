@@ -45,4 +45,10 @@
       and to_user_seq = #{customerSeq}
   </select>
 
+  <select id="getUserCode" resultType="java.lang.String">
+    select code
+    from user
+    where seq = #{userSeq}
+  </select>
+
 </mapper>

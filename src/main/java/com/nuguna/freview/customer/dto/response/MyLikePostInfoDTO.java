@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class MyLikePostInfoDTO {
 
   private Long seq;
-  private Long authorSeq; // store임.
+  private Long authorSeq;
   private LocalDate createdAt;
   private String storeName;
   private Integer likeCount;

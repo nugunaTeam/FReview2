@@ -12,9 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CustomerMyAgeGroupUpdateRequestDTO {
 
-  @Min(1)
-  private Long userSeq;
-
   @NotBlank
   @ValidAgeGroup
   private String toAgeGroup;

@@ -35,7 +35,6 @@ public class CustomerMyNotificationServiceImpl implements CustomerMyNotification
   @Transactional(readOnly = true)
   public CustomerZzimedMeCustomersRetrieveResponseDTO getZzimedMeCustomers(Long userSeq,
       Boolean isRead, Integer targetPage) {
-    // TODO : isRead 를 통해 읽음, 안읽음 처리 구분 & targetPage에 해당하는 "나를 찜한 체험단" 정보 가져오기
     int zzimedMeCustomersCount = customerMyNotificationMapper.getZzimedMeCustomersCount(userSeq,
         isRead);
 
@@ -56,7 +55,6 @@ public class CustomerMyNotificationServiceImpl implements CustomerMyNotification
   @Transactional(readOnly = true)
   public CustomerZzimedMeStoresRetrieveResponseDTO getZzimedMeStores(Long userSeq,
       Boolean isRead, Integer targetPage) {
-    // TODO : isRead 를 통해 읽음, 안읽음 처리 구분 & targetPage에 해당하는 "나를 찜한 스토어" 정보 가져오기
     int zzimedMeStoresCount = customerMyNotificationMapper.getZzimedMeStoresCount(userSeq, isRead);
 
     PaginationInfoResponseDTO paginationInfoResponseDTO = PaginationUtil.makePaginationViewInfo(
@@ -74,7 +72,6 @@ public class CustomerMyNotificationServiceImpl implements CustomerMyNotification
   @Override
   @Transactional
   public void makeNotificationRead(Long userSeq, Long notificationSeq) {
-    // TODO : notificationSeq 에 해당하는 알림을 읽음 처리할 것
     if (!customerMyNotificationMapper.checkExistUnReadNotification(userSeq, notificationSeq)) {
       throw new IllegalArgumentException("해당하는 읽지 않은 알림이 존재하지 않습니다.");
     }

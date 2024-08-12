@@ -16,4 +16,5 @@ public interface OtherBrandPageUtilMapper {
   Boolean checkStoreProposedToUser(@Param("storeSeq") Long storeSeq,
       @Param("customerSeq") Long customerSeq);
 
+  String getUserCode(@Param("userSeq") Long userSeq);
 }

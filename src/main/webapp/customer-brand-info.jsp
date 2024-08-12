@@ -124,7 +124,7 @@
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="${pageContext.request.contextPath}/main?seq=${userSeq}&pagecode=Requester"
+        <a href="/main"
            class="logo d-flex align-items-center">
             <img src="/assets/img/logo/logo-vertical.png" alt="">
             <span class="d-none d-lg-block">FReview</span>
@@ -277,13 +277,12 @@
                       var proposalDetail = $('#proposalDetail').val();
 
                       var dataObject = {
-                        storeSeq: fromUserSeq,
                         customerSeq: userSeq,
                         proposalDetail: proposalDetail
                       };
 
                       $.ajax({
-                        url: '/api/other/customer/proposal',
+                        url: '/api/store/proposal',
                         type: 'POST',
                         contentType: 'application/json',
                         data: JSON.stringify(dataObject),
@@ -314,11 +313,9 @@
                     }
 
                     $('#zzimButton').on('click', function () {
-                      const fromUserSeq = ${fromUserSeq};
                       const userSeq = ${userSeq};
 
                       const data = {
-                        fromUserSeq: fromUserSeq,
                         toUserSeq: userSeq
                       };
 
@@ -337,8 +334,8 @@
                           }
                           $('#zzimCount').text(response.zzimCount);
                         },
-                        error: function (error) {
-                          console.error('Error:', error);
+                        error: function (response) {
+                          alert(response.responseText.message);
                         }
                       });
                     });
