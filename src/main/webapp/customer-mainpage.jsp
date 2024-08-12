@@ -56,20 +56,7 @@
 <body>
 
 <!-- ======= Header ======= -->
-<header id="header" class="header fixed-top d-flex align-items-center header-hr">
-
-    <div class="d-flex align-items-center justify-content-between header-hr-left">
-        <a href="/main-page" class="logo d-flex align-items-center">
-            <img src="assets/img/logo/logo-vertical.png" alt="" style="  width: 50px;
-    margin-top: 20px;">
-            <span class="d-none d-lg-block">Freview</span>
-        </a>
-    </div><!-- End Logo -->
-    <div class="header-hr-right">
-        <a href="/logout" style="margin-right: 20px">로그아웃</a>
-    </div>
-</header><!-- End Header -->
-
+<jsp:include page="/header.jsp" />
 <main id="main_wrap" class="main">
     <div id="main" style="margin:auto; margin-top:80px">
         <div class="pagetitle">
@@ -140,14 +127,4 @@
 </main><!-- End #main -->
 
 <!-- ======= Footer ======= -->
-<footer id="footer" class="footer" style="margin-left: 0">
-    <div class="copyright">
-        &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
-    </div>
-    <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!— You can delete the links only if you purchased the pro version. —>
-        <!— Licensing information: https://bootstrapmade.com/license/ —>
-        <!— Purchase the pro version with->
-    </div>
-</footer>
+<jsp:include page="/footer.jsp" />

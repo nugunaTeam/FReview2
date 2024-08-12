@@ -95,8 +95,8 @@ public class JWTfilter extends OncePerRequestFilter {
 
     }else{
       String requestURI = httpServletRequest.getRequestURI();
-      if(requestURI.equals("/main-page")) {
-        RequestDispatcher dispatcher = httpServletRequest.getRequestDispatcher("/main-page");
+      if(requestURI.equals("/main")) {
+        RequestDispatcher dispatcher = httpServletRequest.getRequestDispatcher("/main");
         dispatcher.forward(httpServletRequest, httpServletResponse);
         return;
       }

@@ -55,7 +55,6 @@
 
 <body>
 
-<!-- ======= Header ======= -->
 <jsp:include page="/header.jsp" />
 
 <main id="main_wrap" class="main">
@@ -123,5 +122,6 @@
 
 </body>
 <!-- ======= Footer ======= -->
+  
 <jsp:include page="/footer.jsp" />
 </html>
