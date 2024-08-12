@@ -7,6 +7,9 @@ mvnw.cmd
 !**/src/test/**/target/
 
 ### IntelliJ IDEA ###
+googleLoginInfo.properties
+jwt.properties
+sendEmail.properties
 .idea
 .idea/modules.xml
 .idea/jarRepositories.xml

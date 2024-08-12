@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.common.mapper.NoticeMapper">
+
+  <!-- resultMap 설정 -->
+  <!-- noticeDetailMap 설정 -->
+  <resultMap id="noticeDetailMap" type="com.nuguna.freview.common.dto.response.page.NoticeDetailResponseDTO">
+    <id property="seq" column="seq"/>
+    <result property="userSeq" column="user_seq"/>
+    <result property="title" column="title"/>
+    <result property="createdAt" column="created_at" />
+    <result property="updatedAt" column="updated_at" />
+    <result property="content" column="content"/>
+    <result property="totalView" column="view_count"/>
+  </resultMap>
+
+  <!-- noticeMap 설정 -->
+  <resultMap id="noticeMap" type="com.nuguna.freview.common.dto.response.NoticePostDTO">
+    <id property="seq" column="seq"/>
+    <result property="userSeq" column="user_seq"/>
+    <result property="title" column="title"/>
+    <result property="content" column="content"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="totalView" column="view_count"/>
+  </resultMap>
+
+  <!-- SQL 쿼리 -->
+  <!-- 특정 공지글 정보 조회 -->
+  <select id="selectNotice" parameterType="Long" resultMap="noticeDetailMap">
+    SELECT
+      seq, user_seq, title, created_at, updated_at, content, view_count
+    FROM post
+    WHERE seq = #{postSeq}
+  </select>
+
+  <!-- 특정 공지글 수정 -->
+  <update id="updateNotice" parameterType="map">
+    UPDATE post
+    SET
+      title = #{title},
+      content = #{content},
+      updated_at = #{updatedAt}
+    WHERE seq = #{postSeq}
+  </update>
+
+  <!-- 공지글 등록 -->
+  <insert id="insertNotice" parameterType="map">
+    INSERT INTO post (title, content, code, created_at, updated_at, user_seq)
+    VALUES (#{title}, #{content}, '공지', #{now}, #{now}, #{userSeq})
+  </insert>
+  <!-- 페이지 별 공지 리스트 조회 -->
+  <select id="selectNoticeList" parameterType="map" resultMap="noticeMap">
+    select
+      seq, user_seq, title, content, created_at, view_count
+    from post
+    where code = '공지'
+    order by seq DESC
+    LIMIT #{pageSize}
+      OFFSET #{offset}
+  </select>
+
+  <!-- 검색 조건에 부합하는 공지 리스트 조회 -->
+  <select id="searchNoticeList" parameterType="map" resultMap="noticeMap">
+    select
+      seq, user_seq, title, content, created_at, view_count
+    from post
+    where code = '공지'
+      AND (title LIKE CONCAT('%', #{searchWord}, '%') OR content LIKE CONCAT('%', #{searchWord}, '%'))
+    order by seq DESC
+    LIMIT #{pageSize}
+      OFFSET #{offset}
+  </select>
+</mapper>

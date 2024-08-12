@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.common.mapper.PostMapper">
+
+  <!-- 특정 게시글 좋아요 여부 확인 -->
+  <select id="checkPostLiked" parameterType="map" resultType="int">
+    SELECT EXISTS (
+      SELECT 1
+      FROM `like`
+      WHERE user_seq = #{userSeq} AND post_seq = #{postSeq}
+    )
+  </select>
+
+  <!-- 특정 게시글 조회수 증가 -->
+  <update id="insertPostViewCount" parameterType="Long">
+    UPDATE
+        post
+    SET view_count = view_count + 1
+    WHERE seq = #{postSeq}
+  </update>
+
+  <!-- 특정 게시글 삭제 -->
+  <delete id="deletePost" parameterType="Long">
+    DELETE
+    FROM post
+    WHERE seq = #{postSeq}
+  </delete>
+
+  <!-- 특정 게시글 좋아요 추가 -->
+  <insert id="insertLike" parameterType="map">
+    INSERT INTO `like` (user_seq, post_seq)
+    VALUES (#{userSeq}, #{postSeq})
+  </insert>
+
+  <!-- 특정 게시글 좋아요 취소 -->
+  <delete id="deleteLike" parameterType="map">
+    DELETE
+    FROM `like`
+    WHERE user_seq = #{userSeq} AND post_seq = #{postSeq}
+  </delete>
+
+  <!-- 특정 게시글 작성자 조회 -->
+  <select id="selectWriterSeqByPostSeq" resultType="Long">
+    SELECT user_seq FROM post WHERE seq = #{postSeq}
+  </select>
+
+  <!-- SQL 쿼리 -->
+  <!-- 코드 별 총 게시글 수 조회 -->
+  <select id="selectTotalPage" parameterType="String" resultType="int">
+    select
+      count(*)
+    from post
+    where code = #{postCode}
+  </select>
+
+  <select id="selectTotalPageWithSearchWord" parameterType="map" resultType="int">
+    select
+      count(*)
+    from post
+    where code = #{postCode}
+      AND (title LIKE CONCAT('%', #{searchWord}, '%') OR content LIKE CONCAT('%', #{searchWord}, '%'))
+  </select>
+
+</mapper>

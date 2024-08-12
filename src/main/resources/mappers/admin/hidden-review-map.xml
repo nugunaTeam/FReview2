@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.admin.mapper.ReviewMapper">
+
+  <resultMap id="HiddenReviewDTOResultMap" type="com.nuguna.freview.admin.dto.HiddenReviewDTO">
+    <id property="seq" column="seq"/>
+    <result property="storeSeq" column="store_seq"/>
+    <result property="storeName" column="store_name"/>
+    <result property="reviewerSeq" column="reviewer_seq"/>
+    <result property="reviewerName" column="reviewer_name"/>
+    <result property="url" column="url"/>
+  </resultMap>
+
+  <select id="getHiddenReviews" resultMap="HiddenReviewDTOResultMap">
+    SELECT
+      r.seq,
+      r.store_seq,
+      u1.nickname AS store_name,
+      r.customer_seq AS reviewer_seq,
+      u2.nickname AS reviewer_name,
+      r.url
+    FROM
+      review r
+        INNER JOIN user u1 ON r.store_seq = u1.seq
+        INNER JOIN user u2 ON r.customer_seq = u2.seq
+    WHERE
+      r.status = 'STORE_HIDDEN'
+    ORDER BY r.updated_at DESC
+    LIMIT #{pageSize}
+    OFFSET #{offset}
+  </select>
+
+  <select id="selectTotalPage" resultType="int">
+    SELECT count(*) FROM review WHERE status = 'STORE_HIDDEN'
+  </select>
+
+  <delete id="deleteReview">
+    DELETE FROM review WHERE seq = #{seq}
+  </delete>
+
+</mapper>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.admin.mapper.UserFoodTypeMapper">
+
+  <select id="getUserFoodTypes" resultType="map">
+    SELECT ft.code AS "code", ft.dish AS "dish"
+    FROM user_food_type uft
+           JOIN food_type ft ON uft.food_type_seq = ft.seq
+    WHERE uft.user_seq = #{userSeq}
+  </select>
+
+</mapper>

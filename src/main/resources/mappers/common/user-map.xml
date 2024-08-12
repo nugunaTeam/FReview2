@@ -4,25 +4,46 @@
 
 <mapper namespace="com.nuguna.freview.common.mapper.UserMapper">
 
-  <!--<resultMap id="userMap_ID" type="com.kosta.semi.vo.UserVO">
-    <id property="userSeq" column="user_seq"/>
-    <result property="userId" column="user_id"/>
-    <result property="userPw" column="user_pw"/>
-    <result property="userName" column="user_name"/>
-    <result property="userGubun" column="user_gubun"/>
-    <result property="regdate" column="regdate"/>
-  </resultMap>-->
+  <resultMap id="userMap" type="com.nuguna.freview.common.vo.user.UserVO">
+    <id property="seq" column="seq"/>
+    <result property="businessNumber" column="business_number"/>
+    <result property="code" column="code"/>
+    <result property="email" column="email"/>
+    <result property="password" column="password"/>
+    <result property="nickname" column="nickname"/>
+    <result property="profilePhotoUrl" column="profile_photo_url"/>
+    <result property="introduce" column="introduce"/>
+    <result property="subEmail" column="sub_email"/>
+    <result property="loginType" column="login_type"/>
+    <result property="isWithDrawn" column="is_withdrawn"/>
+    <result property="ageGroup" column="age_group"/>
+    <result property="storeLocation" column="store_location"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="updatedAt" column="updated_at"/>
+  </resultMap>
 
-
-  <insert id="insertCustomer" parameterType="com.nuguna.freview.common.vo.UserVO">
+  <insert id="insertCustomer" parameterType="com.nuguna.freview.common.vo.user.UserVO">
     insert into user(business_number, code, email, password, nickname, profile_photo_url,
-                     introduce, sub_email, login_type, is_withdrawen, age_group, store_location,
+                     sub_email, login_type, is_withdrawn, age_group, store_location,
                      created_at, updated_at)
     values (null, #{code}, #{email}, #{password}, #{nickname}, null,
-            null, #{subEmail}, #{loginType}, false, #{ageGroup},
+            #{subEmail}, #{loginType}, false, #{ageGroup},
             null, NOW(), NOW())
   </insert>
 
+  <select id="selectUser" parameterType="Long" resultMap="userMap">
+    select
+      seq, business_number, code, email, password, nickname, profile_photo_url, introduce, sub_email, login_type, is_withdrawn, age_group, store_location, created_at, updated_at
+    from user
+    where seq = #{userSeq}
+  </select>
+
+  <!-- 유저 삭제 -->
+  <update id="deleteUser" parameterType="Long">
+    UPDATE user
+    SET is_withdrawn = 1
+    WHERE seq = #{userSeq}
+  </update>
 
 </mapper>
 

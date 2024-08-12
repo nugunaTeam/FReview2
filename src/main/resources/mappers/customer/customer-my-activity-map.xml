@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.customer.mapper.CustomerMyActivityMapper">
+
+  <select id="getLikesCount" resultType="java.lang.Integer">
+    select count(*)
+    from `like` l
+           inner join `post` p
+                      on l.post_seq = p.seq
+    where p.code in ('모집')
+      and l.user_seq = #{userSeq}
+  </select>
+
+  <resultMap id="MyLikePostInfoDTOResultMap"
+    type="com.nuguna.freview.customer.dto.response.MyLikePostInfoDTO">
+    <id property="seq" column="post_seq"/>
+    <result property="authorSeq" column="user_seq"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="storeName" column="store_name"/>
+    <result property="likeCount" column="likeCount"/>
+  </resultMap>
+
+  <select id="getMyLikedPosts" resultMap="MyLikePostInfoDTOResultMap">
+    WITH filtered_like_post AS (SELECT p.user_seq,
+                                       l.post_seq,
+                                       l.created_at
+                                FROM `like` l
+                                       INNER JOIN
+                                     `post` p
+                                     ON
+                                       l.post_seq = p.seq
+                                WHERE p.code IN ('모집')
+                                  AND l.user_seq = #{userSeq})
+
+    SELECT like_post_info.*,
+           (SELECT count(*) FROM `like` WHERE post_seq = like_post_info.post_seq) AS likeCount
+    FROM (SELECT flp.user_seq,
+                 flp.post_seq,
+                 flp.created_at,
+                 nsbi.store_name
+          FROM post p
+                 INNER JOIN filtered_like_post flp ON p.seq = flp.post_seq
+                 INNER JOIN user u ON p.user_seq = u.seq
+                 INNER JOIN national_store_business_information nsbi
+                            ON u.business_number = nsbi.business_number) AS like_post_info
+    ORDER BY like_post_info.created_at desc
+    limit #{pageSize} offset #{offset}
+  </select>
+
+
+  <select id="getZzimedStoresCount" resultType="java.lang.Integer">
+    select count(*)
+    from (select to_user_seq
+          from zzim z
+          where from_user_seq = #{userSeq}) zzimed_user
+           inner join
+         user u
+         on zzimed_user.to_user_seq = u.seq
+    where u.code = 'STORE'
+  </select>
+
+  <resultMap id="MyZzimedStoreInfoDTOResultMap"
+    type="com.nuguna.freview.customer.dto.response.MyZzimedStoreInfoDTO">
+    <result property="storeSeq" column="seq"/>
+    <result property="storeName" column="store_name"/>
+    <result property="storeLocation" column="store_location"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="foodTypes" column="foodTypes"
+      typeHandler="com.nuguna.freview.customer.mapper.typehandler.FoodTypesTypeHandler"/>
+  </resultMap>
+
+  <select id="getMyZzimedStores" resultMap="MyZzimedStoreInfoDTOResultMap">
+    WITH filtered_zzimed_user AS (SELECT z.to_user_seq,
+                                         z.created_at,
+                                         ROW_NUMBER() OVER (ORDER BY z.created_at DESC) AS row_num
+                                  FROM zzim z
+                                         INNER JOIN user u ON u.seq = z.to_user_seq
+                                  WHERE z.from_user_seq = #{userSeq}
+                                    AND u.code = 'STORE')
+    SELECT u.seq,
+           nsbi.store_name,
+           u.store_location,
+           fzu.created_at,
+           GROUP_CONCAT(DISTINCT ft.dish ORDER BY ft.dish ASC) AS foodTypes
+    FROM filtered_zzimed_user fzu
+           INNER JOIN user u ON u.seq = fzu.to_user_seq
+           INNER JOIN national_store_business_information nsbi
+                      ON u.business_number = nsbi.business_number
+           LEFT JOIN user_food_type uft
+                     ON u.seq = uft.user_seq
+           LEFT JOIN food_type ft
+                     ON uft.food_type_seq = ft.seq
+    WHERE fzu.row_num &gt; #{offset}
+      AND fzu.row_num &lt;= #{offset} + #{pageSize}
+    GROUP BY u.seq, u.business_number, nsbi.store_name, u.store_location, fzu.created_at
+    ORDER BY fzu.created_at DESC;
+  </select>
+
+  <select id="getZzimedCustomersCount" resultType="java.lang.Integer">
+    select count(*)
+    from (select to_user_seq
+          from zzim z
+          where from_user_seq = #{userSeq}) zzimed_user
+           inner join
+         user u
+         on zzimed_user.to_user_seq = u.seq
+    where u.code = 'CUSTOMER'
+  </select>
+
+  <resultMap id="MyZzimedCustomerInfoDTOResultMap"
+    type="com.nuguna.freview.customer.dto.response.MyZzimedCustomerInfoDTO">
+    <result property="customerSeq" column="seq"/>
+    <result property="nickname" column="nickname"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="foodTypes" column="foodTypes"
+      typeHandler="com.nuguna.freview.customer.mapper.typehandler.FoodTypesTypeHandler"/>
+  </resultMap>
+
+  <select id="getMyZzimedCustomers" resultMap="MyZzimedCustomerInfoDTOResultMap">
+    WITH filtered_zzimed_user AS (SELECT z.to_user_seq,
+                                         z.created_at,
+                                         ROW_NUMBER() OVER (ORDER BY z.created_at DESC) AS row_num
+                                  FROM zzim z
+                                         INNER JOIN user u ON u.seq = z.to_user_seq
+                                  WHERE z.from_user_seq = #{userSeq}
+                                    AND u.code = 'CUSTOMER')
+    SELECT u.seq,
+           u.nickname,
+           fzu.created_at,
+           GROUP_CONCAT(DISTINCT ft.dish ORDER BY ft.dish ASC) AS foodTypes
+    FROM filtered_zzimed_user fzu
+           INNER JOIN user u ON u.seq = fzu.to_user_seq
+           LEFT JOIN user_food_type uft ON u.seq = uft.user_seq
+           LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
+    WHERE fzu.row_num &gt; #{offset}
+      AND fzu.row_num &lt;= #{offset} + #{pageSize}
+    GROUP BY u.seq, u.nickname, fzu.created_at
+    ORDER BY fzu.created_at DESC;
+  </select>
+</mapper>

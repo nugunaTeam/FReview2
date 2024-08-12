@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.customer.mapper.CustomerPageMapper">
+
+  <resultMap id="CustomerBrandInfoResponseDTOResultMap"
+    type="com.nuguna.freview.customer.dto.response.page.CustomerBrandInfoResponseDTO">
+    <result property="profilePhotoUrl" column="profile_photo_url"/>
+    <result property="nickname" column="nickname"/>
+    <result property="ageGroup" column="age_group"/>
+    <result property="introduce" column="introduce"/>
+    <result property="zzimCount" column="zzimCount"/>
+    <collection property="foodTypes" ofType="java.lang.String">
+      <result column="food_type_name"/>
+    </collection>
+    <collection property="tagInfos" ofType="java.lang.String">
+      <result column="tag_name"/>
+    </collection>
+  </resultMap>
+
+  <select id="getBrandInfo" resultMap="CustomerBrandInfoResponseDTOResultMap">
+    SELECT u.profile_photo_url,
+           u.nickname,
+           u.age_group,
+           u.introduce,
+           (SELECT COUNT(*) FROM zzim z WHERE z.to_user_seq = u.seq) AS zzimCount,
+           ft.dish                                                   AS food_type_name,
+           t.name                                                    AS tag_name
+    FROM user u
+           LEFT JOIN user_food_type uft ON u.seq = uft.user_seq
+           LEFT JOIN food_type ft ON uft.food_type_seq = ft.seq
+           LEFT JOIN user_tag ut ON u.seq = ut.user_seq
+           LEFT JOIN tag t ON ut.tag_seq = t.seq
+    WHERE u.seq = #{customerSeq}
+  </select>
+
+</mapper>

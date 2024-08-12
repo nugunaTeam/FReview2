@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.admin.mapper.AdminMapper">
+
+  <!-- resultMap 설정 -->
+  <!-- adminMap 설정 -->
+  <resultMap id="adminMap" type="com.nuguna.freview.admin.vo.AdminVO">
+    <id property="seq" column="seq"/>
+    <result property="code" column="code"/>
+    <result property="email" column="email"/>
+    <result property="password" column="password"/>
+    <result property="nickname" column="nickname"/>
+    <result property="profilePhotoUrl" column="profile_photo_url"/>
+    <result property="introduce" column="introduce"/>
+    <result property="subEmail" column="sub_email"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="updatedAt" column="updated_at"/>
+  </resultMap>
+
+  <resultMap id="adminProfileMap" type="com.nuguna.freview.admin.dto.response.page.AdminProfileDTO">
+    <id property="seq" column="seq"/>
+    <result property="email" column="email"/>
+    <result property="password" column="password"/>
+    <result property="nickname" column="nickname"/>
+    <result property="subEmail" column="sub_email"/>
+  </resultMap>
+
+  <!-- customerManageMap 설정 -->
+  <resultMap id="customerManageMap" type="com.nuguna.freview.admin.dto.response.CustomerInfoDTO">
+    <id property="seq" column="seq"/>
+    <result property="code" column="code"/>
+    <result property="nickname" column="nickname"/>
+    <result property="email" column="email"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="totalNoshow" column="total_no_show"/>
+  </resultMap>
+
+  <!-- storeManageMap 설정 -->
+  <resultMap id="storeManageMap" type="com.nuguna.freview.admin.dto.response.StoreInfoDTO">
+    <id property="seq" column="seq"/>
+    <result property="code" column="code"/>
+    <result property="businessNumber" column="business_number"/>
+    <result property="nickname" column="nickname"/>
+    <result property="email" column="email"/>
+    <result property="createdAt" column="created_at"/>
+  </resultMap>
+
+  <!-- SQL 쿼리 -->
+  <!-- 관리자 정보 조회 -->
+  <select id="selectAdmin" parameterType="Long" resultMap="adminMap">
+    select
+      seq, code, email, password, nickname, profile_photo_url, sub_email, created_at, updated_at
+    from user
+    where seq = #{userSeq}
+  </select>
+
+  <!-- 관리자 프로필 조회 -->
+  <select id="selectAdminProfile" parameterType="Long" resultMap="adminProfileMap">
+    select
+      seq, email, password, nickname, sub_email
+    from user
+    where seq = #{userSeq}
+  </select>
+
+  <!-- 체험단 목록 조회 -->
+  <select id="selectCustomerList" parameterType="map" resultMap="customerManageMap">
+    SELECT
+      u.seq, u.code, u.nickname, u.email, u.created_at, COALESCE(na.total_no_show, 0) AS total_no_show
+    FROM user u
+           LEFT JOIN noshow_accumulation na ON u.seq = na.user_seq
+    WHERE u.code = 'CUSTOMER'
+      AND u.seq &lt; #{previousUserSeq}
+      AND u.is_withdrawn = 0
+    ORDER BY u.seq DESC
+      LIMIT #{limit}
+  </select>
+
+  <!-- 검색 조건에 부합하는 체험단 목록 조회 -->
+  <select id="searchCustomer" parameterType="map" resultMap="customerManageMap">
+    SELECT
+      u.seq, u.code, u.nickname, u.email, u.created_at, COALESCE(na.total_no_show, 0) AS total_no_show
+    FROM user u
+        LEFT JOIN noshow_accumulation na ON u.seq = na.user_seq
+    WHERE u.code = 'CUSTOMER'
+      AND u.seq &lt; #{previousUserSeq}
+      AND (u.email LIKE CONCAT('%', #{searchWord}, '%') OR u.nickname LIKE CONCAT('%', #{searchWord}, '%'))
+      AND u.is_withdrawn = 0
+    ORDER BY u.seq DESC
+      LIMIT #{limit}
+  </select>
+
+  <!-- 스토어 목록 조회 -->
+  <select id="selectStoreList" parameterType="map" resultMap="customerManageMap">
+    SELECT
+      seq, code, nickname, business_number, email, created_at
+    FROM user
+    WHERE code = 'STORE'
+      AND seq &lt; #{previousUserSeq}
+      AND is_withdrawn = 0
+    ORDER BY seq DESC
+      LIMIT #{limit}
+  </select>
+
+  <!-- 검색 조건에 부합하는 스토어 목록 조회 -->
+  <select id="searchStore" parameterType="map" resultMap="storeManageMap">
+    SELECT
+      seq, code, nickname, business_number, email, created_at
+    FROM user
+    WHERE code = 'STORE'
+      AND seq &lt; #{previousUserSeq}
+      AND (email LIKE CONCAT('%', #{searchWord}, '%') OR nickname LIKE CONCAT('%', #{searchWord}, '%'))
+      AND is_withdrawn = 0
+    ORDER BY seq DESC
+      LIMIT #{limit}
+  </select>
+
+  <!-- 일치하는 관리자 정보 조회 -->
+  <select id="selectMatchingAdmin" parameterType="map" resultType="int">
+    select
+        count(seq)
+    from user
+    where seq = #{adminSeq} and password = #{password}
+  </select>
+
+  <!-- 유저 삭제 -->
+  <update id="deleteUser" parameterType="Long">
+    UPDATE user
+    SET is_withdrawn = 1
+    WHERE seq = #{userSeq}
+  </update>
+
+  <!-- 비밀번호 업데이트 -->
+  <update id="updatePassword" parameterType="map">
+    UPDATE user
+    SET password = #{newPassword}
+    WHERE seq = #{userSeq}
+  </update>
+
+  <!-- 보조 이메일 업데이트 -->
+  <update id="updateSubEmail" parameterType="map">
+    update user
+    set sub_email = #{newEmail}
+    where seq = #{userSeq}
+  </update>
+</mapper>

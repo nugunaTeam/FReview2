@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nuguna.freview.admin.mapper.ZzimLogMapper">
+
+  <!-- ZzimLogVO resultMap -->
+  <resultMap id="zzimLogResultMap" type="com.nuguna.freview.admin.vo.ZzimLogVO">
+    <id property="seq" column="seq" />
+    <result property="fromUserSeq" column="from_user_seq" />
+    <result property="toUserSeq" column="to_user_seq" />
+    <result property="code" column="code" />
+  </resultMap>
+
+  <select id="getNewLogs" resultMap="zzimLogResultMap">
+    SELECT seq, from_user_seq, to_user_seq, code
+    FROM zzim_log
+    WHERE seq > #{lastProcessedSeq}
+    limit 100
+  </select>
+
+  <insert id="insertZzimLog" parameterType="map">
+    insert into zzim_log (from_user_seq, to_user_seq, code)
+    values (#{fromUserSeq}, #{toUserSeq}, #{code})
+  </insert>
+
+</mapper>
