@@ -45,4 +45,13 @@ public class PostServiceImpl implements PostService {
     int result2 = likeMapper.insertLikeLog(postSeq, userSeq, "DISLIKE");
     return result == 1 && result2 == 1;
   }
+
+  @Override
+  public int getTotalCount(String postCode, String searchWord) {
+    if (searchWord == null) {
+      return postMapper.selectTotalPage(postCode);
+    } else {
+      return postMapper.selectTotalPageWithSearchWord(postCode, searchWord);
+    }
+  }
 }
