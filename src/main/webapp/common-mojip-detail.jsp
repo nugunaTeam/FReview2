@@ -103,7 +103,7 @@
                 <img src="${mojipPost.profilePhotoUrl}" alt="Profile" class="profile-img">
                 <div class="ml-4">
                     <h3>
-                        <a href='/brand-page?user_seq=${mojipPost.userSeq}'>${mojipPost.storeName}</a>
+                        <a href='/brand/${mojipPost.userSeq}'>${mojipPost.storeName}</a>
                     </h3>
                     <p>분야: ${mojipPost.foodTypeWord}</p>
                     <p>태그: ${mojipPost.tagWord}</p>

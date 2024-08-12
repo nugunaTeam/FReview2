@@ -162,11 +162,10 @@
             <div class="card">
                 <!-- profile  -->
                 <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                    <img src="/user/${userSeq}/profile" alt="Profile" class="rounded-circle" onerror="
-                            this.onerror = null;
-                            this.src = ${isFromUserStore}
-                            ? '/assets/img/basic/store-basic-profile.png'
-                            : '/assets/img/basic/customer-basic-profile.png';">
+                    <img src="/user/${userSeq}/profile" alt="Profile" class="rounded-circle"
+                         onerror="
+                                 this.onerror = null;
+                                 this.src ='/assets/img/basic/customer-basic-profile.png';">
                     <h2 id="nickname-holder-section" style="font-size: 1.5rem; margin: 0.5rem 0;">
                         ${otherBrandInfo.nickname}
                     </h2>
