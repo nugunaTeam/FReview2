@@ -106,7 +106,7 @@
                                         <a href="/auth?pagecode=findid" style="font-size: 13px" href="#">아이디 찾기</a><a href="/auth?pagecode=findpw" style="margin-left: 10px; font-size: 13px" class="LGN_FIND" id="LGN_FIND_PW" href="#">비밀번호 찾기</a>
                                     </div>
                                     <div class="col-12">
-                                        <p class="small mb-0">회원이 아니신가요?     <a href="/auth?pagecode=register">회원가입 하러가기</a></p>
+                                        <p class="small mb-0">회원이 아니신가요?     <a href="/register-page">회원가입 하러가기</a></p>
                                     </div>
                                     <div class="col-12">
                                         <a href="${googleLoginUrl}"><img src="https://test.codemshop.com/wp-content/plugins/mshop-mcommerce-premium-s2/lib/mshop-members-s2/assets/images/social/logo/Google.png" style="border: 1px solid #bbbbbb;  border-radius:15%;"></a>
