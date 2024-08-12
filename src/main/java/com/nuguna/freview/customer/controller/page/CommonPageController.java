@@ -34,13 +34,11 @@ public class CommonPageController {
     this.otherBrandPageUtilService = otherBrandPageUtilService;
   }
 
-  // TODO : 체험단, 사장님에 따라 다르게 랜더링 해주어야 함.
   @RequestMapping(value = "/brand/{userSeq}", method = RequestMethod.GET)
-  public String customerOtherBrandPage(@PathVariable("userSeq") Long userSeq,
-      @RequestParam Long fromUserSeq, Model model) {
+  public String customerOtherBrandPage(@PathVariable("userSeq") Long userSeq, Model model) {
 
-    UserCode userCode = UserCode.STORE; // TODO : 시큐리티 적용하여 로그인한 유저 정보인 UserVO로 부터 userCode를 받아와서 처리해야함 , fromUserSeq도 마찬가지
-//    Long fromUserSeq = userVO.getSeq();
+    Long fromUserSeq = JwtContextHolder.getUserVO().getSeq();
+    UserCode targetUserCode = otherBrandPageUtilService.getUserCode(userSeq);
 
     boolean zzimed = otherBrandPageUtilService.checkZzimedOtherUser(fromUserSeq, userSeq);
     boolean isFromUserStore = otherBrandPageUtilService.checkUserIsStore(fromUserSeq);
@@ -56,7 +54,7 @@ public class CommonPageController {
     model.addAttribute("isFromUserStore", isFromUserStore);
     model.addAttribute("userNickname", userNickname);
 
-    if(userCode.isCustomer()){
+    if(targetUserCode.isCustomer()){
       CustomerOtherBrandPageInfoResponseDTO otherBrandPageInfo = customerPageService.getOtherBrandPageInfo(
           userSeq);
       boolean proposed = true;
@@ -68,7 +66,7 @@ public class CommonPageController {
       model.addAttribute("reviewPageInfo", otherBrandPageInfo.getReviewPaginationInfo());
       model.addAttribute("proposed", proposed);
       return "customer-brand-info";
-    } else if(userCode.isStore()) {
+    } else if(targetUserCode.isStore()) {
       StoreBrandInfoResponseDTO storeBrandInfoResponseDTO = storeBrandPageService.getMyBrandPageInfo(userSeq);
       model.addAttribute("otherBrandInfo", storeBrandInfoResponseDTO);
       return "store-brand-info";

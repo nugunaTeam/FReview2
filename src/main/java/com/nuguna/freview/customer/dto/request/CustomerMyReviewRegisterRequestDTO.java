@@ -14,9 +14,6 @@ import lombok.NoArgsConstructor;
 public class CustomerMyReviewRegisterRequestDTO {
 
   @Min(1)
-  private Long userSeq;
-
-  @Min(1)
   @NotNull
   private Long reviewSeq;
 

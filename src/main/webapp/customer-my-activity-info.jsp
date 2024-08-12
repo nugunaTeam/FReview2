@@ -105,41 +105,14 @@
 
 <body>
 
-<header id="header" class="header fixed-top d-flex align-items-center">
-    <div class="d-flex align-items-center justify-content-between">
-        <a href="${pageContext.request.contextPath}/main?seq=${userSeq}&pagecode=Requester"
-           class="logo d-flex align-items-center">
-            <img src="/assets/img/logo/logo-vertical.png" alt="">
-            <span class="d-none d-lg-block">FReview</span>
-        </a>
-        <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div>
-
-    <nav class="header-nav ms-auto">
-        <ul class="d-flex align-items-center">
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-
-                    <img src="/user/${userSeq}/profile"
-                         alt="Profile"
-                         class="rounded-circle profile-img"
-                         style="margin-right: 5px;">
-                    <span id="nickname-holder-head"
-                          class="d-none d-md-block"
-                          style="font-size : 18px;">${nickname}</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</header>
-
+<jsp:include page="/header.jsp" />
 
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="/my/brand-info?userSeq=${userSeq}">
+               href="/my/brand-info">
                 <i class="bi bi-grid"></i>
                 <span>브랜딩</span>
             </a>
@@ -147,7 +120,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/my/experience?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/my/experience">
                 <i class="bi bi-card-checklist"></i>
                 <span>체험</span>
             </a>
@@ -156,7 +129,7 @@
 
         <li class="nav-item">
             <a class="nav-link "
-               href="${pageContext.request.contextPath}/my/activity?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/my/activity">
                 <i class="bi bi-bell"></i>
                 <span>활동</span>
             </a>
@@ -165,7 +138,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/my/notification?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/my/notification">
                 <i class="bi bi-card-checklist"></i>
                 <span>알림</span>
             </a>
@@ -174,7 +147,7 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed"
-               href="${pageContext.request.contextPath}/my/personal-info?userSeq=${userSeq}">
+               href="${pageContext.request.contextPath}/my/personal-info">
                 <i class="bi bi-person"></i>
                 <span>개인정보수정</span>
             </a>
@@ -245,7 +218,11 @@
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
-        &copy; Copyright <strong><span>nugunaTeam</span></strong>. All Rights Reserved
+        &copy; Copyright <strong><span><a
+            href="https://github.com/nugunaTeam/FReview2"> nugunaTeam </a></span></strong>.
+        All
+        Rights
+        Reserved
     </div>
     <div class="credits">
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
@@ -268,7 +245,6 @@
 <script src="/assets/js/main.js"></script>
 <script>
   $(document).ready(function () {
-    let userSeq = '${userSeq}'; // 사용자 시퀀스
     let currentPage = 1; // 현재 페이지 번호
 
     // 페이지 로드 시 좋아요 리스트를 가져옵니다.
@@ -277,7 +253,6 @@
     // 좋아요한 글 리스트를 가져오는 함수
     function sendMyLikedPosts(page) {
       let sendData = {
-        'userSeq': userSeq,
         'targetPage': page
       };
 
@@ -305,7 +280,7 @@
         htmlStr += "<div class='card-body mt-2'>";
 
         htmlStr += "<p><a href='/brand/" + item.authorSeq + "'>" + item.storeName + "</a> 님의 ";
-        htmlStr += "<a href='/post/" + item.seq
+        htmlStr += "<a href='/mojip/" + item.seq
             + "'>모집글</a>에 <span style='color : green'>좋아요</span> 했습니다.</p>";
 
         // 날짜와 좋아요 수를 상단에 표시
@@ -325,7 +300,6 @@
     // 찜한 스토어 리스트를 가져오는 함수
     function sendZzimStoreList(page) {
       let sendData = {
-        'userSeq': userSeq,
         'targetPage': page
       };
 
@@ -370,7 +344,6 @@
     // 찜한 체험단 리스트를 가져오는 함수
     function sendZzimCustomerList(page) {
       let sendData = {
-        'userSeq': userSeq,
         'targetPage': page
       };
 

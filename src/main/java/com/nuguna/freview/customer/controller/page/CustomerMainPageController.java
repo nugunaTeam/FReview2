@@ -14,7 +14,6 @@ public class CustomerMainPageController {
   @RequestMapping("/customer/main-page")
   public String customerMyBrandPage(Model model) {
    UserVO uvo = JwtContextHolder.getUserVO();
-   log.info(uvo.toString());
    model.addAttribute("userVO", uvo);
    return "customer_main";
   }

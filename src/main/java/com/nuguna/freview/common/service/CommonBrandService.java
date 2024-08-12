@@ -5,5 +5,5 @@ import com.nuguna.freview.common.dto.response.ZzimResponseDTO;
 
 public interface CommonBrandService {
 
-  ZzimResponseDTO toggleZzim(ZzimRequestDTO zzimRequestDTO);
+  ZzimResponseDTO toggleZzim(Long fromUserSeq, ZzimRequestDTO zzimRequestDTO);
 }
