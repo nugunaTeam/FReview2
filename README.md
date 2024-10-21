@@ -25,9 +25,51 @@ FReview는 리뷰가 필요한 스토어와 무상으로 제품을 제공받는 
 <img width="513" alt="image" src="https://github.com/user-attachments/assets/9e9e145f-ee6b-4e4e-8017-618f0f8449e0">
 
 > **ERD 다이어그램**
+>
+<img width="2279" alt="FReview ERD" src="https://github.com/user-attachments/assets/0c41dd65-91b9-4239-b741-9767e73b8299">
+
+
+> **시퀀스 다이어그램  / 유스케이스**
 > 
 
-![erd](https://github.com/user-attachments/assets/a491784d-f3b8-4fc1-a1ae-4fcfb04a9ff6)
+### [ 인증 / 인가 ]
+
+- form 인증
+<img width="937" alt="image" src="https://github.com/user-attachments/assets/b2c703ef-8401-4105-8d6c-48dfbd4ae1a2">
+
+- OAuth 인증
+<img width="1017" alt="image" src="https://github.com/user-attachments/assets/1852a86d-f814-489b-b358-b9660e306cf7">
+
+- 인가(JWT필터)
+<img width="503" alt="image" src="https://github.com/user-attachments/assets/9eab4cda-7536-47ec-87fd-50591644be2c">
+
+### [ 체험 관련 ]
+
+- 체험 지원
+- 체험 제안
+- 체험 진행
+<img width="503" alt="image" src="https://github.com/user-attachments/assets/a27f9be0-9392-43d6-9c26-c813284999fb">
+
+### [ 로그 - 누계 시스템 ]
+
+- 유저 별 찜 누계 시스템
+- 게시글 좋아요 누계 시스템
+- 유저 별 포인트 누계 시스템
+- 노쇼 누계 시스템
+- 체험완료 누계 시스템
+![로그시스템](https://github.com/user-attachments/assets/403ceb3c-318b-45ea-ad15-c3daf335348b)
+
+
+> **주요 기능**
+> 
+
+[**바로가기 >**](https://www.notion.so/46aa93e1533447759fd2ef43ee4a646a?pvs=21)
+
+> **트러블 슈팅**
+> 
+
+[**바로가기 >**](https://www.notion.so/3534c70f9f7d4a89963a13955adcd793?pvs=21)
+
 
 > **기능명세서**
 >
@@ -691,43 +733,3 @@ FReview는 리뷰가 필요한 스토어와 무상으로 제품을 제공받는 
 └── store_main.jsp
 ```
 
-> **시퀀스 다이어그램  / 유스케이스**
-> 
-
-### [ 인증 / 인가 ]
-
-- form 인증
-<img width="937" alt="image" src="https://github.com/user-attachments/assets/b2c703ef-8401-4105-8d6c-48dfbd4ae1a2">
-
-- OAuth 인증
-<img width="1017" alt="image" src="https://github.com/user-attachments/assets/1852a86d-f814-489b-b358-b9660e306cf7">
-
-- 인가(JWT필터)
-<img width="503" alt="image" src="https://github.com/user-attachments/assets/9eab4cda-7536-47ec-87fd-50591644be2c">
-
-### [ 체험 관련 ]
-
-- 체험 지원
-- 체험 제안
-- 체험 진행
-<img width="503" alt="image" src="https://github.com/user-attachments/assets/a27f9be0-9392-43d6-9c26-c813284999fb">
-
-### [ 로그 - 누계 시스템 ]
-
-- 유저 별 찜 누계 시스템
-- 게시글 좋아요 누계 시스템
-- 유저 별 포인트 누계 시스템
-- 노쇼 누계 시스템
-- 체험완료 누계 시스템
-![로그시스템](https://github.com/user-attachments/assets/403ceb3c-318b-45ea-ad15-c3daf335348b)
-
-
-> **주요 기능**
-> 
-
-[**바로가기 >**](https://www.notion.so/46aa93e1533447759fd2ef43ee4a646a?pvs=21)
-
-> **트러블 슈팅**
-> 
-
-[**바로가기 >**](https://www.notion.so/3534c70f9f7d4a89963a13955adcd793?pvs=21)
